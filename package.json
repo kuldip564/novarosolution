@@ -1,7 +1,10 @@
 {
-  "name": "novarosolution-monorepo",
+  "name": "express-vercel",
   "private": true,
   "type": "module",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
   "scripts": {
     "vercel-build": "npm --prefix server install && npm --prefix clinte install && npm --prefix clinte run build",
     "build": "npm --prefix clinte run build",

@@ -9,6 +9,7 @@
     "start:prod": "NODE_ENV=production node index.js",
     "build:client": "npm --prefix ../clinte run build",
     "build": "npm run build:client",
+    "vercel-build": "npm run build",
     "migrate:local-to-atlas": "node scripts/migrate-local-to-atlas.js"
   },
   "dependencies": {
