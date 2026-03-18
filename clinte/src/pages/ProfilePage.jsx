@@ -246,10 +246,12 @@ const ProfilePage = () => {
                   <img
                     src={profileAvatarPreview}
                     alt="Profile"
-                    className="h-24 w-24 rounded-2xl border border-white/20 object-cover md:h-28 md:w-28"
+                    className="h-24 w-24 rounded-full border border-white/25 object-cover shadow-[0_8px_24px_rgba(0,0,0,0.3)] md:h-28 md:w-28"
                   />
                 ) : (
-                  <FaUserCircle className="text-7xl md:text-8xl text-white/90" />
+                  <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border border-white/20 bg-white/10 md:h-28 md:w-28">
+                    <FaUserCircle className="text-7xl md:text-8xl text-white/90" />
+                  </div>
                 )}
                 {isAdmin && (
                   <span className="absolute -right-1 -bottom-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-slate-950">
