@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaUserCircle, FaCrown, FaSyncAlt, FaCopy, FaChartLine } from 'react-icons/fa';
 import { MdEmail, MdDateRange, MdSecurity, MdOutlineTrackChanges } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,7 @@ async function fileToDataUrl(file) {
 }
 
 const ProfilePage = () => {
-  const { user, token, isAdmin, updateProfile, changePassword, logout } = useAuth();
+  const { user, token, isAdmin, isEmployee, updateProfile, changePassword, logout } = useAuth();
   const pageRef = usePageReveal();
   const [profileForm, setProfileForm] = useState({
     name: user?.name || '',
@@ -39,6 +39,7 @@ const ProfilePage = () => {
   const [projectMessages, setProjectMessages] = useState([]);
   const [lastSyncedAt, setLastSyncedAt] = useState('');
   const [profileAvatarPreview, setProfileAvatarPreview] = useState(user?.avatarUrl || '');
+  const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
 
   const joinedDate = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString()
@@ -64,29 +65,28 @@ const ProfilePage = () => {
     setProfileAvatarPreview(user?.avatarUrl || '');
   }, [user?.avatarUrl]);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function loadActivity() {
-      if (!token) return;
-      setActivityLoading(true);
-      setActivityError('');
-      try {
-        const rows = await fetchMyProjectMessages(token);
-        if (!isMounted) return;
-        setProjectMessages(Array.isArray(rows) ? rows : []);
-        setLastSyncedAt(new Date().toLocaleTimeString());
-      } catch (error) {
-        if (!isMounted) return;
-        setActivityError(error.message || 'Unable to track profile activity.');
-      } finally {
-        if (isMounted) setActivityLoading(false);
-      }
+  const loadActivity = useCallback(async () => {
+    if (!token) return;
+    setActivityLoading(true);
+    setActivityError('');
+    try {
+      const rows = await fetchMyProjectMessages(token);
+      setProjectMessages(Array.isArray(rows) ? rows : []);
+      setLastSyncedAt(new Date().toLocaleTimeString());
+    } catch (error) {
+      setActivityError(error.message || 'Unable to track profile activity.');
+    } finally {
+      setActivityLoading(false);
     }
-    loadActivity();
-    return () => {
-      isMounted = false;
-    };
   }, [token]);
+
+  useEffect(() => {
+    loadActivity();
+  }, [loadActivity]);
+
+  useEffect(() => {
+    setAvatarLoadFailed(false);
+  }, [profileAvatarPreview]);
 
   const adminRepliesCount = useMemo(
     () => projectMessages.filter((item) => item.senderRole === 'admin').length,
@@ -234,6 +234,37 @@ const ProfilePage = () => {
     }
   };
 
+  const copyUserId = async () => {
+    try {
+      await navigator.clipboard.writeText(user?.id || '');
+      setStatus({ type: 'success', message: 'User ID copied to clipboard.' });
+    } catch {
+      setStatus({ type: 'error', message: 'Clipboard unavailable. Copy user ID manually.' });
+    }
+  };
+
+  const downloadProfileData = () => {
+    const payload = {
+      id: user?.id || '',
+      name: profileForm.name || '',
+      email: profileForm.email || '',
+      role: user?.role || '',
+      avatarUrl: profileAvatarPreview || '',
+      createdAt: user?.createdAt || '',
+      exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'profile-data.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus({ type: 'success', message: 'Profile data downloaded.' });
+  };
+
   return (
     <HomeLayout>
       <main ref={pageRef} className="app-page-shell w-full min-h-screen text-white px-4 py-16 md:py-20">
@@ -242,17 +273,20 @@ const ProfilePage = () => {
             <div className="absolute -top-20 -right-20 h-56 w-56 rounded-full bg-linear-to-br from-purple-500/20 via-pink-500/20 to-red-500/20 blur-3xl" />
             <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
               <div className="relative">
-                {profileAvatarPreview ? (
-                  <img
-                    src={profileAvatarPreview}
-                    alt="Profile"
-                    className="h-24 w-24 rounded-full border border-white/25 object-cover shadow-[0_8px_24px_rgba(0,0,0,0.3)] md:h-28 md:w-28"
-                  />
-                ) : (
-                  <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border border-white/20 bg-white/10 md:h-28 md:w-28">
-                    <FaUserCircle className="text-7xl md:text-8xl text-white/90" />
-                  </div>
-                )}
+                <div className="relative h-24 w-24 overflow-hidden rounded-full border border-white/25 bg-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.3)] md:h-28 md:w-28">
+                  {profileAvatarPreview && !avatarLoadFailed ? (
+                    <img
+                      src={profileAvatarPreview}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                      onError={() => setAvatarLoadFailed(true)}
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <FaUserCircle className="text-7xl md:text-8xl text-white/90" />
+                    </div>
+                  )}
+                </div>
                 {isAdmin && (
                   <span className="absolute -right-1 -bottom-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-slate-950">
                     <FaCrown className="text-sm" />
@@ -319,6 +353,32 @@ const ProfilePage = () => {
                 <MdOutlineTrackChanges />
                 Open Project Chat
               </Link>
+              {isEmployee && (
+                <Link
+                  to="/employee/tasks"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                >
+                  <MdOutlineTrackChanges />
+                  Open Daily Tasks
+                </Link>
+              )}
+              {isAdmin && (
+                <Link
+                  to="/admin/dashboard"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                >
+                  <MdSecurity />
+                  Open Admin Dashboard
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={loadActivity}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+              >
+                <FaSyncAlt />
+                Refresh Activity
+              </button>
               <button
                 type="button"
                 onClick={logout}
@@ -347,14 +407,32 @@ const ProfilePage = () => {
               <li>• Track your project conversation status in one place.</li>
               <li>• Reset profile form anytime before saving changes.</li>
             </ul>
-            <button
-              type="button"
-              onClick={resetProfileForm}
-              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
-            >
-              <FaSyncAlt />
-              Reset Profile Form
-            </button>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={resetProfileForm}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
+              >
+                <FaSyncAlt />
+                Reset Profile Form
+              </button>
+              <button
+                type="button"
+                onClick={copyUserId}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
+              >
+                <FaCopy />
+                Copy User ID
+              </button>
+              <button
+                type="button"
+                onClick={downloadProfileData}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
+              >
+                <MdDateRange />
+                Download Profile Data
+              </button>
+            </div>
           </article>
         </section>
 
