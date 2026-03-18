@@ -3,7 +3,9 @@ const REQUEST_TIMEOUT_MS = 12000;
 
 function buildUrl(path) {
   if (!API_BASE_URL) return path;
-  return `${API_BASE_URL}${path}`;
+  const normalizedBase = API_BASE_URL.replace(/\/+$/, '');
+  const normalizedPath = String(path || '').startsWith('/') ? path : `/${path}`;
+  return `${normalizedBase}${normalizedPath}`;
 }
 
 async function safeJson(response) {
