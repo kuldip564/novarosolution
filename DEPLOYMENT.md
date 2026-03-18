@@ -52,10 +52,11 @@ Project contains Vercel-ready files:
 In Vercel dashboard:
 1. Import this GitHub repo
 2. Framework preset: **Other**
-3. Build command: `npm run vercel-build` (already in `vercel.json`)
-4. Output directory: `clinte/dist` (already in `vercel.json`)
-5. Add environment variables from `server/.env` into Vercel Project Settings
-6. Redeploy
+3. Root Directory: **repository root** (do not set `clinte` or `server`)
+4. Build command: `npm run vercel-build` (already in `vercel.json`)
+5. Output directory: `clinte/dist` (already in `vercel.json`)
+6. Add environment variables from `server/.env` into Vercel Project Settings
+7. Redeploy
 
 ## 4) Install Dependencies
 
