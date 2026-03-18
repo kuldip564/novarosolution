@@ -1,5 +1,11 @@
 import app from './app.js';
-import { PORT } from './config/env.js';
+import {
+  DEFAULT_ADMIN_EMAIL,
+  DEFAULT_ADMIN_ENABLED,
+  DEFAULT_ADMIN_NAME,
+  DEFAULT_ADMIN_PASSWORD,
+  PORT,
+} from './config/env.js';
 import { getDb } from './db/connection.js';
 import bcrypt from 'bcryptjs';
 import {
@@ -12,9 +18,16 @@ import {
 let serverInstance;
 
 async function ensureDefaultAdmin() {
-  const adminName = 'kuldipadmin1027';
-  const adminEmail = 'kuldipadmin1027@admin.local';
-  const adminPassword = 'Kuldip@1027';
+  if (!DEFAULT_ADMIN_ENABLED) return;
+
+  const adminName = String(DEFAULT_ADMIN_NAME || '').trim();
+  const adminEmail = String(DEFAULT_ADMIN_EMAIL || '').trim().toLowerCase();
+  const adminPassword = String(DEFAULT_ADMIN_PASSWORD || '');
+
+  if (!adminName || !adminEmail || adminPassword.length < 8) {
+    console.warn('[server] Default admin is enabled but credentials are missing/weak. Skipping admin bootstrap.');
+    return;
+  }
 
   const existingByEmail = await findUserByEmail(adminEmail);
   const existingByName = await findUserByName(adminName);

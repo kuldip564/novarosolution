@@ -1,0 +1,11 @@
+{
+  "name": "novarosolution-monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "vercel-build": "npm --prefix server install && npm --prefix clinte install && npm --prefix clinte run build",
+    "build": "npm --prefix clinte run build",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix clinte run dev"
+  }
+}

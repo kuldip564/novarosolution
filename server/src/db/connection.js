@@ -5,6 +5,8 @@ import { MONGODB_DNS_SERVERS, MONGODB_URI } from '../config/env.js';
 let connectionPromise;
 let dnsConfigured = false;
 
+mongoose.set('bufferCommands', false);
+
 function configureDnsServers() {
   if (dnsConfigured) return;
   const servers = String(MONGODB_DNS_SERVERS || '')
@@ -24,6 +26,7 @@ async function connectWithUri(uri) {
   configureDnsServers();
   await mongoose.connect(uri, {
     autoIndex: true,
+    serverSelectionTimeoutMS: 12000,
     serverApi: {
       version: '1',
       strict: true,
