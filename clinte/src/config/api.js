@@ -53,6 +53,11 @@ export async function fetchSiteContent() {
   return data.data;
 }
 
+export async function fetchCreatorFeed() {
+  const data = await request('/api/creator/feed');
+  return data.data;
+}
+
 export async function updateSiteContent(payload, token) {
   const data = await request('/api/site-content', {
     method: 'PUT',

@@ -100,3 +100,25 @@ export async function getAdminCreatorContent(req, res) {
     });
   }
 }
+
+export async function getPublicCreatorFeed(req, res) {
+  try {
+    const rows = await listAllCreatorContent();
+    const withCreator = await Promise.all(
+      rows.map(async (row) => {
+        const user = await findUserById(row.creatorId);
+        return {
+          ...row,
+          creatorName: user?.name || 'Unknown Creator',
+        };
+      }),
+    );
+    return res.status(200).json({ ok: true, data: withCreator });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: 'Unable to load public creator feed.',
+      error: error.message,
+    });
+  }
+}

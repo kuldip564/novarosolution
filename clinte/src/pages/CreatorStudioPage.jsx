@@ -100,6 +100,9 @@ const CreatorStudioPage = () => {
           <p className="mt-1 text-sm text-slate-400">
             Upload social media content for Twitter, Facebook, Instagram, and more.
           </p>
+          <p className="mt-2 text-xs text-amber-300">
+            Note: this upload publishes content to your website feed. External platform posting (direct API publish to Facebook/Instagram/Twitter) is not enabled yet.
+          </p>
           <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label className="text-sm text-slate-300">Title</label>

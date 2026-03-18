@@ -23,6 +23,7 @@ import AdminProjectChatsPage from './pages/AdminProjectChatsPage'
 import AdminSettingsPage from './pages/AdminSettingsPage'
 import EmployeeTasksPage from './pages/EmployeeTasksPage'
 import CreatorStudioPage from './pages/CreatorStudioPage'
+import CreatorFeedPage from './pages/CreatorFeedPage'
 import CustomCursor from './components/CustomCursor'
 import useRouteTransition from './hooks/useRouteTransition'
 
@@ -139,6 +140,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/creator-feed" element={<CreatorFeedPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
