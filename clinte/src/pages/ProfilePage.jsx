@@ -30,6 +30,7 @@ const ProfilePage = () => {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [passwordStatus, setPasswordStatus] = useState({ type: '', message: '' });
   const [isSaving, setIsSaving] = useState(false);
+  const [isSavingPhotoOnly, setIsSavingPhotoOnly] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -188,6 +189,24 @@ const ProfilePage = () => {
     }
   };
 
+  const handlePhotoOnlySave = async () => {
+    setStatus({ type: '', message: '' });
+    setIsSavingPhotoOnly(true);
+    try {
+      await updateProfile({
+        avatarDataUrl: profileAvatarPreview.startsWith('data:image/')
+          ? profileAvatarPreview
+          : undefined,
+        avatarUrl: !profileAvatarPreview.startsWith('data:image/') ? profileAvatarPreview : undefined,
+      });
+      setStatus({ type: 'success', message: 'Profile photo updated successfully.' });
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Failed to update profile photo.' });
+    } finally {
+      setIsSavingPhotoOnly(false);
+    }
+  };
+
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     setPasswordStatus({ type: '', message: '' });
@@ -278,7 +297,7 @@ const ProfilePage = () => {
                     <img
                       src={profileAvatarPreview}
                       alt="Profile"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-contain bg-slate-900/70"
                       onError={() => setAvatarLoadFailed(true)}
                     />
                   ) : (
@@ -462,6 +481,21 @@ const ProfilePage = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm text-slate-300">Profile Photo</label>
+                {profileAvatarPreview && (
+                  <div className="inline-flex items-center gap-3 rounded-xl border border-white/12 bg-slate-900/60 px-3 py-2">
+                    <div className="h-14 w-14 overflow-hidden rounded-full border border-white/20 bg-slate-900/80">
+                      <img
+                        src={profileAvatarPreview}
+                        alt="Selected profile preview"
+                        className="h-full w-full object-contain"
+                        onError={(event) => {
+                          event.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-slate-300">Preview matches original photo look.</p>
+                  </div>
+                )}
                 <div className="flex flex-wrap items-center gap-3">
                   <label className="inline-flex cursor-pointer items-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
                     Upload Photo
@@ -476,6 +510,14 @@ const ProfilePage = () => {
                       Remove Photo
                     </button>
                   )}
+                  <button
+                    type="button"
+                    onClick={handlePhotoOnlySave}
+                    disabled={isSavingPhotoOnly}
+                    className="rounded-xl border border-pink-400/40 bg-pink-500/15 px-4 py-2 text-xs font-semibold text-pink-100 hover:bg-pink-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isSavingPhotoOnly ? 'Saving Photo...' : 'Save Photo Only'}
+                  </button>
                 </div>
               </div>
               {status.message && (
