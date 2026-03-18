@@ -46,7 +46,7 @@ If backend serves frontend from same domain (recommended), keep `VITE_API_URL` e
 
 Project contains Vercel-ready files:
 - `vercel.json`
-- `api/[...all].js`
+- `api/index.js`
 - root `package.json` with `vercel-build`
 
 In Vercel dashboard:
