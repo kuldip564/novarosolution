@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { submitContactForm } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
 const ContactForm = ({ content, settings }) => {
+  const { isAuthenticated, token } = useAuth();
   const title = content?.title || "Let's talk about your roadmap";
   const description =
     content?.description ||
@@ -57,9 +60,14 @@ const ContactForm = ({ content, settings }) => {
       return;
     }
 
+    if (!isAuthenticated) {
+      setStatus({ type: 'error', message: 'Please login first to send a message.' });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const result = await submitContactForm(trimmedData);
+      const result = await submitContactForm(trimmedData, token);
       setStatus({ type: 'success', message: result.message || successMessage });
       setFormData({
         name: '',
@@ -162,14 +170,28 @@ const ContactForm = ({ content, settings }) => {
                   : 'Contact form submissions are currently disabled by admin.'}
               </p>
             )}
+            {!isAuthenticated && (
+              <p className="text-sm text-amber-300">
+                Login is required to submit contact requests.{' '}
+                <Link to="/login" className="underline text-pink-300">
+                  Go to Login
+                </Link>
+              </p>
+            )}
 
             <button
               type="submit"
-              disabled={isSubmitting || !allowContactSubmissions}
+              disabled={isSubmitting || !allowContactSubmissions || !isAuthenticated}
               className="group inline-flex w-full items-center justify-center rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 text-sm md:text-base font-semibold text-white shadow-lg shadow-red-500/40 transition-transform duration-200 hover:scale-[1.02]"
             >
               <span className="relative z-10 flex items-center gap-2">
-                {isSubmitting ? 'Sending...' : allowContactSubmissions ? submitText : 'Currently Disabled'}
+                {isSubmitting
+                  ? 'Sending...'
+                  : !isAuthenticated
+                    ? 'Login Required'
+                    : allowContactSubmissions
+                      ? submitText
+                      : 'Currently Disabled'}
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </span>
             </button>

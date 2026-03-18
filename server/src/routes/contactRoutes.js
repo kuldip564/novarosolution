@@ -8,7 +8,7 @@ import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js';
 const contactRoutes = Router();
 
 contactRoutes.get('/contact-submissions', requireAuth, requireAdmin, getContactSubmissions);
-contactRoutes.post('/contact', postContactSubmission);
+contactRoutes.post('/contact', requireAuth, postContactSubmission);
 
 export default contactRoutes;
 

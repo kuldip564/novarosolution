@@ -117,11 +117,12 @@ export async function fetchMe(token) {
   return data.data;
 }
 
-export async function submitContactForm(payload) {
+export async function submitContactForm(payload, token) {
   const data = await request('/api/contact', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
     },
     body: JSON.stringify(payload),
   });
@@ -418,11 +419,12 @@ export async function revokeAdminUserSessions(userId, token) {
   return data.data;
 }
 
-export async function createServiceAppointment(payload) {
+export async function createServiceAppointment(payload, token) {
   return request('/api/appointments', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
     },
     body: JSON.stringify(payload),
   });
@@ -532,6 +534,49 @@ export async function fetchAdminCreatorContent(token) {
     headers: {
       ...getAuthHeaders(token),
     },
+  });
+  return data.data;
+}
+
+export async function updateMyCreatorContent(contentId, payload, token) {
+  const data = await request(`/api/creator/content/${contentId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
+    },
+    body: JSON.stringify(payload),
+  });
+  return data.data;
+}
+
+export async function deleteMyCreatorContent(contentId, token) {
+  return request(`/api/creator/content/${contentId}`, {
+    method: 'DELETE',
+    headers: {
+      ...getAuthHeaders(token),
+    },
+  });
+}
+
+export async function likeCreatorFeedContent(contentId, token) {
+  const data = await request(`/api/creator/feed/${contentId}/like`, {
+    method: 'POST',
+    headers: {
+      ...getAuthHeaders(token),
+    },
+  });
+  return data.data;
+}
+
+export async function commentCreatorFeedContent(contentId, text, token) {
+  const data = await request(`/api/creator/feed/${contentId}/comment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
+    },
+    body: JSON.stringify({ text }),
   });
   return data.data;
 }

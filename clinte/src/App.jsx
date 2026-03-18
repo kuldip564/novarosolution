@@ -140,7 +140,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/creator-feed" element={<CreatorFeedPage />} />
+          <Route
+            path="/creator-feed"
+            element={
+              <ProtectedRoute>
+                <CreatorFeedPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createServiceAppointment } from '../config/api';
 import { getServiceIconComponent, resolveServiceIconKey } from '../config/serviceIcons';
+import { useAuth } from '../context/AuthContext';
 
 const defaultServices = [
   {
@@ -78,6 +79,7 @@ const normalizeService = (service = {}) => ({
 });
 
 const Services = ({ data, settings }) => {
+  const { isAuthenticated, token } = useAuth();
   const title = data?.title || 'Services built for modern teams';
   const description =
     data?.description ||
@@ -103,6 +105,13 @@ const Services = ({ data, settings }) => {
   });
 
   const openBookingModal = (serviceTitle) => {
+    if (!isAuthenticated) {
+      setStatus({
+        type: 'error',
+        message: 'Please login first to request service appointment.',
+      });
+      return;
+    }
     if (!allowServiceAppointments) {
       setStatus({
         type: 'error',
@@ -149,7 +158,7 @@ const Services = ({ data, settings }) => {
       await createServiceAppointment({
         serviceTitle: selectedService,
         ...form,
-      });
+      }, token);
       setStatus({
         type: 'success',
         message: 'Contact request sent successfully. Our team will contact you shortly.',
@@ -260,10 +269,10 @@ const Services = ({ data, settings }) => {
                       event.stopPropagation();
                       openBookingModal(service.title);
                     }}
-                    disabled={!allowServiceAppointments}
+                disabled={!allowServiceAppointments || !isAuthenticated}
                     className="services-primary-btn inline-flex items-center rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-4 py-2 text-xs md:text-sm font-semibold text-white shadow-lg shadow-pink-500/25"
                   >
-                    {allowServiceAppointments ? 'Contact Us' : 'Contact Disabled'}
+                {!isAuthenticated ? 'Login Required' : allowServiceAppointments ? 'Contact Us' : 'Contact Disabled'}
                   </button>
                   <button
                     type="button"
@@ -378,6 +387,14 @@ const Services = ({ data, settings }) => {
           {maintenanceMode
             ? maintenanceMessage
             : 'Service contact requests are currently disabled by admin.'}
+        </div>
+      )}
+      {!isAuthenticated && (
+        <div className="mx-auto mt-5 max-w-6xl rounded-2xl border border-amber-400/30 bg-amber-500/10 p-4 text-sm text-amber-200">
+          Login is required to book service appointments.{' '}
+          <Link to="/login" className="underline text-pink-200">
+            Go to Login
+          </Link>
         </div>
       )}
 

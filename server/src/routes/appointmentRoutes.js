@@ -7,7 +7,7 @@ import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js';
 
 const appointmentRoutes = Router();
 
-appointmentRoutes.post('/appointments', postServiceAppointment);
+appointmentRoutes.post('/appointments', requireAuth, postServiceAppointment);
 appointmentRoutes.get('/appointments', requireAuth, requireAdmin, getServiceAppointments);
 
 export default appointmentRoutes;

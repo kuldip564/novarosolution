@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import HomeLayout from '../assets/componet/HomeLayout';
 import {
   createMyCreatorContent,
+  deleteMyCreatorContent,
   fetchMyCreatorContent,
+  updateMyCreatorContent,
 } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,11 +25,12 @@ const CreatorStudioPage = () => {
   const [items, setItems] = useState([]);
   const [form, setForm] = useState({
     title: '',
-    platform: 'instagram',
     caption: '',
     mediaDataUrl: '',
   });
   const [selectedMediaType, setSelectedMediaType] = useState('');
+  const [editingId, setEditingId] = useState('');
+  const [currentMediaUrl, setCurrentMediaUrl] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -79,20 +82,73 @@ const CreatorStudioPage = () => {
     setSaving(true);
     setStatus({ type: '', message: '' });
     try {
-      const created = await createMyCreatorContent(form, token);
-      setItems((prev) => [created, ...prev]);
+      const payload = editingId
+        ? {
+            ...form,
+            mediaUrl: form.mediaDataUrl ? undefined : currentMediaUrl,
+          }
+        : form;
+      const created = editingId
+        ? await updateMyCreatorContent(editingId, payload, token)
+        : await createMyCreatorContent(payload, token);
+      if (editingId) {
+        setItems((prev) => prev.map((item) => (item.id === editingId ? created : item)));
+      } else {
+        setItems((prev) => [created, ...prev]);
+      }
       setForm({
         title: '',
-        platform: 'instagram',
         caption: '',
         mediaDataUrl: '',
       });
       setSelectedMediaType('');
-      setStatus({ type: 'success', message: 'Content uploaded successfully.' });
+      setEditingId('');
+      setCurrentMediaUrl('');
+      setStatus({
+        type: 'success',
+        message: editingId ? 'Content updated successfully.' : 'Content uploaded successfully.',
+      });
     } catch (error) {
       setStatus({ type: 'error', message: error.message || 'Unable to upload content.' });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const startEdit = (item) => {
+    setEditingId(item.id);
+    setForm({
+      title: item.title || '',
+      caption: item.caption || '',
+      mediaDataUrl: '',
+    });
+    setCurrentMediaUrl(item.mediaUrl || '');
+    setSelectedMediaType(item.mediaType || '');
+    setStatus({ type: 'success', message: 'Editing mode enabled.' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId('');
+    setForm({
+      title: '',
+      caption: '',
+      mediaDataUrl: '',
+    });
+    setSelectedMediaType('');
+    setCurrentMediaUrl('');
+    setStatus({ type: 'success', message: 'Edit canceled.' });
+  };
+
+  const handleDelete = async (item) => {
+    if (!window.confirm(`Delete "${item.title}"?`)) return;
+    try {
+      await deleteMyCreatorContent(item.id, token);
+      setItems((prev) => prev.filter((row) => row.id !== item.id));
+      setStatus({ type: 'success', message: 'Content deleted successfully.' });
+      if (editingId === item.id) cancelEdit();
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Unable to delete content.' });
     }
   };
 
@@ -110,8 +166,8 @@ const CreatorStudioPage = () => {
 
           <div className="mt-5 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
-              <p className="text-xs uppercase tracking-widest text-slate-400">Supported Platforms</p>
-              <p className="mt-2 text-sm text-slate-100">Instagram, Facebook, Twitter</p>
+              <p className="text-xs uppercase tracking-widest text-slate-400">Content Type</p>
+              <p className="mt-2 text-sm text-slate-100">Feed upload only (no platform field)</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
               <p className="text-xs uppercase tracking-widest text-slate-400">Allowed Media</p>
@@ -139,18 +195,6 @@ const CreatorStudioPage = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm text-slate-300">Platform</label>
-                <select
-                  value={form.platform}
-                  onChange={(event) => setForm((prev) => ({ ...prev, platform: event.target.value }))}
-                  className="w-full rounded-xl border border-white/12 bg-slate-950 px-4 py-3 text-sm text-slate-100 outline-none focus:border-pink-500"
-                >
-                  <option value="instagram">Instagram</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="twitter">Twitter</option>
-                </select>
-              </div>
-              <div className="space-y-2">
                 <label className="text-sm text-slate-300">Caption</label>
                 <textarea
                   value={form.caption}
@@ -170,12 +214,12 @@ const CreatorStudioPage = () => {
                   <input type="file" accept="image/*,video/*" className="hidden" onChange={handleUploadFile} />
                 </label>
               </div>
-              {form.mediaDataUrl ? (
+              {form.mediaDataUrl || currentMediaUrl ? (
                 <div className="mt-4 overflow-hidden rounded-xl border border-white/12 bg-slate-950/70">
                   {selectedMediaType === 'video' ? (
-                    <video src={form.mediaDataUrl} controls className="h-56 w-full object-cover" />
+                    <video src={form.mediaDataUrl || currentMediaUrl} controls className="h-56 w-full object-cover" />
                   ) : (
-                    <img src={form.mediaDataUrl} alt="Selected upload preview" className="h-56 w-full object-cover" />
+                    <img src={form.mediaDataUrl || currentMediaUrl} alt="Selected upload preview" className="h-56 w-full object-cover" />
                   )}
                 </div>
               ) : (
@@ -184,11 +228,12 @@ const CreatorStudioPage = () => {
                 </div>
               )}
               <div className="mt-4 flex gap-2">
-                {form.mediaDataUrl && (
+                {(form.mediaDataUrl || currentMediaUrl) && (
                   <button
                     type="button"
                     onClick={() => {
                       setForm((prev) => ({ ...prev, mediaDataUrl: '' }));
+                      setCurrentMediaUrl('');
                       setSelectedMediaType('');
                     }}
                     className="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
@@ -198,12 +243,21 @@ const CreatorStudioPage = () => {
                 )}
                 <button
                   type="submit"
-                  disabled={saving || !form.mediaDataUrl}
+                  disabled={saving || (!form.mediaDataUrl && !currentMediaUrl)}
                   className="flex-1 rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {saving ? 'Publishing...' : 'Publish to Feed'}
+                  {saving ? 'Saving...' : editingId ? 'Update Content' : 'Publish to Feed'}
                 </button>
               </div>
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                >
+                  Cancel Edit
+                </button>
+              )}
               <p className="mt-3 text-[11px] text-slate-500">
                 Upload appears on website feed. External platform auto-post is not enabled.
               </p>
@@ -237,12 +291,30 @@ const CreatorStudioPage = () => {
                     )}
                   </div>
                   <div className="p-4">
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-pink-300">{item.platform}</p>
                     <h3 className="mt-1 text-base font-semibold text-slate-100">{item.title}</h3>
                     {item.caption && <p className="mt-2 text-sm text-slate-300 line-clamp-3">{item.caption}</p>}
+                    <p className="mt-2 text-xs text-slate-500">
+                      Likes: {item.likesCount || 0} • Comments: {Array.isArray(item.comments) ? item.comments.length : 0}
+                    </p>
                     <p className="mt-3 text-xs text-slate-500">
                       {item.createdAt ? new Date(item.createdAt).toLocaleString() : ''}
                     </p>
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(item)}
+                        className="rounded-lg border border-emerald-400/35 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(item)}
+                        className="rounded-lg border border-red-400/35 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-200"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}
