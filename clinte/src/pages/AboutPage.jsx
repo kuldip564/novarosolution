@@ -11,18 +11,30 @@ const AboutPage = () => {
   const team = data?.teamSection;
   const pageRef = usePageReveal();
 
-  const fallbackOwner = {
-    name: 'Kuldip Patel',
-    role: 'Founder & Owner',
-    bio: 'Leads product strategy and delivery excellence across all client projects.',
-    email: 'owner@novarosolution.com',
-    experience: '10+ years in software delivery',
-    avatar: '👨‍💼',
-  };
+  const fallbackOwners = [
+    {
+      name: 'kuldip chaudhary',
+      role: 'Founder & Owner',
+      bio: 'Leads product strategy and delivery excellence across all client projects.',
+      email: 'chaudharykuldip453@gmail.com',
+      experience: '',
+      avatar: '👨‍💼',
+    },
+    {
+      name: 'mehul chaudhary',
+      role: 'Founder & Owner',
+      bio: 'Leads operations, delivery coordination, and long-term growth for NovaRo Solution engagements.',
+      email: 'mehulchaudhary@gmail.com',
+      experience: '',
+      avatar: '👨‍💼',
+    },
+  ];
   const owners =
     team?.ownerList?.length && Array.isArray(team.ownerList)
       ? team.ownerList
-      : [team?.owner || fallbackOwner];
+      : team?.owner
+        ? [team.owner, ...fallbackOwners.slice(1)]
+        : fallbackOwners;
   const visibleOwners = owners.slice(0, 2);
 
   if (loading) {
