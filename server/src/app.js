@@ -17,6 +17,7 @@ const shouldServeClient = process.env.NODE_ENV === 'production' && fs.existsSync
 app.disable('x-powered-by');
 app.set('trust proxy', TRUST_PROXY);
 
+
 function isOriginAllowed(origin) {
   if (!origin) return true;
   if (allowedOrigins.includes('*')) return true;
