@@ -6,7 +6,7 @@ import {
 import { findUserById } from '../models/userModel.js';
 import { uploadMediaDataUrl } from '../services/cloudinaryService.js';
 
-const ALLOWED_PLATFORMS = ['twitter', 'facebook', 'instagram', 'linkedin', 'youtube', 'other'];
+const ALLOWED_PLATFORMS = ['twitter', 'facebook', 'instagram'];
 
 export async function getMyCreatorContent(req, res) {
   try {

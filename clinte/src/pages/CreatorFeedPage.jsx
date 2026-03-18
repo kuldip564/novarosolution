@@ -2,11 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import HomeLayout from '../assets/componet/HomeLayout';
 import { fetchCreatorFeed } from '../config/api';
 
+const PLATFORM_ORDER = ['all', 'instagram', 'facebook', 'twitter'];
+
 const CreatorFeedPage = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [platform, setPlatform] = useState('all');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -30,37 +33,57 @@ const CreatorFeedPage = () => {
 
   const platforms = useMemo(() => {
     const set = new Set(rows.map((item) => item.platform).filter(Boolean));
-    return ['all', ...Array.from(set)];
+    const inOrder = PLATFORM_ORDER.filter((item) => item === 'all' || set.has(item));
+    return inOrder.length ? inOrder : ['all'];
   }, [rows]);
 
   const visibleRows = useMemo(() => {
-    if (platform === 'all') return rows;
-    return rows.filter((item) => item.platform === platform);
-  }, [rows, platform]);
+    const byPlatform = platform === 'all' ? rows : rows.filter((item) => item.platform === platform);
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) return byPlatform;
+    return byPlatform.filter((item) => {
+      return (
+        String(item.title || '').toLowerCase().includes(q) ||
+        String(item.caption || '').toLowerCase().includes(q) ||
+        String(item.creatorName || '').toLowerCase().includes(q)
+      );
+    });
+  }, [rows, platform, query]);
 
   return (
     <HomeLayout>
       <main className="mx-auto w-[96vw] max-w-[1260px] px-2 pb-14 pt-8 md:px-0 text-white">
-        <section className="rounded-2xl border border-white/12 bg-slate-950/75 p-6">
-          <h1 className="text-2xl font-semibold text-slate-100">Creator Content Feed</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            View all uploaded content from creators on this website.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {platforms.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setPlatform(item)}
-                className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
-                  platform === item
-                    ? 'border-pink-400/50 bg-pink-500/20 text-pink-100'
-                    : 'border-white/15 bg-white/5 text-slate-300 hover:bg-white/10'
-                }`}
-              >
-                {item === 'all' ? 'All Platforms' : item}
-              </button>
-            ))}
+        <section className="overflow-hidden rounded-3xl border border-white/12 bg-slate-950/80 p-6 md:p-8">
+          <div className="relative">
+            <div className="pointer-events-none absolute -top-24 -right-24 h-60 w-60 rounded-full bg-linear-to-br from-pink-500/20 via-purple-500/20 to-cyan-500/20 blur-3xl" />
+            <h1 className="relative text-2xl font-semibold text-slate-100 md:text-3xl">Content Feed</h1>
+            <p className="relative mt-2 text-sm text-slate-300">
+              Browse all creator uploads published on your website.
+            </p>
+          </div>
+          <div className="mt-5 grid gap-4 md:grid-cols-[1fr_auto]">
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search by title, caption, creator..."
+              className="w-full rounded-xl border border-white/12 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none focus:border-pink-500"
+            />
+            <div className="flex flex-wrap gap-2">
+              {platforms.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setPlatform(item)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
+                    platform === item
+                      ? 'border-pink-400/50 bg-pink-500/20 text-pink-100'
+                      : 'border-white/15 bg-white/5 text-slate-300 hover:bg-white/10'
+                  }`}
+                >
+                  {item === 'all' ? 'All' : item}
+                </button>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -70,13 +93,15 @@ const CreatorFeedPage = () => {
           ) : error ? (
             <p className="text-sm text-red-400">{error}</p>
           ) : visibleRows.length === 0 ? (
-            <p className="text-sm text-slate-400">No content available for selected platform.</p>
+            <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-8 text-center text-sm text-slate-400">
+              No content available for selected filter.
+            </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {visibleRows.map((item) => (
                 <article
                   key={item.id}
-                  className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70"
+                  className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-[0_10px_30px_rgba(0,0,0,0.22)]"
                 >
                   <div className="h-52 w-full bg-slate-950/70">
                     {item.mediaType === 'video' ? (
@@ -90,7 +115,7 @@ const CreatorFeedPage = () => {
                       {item.platform}
                     </p>
                     <h2 className="mt-1 text-base font-semibold text-slate-100">{item.title}</h2>
-                    {item.caption && <p className="mt-2 text-sm text-slate-300">{item.caption}</p>}
+                    {item.caption && <p className="mt-2 text-sm text-slate-300 line-clamp-3">{item.caption}</p>}
                     <p className="mt-3 text-xs text-slate-500">
                       by {item.creatorName || 'Creator'} •{' '}
                       {item.createdAt ? new Date(item.createdAt).toLocaleString() : 'now'}
