@@ -16,6 +16,41 @@ async function fileToDataUrl(file) {
   });
 }
 
+async function loadImageFromDataUrl(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('Unable to load selected image.'));
+    image.src = dataUrl;
+  });
+}
+
+async function buildFittedAvatarDataUrl(sourceDataUrl, zoom = 1, offsetX = 0, offsetY = 0) {
+  const image = await loadImageFromDataUrl(sourceDataUrl);
+  const targetSize = 600;
+  const canvas = document.createElement('canvas');
+  canvas.width = targetSize;
+  canvas.height = targetSize;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Unable to prepare image editor.');
+
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, targetSize, targetSize);
+
+  const baseScale = Math.max(targetSize / image.width, targetSize / image.height);
+  const scale = baseScale * Math.max(1, Number(zoom) || 1);
+  const drawWidth = image.width * scale;
+  const drawHeight = image.height * scale;
+  const maxShift = targetSize * 0.45;
+  const shiftX = Math.max(-100, Math.min(100, Number(offsetX) || 0));
+  const shiftY = Math.max(-100, Math.min(100, Number(offsetY) || 0));
+  const drawX = (targetSize - drawWidth) / 2 + (shiftX / 100) * maxShift;
+  const drawY = (targetSize - drawHeight) / 2 + (shiftY / 100) * maxShift;
+
+  ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  return canvas.toDataURL('image/jpeg', 0.92);
+}
+
 const ProfilePage = () => {
   const { user, token, isAdmin, isEmployee, updateProfile, changePassword, logout } = useAuth();
   const pageRef = usePageReveal();
@@ -41,6 +76,11 @@ const ProfilePage = () => {
   const [lastSyncedAt, setLastSyncedAt] = useState('');
   const [profileAvatarPreview, setProfileAvatarPreview] = useState(user?.avatarUrl || '');
   const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
+  const [photoEditorSource, setPhotoEditorSource] = useState('');
+  const [photoZoom, setPhotoZoom] = useState(1);
+  const [photoOffsetX, setPhotoOffsetX] = useState(0);
+  const [photoOffsetY, setPhotoOffsetY] = useState(0);
+  const [isApplyingPhotoFit, setIsApplyingPhotoFit] = useState(false);
 
   const joinedDate = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString()
@@ -64,6 +104,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     setProfileAvatarPreview(user?.avatarUrl || '');
+    setPhotoEditorSource('');
+    setPhotoZoom(1);
+    setPhotoOffsetX(0);
+    setPhotoOffsetY(0);
   }, [user?.avatarUrl]);
 
   const loadActivity = useCallback(async () => {
@@ -160,12 +204,45 @@ const ProfilePage = () => {
     try {
       const dataUrl = await fileToDataUrl(file);
       setProfileAvatarPreview(dataUrl);
+      setPhotoEditorSource(dataUrl);
+      setPhotoZoom(1);
+      setPhotoOffsetX(0);
+      setPhotoOffsetY(0);
       setStatus({ type: 'success', message: 'Profile photo selected. Click Save Changes.' });
     } catch (error) {
       setStatus({ type: 'error', message: error.message || 'Unable to read selected image.' });
     } finally {
       event.target.value = '';
     }
+  };
+
+  const applyPhotoFit = async () => {
+    if (!photoEditorSource) return;
+    setIsApplyingPhotoFit(true);
+    setStatus({ type: '', message: '' });
+    try {
+      const fitted = await buildFittedAvatarDataUrl(
+        photoEditorSource,
+        photoZoom,
+        photoOffsetX,
+        photoOffsetY,
+      );
+      setProfileAvatarPreview(fitted);
+      setStatus({ type: 'success', message: 'Photo fitted for profile. Save to apply.' });
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Unable to fit profile photo.' });
+    } finally {
+      setIsApplyingPhotoFit(false);
+    }
+  };
+
+  const resetPhotoFit = () => {
+    if (!photoEditorSource) return;
+    setPhotoZoom(1);
+    setPhotoOffsetX(0);
+    setPhotoOffsetY(0);
+    setProfileAvatarPreview(photoEditorSource);
+    setStatus({ type: 'success', message: 'Photo fit reset to original upload.' });
   };
 
   const handleProfileSubmit = async (event) => {
@@ -297,7 +374,7 @@ const ProfilePage = () => {
                     <img
                       src={profileAvatarPreview}
                       alt="Profile"
-                      className="h-full w-full object-contain bg-slate-900/70"
+                      className="h-full w-full object-cover bg-slate-900/70"
                       onError={() => setAvatarLoadFailed(true)}
                     />
                   ) : (
@@ -487,13 +564,91 @@ const ProfilePage = () => {
                       <img
                         src={profileAvatarPreview}
                         alt="Selected profile preview"
-                        className="h-full w-full object-contain"
+                        className="h-full w-full object-cover"
                         onError={(event) => {
                           event.currentTarget.style.display = 'none';
                         }}
                       />
                     </div>
                     <p className="text-xs text-slate-300">Preview matches original photo look.</p>
+                  </div>
+                )}
+                {photoEditorSource && (
+                  <div className="rounded-2xl border border-white/12 bg-slate-900/50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+                      Photo Fit Editor
+                    </p>
+                    <p className="mt-1 text-xs text-slate-400">
+                      Adjust zoom and position, then click Apply Fit.
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-5">
+                      <div className="h-28 w-28 overflow-hidden rounded-full border border-white/20 bg-slate-900">
+                        <img
+                          src={photoEditorSource}
+                          alt="Photo fit editor preview"
+                          className="h-full w-full object-cover"
+                          style={{
+                            transform: `translate(${photoOffsetX * 0.4}%, ${photoOffsetY * 0.4}%) scale(${photoZoom})`,
+                            transformOrigin: 'center',
+                          }}
+                        />
+                      </div>
+                      <div className="min-w-[220px] flex-1 space-y-3">
+                        <label className="block text-xs text-slate-300">
+                          Zoom ({photoZoom.toFixed(2)}x)
+                          <input
+                            type="range"
+                            min="1"
+                            max="3"
+                            step="0.05"
+                            value={photoZoom}
+                            onChange={(event) => setPhotoZoom(Number(event.target.value))}
+                            className="mt-1 w-full"
+                          />
+                        </label>
+                        <label className="block text-xs text-slate-300">
+                          Move Left/Right ({photoOffsetX})
+                          <input
+                            type="range"
+                            min="-100"
+                            max="100"
+                            step="1"
+                            value={photoOffsetX}
+                            onChange={(event) => setPhotoOffsetX(Number(event.target.value))}
+                            className="mt-1 w-full"
+                          />
+                        </label>
+                        <label className="block text-xs text-slate-300">
+                          Move Up/Down ({photoOffsetY})
+                          <input
+                            type="range"
+                            min="-100"
+                            max="100"
+                            step="1"
+                            value={photoOffsetY}
+                            onChange={(event) => setPhotoOffsetY(Number(event.target.value))}
+                            className="mt-1 w-full"
+                          />
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={applyPhotoFit}
+                            disabled={isApplyingPhotoFit}
+                            className="rounded-xl border border-emerald-400/40 bg-emerald-500/15 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+                          >
+                            {isApplyingPhotoFit ? 'Applying...' : 'Apply Fit'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={resetPhotoFit}
+                            className="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                          >
+                            Reset Fit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
                 <div className="flex flex-wrap items-center gap-3">
@@ -504,7 +659,13 @@ const ProfilePage = () => {
                   {profileAvatarPreview && (
                     <button
                       type="button"
-                      onClick={() => setProfileAvatarPreview('')}
+                      onClick={() => {
+                        setProfileAvatarPreview('');
+                        setPhotoEditorSource('');
+                        setPhotoZoom(1);
+                        setPhotoOffsetX(0);
+                        setPhotoOffsetY(0);
+                      }}
                       className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
                     >
                       Remove Photo
