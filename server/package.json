@@ -1,0 +1,23 @@
+{
+  "name": "novaro-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "start:prod": "NODE_ENV=production node index.js",
+    "build:client": "npm --prefix ../clinte run build",
+    "build": "npm run build:client",
+    "migrate:local-to-atlas": "node scripts/migrate-local-to-atlas.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.0",
+    "xlsx": "^0.18.5"
+  }
+}
