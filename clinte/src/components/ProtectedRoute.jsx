@@ -3,8 +3,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoadingState from './LoadingState';
 
-const ProtectedRoute = ({ children, adminOnly = false, employeeOnly = false, loginPath = '/login' }) => {
-  const { loading, isAuthenticated, isAdmin, isEmployee } = useAuth();
+const ProtectedRoute = ({
+  children,
+  adminOnly = false,
+  employeeOnly = false,
+  creatorOnly = false,
+  loginPath = '/login',
+}) => {
+  const { loading, isAuthenticated, isAdmin, isEmployee, isCreator } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -24,6 +30,10 @@ const ProtectedRoute = ({ children, adminOnly = false, employeeOnly = false, log
   }
 
   if (employeeOnly && !isEmployee) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (creatorOnly && !isCreator && !isAdmin) {
     return <Navigate to="/" replace />;
   }
 

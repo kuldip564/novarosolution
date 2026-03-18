@@ -26,6 +26,17 @@ export function isImageDataUrl(value) {
   return /^data:image\/[a-zA-Z0-9.+-]+;base64,/.test(value);
 }
 
+export function isVideoDataUrl(value) {
+  if (typeof value !== 'string') return false;
+  return /^data:video\/[a-zA-Z0-9.+-]+;base64,/.test(value);
+}
+
+export function getDataUrlMediaType(value) {
+  if (isImageDataUrl(value)) return 'image';
+  if (isVideoDataUrl(value)) return 'video';
+  return '';
+}
+
 export async function uploadImageDataUrl(dataUrl, { folder = 'novarosolution/uploads', publicIdPrefix = 'image' } = {}) {
   if (!isImageDataUrl(dataUrl)) {
     throw new Error('Invalid image data URL.');
@@ -39,4 +50,26 @@ export async function uploadImageDataUrl(dataUrl, { folder = 'novarosolution/upl
     resource_type: 'image',
   });
   return result.secure_url;
+}
+
+export async function uploadMediaDataUrl(
+  dataUrl,
+  { folder = 'novarosolution/uploads', publicIdPrefix = 'media' } = {},
+) {
+  const mediaType = getDataUrlMediaType(dataUrl);
+  if (!mediaType) {
+    throw new Error('Invalid media data URL. Upload image or video only.');
+  }
+  ensureConfigured();
+  const publicId = `${publicIdPrefix}-${Date.now()}`;
+  const result = await cloudinary.uploader.upload(dataUrl, {
+    folder,
+    public_id: publicId,
+    overwrite: true,
+    resource_type: mediaType === 'video' ? 'video' : 'image',
+  });
+  return {
+    mediaUrl: result.secure_url,
+    mediaType,
+  };
 }

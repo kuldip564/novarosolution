@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import HomeLayout from '../assets/componet/HomeLayout';
 import LoadingState from '../components/LoadingState';
 import {
+  fetchAdminCreatorContent,
   deleteAdminUser,
   fetchAdminEmployees,
   fetchAdminEmployeeTasks,
@@ -11,6 +12,7 @@ import {
   fetchContactSubmissions,
   fetchServiceAppointments,
   revokeAdminUserSessions,
+  reviewAdminCreatorRequest,
   updateAdminUserRole,
   updateAdminUserStatus,
 } from '../config/api';
@@ -25,6 +27,7 @@ const AdminDashboardPage = () => {
   const [employeeTasks, setEmployeeTasks] = useState([]);
   const [contactSubmissions, setContactSubmissions] = useState([]);
   const [appointments, setAppointments] = useState([]);
+  const [creatorContent, setCreatorContent] = useState([]);
   const [query, setQuery] = useState('');
   const [actionId, setActionId] = useState('');
   const [overview, setOverview] = useState({
@@ -32,6 +35,8 @@ const AdminDashboardPage = () => {
     totalAdmins: 0,
     totalMembers: 0,
     totalEmployees: 0,
+    totalCreators: 0,
+    pendingCreatorRequests: 0,
     totalSubmissions: 0,
     totalAppointments: 0,
   });
@@ -41,13 +46,14 @@ const AdminDashboardPage = () => {
 
     async function loadOverview() {
       try {
-        const [overviewData, userRows, employeeRows, taskRows, submissionRows, appointmentRows] = await Promise.all([
+        const [overviewData, userRows, employeeRows, taskRows, submissionRows, appointmentRows, creatorRows] = await Promise.all([
           fetchAdminOverview(token),
           fetchAdminUsers(token),
           fetchAdminEmployees(token),
           fetchAdminEmployeeTasks(token),
           fetchContactSubmissions(token),
           fetchServiceAppointments(token),
+          fetchAdminCreatorContent(token),
         ]);
         if (!active) return;
         setOverview({
@@ -55,6 +61,8 @@ const AdminDashboardPage = () => {
           totalAdmins: overviewData?.totalAdmins || 0,
           totalMembers: overviewData?.totalMembers || 0,
           totalEmployees: overviewData?.totalEmployees || 0,
+          totalCreators: overviewData?.totalCreators || 0,
+          pendingCreatorRequests: overviewData?.pendingCreatorRequests || 0,
           totalSubmissions: overviewData?.totalSubmissions || 0,
           totalAppointments: overviewData?.totalAppointments || 0,
         });
@@ -63,6 +71,7 @@ const AdminDashboardPage = () => {
         setEmployeeTasks(taskRows || []);
         setContactSubmissions(submissionRows || []);
         setAppointments(appointmentRows || []);
+        setCreatorContent(creatorRows || []);
       } catch (err) {
         if (!active) return;
         setError(err.message || 'Unable to load dashboard.');
@@ -92,12 +101,13 @@ const AdminDashboardPage = () => {
       (acc, user) => {
         if (user.role === 'admin') acc.admin += 1;
         else if (user.role === 'employee') acc.employee += 1;
+        else if (user.role === 'creator') acc.creator += 1;
         else acc.user += 1;
         if (user.isActive) acc.active += 1;
         else acc.inactive += 1;
         return acc;
       },
-      { admin: 0, employee: 0, user: 0, active: 0, inactive: 0 },
+      { admin: 0, employee: 0, creator: 0, user: 0, active: 0, inactive: 0 },
     );
 
     const taskStatus = employeeTasks.reduce(
@@ -132,6 +142,19 @@ const AdminDashboardPage = () => {
   const reloadUsers = async () => {
     const rows = await fetchAdminUsers(token);
     setUsers(rows || []);
+  };
+
+  const handleCreatorRequestReview = async (user, action) => {
+    setActionId(`creator-${action}-${user.id}`);
+    setError('');
+    try {
+      await reviewAdminCreatorRequest(user.id, action, token);
+      await reloadUsers();
+    } catch (err) {
+      setError(err.message || 'Unable to review creator request.');
+    } finally {
+      setActionId('');
+    }
   };
 
   const handleRole = async (user, role) => {
@@ -193,6 +216,8 @@ const AdminDashboardPage = () => {
     { label: 'Total Admins', value: overview.totalAdmins },
     { label: 'Total Members', value: overview.totalMembers },
     { label: 'Total Employees', value: overview.totalEmployees },
+    { label: 'Total Creators', value: overview.totalCreators },
+    { label: 'Creator Requests', value: overview.pendingCreatorRequests },
     { label: 'Contact Requests', value: overview.totalSubmissions },
     { label: 'Appointments', value: overview.totalAppointments },
   ];
@@ -256,7 +281,7 @@ const AdminDashboardPage = () => {
             <p className="mt-8 text-sm text-red-400">{error}</p>
           ) : (
             <>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-8">
                 {cards.map((item) => (
                   <div key={item.label} className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
                     <p className="text-xs uppercase tracking-wide text-slate-400">{item.label}</p>
@@ -271,8 +296,8 @@ const AdminDashboardPage = () => {
                   <div className="rounded-xl border border-white/10 bg-slate-950/60 p-3">
                     <p className="text-xs uppercase tracking-wide text-slate-400">User Roles</p>
                     <p className="mt-1 text-sm text-slate-300">
-                      Admin: {analytics.roleCounts.admin} | Employee: {analytics.roleCounts.employee} | User:{' '}
-                      {analytics.roleCounts.user}
+                      Admin: {analytics.roleCounts.admin} | Employee: {analytics.roleCounts.employee} | Creator:{' '}
+                      {analytics.roleCounts.creator} | User: {analytics.roleCounts.user}
                     </p>
                     <p className="text-xs text-slate-500">
                       Active: {analytics.roleCounts.active} | Disabled: {analytics.roleCounts.inactive}
@@ -308,6 +333,10 @@ const AdminDashboardPage = () => {
                     )}
                   </div>
                 </div>
+                <div className="mt-4 rounded-xl border border-white/10 bg-slate-950/60 p-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-400">Creator Uploads</p>
+                  <p className="mt-1 text-sm text-slate-300">Total uploads: {creatorContent.length}</p>
+                </div>
               </div>
 
               <div className="mt-8 rounded-2xl border border-white/10 bg-slate-900/50 p-4">
@@ -327,6 +356,7 @@ const AdminDashboardPage = () => {
                         <th className="px-2 py-2">Name</th>
                         <th className="px-2 py-2">Email</th>
                         <th className="px-2 py-2">Role</th>
+                        <th className="px-2 py-2">Creator Request</th>
                         <th className="px-2 py-2">Status</th>
                         <th className="px-2 py-2 text-right">Actions</th>
                       </tr>
@@ -337,6 +367,16 @@ const AdminDashboardPage = () => {
                           <td className="px-2 py-2 text-slate-100">{user.name}</td>
                           <td className="px-2 py-2 text-slate-300">{user.email}</td>
                           <td className="px-2 py-2 text-slate-300">{user.role}</td>
+                          <td className="px-2 py-2 text-slate-300">
+                            <div className="flex flex-col gap-1">
+                              <span>{user.creatorRequestStatus || 'none'}</span>
+                              {user.creatorRequestMessage ? (
+                                <span className="text-xs text-slate-500">
+                                  {String(user.creatorRequestMessage).slice(0, 60)}
+                                </span>
+                              ) : null}
+                            </div>
+                          </td>
                           <td className="px-2 py-2">
                             <span
                               className={`rounded-full px-2 py-1 text-xs ${
@@ -374,6 +414,34 @@ const AdminDashboardPage = () => {
                               >
                                 Employee
                               </button>
+                              <button
+                                type="button"
+                                disabled={actionId === `role-${user.id}`}
+                                onClick={() => handleRole(user, 'creator')}
+                                className="rounded-lg border border-fuchsia-400/35 bg-fuchsia-500/10 px-2 py-1 text-xs text-fuchsia-200 disabled:opacity-50"
+                              >
+                                Creator
+                              </button>
+                              {user.creatorRequestStatus === 'pending' && (
+                                <>
+                                  <button
+                                    type="button"
+                                    disabled={actionId === `creator-approve-${user.id}`}
+                                    onClick={() => handleCreatorRequestReview(user, 'approve')}
+                                    className="rounded-lg border border-lime-400/35 bg-lime-500/10 px-2 py-1 text-xs text-lime-200 disabled:opacity-50"
+                                  >
+                                    Approve Creator
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={actionId === `creator-reject-${user.id}`}
+                                    onClick={() => handleCreatorRequestReview(user, 'reject')}
+                                    className="rounded-lg border border-orange-400/35 bg-orange-500/10 px-2 py-1 text-xs text-orange-200 disabled:opacity-50"
+                                  >
+                                    Reject Creator
+                                  </button>
+                                </>
+                              )}
                               <button
                                 type="button"
                                 disabled={actionId === `status-${user.id}`}

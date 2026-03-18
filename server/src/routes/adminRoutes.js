@@ -11,6 +11,7 @@ import {
   patchAdminEmployee,
   patchAdminEmployeeTask,
   patchAdminUserRole,
+  patchAdminUserCreatorRequest,
   patchAdminUserStatus,
   postAdminEmployee,
   postAdminEmployeeTask,
@@ -37,6 +38,7 @@ adminRoutes.post('/admin/employee-tasks', requireAuth, requireAdmin, postAdminEm
 adminRoutes.patch('/admin/employee-tasks/:taskId', requireAuth, requireAdmin, patchAdminEmployeeTask);
 adminRoutes.delete('/admin/employee-tasks/:taskId', requireAuth, requireAdmin, deleteAdminEmployeeTask);
 adminRoutes.patch('/admin/users/:userId/role', requireAuth, requireAdmin, patchAdminUserRole);
+adminRoutes.patch('/admin/users/:userId/creator-request', requireAuth, requireAdmin, patchAdminUserCreatorRequest);
 adminRoutes.patch('/admin/users/:userId/status', requireAuth, requireAdmin, patchAdminUserStatus);
 adminRoutes.post(
   '/admin/users/:userId/revoke-session',

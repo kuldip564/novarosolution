@@ -31,15 +31,18 @@ import {
 
 export async function getAdminOverview(req, res) {
   try {
-    const [totalUsers, totalAdmins, totalMembers, totalEmployees, totalSubmissions, totalAppointments] =
+    const [totalUsers, totalAdmins, totalMembers, totalEmployees, totalCreators, totalSubmissions, totalAppointments, users] =
       await Promise.all([
       countUsers(),
       countUsersByRole('admin'),
       countUsersByRole('user'),
         countUsersByRole('employee'),
+      countUsersByRole('creator'),
       countContactSubmissions(),
       countServiceAppointments(),
+      listUsers(),
     ]);
+    const pendingCreatorRequests = users.filter((item) => item.creatorRequestStatus === 'pending').length;
 
     return res.status(200).json({
       ok: true,
@@ -48,6 +51,8 @@ export async function getAdminOverview(req, res) {
         totalAdmins,
         totalMembers,
         totalEmployees,
+        totalCreators,
+        pendingCreatorRequests,
         totalSubmissions,
         totalAppointments,
       },
@@ -405,8 +410,8 @@ export async function patchAdminUserRole(req, res) {
   try {
     const { userId } = req.params;
     const { role } = req.body ?? {};
-    if (!role || !['admin', 'user', 'employee'].includes(String(role))) {
-      return res.status(400).json({ ok: false, message: 'Valid role is required (admin, user, or employee).' });
+    if (!role || !['admin', 'user', 'employee', 'creator'].includes(String(role))) {
+      return res.status(400).json({ ok: false, message: 'Valid role is required (admin, user, employee, or creator).' });
     }
 
     const targetUser = await findUserById(userId);
@@ -423,7 +428,18 @@ export async function patchAdminUserRole(req, res) {
       }
     }
 
-    const updated = await updateUserById(userId, { role: nextRole });
+    const updates = { role: nextRole };
+    if (nextRole === 'creator') {
+      updates.creatorRequestStatus = 'approved';
+      updates.creatorReviewedAt = new Date();
+      updates.creatorReviewedById = req.auth.userId;
+    }
+    if (nextRole !== 'creator' && targetUser.creatorRequestStatus === 'pending') {
+      updates.creatorRequestStatus = 'rejected';
+      updates.creatorReviewedAt = new Date();
+      updates.creatorReviewedById = req.auth.userId;
+    }
+    const updated = await updateUserById(userId, updates);
     if (!updated) return res.status(404).json({ ok: false, message: 'User not found.' });
 
     if (nextRole === 'employee') {
@@ -454,6 +470,10 @@ export async function patchAdminUserRole(req, res) {
         name: updated.name,
         email: updated.email,
         role: updated.role,
+        creatorRequestStatus: updated.creatorRequestStatus || 'none',
+        creatorRequestMessage: updated.creatorRequestMessage || '',
+        creatorRequestedAt: updated.creatorRequestedAt || null,
+        creatorReviewedAt: updated.creatorReviewedAt || null,
         isActive: updated.isActive !== false,
         createdAt: updated.createdAt,
       },
@@ -520,5 +540,54 @@ export async function deleteAdminUser(req, res) {
     return res.status(200).json({ ok: true, message: 'User deleted successfully.' });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to delete user.', error: error.message });
+  }
+}
+
+export async function patchAdminUserCreatorRequest(req, res) {
+  try {
+    const { userId } = req.params;
+    const { action } = req.body ?? {};
+    const normalizedAction = String(action || '').toLowerCase();
+    if (!['approve', 'reject'].includes(normalizedAction)) {
+      return res.status(400).json({ ok: false, message: 'Action must be approve or reject.' });
+    }
+
+    const targetUser = await findUserById(userId);
+    if (!targetUser) return res.status(404).json({ ok: false, message: 'User not found.' });
+    if (targetUser.creatorRequestStatus !== 'pending') {
+      return res.status(400).json({ ok: false, message: 'No pending creator request for this user.' });
+    }
+
+    const updates =
+      normalizedAction === 'approve'
+        ? {
+            role: 'creator',
+            creatorRequestStatus: 'approved',
+            creatorReviewedAt: new Date(),
+            creatorReviewedById: req.auth.userId,
+          }
+        : {
+            creatorRequestStatus: 'rejected',
+            creatorReviewedAt: new Date(),
+            creatorReviewedById: req.auth.userId,
+          };
+
+    const updated = await updateUserById(userId, updates);
+    if (!updated) return res.status(404).json({ ok: false, message: 'User not found.' });
+
+    return res.status(200).json({
+      ok: true,
+      message:
+        normalizedAction === 'approve'
+          ? 'Creator request approved and role granted.'
+          : 'Creator request rejected.',
+      data: updated,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: 'Unable to process creator request.',
+      error: error.message,
+    });
   }
 }

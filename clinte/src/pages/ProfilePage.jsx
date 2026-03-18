@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaUserCircle, FaCrown, FaSyncAlt, FaCopy, FaChartLine } from 'react-icons/fa';
 import { MdEmail, MdDateRange, MdSecurity, MdOutlineTrackChanges } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { fetchMyProjectMessages } from '../config/api';
+import { fetchMyProjectMessages, requestCreatorAccess } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import HomeLayout from '../assets/componet/HomeLayout';
 import usePageReveal from '../hooks/usePageReveal';
@@ -52,7 +52,7 @@ async function buildFittedAvatarDataUrl(sourceDataUrl, zoom = 1, offsetX = 0, of
 }
 
 const ProfilePage = () => {
-  const { user, token, isAdmin, isEmployee, updateProfile, changePassword, logout } = useAuth();
+  const { user, token, isAdmin, isEmployee, isCreator, updateProfile, changePassword, logout } = useAuth();
   const pageRef = usePageReveal();
   const [profileForm, setProfileForm] = useState({
     name: user?.name || '',
@@ -361,6 +361,29 @@ const ProfilePage = () => {
     setStatus({ type: 'success', message: 'Profile data downloaded.' });
   };
 
+  const handleRequestCreatorAccess = async () => {
+    setStatus({ type: '', message: '' });
+    try {
+      const updatedUser = await requestCreatorAccess(
+        {
+          message:
+            'I want to upload social content (photo/video) for platforms like Twitter, Facebook, and Instagram.',
+        },
+        token,
+      );
+      setStatus({
+        type: 'success',
+        message:
+          updatedUser?.creatorRequestStatus === 'pending'
+            ? 'Creator access request sent to admin.'
+            : 'Creator request updated.',
+      });
+      await updateProfile({});
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Unable to request creator access.' });
+    }
+  };
+
   return (
     <HomeLayout>
       <main ref={pageRef} className="app-page-shell w-full min-h-screen text-white px-4 py-16 md:py-20">
@@ -458,6 +481,15 @@ const ProfilePage = () => {
                   Open Daily Tasks
                 </Link>
               )}
+              {isCreator && (
+                <Link
+                  to="/creator/studio"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                >
+                  <MdOutlineTrackChanges />
+                  Open Creator Studio
+                </Link>
+              )}
               {isAdmin && (
                 <Link
                   to="/admin/dashboard"
@@ -502,7 +534,34 @@ const ProfilePage = () => {
               <li>• Use a strong password and change it regularly.</li>
               <li>• Track your project conversation status in one place.</li>
               <li>• Reset profile form anytime before saving changes.</li>
+              <li>• Request creator access to upload photo/video social content.</li>
             </ul>
+            <div className="mt-4 rounded-xl border border-white/12 bg-slate-900/60 p-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Creator Access</p>
+              <p className="mt-1 text-xs text-slate-400">
+                Status: <span className="text-slate-200">{user?.creatorRequestStatus || 'none'}</span>
+              </p>
+              {!isCreator && user?.creatorRequestStatus !== 'pending' && (
+                <button
+                  type="button"
+                  onClick={handleRequestCreatorAccess}
+                  className="mt-3 rounded-xl border border-pink-400/40 bg-pink-500/15 px-3 py-2 text-xs font-semibold text-pink-100 hover:bg-pink-500/25"
+                >
+                  Request Creator Role
+                </button>
+              )}
+              {!isCreator && user?.creatorRequestStatus === 'pending' && (
+                <p className="mt-2 text-xs text-amber-300">Request pending admin approval.</p>
+              )}
+              {isCreator && (
+                <Link
+                  to="/creator/studio"
+                  className="mt-3 inline-flex items-center rounded-xl border border-emerald-400/40 bg-emerald-500/15 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/25"
+                >
+                  Go to Creator Studio
+                </Link>
+              )}
+            </div>
             <div className="mt-5 flex flex-wrap gap-2">
               <button
                 type="button"

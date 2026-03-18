@@ -76,3 +76,13 @@ export function requireEmployee(req, res, next) {
   return next();
 }
 
+export function requireCreator(req, res, next) {
+  if (req.auth?.role !== 'creator' && req.auth?.role !== 'admin') {
+    return res.status(403).json({
+      ok: false,
+      message: 'Forbidden. Creator access required.',
+    });
+  }
+  return next();
+}
+

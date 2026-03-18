@@ -146,6 +146,18 @@ export async function changePassword(payload, token) {
   });
 }
 
+export async function requestCreatorAccess(payload, token) {
+  const data = await request('/api/auth/creator-request', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
+    },
+    body: JSON.stringify(payload || {}),
+  });
+  return data.data;
+}
+
 export async function fetchAdminOverview(token) {
   const data = await request('/api/admin/overview', {
     headers: {
@@ -358,6 +370,18 @@ export async function updateAdminUserRole(userId, role, token) {
   return data.data;
 }
 
+export async function reviewAdminCreatorRequest(userId, action, token) {
+  const data = await request(`/api/admin/users/${userId}/creator-request`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
+    },
+    body: JSON.stringify({ action }),
+  });
+  return data.data;
+}
+
 export async function deleteAdminUser(userId, token) {
   return request(`/api/admin/users/${userId}`, {
     method: 'DELETE',
@@ -475,5 +499,35 @@ export async function deleteAdminChatThread(userId, token) {
       ...getAuthHeaders(token),
     },
   });
+}
+
+export async function fetchMyCreatorContent(token) {
+  const data = await request('/api/creator/content', {
+    headers: {
+      ...getAuthHeaders(token),
+    },
+  });
+  return data.data;
+}
+
+export async function createMyCreatorContent(payload, token) {
+  const data = await request('/api/creator/content', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(token),
+    },
+    body: JSON.stringify(payload),
+  });
+  return data.data;
+}
+
+export async function fetchAdminCreatorContent(token) {
+  const data = await request('/api/admin/creator-content', {
+    headers: {
+      ...getAuthHeaders(token),
+    },
+  });
+  return data.data;
 }
 

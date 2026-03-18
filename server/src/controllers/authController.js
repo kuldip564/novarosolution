@@ -2,6 +2,7 @@ import {
   changePassword,
   getUserById,
   loginUser,
+  requestCreatorAccess,
   registerUser,
   updateProfile,
 } from '../services/authService.js';
@@ -153,6 +154,23 @@ export async function updateMyPassword(req, res) {
     return res.status(400).json({
       ok: false,
       message: error.message || 'Unable to change password.',
+    });
+  }
+}
+
+export async function requestMyCreatorAccess(req, res) {
+  try {
+    const { message } = req.body ?? {};
+    const updatedUser = await requestCreatorAccess(req.auth.userId, { message });
+    return res.status(200).json({
+      ok: true,
+      message: 'Creator access request sent to admin successfully.',
+      data: updatedUser,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      message: error.message || 'Unable to request creator access.',
     });
   }
 }

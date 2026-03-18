@@ -8,7 +8,7 @@ import { useTheme } from '../../context/ThemeContext'
 import { gsap } from 'gsap'
 
 const HomeLayout = ({ children }) => {
-  const { isAuthenticated, isAdmin, isEmployee, logout } = useAuth()
+  const { isAuthenticated, isAdmin, isEmployee, isCreator, logout } = useAuth()
   const { isDark, toggleTheme } = useTheme()
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -282,6 +282,11 @@ const HomeLayout = ({ children }) => {
                   Daily Tasks
                 </Link>
               )}
+              {isCreator && (
+                <Link to="/creator/studio" className={navLinkClass('/creator/studio')}>
+                  Creator Studio
+                </Link>
+              )}
               <Link to="/project-chat" className={navLinkClass('/project-chat')}>
                 Project Chat
               </Link>
@@ -359,6 +364,15 @@ const HomeLayout = ({ children }) => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Daily Tasks
+                  </Link>
+                )}
+                {isCreator && (
+                  <Link
+                    to="/creator/studio"
+                    className={`app-link-hover px-4 py-2 rounded-md transition-colors duration-300 ${isActiveRoute('/creator/studio') ? 'app-link-active' : ''}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Creator Studio
                   </Link>
                 )}
                 <Link 

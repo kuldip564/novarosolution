@@ -17,6 +17,10 @@ function sanitizeUser(user) {
     email: user.email,
     avatarUrl: user.avatarUrl || '',
     role: user.role,
+    creatorRequestStatus: user.creatorRequestStatus || 'none',
+    creatorRequestMessage: user.creatorRequestMessage || '',
+    creatorRequestedAt: user.creatorRequestedAt || null,
+    creatorReviewedAt: user.creatorReviewedAt || null,
     isActive: user.isActive !== false,
     createdAt: user.createdAt,
   };
@@ -142,6 +146,34 @@ export async function changePassword(userId, { currentPassword, newPassword }) {
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   const updatedUser = await updateUserById(userId, { password: hashedPassword });
+  if (!updatedUser) {
+    throw new Error('User not found.');
+  }
+  return sanitizeUser(updatedUser);
+}
+
+export async function requestCreatorAccess(userId, { message = '' } = {}) {
+  const existingUser = await findUserById(userId);
+  if (!existingUser) {
+    throw new Error('User not found.');
+  }
+  if (existingUser.role === 'admin') {
+    throw new Error('Admin already has elevated access.');
+  }
+  if (existingUser.role === 'creator') {
+    throw new Error('You are already a creator.');
+  }
+  if (existingUser.creatorRequestStatus === 'pending') {
+    throw new Error('Creator access request is already pending admin approval.');
+  }
+
+  const updatedUser = await updateUserById(userId, {
+    creatorRequestStatus: 'pending',
+    creatorRequestMessage: String(message || '').trim(),
+    creatorRequestedAt: new Date(),
+    creatorReviewedAt: null,
+    creatorReviewedById: '',
+  });
   if (!updatedUser) {
     throw new Error('User not found.');
   }

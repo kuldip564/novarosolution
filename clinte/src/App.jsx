@@ -22,6 +22,7 @@ import ProjectChatPage from './pages/ProjectChatPage'
 import AdminProjectChatsPage from './pages/AdminProjectChatsPage'
 import AdminSettingsPage from './pages/AdminSettingsPage'
 import EmployeeTasksPage from './pages/EmployeeTasksPage'
+import CreatorStudioPage from './pages/CreatorStudioPage'
 import CustomCursor from './components/CustomCursor'
 import useRouteTransition from './hooks/useRouteTransition'
 
@@ -127,6 +128,14 @@ function App() {
             element={
               <ProtectedRoute employeeOnly>
                 <EmployeeTasksPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/studio"
+            element={
+              <ProtectedRoute creatorOnly>
+                <CreatorStudioPage />
               </ProtectedRoute>
             }
           />
