@@ -107,8 +107,13 @@ export async function me(req, res) {
 
 export async function updateMyProfile(req, res) {
   try {
-    const { name, email } = req.body ?? {};
-    const updatedUser = await updateProfile(req.auth.userId, { name, email });
+    const { name, email, avatarUrl, avatarDataUrl } = req.body ?? {};
+    const updatedUser = await updateProfile(req.auth.userId, {
+      name,
+      email,
+      avatarUrl,
+      avatarDataUrl,
+    });
     return res.status(200).json({
       ok: true,
       message: 'Profile updated successfully.',

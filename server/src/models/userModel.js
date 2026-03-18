@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
+    avatarUrl: { type: String, default: '' },
     role: { type: String, enum: ['admin', 'user', 'employee'], default: 'user' },
     tokenVersion: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
@@ -36,6 +37,7 @@ export async function findUserByEmail(email) {
     name: user.name,
     email: user.email,
     password: user.password,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     tokenVersion: Number(user.tokenVersion || 0),
     isActive: user.isActive !== false,
@@ -51,6 +53,7 @@ export async function findUserByName(name) {
     name: user.name,
     email: user.email,
     password: user.password,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     tokenVersion: Number(user.tokenVersion || 0),
     isActive: user.isActive !== false,
@@ -67,6 +70,7 @@ export async function findUserById(userId) {
     name: user.name,
     email: user.email,
     password: user.password,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     tokenVersion: Number(user.tokenVersion || 0),
     isActive: user.isActive !== false,
@@ -74,12 +78,13 @@ export async function findUserById(userId) {
   };
 }
 
-export async function createUser({ name, email, password, role }) {
+export async function createUser({ name, email, password, role, avatarUrl = '' }) {
   const user = await User.create({
     name,
     email,
     password,
     role,
+    avatarUrl,
   });
 
   return {
@@ -87,6 +92,7 @@ export async function createUser({ name, email, password, role }) {
     name: user.name,
     email: user.email,
     password: user.password,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     tokenVersion: Number(user.tokenVersion || 0),
     isActive: user.isActive !== false,
@@ -108,6 +114,7 @@ export async function updateUserById(userId, updates) {
     name: user.name,
     email: user.email,
     password: user.password,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     tokenVersion: Number(user.tokenVersion || 0),
     isActive: user.isActive !== false,
@@ -127,6 +134,7 @@ export async function incrementUserTokenVersionById(userId) {
     id: String(user._id),
     name: user.name,
     email: user.email,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     tokenVersion: Number(user.tokenVersion || 0),
     isActive: user.isActive !== false,
@@ -142,6 +150,7 @@ export async function deleteUserById(userId) {
     id: String(user._id),
     name: user.name,
     email: user.email,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     createdAt: user.createdAt,
   };
@@ -153,6 +162,7 @@ export async function listUsers() {
     id: String(user._id),
     name: user.name,
     email: user.email,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     isActive: user.isActive !== false,
     createdAt: user.createdAt,

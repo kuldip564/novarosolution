@@ -7,6 +7,15 @@ import { useAuth } from '../context/AuthContext';
 import HomeLayout from '../assets/componet/HomeLayout';
 import usePageReveal from '../hooks/usePageReveal';
 
+async function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Failed to read image file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 const ProfilePage = () => {
   const { user, token, isAdmin, updateProfile, changePassword, logout } = useAuth();
   const pageRef = usePageReveal();
@@ -29,6 +38,7 @@ const ProfilePage = () => {
   const [activityError, setActivityError] = useState('');
   const [projectMessages, setProjectMessages] = useState([]);
   const [lastSyncedAt, setLastSyncedAt] = useState('');
+  const [profileAvatarPreview, setProfileAvatarPreview] = useState(user?.avatarUrl || '');
 
   const joinedDate = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString()
@@ -49,6 +59,10 @@ const ProfilePage = () => {
       email: user?.email || '',
     });
   }, [user?.name, user?.email]);
+
+  useEffect(() => {
+    setProfileAvatarPreview(user?.avatarUrl || '');
+  }, [user?.avatarUrl]);
 
   useEffect(() => {
     let isMounted = true;
@@ -131,6 +145,28 @@ const ProfilePage = () => {
     setPasswordForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const onProfilePhotoChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!String(file.type || '').startsWith('image/')) {
+      setStatus({ type: 'error', message: 'Please select a valid image file.' });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setStatus({ type: 'error', message: 'Image must be 5MB or smaller.' });
+      return;
+    }
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setProfileAvatarPreview(dataUrl);
+      setStatus({ type: 'success', message: 'Profile photo selected. Click Save Changes.' });
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Unable to read selected image.' });
+    } finally {
+      event.target.value = '';
+    }
+  };
+
   const handleProfileSubmit = async (event) => {
     event.preventDefault();
     setStatus({ type: '', message: '' });
@@ -139,6 +175,10 @@ const ProfilePage = () => {
       await updateProfile({
         name: profileForm.name,
         email: profileForm.email,
+        avatarDataUrl: profileAvatarPreview.startsWith('data:image/')
+          ? profileAvatarPreview
+          : undefined,
+        avatarUrl: !profileAvatarPreview.startsWith('data:image/') ? profileAvatarPreview : undefined,
       });
       setStatus({ type: 'success', message: 'Profile updated successfully.' });
     } catch (error) {
@@ -181,6 +221,7 @@ const ProfilePage = () => {
       name: user?.name || '',
       email: user?.email || '',
     });
+    setProfileAvatarPreview(user?.avatarUrl || '');
     setStatus({ type: 'success', message: 'Profile form reset to current account values.' });
   };
 
@@ -201,7 +242,15 @@ const ProfilePage = () => {
             <div className="absolute -top-20 -right-20 h-56 w-56 rounded-full bg-linear-to-br from-purple-500/20 via-pink-500/20 to-red-500/20 blur-3xl" />
             <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
               <div className="relative">
-                <FaUserCircle className="text-7xl md:text-8xl text-white/90" />
+                {profileAvatarPreview ? (
+                  <img
+                    src={profileAvatarPreview}
+                    alt="Profile"
+                    className="h-24 w-24 rounded-2xl border border-white/20 object-cover md:h-28 md:w-28"
+                  />
+                ) : (
+                  <FaUserCircle className="text-7xl md:text-8xl text-white/90" />
+                )}
                 {isAdmin && (
                   <span className="absolute -right-1 -bottom-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-slate-950">
                     <FaCrown className="text-sm" />
@@ -330,6 +379,24 @@ const ProfilePage = () => {
                   onChange={onProfileChange}
                   className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none focus:border-pink-500"
                 />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm text-slate-300">Profile Photo</label>
+                <div className="flex flex-wrap items-center gap-3">
+                  <label className="inline-flex cursor-pointer items-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
+                    Upload Photo
+                    <input type="file" accept="image/*" className="hidden" onChange={onProfilePhotoChange} />
+                  </label>
+                  {profileAvatarPreview && (
+                    <button
+                      type="button"
+                      onClick={() => setProfileAvatarPreview('')}
+                      className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                    >
+                      Remove Photo
+                    </button>
+                  )}
+                </div>
               </div>
               {status.message && (
                 <p className={`text-sm ${status.type === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>

@@ -11,6 +11,10 @@ export const DEFAULT_ADMIN_ENABLED =
 export const DEFAULT_ADMIN_NAME = process.env.DEFAULT_ADMIN_NAME || '';
 export const DEFAULT_ADMIN_EMAIL = process.env.DEFAULT_ADMIN_EMAIL || '';
 export const DEFAULT_ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD || '';
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || '';
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || '';
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET || '';
+export const CLOUDINARY_URL = process.env.CLOUDINARY_URL || '';
 
 function isWeakJwtSecret(value) {
   const text = String(value || '');

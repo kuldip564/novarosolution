@@ -5,6 +5,13 @@ import LoadingState from '../components/LoadingState';
 import useSiteContent from '../hooks/useSiteContent';
 import usePageReveal from '../hooks/usePageReveal';
 
+const isImageAvatar = (avatar) =>
+  typeof avatar === 'string' &&
+  (avatar.startsWith('http://') ||
+    avatar.startsWith('https://') ||
+    avatar.startsWith('data:image/') ||
+    avatar.startsWith('/'));
+
 const AboutPage = () => {
   const { data, loading, error } = useSiteContent();
   const about = data?.aboutPage;
@@ -125,7 +132,15 @@ const AboutPage = () => {
                 </p>
                 <div className="relative z-10 mt-5 grid gap-5 md:grid-cols-[auto_1fr]">
                   <div className="about-owner-avatar inline-flex h-18 w-18 items-center justify-center rounded-2xl border border-white/12 bg-linear-to-r from-red-500/35 via-pink-500/35 to-purple-500/35 text-4xl shadow-[0_10px_30px_rgba(236,72,153,0.28)]">
-                    {item.avatar || '👨‍💼'}
+                    {isImageAvatar(item.avatar) ? (
+                      <img
+                        src={item.avatar}
+                        alt={item.name || 'Owner'}
+                        className="h-full w-full rounded-2xl object-cover"
+                      />
+                    ) : (
+                      item.avatar || '👨‍💼'
+                    )}
                   </div>
                   <div className="flex-1">
                     <h3 className="about-owner-name text-2xl font-semibold text-slate-100">

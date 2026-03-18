@@ -33,13 +33,13 @@ export async function getAdminOverview(req, res) {
   try {
     const [totalUsers, totalAdmins, totalMembers, totalEmployees, totalSubmissions, totalAppointments] =
       await Promise.all([
-        countUsers(),
-        countUsersByRole('admin'),
-        countUsersByRole('user'),
+      countUsers(),
+      countUsersByRole('admin'),
+      countUsersByRole('user'),
         countUsersByRole('employee'),
-        countContactSubmissions(),
-        countServiceAppointments(),
-      ]);
+      countContactSubmissions(),
+      countServiceAppointments(),
+    ]);
 
     return res.status(200).json({
       ok: true,

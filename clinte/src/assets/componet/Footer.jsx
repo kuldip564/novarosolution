@@ -21,9 +21,12 @@ const Footer = () => {
       <div className="app-footer-card footer-premium w-full max-w-[1260px] rounded-3xl px-6 py-10 backdrop-blur-2xl md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-3">
-            <h2 className="text-xl font-bold tracking-wide bg-linear-to-r from-white to-slate-300 bg-clip-text text-transparent">
-              NovaRoSolution
-            </h2>
+            <img
+              src="/site-logo.jpg"
+              alt="NovaRo Solution logo"
+              className="h-14 w-auto rounded-lg bg-white/90 p-1 shadow-[0_8px_20px_rgba(0,0,0,0.28)]"
+              loading="lazy"
+            />
             <p className="text-gray-300 max-w-[280px] leading-relaxed">
               Building modern digital solutions and powerful web experiences.
             </p>

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { createAuthToken } from '../utils/token.js';
+import { isImageDataUrl, uploadImageDataUrl } from './cloudinaryService.js';
 import {
   countUsers,
   createUser,
@@ -14,6 +15,7 @@ function sanitizeUser(user) {
     id: user.id,
     name: user.name,
     email: user.email,
+    avatarUrl: user.avatarUrl || '',
     role: user.role,
     isActive: user.isActive !== false,
     createdAt: user.createdAt,
@@ -84,7 +86,7 @@ export async function getUserById(userId) {
   return user ? sanitizeUser(user) : null;
 }
 
-export async function updateProfile(userId, { name, email }) {
+export async function updateProfile(userId, { name, email, avatarUrl, avatarDataUrl }) {
   const existingUser = await findUserById(userId);
   if (!existingUser) {
     throw new Error('User not found.');
@@ -102,6 +104,18 @@ export async function updateProfile(userId, { name, email }) {
       throw new Error('Email already in use.');
     }
     updates.email = normalizedEmail;
+  }
+
+  if (typeof avatarDataUrl === 'string' && avatarDataUrl.trim()) {
+    if (!isImageDataUrl(avatarDataUrl)) {
+      throw new Error('Invalid profile image format.');
+    }
+    updates.avatarUrl = await uploadImageDataUrl(avatarDataUrl, {
+      folder: 'novarosolution/profile-photos',
+      publicIdPrefix: `user-${userId}`,
+    });
+  } else if (typeof avatarUrl === 'string') {
+    updates.avatarUrl = avatarUrl.trim();
   }
 
   if (!Object.keys(updates).length) {

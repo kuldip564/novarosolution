@@ -7,6 +7,15 @@ import { fetchSiteContent, updateSiteContent } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import usePageReveal from '../hooks/usePageReveal';
 
+async function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Failed to read image file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 const AdminContentManagerPage = () => {
   const { token } = useAuth();
   const pageRef = usePageReveal();
@@ -271,6 +280,31 @@ const AdminContentManagerPage = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleOwnerAvatarUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!String(file.type || '').startsWith('image/')) {
+      setStatus({ type: 'error', message: 'Please upload a valid image file for owner avatar.' });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setStatus({ type: 'error', message: 'Owner avatar image must be 5MB or smaller.' });
+      return;
+    }
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setForm((prev) => ({ ...prev, ownerAvatar: dataUrl }));
+      setStatus({
+        type: 'success',
+        message: 'Owner image selected. Click Update Owner, then Save Website Content.',
+      });
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Unable to read owner image file.' });
+    } finally {
+      event.target.value = '';
+    }
+  };
+
   const editorOptions = [
     { id: 'all', label: 'All Data' },
     { id: 'team', label: 'Team Owner' },
@@ -529,10 +563,20 @@ const AdminContentManagerPage = () => {
       };
 
       const updatedContent = await updateSiteContent(payload, token);
+      const persistedOwners =
+        Array.isArray(updatedContent?.teamSection?.ownerList) && updatedContent.teamSection.ownerList.length
+          ? updatedContent.teamSection.ownerList.map(normalizeOwner)
+          : [normalizeOwner(updatedContent?.teamSection?.owner || {})];
+      const persistedForm = toFormValues(updatedContent);
       setSiteContent(updatedContent);
-      setOwnerProfiles(resolvedOwners);
-      setSavedSnapshot(JSON.stringify(form));
-      setSavedOwnerProfilesSnapshot(JSON.stringify(resolvedOwners));
+      setForm(persistedForm);
+      setOwnerProfiles(persistedOwners);
+      const safeIndex =
+        selectedOwnerIndex >= 0 && selectedOwnerIndex < persistedOwners.length ? selectedOwnerIndex : 0;
+      setSelectedOwnerIndex(safeIndex);
+      setOwnerFormFields(persistedOwners[safeIndex] || persistedOwners[0] || normalizeOwner({}));
+      setSavedSnapshot(JSON.stringify(persistedForm));
+      setSavedOwnerProfilesSnapshot(JSON.stringify(persistedOwners));
       setLastSavedAt(new Date().toLocaleTimeString());
       setStatus({ type: 'success', message: 'Website content updated successfully.' });
     } catch (error) {
@@ -738,13 +782,33 @@ const AdminContentManagerPage = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm text-slate-300">Owner Avatar (emoji)</label>
+                      <label className="text-sm text-slate-300">Owner Avatar (emoji or image URL)</label>
                       <input
                         name="ownerAvatar"
                         value={form.ownerAvatar}
                         onChange={onChange}
                         className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none focus:border-pink-500"
                       />
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <label className="inline-flex cursor-pointer items-center rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
+                          Upload Owner Image
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleOwnerAvatarUpload}
+                          />
+                        </label>
+                        {form.ownerAvatar && (
+                          <button
+                            type="button"
+                            onClick={() => setForm((prev) => ({ ...prev, ownerAvatar: '' }))}
+                            className="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                          >
+                            Clear Avatar
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <label className="text-sm text-slate-300">Team Section Description</label>
