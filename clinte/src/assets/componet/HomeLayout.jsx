@@ -223,14 +223,14 @@ const HomeLayout = ({ children }) => {
         <div className="app-glow absolute inset-0" />
       </div>
       {announcement.enabled && announcement.text && (
-        <div className="w-full px-2 md:px-0">
-          <div className="mx-auto mt-3 w-[96vw] max-w-[1260px] rounded-2xl border border-pink-400/25 bg-linear-to-r from-red-500/15 via-pink-500/15 to-purple-500/15 px-4 py-2 text-center text-sm text-slate-100 backdrop-blur-xl">
+        <div className="w-full px-2 md:px-3">
+          <div className="mx-auto mt-3 w-full max-w-[1260px] rounded-2xl border border-pink-400/25 bg-linear-to-r from-red-500/15 via-pink-500/15 to-purple-500/15 px-4 py-2 text-center text-sm text-slate-100 backdrop-blur-xl">
             {announcement.text}
           </div>
         </div>
       )}
-      <header className="w-full sticky top-3 z-40 px-2 md:px-0">
-        <div className="app-nav-card w-[96vw] md:w-[90vw] max-w-[1260px] mx-auto mt-3 mb-2 rounded-2xl flex items-center justify-between backdrop-blur-2xl px-4 py-2.5 md:px-5">
+      <header className="w-full sticky top-3 z-40 px-2 md:px-3">
+        <div className="app-nav-card mx-auto mt-3 mb-2 flex w-full max-w-[1260px] items-center justify-between rounded-2xl px-4 py-2.5 backdrop-blur-2xl md:px-5">
           <Link to="/" className="inline-flex items-center text-lg md:text-xl font-semibold tracking-wide">
             <span className="text-red-600">Nova</span>
             <span className="text-white">RoSolution</span>
@@ -238,7 +238,7 @@ const HomeLayout = ({ children }) => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="app-link-hover md:hidden p-2 rounded-xl transition-colors duration-300"
+          className="app-link-hover p-2 rounded-xl transition-colors duration-300 lg:hidden"
           aria-label="Toggle menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,7 +250,7 @@ const HomeLayout = ({ children }) => {
           </svg>
         </button>
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex ml-auto mr-1 text-sm items-center gap-1">
+        <nav className="ml-auto mr-1 hidden flex-wrap items-center gap-1 text-sm lg:flex">
           <button
             type="button"
             onClick={toggleTheme}
@@ -303,7 +303,7 @@ const HomeLayout = ({ children }) => {
       </header>
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="app-mobile-card w-[96vw] max-w-[1260px] md:hidden mx-auto mt-1 rounded-2xl backdrop-blur-lg p-4">
+        <div className="app-mobile-card mx-auto mt-1 w-full max-w-[1260px] rounded-2xl p-4 backdrop-blur-lg lg:hidden">
           <nav className="flex flex-col space-y-2">
             <button
               type="button"

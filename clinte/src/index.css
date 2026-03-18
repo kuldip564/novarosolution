@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 @keyframes gradient {
   0%, 100% {
     background-position: 0% 50%;
@@ -134,6 +140,20 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   transition: background 240ms ease, color 240ms ease;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 a,
@@ -1437,6 +1457,14 @@ body.custom-cursor-enabled * {
 
 .app-mobile-card {
   background: var(--app-bg-soft-strong);
+}
+
+@media (max-width: 1024px) {
+  .page-hero-shell,
+  .page-content-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
 }
 
 .app-link-hover {

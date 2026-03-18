@@ -17,8 +17,8 @@ const Footer = () => {
     { label: 'SEO Optimization', to: '/services' },
   ]
   return (
-    <footer className="w-full flex justify-center items-center mt-20 pb-8 px-2 md:px-0">
-      <div className="app-footer-card footer-premium w-[96vw] max-w-[1260px] backdrop-blur-2xl rounded-3xl px-6 md:px-8 py-10">
+    <footer className="mt-20 flex w-full items-center justify-center px-2 pb-8 md:px-3">
+      <div className="app-footer-card footer-premium w-full max-w-[1260px] rounded-3xl px-6 py-10 backdrop-blur-2xl md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-3">
             <h2 className="text-xl font-bold tracking-wide bg-linear-to-r from-white to-slate-300 bg-clip-text text-transparent">
