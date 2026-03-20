@@ -515,6 +515,21 @@ body.custom-cursor-enabled * {
   cursor: auto !important;
 }
 
+body.custom-cursor-enabled a[href],
+body.custom-cursor-enabled button,
+body.custom-cursor-enabled [role='button'],
+body.custom-cursor-enabled input[type='button'],
+body.custom-cursor-enabled input[type='submit'],
+body.custom-cursor-enabled input[type='reset'],
+body.custom-cursor-enabled label[for] {
+  cursor: pointer !important;
+}
+
+body.custom-cursor-enabled button:disabled,
+body.custom-cursor-enabled input:disabled {
+  cursor: not-allowed !important;
+}
+
 .reveal-ready {
   opacity: 0;
   transform: translateY(22px) scale(0.995);
