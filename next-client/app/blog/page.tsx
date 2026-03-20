@@ -23,20 +23,28 @@ export default async function BlogListPage() {
   }
 
   return (
-    <section>
+    <section className="space-y-5">
       <SEO
         title="Blog | Novaro Solution"
         description="Simple insights on UI/UX design, web development, mobile app development, and SEO."
         canonical={buildCanonical('/blog')}
       />
-      <h1>Blog</h1>
+      <h1 className="text-3xl font-extrabold md:text-5xl">Blog</h1>
+      <p className="max-w-3xl text-slate-300">
+        Practical guides and product lessons from real client projects.
+      </p>
       <h2 className="sr-only">Latest articles</h2>
       <div className="post-list">
         {posts.map((post) => (
           <article className="card" key={post._id}>
-            <h2>{post.title}</h2>
-            <p>{post.excerpt || post.content.slice(0, 100)}</p>
-            <Link href={`/blog/${post.slug}`}>Read article</Link>
+            <h2 className="text-xl font-semibold">{post.title}</h2>
+            <p className="mt-2 text-slate-300">{post.excerpt || post.content.slice(0, 100)}</p>
+            <Link
+              className="mt-4 inline-flex rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm transition-colors hover:bg-white/10"
+              href={`/blog/${post.slug}`}
+            >
+              Read article
+            </Link>
           </article>
         ))}
       </div>

@@ -2,6 +2,7 @@
 
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   FaBullhorn,
   FaChartLine,
@@ -19,6 +20,7 @@ import {
   createServiceAppointment,
   submitContactForm
 } from '@/lib/api';
+import Reveal from '@/components/animations/Reveal';
 
 type AnyRecord = Record<string, any>;
 const CreatorFeedPreview = lazy(() => import('./CreatorFeedPreview'));
@@ -152,9 +154,12 @@ function normalizeService(service: AnyRecord = {}) {
 }
 
 export default function HomePageClient({ data }: { data: AnyRecord }) {
+  const reduceMotion = useReducedMotion();
   const [token, setToken] = useState('');
   const [selectedService, setSelectedService] = useState('');
   const [status, setStatus] = useState({ type: '', message: '' });
+  const [formError, setFormError] = useState('');
+  const [contactError, setContactError] = useState('');
   const [form, setForm] = useState({ name: '', email: '', phone: '', preferredDate: '', notes: '' });
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmittingService, setIsSubmittingService] = useState(false);
@@ -189,10 +194,19 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
     [data]
   );
 
+  function isValidEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
   async function onServiceSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!token || !selectedService) return;
+    if (!form.name.trim() || !form.phone.trim() || !form.preferredDate || !isValidEmail(form.email.trim())) {
+      setFormError('Please enter valid name, email, phone, and preferred date.');
+      return;
+    }
     setIsSubmittingService(true);
+    setFormError('');
     setStatus({ type: '', message: '' });
     try {
       await createServiceAppointment({ serviceTitle: selectedService, ...form }, token);
@@ -208,7 +222,17 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   async function onContactSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!token) return;
+    if (
+      !contactForm.name.trim() ||
+      !isValidEmail(contactForm.email.trim()) ||
+      !contactForm.subject.trim() ||
+      !contactForm.message.trim()
+    ) {
+      setContactError('Please fill all fields with valid details.');
+      return;
+    }
     setIsSubmittingContact(true);
+    setContactError('');
     setStatus({ type: '', message: '' });
     try {
       await submitContactForm(
@@ -230,8 +254,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   }
 
   return (
-    <div className="w-full text-white">
-      <section className="relative w-full min-h-[80vh] flex items-center justify-center px-4 py-24">
+    <div className="w-full text-(--text)">
+      <Reveal>
+        <section className="relative w-full min-h-[80vh] flex items-center justify-center px-4 py-24">
         <div className="mx-auto max-w-6xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -245,29 +270,41 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           </h1>
           <p className="mt-6 text-base md:text-lg text-slate-300 max-w-3xl mx-auto">{hero.description}</p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/contact" className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold">
+            <Link href="/contact" className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold transition-transform duration-200 hover:-translate-y-0.5">
               {hero.primaryCta}
             </Link>
-            <Link href="/services" className="rounded-xl border border-white/20 bg-white/10 px-8 py-3 font-semibold">
+            <Link href="/services" className="rounded-xl border border-white/20 bg-white/10 px-8 py-3 font-semibold transition-colors duration-200 hover:bg-white/15">
               {hero.secondaryCta}
             </Link>
           </div>
         </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="w-full px-4 py-18 md:py-24">
+      <Reveal>
+        <section id="contact-form" className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((item: AnyRecord) => (
-            <article key={item.label} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center">
+          {stats.map((item: AnyRecord, index: number) => (
+            <motion.article
+              key={item.label}
+              initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+              whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.35, delay: index * 0.06 }}
+              whileHover={reduceMotion ? undefined : { y: -3 }}
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center"
+            >
               <div className="text-2xl">{item.icon}</div>
               <p className="text-2xl font-bold mt-1">{item.value}</p>
               <p className="text-sm text-slate-400">{item.label}</p>
-            </article>
+            </motion.article>
           ))}
         </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="w-full px-4 py-18 md:py-24">
+      <Reveal>
+        <section className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
             {data?.services?.title ||
@@ -278,10 +315,18 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               'One team for design and development. We build simple, fast, and user-friendly digital products.'}
           </p>
           <div className="grid gap-6 md:grid-cols-2">
-            {services.map((service: AnyRecord) => {
+            {services.map((service: AnyRecord, index: number) => {
               const Icon = ICON_BY_KEY[service.iconKey] || FaRocket;
               return (
-                <article key={service.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                <motion.article
+                  key={service.title}
+                  initial={reduceMotion ? undefined : { opacity: 0, y: 20 }}
+                  whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, delay: index * 0.08 }}
+                  whileHover={reduceMotion ? undefined : { y: -4 }}
+                  className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                >
                   <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-pink-200">
                     <Icon />
                   </span>
@@ -296,11 +341,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                     type="button"
                     disabled={!isAuthenticated}
                     onClick={() => setSelectedService(service.title)}
-                    className="mt-5 rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-4 py-2 text-sm font-semibold disabled:opacity-60"
+                    className="mt-5 rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-4 py-2 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5 disabled:opacity-60"
                   >
                     {!isAuthenticated ? 'Login Required' : 'Contact Us'}
                   </button>
-                </article>
+                </motion.article>
               );
             })}
           </div>
@@ -310,11 +355,18 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             </p>
           ) : null}
         </div>
-      </section>
+        </section>
+      </Reveal>
 
+      <AnimatePresence>
       {selectedService ? (
-        <section className="w-full px-4 py-8">
-          <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-slate-950/80 p-6">
+        <motion.section
+          className="w-full px-4 py-8"
+          initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
+        >
+          <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-2xl">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">Contact Us for {selectedService}</h3>
               <button type="button" onClick={() => setSelectedService('')} className="rounded-lg px-2 py-1 hover:bg-white/10">x</button>
@@ -325,37 +377,58 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" placeholder="Phone" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
               <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" type="date" required value={form.preferredDate} onChange={(e) => setForm({ ...form, preferredDate: e.target.value })} />
               <textarea className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" rows={4} placeholder="Notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+              {formError ? <p className="text-sm text-amber-300">{formError}</p> : null}
               <button disabled={isSubmittingService} className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-5 py-2.5 font-semibold">
                 {isSubmittingService ? 'Submitting...' : 'Submit Request'}
               </button>
             </form>
           </div>
-        </section>
+        </motion.section>
       ) : null}
+      </AnimatePresence>
 
-      <section className="w-full px-4 py-18 md:py-24">
+      <Reveal>
+        <section className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
           </h2>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature: AnyRecord) => (
-              <article key={feature.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            {features.map((feature: AnyRecord, index: number) => (
+              <motion.article
+                key={feature.title}
+                initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
+                whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.35, delay: index * 0.06 }}
+                whileHover={reduceMotion ? undefined : { y: -4 }}
+                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+              >
                 <div className="text-3xl">{feature.icon}</div>
                 <h3 className="mt-3 text-lg font-semibold">{feature.title}</h3>
                 <p className="mt-2 text-sm text-slate-300">{feature.description}</p>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="w-full px-4 py-18 md:py-24">
+      <Reveal>
+        <section className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">{data?.testimonials?.title || 'Teams that ship with confidence'}</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {testimonials.map((t: AnyRecord) => (
-              <article key={t.name} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            {testimonials.map((t: AnyRecord, index: number) => (
+              <motion.article
+                key={t.name}
+                initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
+                whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.35, delay: index * 0.07 }}
+                whileHover={reduceMotion ? undefined : { y: -3 }}
+                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+              >
                 <div className="flex items-center justify-between">
                   <div className="text-3xl">{t.avatar}</div>
                   <div className="text-amber-400">{Array.from({ length: t.rating || 5 }).map((_, i) => <span key={i}>★</span>)}</div>
@@ -363,24 +436,28 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 <p className="mt-4 text-slate-200">{t.content}</p>
                 <p className="mt-4 font-semibold">{t.name}</p>
                 <p className="text-xs text-slate-400">{t.role}</p>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="w-full px-4 py-18 md:py-24">
+      <Reveal>
+        <section className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-5xl rounded-3xl border border-white/20 bg-linear-to-br from-red-600/40 via-pink-600/40 to-purple-700/40 p-8 text-center">
           <h2 className="text-3xl md:text-5xl font-bold">{data?.cta?.title || 'Ready to ship your next product?'}</h2>
-          <p className="mt-3 text-slate-100/90">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
+          <p className="mt-3 text-slate-300">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/contact" className="rounded-xl bg-black/90 px-8 py-3 font-semibold">Start a Project</Link>
             <Link href="/contact" className="rounded-xl border border-white/30 bg-white/10 px-8 py-3 font-semibold">Schedule a Call</Link>
           </div>
         </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="w-full px-4 py-18 md:py-24">
+      <Reveal>
+        <section className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
           <h2 className="text-3xl md:text-5xl font-bold text-center">{data?.contactForm?.title || "Let's talk about your roadmap"}</h2>
           <p className="mt-3 text-center text-slate-400">
@@ -391,6 +468,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             <input className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" placeholder="Email" type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} />
             <input className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" placeholder="Subject" value={contactForm.subject} onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })} />
             <textarea className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" rows={5} placeholder="Message" value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} />
+            {contactError ? <p className="text-sm text-amber-300">{contactError}</p> : null}
             {!isAuthenticated ? (
               <p className="text-sm text-amber-300">
                 Login is required to submit contact requests. <Link href="/login" className="underline">Go to Login</Link>
@@ -410,9 +488,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             </button>
           </form>
         </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="w-full px-4 pb-20">
+      <Reveal>
+        <section className="w-full px-4 pb-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-2xl md:text-3xl font-bold">Latest Creator Feed</h2>
           <p className="mt-2 mb-4 text-sm text-slate-400">Client-cached updates powered by React Query.</p>
@@ -420,7 +500,8 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             <CreatorFeedPreview />
           </Suspense>
         </div>
-      </section>
+        </section>
+      </Reveal>
     </div>
   );
 }

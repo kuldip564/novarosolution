@@ -7,11 +7,22 @@ import { getSiteContent } from '../services/siteContentService.js';
 import { countServiceAppointments } from '../models/serviceAppointmentModel.js';
 import { deleteCacheByPrefix } from '../services/cacheService.js';
 import { parsePagination } from '../utils/pagination.js';
+import { isValidEmail } from '../utils/validators.js';
 
 function validateAppointmentPayload(payload) {
   const { serviceTitle, name, email, phone, preferredDate } = payload ?? {};
   if (!serviceTitle || !name || !email || !phone || !preferredDate) {
     return 'Service, name, email, phone and preferred date are required.';
+  }
+  if (!isValidEmail(String(email).trim())) {
+    return 'Please provide a valid email address.';
+  }
+  if (!/^[+()\-\d\s]{7,20}$/.test(String(phone).trim())) {
+    return 'Please provide a valid phone number.';
+  }
+  const preferredDateValue = new Date(preferredDate);
+  if (Number.isNaN(preferredDateValue.getTime())) {
+    return 'Preferred date is invalid.';
   }
   return '';
 }

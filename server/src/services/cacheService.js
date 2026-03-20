@@ -78,16 +78,29 @@ export async function deleteCacheByPrefix(prefix) {
   const client = getRedisClient();
   if (client && redisReady) {
     try {
-      const stream = client.scanStream({ match: `${prefix}*`, count: 200 });
-      stream.on('data', (keys) => {
-        if (Array.isArray(keys) && keys.length) {
-          client.del(...keys).catch(() => {});
-        }
+      await new Promise((resolve) => {
+        const stream = client.scanStream({ match: `${prefix}*`, count: 200 });
+        stream.on('data', (keys) => {
+          if (Array.isArray(keys) && keys.length) {
+            client.del(...keys).catch(() => {});
+          }
+        });
+        stream.on('end', resolve);
+        stream.on('error', resolve);
       });
     } catch {
       // Ignore redis delete errors and keep in-memory invalidation.
     }
   }
   deleteMemoryByPrefix(prefix);
+}
+
+export function getCacheHealth() {
+  const hasRedis = Boolean(REDIS_URL);
+  return {
+    provider: hasRedis ? 'redis' : 'memory',
+    redisConfigured: hasRedis,
+    redisReady: hasRedis ? redisReady : null
+  };
 }
 

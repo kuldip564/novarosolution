@@ -59,25 +59,27 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
   };
 
   return (
-    <article className="card">
+    <article className="card space-y-4">
       <SEO
         title={`${post.title} | Blog`}
         description={post.excerpt || post.content.slice(0, 140)}
         canonical={canonical}
         schema={schema}
       />
-      <h1>{post.title}</h1>
+      <h1 className="text-3xl font-extrabold md:text-5xl">{post.title}</h1>
       {post.imageUrl ? (
-        <Image
-          src={post.imageUrl}
-          alt={`${post.title} cover image`}
-          width={1000}
-          height={560}
-          className="mb-4 rounded-lg object-cover"
-          priority
-        />
+        <div className="overflow-hidden rounded-xl">
+          <Image
+            src={post.imageUrl}
+            alt={`${post.title} cover image`}
+            width={1000}
+            height={560}
+            className="mb-4 rounded-xl object-cover transition-transform duration-500 hover:scale-105"
+            priority
+          />
+        </div>
       ) : null}
-      <p>{post.content}</p>
+      <p className="leading-8 text-slate-200">{post.content}</p>
     </article>
   );
 }

@@ -13,11 +13,14 @@ const DEFAULT_IMAGE =
   'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200';
 
 export function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '';
+  const fallback = 'http://localhost:3000';
+  return String(explicitSiteUrl || vercelUrl || fallback).replace(/\/+$/, '');
 }
 
 export function buildCanonical(path = '/') {
-  const base = getSiteUrl().replace(/\/$/, '');
+  const base = getSiteUrl();
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${base}${normalizedPath}`;
 }

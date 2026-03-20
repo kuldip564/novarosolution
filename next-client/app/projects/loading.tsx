@@ -1,16 +1,22 @@
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 export default function ProjectsLoading() {
   return (
-    <section>
-      <div className="h-8 w-40 rounded bg-white/10" />
-      <div className="post-list mt-5">
-        {[1, 2, 3, 4].map((item) => (
-          <article key={item} className="card animate-pulse">
-            <div className="h-5 w-2/3 rounded bg-white/10" />
-            <div className="mt-3 h-4 w-full rounded bg-white/10" />
-            <div className="mt-2 h-4 w-5/6 rounded bg-white/10" />
-          </article>
-        ))}
-      </div>
-    </section>
+    <SkeletonTheme baseColor="#1e293b" highlightColor="#334155">
+      <section>
+        <Skeleton height={30} width={150} />
+        <div className="post-list mt-5">
+          {[1, 2, 3, 4].map((item) => (
+            <article key={item} className="card">
+              <Skeleton height={24} width="70%" />
+              <div className="mt-3">
+                <Skeleton count={2} height={14} style={{ marginBottom: 8 }} />
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </SkeletonTheme>
   );
 }

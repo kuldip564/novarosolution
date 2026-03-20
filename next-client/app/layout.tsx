@@ -5,6 +5,7 @@ import './globals.css';
 import { buildMetadata, generateOrganizationSchema, getSiteUrl } from '@/lib/seo';
 import SEO from '@/components/SEO';
 import Providers from './providers';
+import RouteTransition from '@/components/animations/RouteTransition';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,8 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <SEO
-          title="Novaro Solution"
-          description="SEO-focused MERN and Next.js architecture."
           canonical={getSiteUrl()}
           schema={generateOrganizationSchema()}
         />
@@ -41,13 +40,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <strong>Novaro Solution</strong>
             <nav className="nav" aria-label="Main navigation">
               <Link href="/">Home</Link>
+              <Link href="/services">Services</Link>
               <Link href="/projects">Projects</Link>
               <Link href="/blog">Blog</Link>
+              <Link href="/contact">Contact</Link>
             </nav>
           </div>
         </header>
         <Providers>
-          <main className="main container">{children}</main>
+          <main className="main container">
+            <RouteTransition>{children}</RouteTransition>
+          </main>
         </Providers>
         <footer className="footer">
           <div className="container footer-content">

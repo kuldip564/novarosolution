@@ -33,9 +33,9 @@ async function ensureDefaultAdmin() {
   const existingByEmail = await findUserByEmail(adminEmail);
   const existingByName = await findUserByName(adminName);
   const existingAdmin = existingByEmail || existingByName;
-  const passwordHash = await bcrypt.hash(adminPassword, 10);
 
   if (!existingAdmin) {
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
     await createUser({
       name: adminName,
       email: adminEmail,
@@ -45,11 +45,9 @@ async function ensureDefaultAdmin() {
     return;
   }
 
+  // Keep existing credentials stable; only enforce admin role.
   await updateUserById(existingAdmin.id, {
-    role: 'admin',
-    password: passwordHash,
-    name: adminName,
-    email: adminEmail,
+    role: 'admin'
   });
 }
 

@@ -33,3 +33,25 @@ if (NODE_ENV === 'production' && isWeakJwtSecret(JWT_SECRET)) {
   throw new Error('JWT_SECRET must be set to a strong value in production.');
 }
 
+if (NODE_ENV === 'production') {
+  if (!MONGODB_URI || MONGODB_URI.includes('127.0.0.1') || MONGODB_URI.includes('localhost')) {
+    throw new Error('MONGODB_URI must point to a production database in production.');
+  }
+  if (!CORS_ORIGIN || CORS_ORIGIN === '*') {
+    throw new Error('CORS_ORIGIN must be explicitly configured in production.');
+  }
+}
+
+const hasAnyCloudinaryValue = Boolean(
+  CLOUDINARY_URL || CLOUDINARY_CLOUD_NAME || CLOUDINARY_API_KEY || CLOUDINARY_API_SECRET
+);
+const hasCompleteCloudinaryConfig = Boolean(
+  CLOUDINARY_URL || (CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET)
+);
+
+if (NODE_ENV === 'production' && hasAnyCloudinaryValue && !hasCompleteCloudinaryConfig) {
+  throw new Error(
+    'Cloudinary config is incomplete. Provide CLOUDINARY_URL or CLOUDINARY_CLOUD_NAME + CLOUDINARY_API_KEY + CLOUDINARY_API_SECRET.'
+  );
+}
+

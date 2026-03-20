@@ -1,7 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 type FeedItem = {
   _id: string;
@@ -21,19 +23,26 @@ async function fetchCreatorFeed() {
 
 function FeedSkeleton() {
   return (
-    <div className="grid gap-4 md:grid-cols-3" aria-hidden>
-      {[1, 2, 3].map((key) => (
-        <div key={key} className="card animate-pulse">
-          <div className="h-40 rounded-md bg-white/10" />
-          <div className="mt-3 h-4 w-2/3 rounded bg-white/10" />
-          <div className="mt-2 h-3 w-full rounded bg-white/10" />
-        </div>
-      ))}
-    </div>
+    <SkeletonTheme baseColor="#1e293b" highlightColor="#334155">
+      <div className="grid gap-4 md:grid-cols-3" aria-hidden>
+        {[1, 2, 3].map((key) => (
+          <div key={key} className="card">
+            <Skeleton height={160} borderRadius={8} />
+            <div className="mt-3">
+              <Skeleton height={16} width="70%" />
+            </div>
+            <div className="mt-2">
+              <Skeleton height={12} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </SkeletonTheme>
   );
 }
 
 export default function CreatorFeedPreview() {
+  const reduceMotion = useReducedMotion();
   const { data, isLoading, isError } = useQuery({
     queryKey: ['creator-feed-preview'],
     queryFn: fetchCreatorFeed
@@ -44,22 +53,32 @@ export default function CreatorFeedPreview() {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {data?.slice(0, 3).map((item) => (
-        <article key={item._id} className="card">
+      {data?.slice(0, 3).map((item, index) => (
+        <motion.article
+          key={item._id}
+          initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.35, delay: index * 0.08 }}
+          whileHover={reduceMotion ? undefined : { y: -3 }}
+          className="card overflow-hidden"
+        >
           {item.mediaUrl ? (
-            <Image
-              src={item.mediaUrl}
-              alt={`${item.title} by ${item.creatorName || 'creator'}`}
-              width={420}
-              height={240}
-              className="h-40 w-full rounded-md object-cover"
-            />
+            <div className="overflow-hidden rounded-md">
+              <Image
+                src={item.mediaUrl}
+                alt={`${item.title} by ${item.creatorName || 'creator'}`}
+                width={420}
+                height={240}
+                className="h-40 w-full rounded-md object-cover transition-transform duration-400 hover:scale-105"
+              />
+            </div>
           ) : (
             <div className="h-40 rounded-md bg-white/5" />
           )}
           <h3 className="mt-3 text-base font-semibold">{item.title}</h3>
           <p className="mt-2 text-sm text-slate-300">{String(item.caption || '').slice(0, 90)}</p>
-        </article>
+        </motion.article>
       ))}
     </div>
   );

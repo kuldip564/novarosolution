@@ -58,25 +58,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   };
 
   return (
-    <article className="card">
+    <article className="card space-y-4">
       <SEO
         title={`${project.title} | Project`}
         description={project.description}
         canonical={canonical}
         schema={schema}
       />
-      <h1>{project.title}</h1>
-      <p>{project.description}</p>
-      <Image
-        src={
-          project.imageUrl ||
-          'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200'
-        }
-        alt={`${project.title} preview`}
-        width={900}
-        height={520}
-        priority
-      />
+      <h1 className="text-3xl font-extrabold md:text-5xl">{project.title}</h1>
+      <p className="text-slate-300">{project.description}</p>
+      <div className="overflow-hidden rounded-xl">
+        <Image
+          src={
+            project.imageUrl ||
+            'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200'
+          }
+          alt={`${project.title} preview`}
+          width={900}
+          height={520}
+          className="rounded-xl object-cover transition-transform duration-500 hover:scale-105"
+          priority
+        />
+      </div>
     </article>
   );
 }

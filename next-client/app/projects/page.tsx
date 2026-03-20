@@ -22,14 +22,22 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <section>
-      <h1>Projects</h1>
+    <section className="space-y-5">
+      <h1 className="text-3xl font-extrabold md:text-5xl">Projects</h1>
+      <p className="max-w-3xl text-slate-300">
+        Real product work focused on speed, usability, and measurable growth.
+      </p>
       <div className="post-list">
         {projects.map((project) => (
-          <article className="card" key={project._id}>
-            <h2>{project.title}</h2>
-            <p>{project.description}</p>
-            <Link href={`/projects/${project.slug}`}>View project</Link>
+          <article className="card group" key={project._id}>
+            <h2 className="text-xl font-semibold">{project.title}</h2>
+            <p className="mt-2 text-slate-300">{project.description}</p>
+            <Link
+              className="mt-4 inline-flex rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm transition-colors hover:bg-white/10"
+              href={`/projects/${project.slug}`}
+            >
+              View project
+            </Link>
           </article>
         ))}
       </div>

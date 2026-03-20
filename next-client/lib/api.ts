@@ -40,9 +40,9 @@ type SiteContentShape = {
     description?: string;
   };
   projectsPage?: {
-    items?: Array<Record<string, any>>;
+    items?: Array<Record<string, unknown>>;
   };
-} & Record<string, any>;
+} & Record<string, unknown>;
 
 function slugify(input: string) {
   return String(input || '')
@@ -69,9 +69,17 @@ async function requestJson<T>(path: string, cacheMode: FetchCacheMode = { revali
 
 async function requestClientJson<T>(path: string, init: RequestInit = {}) {
   const response = await fetch(`${API_URL}${path}`, init);
-  const payload = await response.json().catch(() => ({}));
+  const rawBody = await response.text();
+  let payload: unknown = {};
+  if (rawBody) {
+    try {
+      payload = JSON.parse(rawBody);
+    } catch {
+      payload = {};
+    }
+  }
   if (!response.ok) {
-    throw new Error(payload?.message || `Request failed: ${response.status}`);
+    throw new Error((payload as { message?: string })?.message || `Request failed: ${response.status}`);
   }
   return payload as T;
 }
@@ -111,7 +119,7 @@ function mapProject(item: Record<string, any>, index: number): Project {
   return {
     _id: String(item?._id || item?.id || `project-${index + 1}`),
     title,
-    slug: slugify(item?.slug || title),
+    slug: slugify(String(item?.slug || title)),
     description: String(item?.summary || item?.description || ''),
     imageUrl: typeof item?.image === 'string' ? item.image : undefined,
     category: item?.category,
@@ -148,7 +156,7 @@ function mapArticle(item: Record<string, any>, index: number): Article {
   return {
     _id: String(item?._id || item?.id || `article-${index + 1}`),
     title,
-    slug: slugify(item?.slug || title),
+    slug: slugify(String(item?.slug || title)),
     excerpt: caption.slice(0, 140) || 'Latest updates from our creator community.',
     content: caption || 'No article content available.',
     imageUrl: typeof item?.mediaUrl === 'string' ? item.mediaUrl : undefined,

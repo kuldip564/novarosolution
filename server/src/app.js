@@ -51,14 +51,40 @@ app.use(
 );
 
 app.use((req, res, next) => {
+  const originalJson = res.json.bind(res);
+  res.json = (body) => {
+    if (
+      process.env.NODE_ENV === 'production' &&
+      body &&
+      typeof body === 'object' &&
+      !Array.isArray(body) &&
+      Object.prototype.hasOwnProperty.call(body, 'error')
+    ) {
+      const sanitizedBody = { ...body };
+      delete sanitizedBody.error;
+      return originalJson(sanitizedBody);
+    }
+    return originalJson(body);
+  };
+  next();
+});
+
+app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   next();
 });
-// Allow larger payloads for proof file uploads (base64 data URLs).
-app.use(express.json({ limit: '25mb' }));
+const jsonSmallPayload = express.json({ limit: '1mb' });
+const jsonLargePayload = express.json({ limit: '25mb' });
+app.use((req, res, next) => {
+  const needsLargePayload =
+    req.path.startsWith('/api/employee') ||
+    req.path.startsWith('/api/creator');
+  if (needsLargePayload) return jsonLargePayload(req, res, next);
+  return jsonSmallPayload(req, res, next);
+});
 app.use('/api', apiRateLimiter);
 
 app.use('/api', async (req, res, next) => {

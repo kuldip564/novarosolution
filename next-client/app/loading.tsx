@@ -1,9 +1,15 @@
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 export default function RootLoading() {
   return (
-    <div className="card animate-pulse">
-      <div className="h-7 w-1/3 rounded bg-white/10" />
-      <div className="mt-3 h-4 w-full rounded bg-white/10" />
-      <div className="mt-2 h-4 w-5/6 rounded bg-white/10" />
-    </div>
+    <SkeletonTheme baseColor="#1e293b" highlightColor="#334155">
+      <div className="card">
+        <Skeleton height={28} width="38%" borderRadius={8} />
+        <div className="mt-3">
+          <Skeleton count={2} height={14} style={{ marginBottom: 8 }} />
+        </div>
+      </div>
+    </SkeletonTheme>
   );
 }

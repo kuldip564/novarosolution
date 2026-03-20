@@ -5,7 +5,12 @@ import { fetchSiteContent } from '@/lib/api';
 import { buildCanonical, buildMetadata } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const content = await fetchSiteContent({ revalidate: 180 });
+  let content: Awaited<ReturnType<typeof fetchSiteContent>> | null = null;
+  try {
+    content = await fetchSiteContent({ revalidate: 180 });
+  } catch {
+    content = null;
+  }
   const heroTitle = content?.hero?.titleMain || 'NovaRo Solution';
   const heroDescription =
     content?.hero?.description ||
@@ -26,7 +31,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const content = await fetchSiteContent({ revalidate: 180 });
+  let content: Awaited<ReturnType<typeof fetchSiteContent>> | null = null;
+  try {
+    content = await fetchSiteContent({ revalidate: 180 });
+  } catch {
+    content = null;
+  }
   const canonical = buildCanonical('/');
 
   const schema = {
@@ -46,7 +56,7 @@ export default async function HomePage() {
         keywords={['ui ux design', 'web development', 'mobile app development', 'seo']}
         schema={schema}
       />
-      <HomePageClient data={content} />
+      <HomePageClient data={content ?? {}} />
     </>
   );
 }

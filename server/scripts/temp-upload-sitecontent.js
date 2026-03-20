@@ -1,6 +1,11 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import defaultSiteContent from '../src/config/siteContent.js';
 import { getDb } from '../src/db/connection.js';
+
+function maskMongoUri(uri = '') {
+  return String(uri).replace(/\/\/[^@]+@/, '//***:***@');
+}
 
 async function run() {
   await getDb();
@@ -19,6 +24,11 @@ async function run() {
       {
         ok: true,
         message: 'Site content replaced successfully.',
+        target: {
+          dbName: mongoose.connection.db?.databaseName || null,
+          host: mongoose.connection.host || null,
+          uri: maskMongoUri(process.env.MONGODB_URI || '')
+        },
         deletedOldDocuments: deleteResult.deletedCount,
         insertedId: String(insertResult.insertedId),
         totalDocumentsNow: total
