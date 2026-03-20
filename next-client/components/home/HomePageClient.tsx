@@ -32,23 +32,23 @@ const defaultStats = [
 
 const defaultFeatures = [
   {
-    title: 'Fast & Performant',
-    description: 'Optimized experiences with edge delivery, caching, and first-class performance budgets.',
+    title: 'Fast and SEO-friendly',
+    description: 'We optimize performance, structure, and content for better user experience and rankings.',
     icon: '⚡'
   },
   {
-    title: 'Secure by Design',
-    description: 'Security woven into every layer, from auth to infrastructure and compliance.',
+    title: 'Secure and stable',
+    description: 'Security is built into every layer, from login flows to backend systems.',
     icon: '🔒'
   },
   {
-    title: 'Dedicated Support',
-    description: 'Hands-on collaboration from a team that feels like an extension of your own.',
+    title: 'Clear communication',
+    description: 'You get clear updates, timelines, and direct communication with our team.',
     icon: '💬'
   },
   {
-    title: 'Cost Effective',
-    description: 'Flexible engagement models that scale with your product, not against it.',
+    title: 'Flexible pricing',
+    description: 'Choose a service plan that matches your budget and growth stage.',
     icon: '💰'
   }
 ];
@@ -176,10 +176,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       titleMain: data?.hero?.titleMain || 'NovaRo Solution',
       titleGradient:
         data?.hero?.titleGradient ||
-        'UI/UX design, web development, and mobile app development experts.',
+        'UI/UX design, web development, and mobile app development',
       description:
         data?.hero?.description ||
-        'We help modern companies with UI/UX design, web development, and mobile app development to build and scale premium digital experiences.',
+        'We help businesses with UI/UX design, web development, and mobile app development in one clear process.',
       primaryCta: data?.hero?.primaryCta || 'Get Started',
       secondaryCta: data?.hero?.secondaryCta || 'Explore Services',
       highlights: data?.hero?.highlights?.length
@@ -273,6 +273,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             {data?.services?.title ||
               'UI/UX design, web development, and mobile app development services'}
           </h2>
+          <p className="mx-auto mb-8 max-w-3xl text-center text-slate-300">
+            {data?.services?.description ||
+              'One team for design and development. We build simple, fast, and user-friendly digital products.'}
+          </p>
           <div className="grid gap-6 md:grid-cols-2">
             {services.map((service: AnyRecord) => {
               const Icon = ICON_BY_KEY[service.iconKey] || FaRocket;
@@ -331,7 +335,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
 
       <section className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">{data?.features?.title || 'Why teams choose NovaRo Solution'}</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
+            {data?.features?.title || 'Why businesses choose NovaRo Solution'}
+          </h2>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {features.map((feature: AnyRecord) => (
               <article key={feature.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">

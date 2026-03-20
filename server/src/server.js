@@ -1,4 +1,5 @@
 import app from './app.js';
+import http from 'node:http';
 import {
   DEFAULT_ADMIN_EMAIL,
   DEFAULT_ADMIN_ENABLED,
@@ -71,7 +72,10 @@ export async function startServer() {
 
   if (serverInstance) return serverInstance;
 
-  serverInstance = app.listen(PORT, () => {
+  const httpServer = http.createServer(app);
+  httpServer.keepAliveTimeout = 65_000;
+  httpServer.headersTimeout = 66_000;
+  serverInstance = httpServer.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
   return serverInstance;

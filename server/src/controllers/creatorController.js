@@ -1,4 +1,5 @@
 import {
+  countCreatorContent,
   addCommentToCreatorContent,
   createCreatorContent,
   deleteCreatorContentById,
@@ -8,13 +9,24 @@ import {
   toggleLikeCreatorContent,
   updateCreatorContentById,
 } from '../models/creatorContentModel.js';
-import { findUserById } from '../models/userModel.js';
+import { findUserById, findUsersByIds } from '../models/userModel.js';
 import { uploadMediaDataUrl } from '../services/cloudinaryService.js';
+import { deleteCacheByPrefix, getCache, setCache } from '../services/cacheService.js';
+import { parsePagination } from '../utils/pagination.js';
 
 export async function getMyCreatorContent(req, res) {
   try {
-    const rows = await listCreatorContentByCreatorId(req.auth.userId);
-    return res.status(200).json({ ok: true, data: rows });
+    const { page, limit } = parsePagination(req.query);
+    const [rows, total] = await Promise.all([
+      listCreatorContentByCreatorId(req.auth.userId, { page, limit }),
+      countCreatorContent({ creatorId: req.auth.userId })
+    ]);
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: rows,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -60,6 +72,7 @@ export async function postMyCreatorContent(req, res) {
       mediaType: resolvedMediaType,
       status: 'published',
     });
+    await deleteCacheByPrefix('creator-feed:');
     return res.status(201).json({
       ok: true,
       message: 'Content uploaded successfully.',
@@ -100,6 +113,7 @@ export async function patchMyCreatorContent(req, res) {
       return res.status(200).json({ ok: true, message: 'No changes applied.', data: row });
     }
     const updated = await updateCreatorContentById(contentId, updates);
+    await deleteCacheByPrefix('creator-feed:');
     return res.status(200).json({ ok: true, message: 'Content updated successfully.', data: updated });
   } catch (error) {
     return res.status(400).json({ ok: false, message: error.message || 'Unable to update content.' });
@@ -115,6 +129,7 @@ export async function deleteMyCreatorContent(req, res) {
       return res.status(403).json({ ok: false, message: 'Forbidden. Cannot delete this content.' });
     }
     await deleteCreatorContentById(contentId);
+    await deleteCacheByPrefix('creator-feed:');
     return res.status(200).json({ ok: true, message: 'Content deleted successfully.' });
   } catch (error) {
     return res.status(400).json({ ok: false, message: error.message || 'Unable to delete content.' });
@@ -123,18 +138,26 @@ export async function deleteMyCreatorContent(req, res) {
 
 export async function getAdminCreatorContent(req, res) {
   try {
-    const [rows] = await Promise.all([listAllCreatorContent()]);
-    const withCreator = await Promise.all(
-      rows.map(async (row) => {
-        const user = await findUserById(row.creatorId);
-        return {
-          ...row,
-          creatorName: user?.name || 'Unknown',
-          creatorEmail: user?.email || '',
-        };
-      }),
-    );
-    return res.status(200).json({ ok: true, data: withCreator });
+    const { page, limit } = parsePagination(req.query);
+    const [rows, total] = await Promise.all([
+      listAllCreatorContent({ page, limit }),
+      countCreatorContent()
+    ]);
+    const creatorUsers = await findUsersByIds(rows.map((row) => row.creatorId), {
+      projection: 'name email'
+    });
+    const userMap = new Map(creatorUsers.map((user) => [user.id, user]));
+    const withCreator = rows.map((row) => ({
+      ...row,
+      creatorName: userMap.get(row.creatorId)?.name || 'Unknown',
+      creatorEmail: userMap.get(row.creatorId)?.email || ''
+    }));
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: withCreator,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -146,17 +169,35 @@ export async function getAdminCreatorContent(req, res) {
 
 export async function getPublicCreatorFeed(req, res) {
   try {
-    const rows = await listAllCreatorContent();
-    const withCreator = await Promise.all(
-      rows.map(async (row) => {
-        const user = await findUserById(row.creatorId);
-        return {
-          ...row,
-          creatorName: user?.name || 'Unknown Creator',
-        };
-      }),
-    );
-    return res.status(200).json({ ok: true, data: withCreator });
+    const { page, limit } = parsePagination(req.query);
+    const cacheKey = `creator-feed:page:${page}:limit:${limit}`;
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      return res
+        .status(200)
+        .json({ ok: true, data: cached.items || [], pagination: cached.pagination || null });
+    }
+
+    const [rows, total] = await Promise.all([
+      listAllCreatorContent({ page, limit }),
+      countCreatorContent()
+    ]);
+    const creatorUsers = await findUsersByIds(rows.map((row) => row.creatorId), {
+      projection: 'name'
+    });
+    const userMap = new Map(creatorUsers.map((user) => [user.id, user]));
+    const withCreator = rows.map((row) => ({
+      ...row,
+      creatorName: userMap.get(row.creatorId)?.name || 'Unknown Creator'
+    }));
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    const payload = {
+      items: withCreator,
+      pagination: { page, limit, total, totalPages }
+    };
+    await setCache(cacheKey, payload, 60);
+    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+    return res.status(200).json({ ok: true, data: payload.items, pagination: payload.pagination });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -171,6 +212,7 @@ export async function postCreatorFeedLike(req, res) {
     const { contentId } = req.params;
     const updated = await toggleLikeCreatorContent(contentId, req.auth.userId);
     if (!updated) return res.status(404).json({ ok: false, message: 'Content not found.' });
+    await deleteCacheByPrefix('creator-feed:');
     return res.status(200).json({ ok: true, message: 'Like updated.', data: updated });
   } catch (error) {
     return res.status(400).json({ ok: false, message: error.message || 'Unable to update like.' });
@@ -191,6 +233,7 @@ export async function postCreatorFeedComment(req, res) {
       createdAt: new Date(),
     });
     if (!updated) return res.status(404).json({ ok: false, message: 'Content not found.' });
+    await deleteCacheByPrefix('creator-feed:');
     return res.status(200).json({ ok: true, message: 'Comment added successfully.', data: updated });
   } catch (error) {
     return res.status(400).json({ ok: false, message: error.message || 'Unable to add comment.' });

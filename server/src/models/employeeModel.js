@@ -21,6 +21,8 @@ const employeeSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
   },
 );
+employeeSchema.index({ isActive: 1, createdAt: -1 });
+employeeSchema.index({ userId: 1, isActive: 1 });
 
 const Employee = mongoose.models.Employee || mongoose.model('Employee', employeeSchema);
 
@@ -47,9 +49,19 @@ export async function createEmployee(payload) {
   return normalizeEmployee(created.toObject());
 }
 
-export async function listEmployees() {
-  const rows = await Employee.find().sort({ createdAt: -1 }).lean();
+export async function listEmployees({ page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = Employee.find().sort({ createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map(normalizeEmployee);
+}
+
+export async function countEmployees(filter = {}) {
+  return Employee.countDocuments(filter);
 }
 
 export async function findEmployeeById(employeeId) {

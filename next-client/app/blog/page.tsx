@@ -8,8 +8,9 @@ export const revalidate = 120;
 
 export const metadata: Metadata = buildMetadata({
   title: 'Blog | Novaro Solution',
-  description: 'Technical insights and updates from Novaro Solution.',
-  keywords: ['blog', 'articles', 'next.js', 'mern'],
+  description:
+    'Read simple insights on UI/UX design, web development, mobile app development, and SEO from Novaro Solution.',
+  keywords: ['ui ux design blog', 'web development tips', 'mobile app development guide', 'seo blog'],
   path: '/blog'
 });
 
@@ -25,7 +26,7 @@ export default async function BlogListPage() {
     <section>
       <SEO
         title="Blog | Novaro Solution"
-        description="Technical insights and updates from Novaro Solution."
+        description="Simple insights on UI/UX design, web development, mobile app development, and SEO."
         canonical={buildCanonical('/blog')}
       />
       <h1>Blog</h1>

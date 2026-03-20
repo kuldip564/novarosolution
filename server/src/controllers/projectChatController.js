@@ -10,6 +10,7 @@ import {
   sendAdminProjectMessage,
   sendUserProjectMessage,
 } from '../services/projectChatService.js';
+import { parsePagination } from '../utils/pagination.js';
 
 function validateMessageInput(body) {
   const message = body?.message;
@@ -21,8 +22,14 @@ function validateMessageInput(body) {
 
 export async function getMyProjectMessages(req, res) {
   try {
-    const messages = await listUserProjectMessages(req.auth.userId);
-    return res.status(200).json({ ok: true, data: messages });
+    const { page, limit } = parsePagination(req.query);
+    const { items, total } = await listUserProjectMessages(req.auth.userId, { page, limit });
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: items,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -94,8 +101,14 @@ export async function deleteMyProjectChat(req, res) {
 
 export async function getAdminProjectThreads(req, res) {
   try {
-    const threads = await listAdminProjectThreads();
-    return res.status(200).json({ ok: true, data: threads });
+    const { page, limit } = parsePagination(req.query);
+    const { items, total } = await listAdminProjectThreads({ page, limit });
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: items,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -106,8 +119,17 @@ export async function getAdminProjectThreads(req, res) {
 
 export async function getAdminProjectMessages(req, res) {
   try {
-    const messages = await listAdminProjectMessagesByUserId(req.params.userId);
-    return res.status(200).json({ ok: true, data: messages });
+    const { page, limit } = parsePagination(req.query);
+    const { items, total } = await listAdminProjectMessagesByUserId(req.params.userId, {
+      page,
+      limit
+    });
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: items,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(400).json({
       ok: false,

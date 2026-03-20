@@ -1,10 +1,12 @@
 import XLSX from 'xlsx';
 import {
+  countDailyTasks,
   createDailyTask,
   deleteDailyTaskByIdForEmployee,
   listDailyTasksByEmployee,
   updateDailyTaskByIdForEmployee,
 } from '../models/dailyTaskModel.js';
+import { parsePagination } from '../utils/pagination.js';
 
 function parseDateValue(value) {
   if (!value) return null;
@@ -32,8 +34,17 @@ function taskToXlsxRows(tasks) {
 
 export async function getMyDailyTasks(req, res) {
   try {
-    const tasks = await listDailyTasksByEmployee(req.auth.userId);
-    return res.status(200).json({ ok: true, data: tasks });
+    const { page, limit } = parsePagination(req.query);
+    const [tasks, total] = await Promise.all([
+      listDailyTasksByEmployee(req.auth.userId, { page, limit }),
+      countDailyTasks({ employeeId: req.auth.userId })
+    ]);
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: tasks,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({
       ok: false,

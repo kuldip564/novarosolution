@@ -13,10 +13,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Novaro Solution | Modern Web Platform',
+  title: 'Novaro Solution | UI/UX Design, Web and Mobile App Development',
   description:
-    'SEO-focused MERN and Next.js architecture with fast loading and indexable pages.',
-  keywords: ['novaro', 'next.js', 'mern', 'seo', 'web development'],
+    'Novaro Solution is a full-service digital product engineering partner for UI/UX design, web development, mobile app development, and SEO.',
+  keywords: [
+    'ui ux design',
+    'web development company',
+    'mobile app development',
+    'digital product engineering',
+    'seo services'
+  ],
   path: '/'
 });
 

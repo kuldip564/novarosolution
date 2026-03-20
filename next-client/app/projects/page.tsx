@@ -7,8 +7,9 @@ export const revalidate = 300;
 
 export const metadata: Metadata = buildMetadata({
   title: 'Projects | Novaro Solution',
-  description: 'Explore our delivered projects with SEO-friendly clean URLs.',
-  keywords: ['projects', 'portfolio', 'web development'],
+  description:
+    'Explore UI/UX design, web development, and mobile app development projects delivered by Novaro Solution.',
+  keywords: ['ui ux design projects', 'web development portfolio', 'mobile app case studies'],
   path: '/projects'
 });
 

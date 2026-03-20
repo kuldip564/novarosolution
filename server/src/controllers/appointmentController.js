@@ -1,8 +1,12 @@
 import {
   createServiceAppointment,
   listServiceAppointments,
+  listServiceAppointmentsPaginated,
 } from '../services/appointmentService.js';
 import { getSiteContent } from '../services/siteContentService.js';
+import { countServiceAppointments } from '../models/serviceAppointmentModel.js';
+import { deleteCacheByPrefix } from '../services/cacheService.js';
+import { parsePagination } from '../utils/pagination.js';
 
 function validateAppointmentPayload(payload) {
   const { serviceTitle, name, email, phone, preferredDate } = payload ?? {};
@@ -41,6 +45,7 @@ export async function postServiceAppointment(req, res) {
     }
 
     await createServiceAppointment(req.body);
+    await deleteCacheByPrefix('overview:');
     return res.status(201).json({
       ok: true,
       message: 'Appointment request submitted successfully.',
@@ -56,10 +61,23 @@ export async function postServiceAppointment(req, res) {
 
 export async function getServiceAppointments(req, res) {
   try {
+    const { page, limit } = parsePagination(req.query);
+    if (limit) {
+      const [appointments, total] = await Promise.all([
+        listServiceAppointmentsPaginated({ page, limit }),
+        countServiceAppointments()
+      ]);
+      return res.status(200).json({
+        ok: true,
+        data: appointments,
+        pagination: { page, limit, total, totalPages: Math.max(Math.ceil(total / limit), 1) }
+      });
+    }
     const appointments = await listServiceAppointments();
     return res.status(200).json({
       ok: true,
       data: appointments,
+      pagination: null
     });
   } catch (error) {
     return res.status(500).json({

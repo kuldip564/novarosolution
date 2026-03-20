@@ -1,10 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import compression from 'compression';
+import mongoose from 'mongoose';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CORS_ORIGIN, TRUST_PROXY } from './config/env.js';
 import { getDb } from './db/connection.js';
+import { requestMetrics } from './middleware/requestMetrics.js';
+import { apiRateLimiter } from './middleware/rateLimit.js';
 import apiRoutes from './routes/index.js';
 
 const app = express();
@@ -16,6 +20,12 @@ const shouldServeClient = process.env.NODE_ENV === 'production' && fs.existsSync
 
 app.disable('x-powered-by');
 app.set('trust proxy', TRUST_PROXY);
+app.use(requestMetrics);
+app.use(
+  compression({
+    threshold: 1024
+  })
+);
 
 
 function isOriginAllowed(origin) {
@@ -49,13 +59,15 @@ app.use((req, res, next) => {
 });
 // Allow larger payloads for proof file uploads (base64 data URLs).
 app.use(express.json({ limit: '25mb' }));
+app.use('/api', apiRateLimiter);
 
 app.use('/api', async (req, res, next) => {
   if (req.path === '/health') return next();
+  if (mongoose.connection.readyState === 1) return next();
   try {
     await getDb();
-  } catch (error) {
-    console.warn(`[db] Request proceeding without DB connection: ${error?.message || 'unknown error'}`);
+  } catch {
+    // Let handlers degrade gracefully if DB is unavailable.
   }
   return next();
 });
@@ -74,6 +86,12 @@ app.use((err, req, res, next) => {
     return res.status(403).json({
       ok: false,
       message: 'CORS blocked this origin.',
+    });
+  }
+  if (err) {
+    return res.status(500).json({
+      ok: false,
+      message: 'Internal server error.'
     });
   }
   return next(err);

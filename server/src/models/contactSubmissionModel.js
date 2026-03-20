@@ -11,6 +11,8 @@ const contactSubmissionSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: false },
   },
 );
+contactSubmissionSchema.index({ email: 1, createdAt: -1 });
+contactSubmissionSchema.index({ createdAt: -1 });
 
 const ContactSubmission =
   mongoose.models.ContactSubmission ||
@@ -38,8 +40,14 @@ export async function createContactSubmissionRow({ name, email, subject, message
   };
 }
 
-export async function listContactSubmissionsRows() {
-  const rows = await ContactSubmission.find().sort({ createdAt: -1 }).lean();
+export async function listContactSubmissionsRows({ page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = ContactSubmission.find().sort({ createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map((row) => ({
     id: String(row._id),
     name: row.name,

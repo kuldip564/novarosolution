@@ -7,6 +7,10 @@ export async function listContactSubmissions() {
   return listContactSubmissionsRows();
 }
 
+export async function listContactSubmissionsPaginated({ page, limit } = {}) {
+  return listContactSubmissionsRows({ page, limit });
+}
+
 export async function createContactSubmission(payload) {
   return createContactSubmissionRow({
     name: payload.name.trim(),

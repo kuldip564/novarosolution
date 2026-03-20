@@ -29,6 +29,8 @@ const creatorContentSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
   },
 );
+creatorContentSchema.index({ creatorId: 1, createdAt: -1 });
+creatorContentSchema.index({ status: 1, createdAt: -1 });
 
 const CreatorContent =
   mongoose.models.CreatorContent || mongoose.model('CreatorContent', creatorContentSchema);
@@ -55,14 +57,30 @@ export async function createCreatorContent(payload) {
   return toPayload(created);
 }
 
-export async function listCreatorContentByCreatorId(creatorId) {
-  const rows = await CreatorContent.find({ creatorId }).sort({ createdAt: -1 }).lean();
+export async function listCreatorContentByCreatorId(creatorId, { page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = CreatorContent.find({ creatorId }).sort({ createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map(toPayload);
 }
 
-export async function listAllCreatorContent() {
-  const rows = await CreatorContent.find().sort({ createdAt: -1 }).lean();
+export async function listAllCreatorContent({ page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = CreatorContent.find().sort({ createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map(toPayload);
+}
+
+export async function countCreatorContent(filter = {}) {
+  return CreatorContent.countDocuments(filter);
 }
 
 export async function findCreatorContentById(contentId) {

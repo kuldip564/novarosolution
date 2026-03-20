@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { findFirstAdminUser, findUserById } from '../models/userModel.js';
 import { getSiteContent } from './siteContentService.js';
 import {
+  countProjectChatThreadsRows,
+  countProjectChatMessagesByUserId,
   createProjectChatMessageRow,
   deleteProjectChatThreadByUserId,
   listProjectChatMessagesByUserId,
@@ -36,20 +38,32 @@ export async function sendUserProjectMessage(user, message) {
   });
 }
 
-export async function listUserProjectMessages(userId) {
+export async function listUserProjectMessages(userId, pagination = {}) {
   const userObjectId = toObjectId(userId);
   if (!userObjectId) throw new Error('Invalid user.');
-  return listProjectChatMessagesByUserId(userObjectId);
+  const [items, total] = await Promise.all([
+    listProjectChatMessagesByUserId(userObjectId, pagination),
+    countProjectChatMessagesByUserId(userObjectId)
+  ]);
+  return { items, total };
 }
 
-export async function listAdminProjectThreads() {
-  return listProjectChatThreadsRows();
+export async function listAdminProjectThreads(pagination = {}) {
+  const [items, total] = await Promise.all([
+    listProjectChatThreadsRows(pagination),
+    countProjectChatThreadsRows()
+  ]);
+  return { items, total };
 }
 
-export async function listAdminProjectMessagesByUserId(targetUserId) {
+export async function listAdminProjectMessagesByUserId(targetUserId, pagination = {}) {
   const targetUserObjectId = toObjectId(targetUserId);
   if (!targetUserObjectId) throw new Error('Invalid user.');
-  return listProjectChatMessagesByUserId(targetUserObjectId);
+  const [items, total] = await Promise.all([
+    listProjectChatMessagesByUserId(targetUserObjectId, pagination),
+    countProjectChatMessagesByUserId(targetUserObjectId)
+  ]);
+  return { items, total };
 }
 
 export async function sendAdminProjectMessage(adminUser, targetUserId, message) {

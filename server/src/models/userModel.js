@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
   },
 );
+userSchema.index({ role: 1, createdAt: -1 });
+userSchema.index({ creatorRequestStatus: 1, createdAt: -1 });
+userSchema.index({ isActive: 1, role: 1 });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
@@ -39,7 +42,9 @@ export async function countActiveUsersByRole(role) {
 }
 
 export async function findUserByEmail(email) {
-  const user = await User.findOne({ email }).lean();
+  const user = await User.findOne({ email })
+    .select('name email password avatarUrl role creatorRequestStatus creatorRequestMessage creatorRequestedAt creatorReviewedAt creatorReviewedById tokenVersion isActive createdAt')
+    .lean();
   if (!user) return null;
   return {
     id: String(user._id),
@@ -60,7 +65,9 @@ export async function findUserByEmail(email) {
 }
 
 export async function findUserByName(name) {
-  const user = await User.findOne({ name }).lean();
+  const user = await User.findOne({ name })
+    .select('name email password avatarUrl role creatorRequestStatus creatorRequestMessage creatorRequestedAt creatorReviewedAt creatorReviewedById tokenVersion isActive createdAt')
+    .lean();
   if (!user) return null;
   return {
     id: String(user._id),
@@ -82,7 +89,9 @@ export async function findUserByName(name) {
 
 export async function findUserById(userId) {
   if (!mongoose.Types.ObjectId.isValid(userId)) return null;
-  const user = await User.findById(userId).lean();
+  const user = await User.findById(userId)
+    .select('name email password avatarUrl role creatorRequestStatus creatorRequestMessage creatorRequestedAt creatorReviewedAt creatorReviewedById tokenVersion isActive createdAt')
+    .lean();
   if (!user) return null;
   return {
     id: String(user._id),
@@ -216,8 +225,19 @@ export async function deleteUserById(userId) {
   };
 }
 
-export async function listUsers() {
-  const users = await User.find().sort({ createdAt: -1 }).lean();
+export async function listUsers({ page, limit, projection, filter } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = User.find(filter || {})
+    .select(
+      projection ||
+        'name email avatarUrl role creatorRequestStatus creatorRequestMessage creatorRequestedAt creatorReviewedAt creatorReviewedById isActive createdAt tokenVersion'
+    )
+    .sort({ createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const users = await query.lean();
   return users.map((user) => ({
     id: String(user._id),
     name: user.name,
@@ -231,6 +251,32 @@ export async function listUsers() {
     creatorReviewedById: user.creatorReviewedById || '',
     isActive: user.isActive !== false,
     createdAt: user.createdAt,
+  }));
+}
+
+export async function countUsersWithFilter(filter = {}) {
+  return User.countDocuments(filter);
+}
+
+export async function findUsersByIds(userIds, { projection } = {}) {
+  const ids = (Array.isArray(userIds) ? userIds : [])
+    .map((id) => String(id))
+    .filter((id) => mongoose.Types.ObjectId.isValid(id))
+    .map((id) => new mongoose.Types.ObjectId(id));
+  if (!ids.length) return [];
+
+  const rows = await User.find({ _id: { $in: ids } })
+    .select(projection || 'name email role avatarUrl isActive createdAt')
+    .lean();
+
+  return rows.map((user) => ({
+    id: String(user._id),
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    avatarUrl: user.avatarUrl || '',
+    isActive: user.isActive !== false,
+    createdAt: user.createdAt
   }));
 }
 

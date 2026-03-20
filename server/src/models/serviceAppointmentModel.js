@@ -14,6 +14,8 @@ const serviceAppointmentSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
   },
 );
+serviceAppointmentSchema.index({ status: 1, createdAt: -1 });
+serviceAppointmentSchema.index({ email: 1, createdAt: -1 });
 
 const ServiceAppointment =
   mongoose.models.ServiceAppointment ||
@@ -34,8 +36,14 @@ export async function createServiceAppointmentRow(payload) {
   };
 }
 
-export async function listServiceAppointmentsRows() {
-  const rows = await ServiceAppointment.find().sort({ createdAt: -1 }).lean();
+export async function listServiceAppointmentsRows({ page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = ServiceAppointment.find().sort({ createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map((row) => ({
     id: String(row._id),
     serviceTitle: row.serviceTitle,

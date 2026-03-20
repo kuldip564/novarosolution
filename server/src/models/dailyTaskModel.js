@@ -28,6 +28,8 @@ const dailyTaskSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
   },
 );
+dailyTaskSchema.index({ employeeId: 1, workDate: -1, createdAt: -1 });
+dailyTaskSchema.index({ status: 1, approvalRequested: 1, workDate: -1 });
 
 const DailyTask = mongoose.models.DailyTask || mongoose.model('DailyTask', dailyTaskSchema);
 
@@ -61,15 +63,31 @@ export async function createDailyTask(payload) {
   return normalizeTask(created.toObject());
 }
 
-export async function listAllDailyTasks() {
-  const rows = await DailyTask.find().sort({ workDate: -1, createdAt: -1 }).lean();
+export async function listAllDailyTasks({ page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 200) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = DailyTask.find().sort({ workDate: -1, createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map(normalizeTask);
 }
 
-export async function listDailyTasksByEmployee(employeeId) {
+export async function listDailyTasksByEmployee(employeeId, { page, limit } = {}) {
   if (!mongoose.Types.ObjectId.isValid(employeeId)) return [];
-  const rows = await DailyTask.find({ employeeId }).sort({ workDate: -1, createdAt: -1 }).lean();
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 200) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = DailyTask.find({ employeeId }).sort({ workDate: -1, createdAt: -1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map(normalizeTask);
+}
+
+export async function countDailyTasks(filter = {}) {
+  return DailyTask.countDocuments(filter);
 }
 
 export async function updateDailyTaskById(taskId, updates) {

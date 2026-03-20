@@ -1,6 +1,6 @@
 import dns from 'node:dns';
 import mongoose from 'mongoose';
-import { MONGODB_DNS_SERVERS, MONGODB_URI } from '../config/env.js';
+import { MONGODB_DNS_SERVERS, MONGODB_URI, NODE_ENV } from '../config/env.js';
 
 let connectionPromise;
 let dnsConfigured = false;
@@ -25,8 +25,10 @@ function configureDnsServers() {
 async function connectWithUri(uri) {
   configureDnsServers();
   await mongoose.connect(uri, {
-    autoIndex: true,
+    autoIndex: NODE_ENV !== 'production',
     serverSelectionTimeoutMS: 12000,
+    maxPoolSize: 30,
+    minPoolSize: NODE_ENV === 'production' ? 5 : 1,
     serverApi: {
       version: '1',
       strict: true,

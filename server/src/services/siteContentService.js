@@ -1,6 +1,9 @@
 import defaultSiteContent from '../config/siteContent.js';
 import { getSiteContentRow, upsertSiteContent } from '../models/siteContentModel.js';
 import { isImageDataUrl, uploadImageDataUrl } from './cloudinaryService.js';
+import { deleteCacheByPrefix, getCache, setCache } from './cacheService.js';
+
+const SITE_CONTENT_CACHE_KEY = 'site-content:default';
 
 async function replaceImageDataUrls(value, path = []) {
   if (Array.isArray(value)) {
@@ -29,13 +32,17 @@ async function replaceImageDataUrls(value, path = []) {
 }
 
 export async function getSiteContent() {
+  const cached = await getCache(SITE_CONTENT_CACHE_KEY);
+  if (cached) return cached;
   try {
     const row = await getSiteContentRow();
 
     if (!row?.content) {
       await upsertSiteContent(defaultSiteContent);
+      await setCache(SITE_CONTENT_CACHE_KEY, defaultSiteContent, 120);
       return defaultSiteContent;
     }
+    await setCache(SITE_CONTENT_CACHE_KEY, row.content, 120);
     return row.content;
   } catch (error) {
     console.warn(`[site-content] Using default content due to DB error: ${error?.message || 'unknown error'}`);
@@ -50,6 +57,8 @@ export async function updateSiteContent(content) {
   try {
     const contentWithUploadedImages = await replaceImageDataUrls(content);
     await upsertSiteContent(contentWithUploadedImages);
+    await deleteCacheByPrefix('site-content:');
+    await deleteCacheByPrefix('overview:');
     return getSiteContent();
   } catch (error) {
     throw new Error(`Unable to save site content: ${error?.message || 'database unavailable'}`);

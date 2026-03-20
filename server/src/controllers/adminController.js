@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import XLSX from 'xlsx';
 import { countContactSubmissions } from '../models/contactSubmissionModel.js';
 import {
+  countDailyTasks,
   createDailyTask,
   deleteDailyTaskById,
   listAllDailyTasks,
@@ -19,6 +20,7 @@ import { countServiceAppointments } from '../models/serviceAppointmentModel.js';
 import {
   countActiveUsersByRole,
   countUsers,
+  countUsersWithFilter,
   countUsersByRole,
   createUser,
   deleteUserById,
@@ -28,34 +30,40 @@ import {
   listUsers,
   updateUserById,
 } from '../models/userModel.js';
+import { deleteCacheByPrefix, getCache, setCache } from '../services/cacheService.js';
+import { parsePagination } from '../utils/pagination.js';
 
 export async function getAdminOverview(req, res) {
   try {
-    const [totalUsers, totalAdmins, totalMembers, totalEmployees, totalCreators, totalSubmissions, totalAppointments, users] =
+    const cacheKey = 'overview:admin';
+    const cached = await getCache(cacheKey);
+    if (cached) return res.status(200).json({ ok: true, data: cached });
+    const [totalUsers, totalAdmins, totalMembers, totalEmployees, totalCreators, totalSubmissions, totalAppointments, pendingCreatorRequests] =
       await Promise.all([
       countUsers(),
       countUsersByRole('admin'),
       countUsersByRole('user'),
-        countUsersByRole('employee'),
+      countUsersByRole('employee'),
       countUsersByRole('creator'),
       countContactSubmissions(),
       countServiceAppointments(),
-      listUsers(),
+      countUsersWithFilter({ creatorRequestStatus: 'pending' }),
     ]);
-    const pendingCreatorRequests = users.filter((item) => item.creatorRequestStatus === 'pending').length;
+    const payload = {
+      totalUsers,
+      totalAdmins,
+      totalMembers,
+      totalEmployees,
+      totalCreators,
+      pendingCreatorRequests,
+      totalSubmissions,
+      totalAppointments,
+    };
+    await setCache(cacheKey, payload, 45);
 
     return res.status(200).json({
       ok: true,
-      data: {
-        totalUsers,
-        totalAdmins,
-        totalMembers,
-        totalEmployees,
-        totalCreators,
-        pendingCreatorRequests,
-        totalSubmissions,
-        totalAppointments,
-      },
+      data: payload,
     });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to load admin overview.', error: error.message });
@@ -64,7 +72,12 @@ export async function getAdminOverview(req, res) {
 
 export async function getAdminEmployees(req, res) {
   try {
-    const [employeeProfiles, users] = await Promise.all([listEmployees(), listUsers()]);
+    const { page, limit } = parsePagination(req.query);
+    const [employeeProfiles, users, total] = await Promise.all([
+      listEmployees({ page, limit }),
+      listUsers({ page, limit, projection: 'name email role isActive createdAt', filter: { role: 'employee' } }),
+      countUsersWithFilter({ role: 'employee' }),
+    ]);
     const employeeUsers = users.filter((item) => item.role === 'employee');
     const profileByUserId = new Map(employeeProfiles.filter((item) => item.userId).map((item) => [item.userId, item]));
     const profileByEmail = new Map(employeeProfiles.map((item) => [String(item.email || '').toLowerCase(), item]));
@@ -86,8 +99,13 @@ export async function getAdminEmployees(req, res) {
         updatedAt: profile?.updatedAt || user.createdAt,
       };
     });
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
 
-    return res.status(200).json({ ok: true, data: employees });
+    return res.status(200).json({
+      ok: true,
+      data: employees,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to load employees.', error: error.message });
   }
@@ -149,6 +167,7 @@ export async function postAdminEmployee(req, res) {
       isActive: typeof isActive === 'boolean' ? isActive : true,
       joinedAt: joinedAt ? new Date(joinedAt) : new Date(),
     });
+    await deleteCacheByPrefix('overview:');
 
     return res.status(201).json({ ok: true, message: 'Employee added successfully.', data: employee });
   } catch (error) {
@@ -202,6 +221,7 @@ export async function patchAdminEmployee(req, res) {
 
     const updated = await updateEmployeeById(employeeId, updates);
     if (!updated) return res.status(404).json({ ok: false, message: 'Employee not found.' });
+    await deleteCacheByPrefix('overview:');
     return res.status(200).json({ ok: true, message: 'Employee updated successfully.', data: updated });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to update employee.', error: error.message });
@@ -221,6 +241,7 @@ export async function deleteAdminEmployee(req, res) {
     if (mappedUser && mappedUser.role === 'employee') {
       await updateUserById(mappedUser.id, { role: 'user' });
     }
+    await deleteCacheByPrefix('overview:');
 
     return res.status(200).json({ ok: true, message: 'Employee deleted successfully.' });
   } catch (error) {
@@ -230,7 +251,12 @@ export async function deleteAdminEmployee(req, res) {
 
 export async function getAdminEmployeeTasks(req, res) {
   try {
-    const [tasks, users] = await Promise.all([listAllDailyTasks(), listUsers()]);
+    const { page, limit } = parsePagination(req.query);
+    const [tasks, users, total] = await Promise.all([
+      listAllDailyTasks({ page, limit }),
+      listUsers({ projection: 'name email' }),
+      countDailyTasks(),
+    ]);
     const userMap = new Map(users.map((u) => [u.id, u]));
     const rows = tasks.map((task) => ({
       ...task,
@@ -238,7 +264,12 @@ export async function getAdminEmployeeTasks(req, res) {
       employeeEmail: userMap.get(task.employeeId)?.email || '',
       assignedByName: userMap.get(task.assignedById)?.name || 'Admin',
     }));
-    return res.status(200).json({ ok: true, data: rows });
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: rows,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to load employee tasks.', error: error.message });
   }
@@ -271,6 +302,7 @@ export async function postAdminEmployeeTask(req, res) {
     };
 
     const task = await createDailyTask(payload);
+    await deleteCacheByPrefix('overview:');
     return res.status(201).json({ ok: true, message: 'Task assigned successfully.', data: task });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to assign task.', error: error.message });
@@ -323,6 +355,7 @@ export async function patchAdminEmployeeTask(req, res) {
 
     const updated = await updateDailyTaskById(taskId, updates);
     if (!updated) return res.status(404).json({ ok: false, message: 'Task not found.' });
+    await deleteCacheByPrefix('overview:');
     return res.status(200).json({ ok: true, message: 'Task updated successfully.', data: updated });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to update task.', error: error.message });
@@ -334,6 +367,7 @@ export async function deleteAdminEmployeeTask(req, res) {
     const { taskId } = req.params;
     const deleted = await deleteDailyTaskById(taskId);
     if (!deleted) return res.status(404).json({ ok: false, message: 'Task not found.' });
+    await deleteCacheByPrefix('overview:');
     return res.status(200).json({ ok: true, message: 'Task deleted successfully.' });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to delete task.', error: error.message });
@@ -399,8 +433,17 @@ export async function downloadAdminEmployeeMonthlyReport(req, res) {
 
 export async function getAdminUsers(req, res) {
   try {
-    const users = await listUsers();
-    return res.status(200).json({ ok: true, data: users });
+    const { page, limit } = parsePagination(req.query);
+    const [users, total] = await Promise.all([
+      listUsers({ page, limit }),
+      countUsers(),
+    ]);
+    const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
+    return res.status(200).json({
+      ok: true,
+      data: users,
+      pagination: { page, limit, total, totalPages }
+    });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to load users.', error: error.message });
   }
@@ -461,6 +504,7 @@ export async function patchAdminUserRole(req, res) {
         });
       }
     }
+    await deleteCacheByPrefix('overview:');
 
     return res.status(200).json({
       ok: true,
@@ -505,6 +549,7 @@ export async function patchAdminUserStatus(req, res) {
     if (isActive === false) updates.tokenVersion = Number(targetUser.tokenVersion || 0) + 1;
     const updated = await updateUserById(userId, updates);
     if (!updated) return res.status(404).json({ ok: false, message: 'User not found.' });
+    await deleteCacheByPrefix('overview:');
     return res.status(200).json({ ok: true, message: `User ${isActive ? 'enabled' : 'disabled'} successfully.`, data: updated });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to update user status.', error: error.message });
@@ -537,6 +582,7 @@ export async function deleteAdminUser(req, res) {
       if (adminCount <= 1) return res.status(400).json({ ok: false, message: 'Cannot delete the last admin user.' });
     }
     await deleteUserById(userId);
+    await deleteCacheByPrefix('overview:');
     return res.status(200).json({ ok: true, message: 'User deleted successfully.' });
   } catch (error) {
     return res.status(500).json({ ok: false, message: 'Unable to delete user.', error: error.message });
@@ -574,6 +620,7 @@ export async function patchAdminUserCreatorRequest(req, res) {
 
     const updated = await updateUserById(userId, updates);
     if (!updated) return res.status(404).json({ ok: false, message: 'User not found.' });
+    await deleteCacheByPrefix('overview:');
 
     return res.status(200).json({
       ok: true,

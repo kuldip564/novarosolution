@@ -15,6 +15,8 @@ const projectChatSchema = new mongoose.Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: false },
   },
 );
+projectChatSchema.index({ userId: 1, createdAt: 1 });
+projectChatSchema.index({ userDeleteRequested: 1, createdAt: -1 });
 
 const ProjectChat =
   mongoose.models.ProjectChat || mongoose.model('ProjectChat', projectChatSchema);
@@ -39,12 +41,22 @@ export async function createProjectChatMessageRow(payload) {
   return mapMessage(row);
 }
 
-export async function listProjectChatMessagesByUserId(userId) {
-  const rows = await ProjectChat.find({ userId }).sort({ createdAt: 1 }).lean();
+export async function listProjectChatMessagesByUserId(userId, { page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 200) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
+  const query = ProjectChat.find({ userId }).sort({ createdAt: 1 });
+  if (normalizedLimit) query.skip(skip).limit(normalizedLimit);
+  const rows = await query.lean();
   return rows.map(mapMessage);
 }
 
-export async function listProjectChatThreadsRows() {
+export async function listProjectChatThreadsRows({ page, limit } = {}) {
+  const normalizedPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const normalizedLimit =
+    Number.isInteger(limit) && limit > 0 ? Math.min(limit, 100) : null;
+  const skip = normalizedLimit ? (normalizedPage - 1) * normalizedLimit : 0;
   const rows = await ProjectChat.aggregate([
     { $sort: { createdAt: -1 } },
     {
@@ -60,6 +72,7 @@ export async function listProjectChatThreadsRows() {
       },
     },
     { $sort: { lastMessageAt: -1 } },
+    ...(normalizedLimit ? [{ $skip: skip }, { $limit: normalizedLimit }] : [])
   ]);
 
   return rows.map((row) => ({
@@ -72,6 +85,15 @@ export async function listProjectChatThreadsRows() {
     userDeleteRequested: Boolean(row.userDeleteRequested),
     userDeleteRequestedAt: row.userDeleteRequestedAt || null,
   }));
+}
+
+export async function countProjectChatThreadsRows() {
+  const rows = await ProjectChat.aggregate([{ $group: { _id: '$userId' } }, { $count: 'total' }]);
+  return Number(rows?.[0]?.total || 0);
+}
+
+export async function countProjectChatMessagesByUserId(userId) {
+  return ProjectChat.countDocuments({ userId });
 }
 
 export async function markProjectChatDeleteRequestedByUserId(userId) {

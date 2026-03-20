@@ -18,3 +18,7 @@ export async function listServiceAppointments() {
   return listServiceAppointmentsRows();
 }
 
+export async function listServiceAppointmentsPaginated({ page, limit } = {}) {
+  return listServiceAppointmentsRows({ page, limit });
+}
+

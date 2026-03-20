@@ -1,12 +1,12 @@
 const siteContent = {
   hero: {
-    badge: 'Trusted product engineering partner',
+    badge: 'Full-service digital product engineering partner',
     titleMain: 'NovaRo Solution',
-    titleGradient: 'UI/UX design, web development, and mobile app development experts.',
+    titleGradient: 'UI/UX design, web development, and mobile app development',
     description:
-      'We help ambitious teams with UI/UX design, web development, and mobile app development to engineer and scale premium digital products with speed, clarity, and enterprise-grade reliability.',
+      'We help startups and growing businesses plan, design, and build digital products. Our team handles UI/UX design, web development, and mobile app development in one place.',
     primaryCta: 'Start Your Project',
-    secondaryCta: 'View Services',
+    secondaryCta: 'See Services',
     highlights: [
       'Enterprise-grade quality',
       'Battle-tested infrastructure',
@@ -25,7 +25,7 @@ const siteContent = {
   services: {
     title: 'UI/UX design, web development, and mobile app development services',
     description:
-      'From zero to one, or one to one hundred, NovaRo Solution is your full-service digital product engineering partner across UI/UX design, web development, and mobile app development.',
+      'Need one trusted team for design and development? We deliver UI/UX design, web development, and mobile app development with clear process and fast delivery.',
     items: [
       {
         iconKey: 'web-development',
@@ -34,7 +34,7 @@ const siteContent = {
         deliveryTime: '4-8 weeks',
         pricing: 'Starting at $3,500',
         description:
-          'High-performance web applications built with modern React ecosystems and cloud-native tooling.',
+          'We build fast, secure, and SEO-friendly websites and web apps for your business.',
         details: [
           'Scalable architecture planning for long-term growth',
           'Fully responsive frontend with conversion-focused UI',
@@ -49,7 +49,7 @@ const siteContent = {
         deliveryTime: '2-5 weeks',
         pricing: 'Starting at $1,800',
         description:
-          'Product-led design that feels premium, intuitive, and aligned with your brand vision.',
+          'We design clean and easy interfaces that help users understand your product quickly.',
         details: [
           'User journey mapping and flow optimization',
           'High-fidelity screens and interactive prototype delivery',
@@ -64,7 +64,7 @@ const siteContent = {
         deliveryTime: '6-10 weeks',
         pricing: 'Starting at $4,200',
         description:
-          'Native-feeling mobile apps using cross-platform stacks that scale with your product.',
+          'We build Android and iOS mobile apps with smooth performance and simple user experience.',
         details: [
           'Cross-platform app architecture and reusable codebase',
           'Push notifications, analytics, and third-party integrations',
@@ -79,7 +79,7 @@ const siteContent = {
         deliveryTime: '3-6 weeks',
         pricing: 'Starting at $1,200',
         description:
-          'Technical SEO and growth frameworks that help your product get discovered and adopted.',
+          'We improve technical SEO, content strategy, and growth tracking so your website gets more visibility.',
         details: [
           'Technical audits to remove ranking blockers',
           'Content and keyword strategy aligned to business goals',
@@ -90,35 +90,35 @@ const siteContent = {
     ],
   },
   features: {
-    title: 'Why teams choose NovaRo Solution',
+    title: 'Why businesses choose NovaRo Solution',
     description:
-      'We combine product strategy, engineering rigor, and premium design execution into one focused delivery team.',
+      'You get one reliable team for strategy, UI/UX design, web development, and mobile app development.',
     items: [
       {
-        title: 'Fast & Performant',
+        title: 'Fast and SEO-friendly',
         description:
-          'Fast-loading products engineered with performance budgets, optimized APIs, and clean architecture.',
+          'We optimize speed, structure, and technical SEO for better rankings and user experience.',
         icon: '⚡',
       },
       {
-        title: 'Secure by Design',
-        description: 'Security integrated into every layer, from authentication to infrastructure hardening.',
+        title: 'Secure and stable',
+        description: 'Security is built into every layer, from authentication to backend architecture.',
         icon: '🔒',
       },
       {
-        title: 'Dedicated Support',
-        description: 'Hands-on collaboration with clear communication, ownership, and long-term partnership.',
+        title: 'Clear communication',
+        description: 'We keep communication simple with clear updates, timelines, and ownership.',
         icon: '💬',
       },
       {
-        title: 'Cost Effective',
-        description: 'Flexible delivery models that maximize output while keeping your roadmap sustainable.',
+        title: 'Flexible pricing',
+        description: 'Choose a delivery model that fits your budget and growth stage.',
         icon: '💰',
       },
     ],
   },
   testimonials: {
-    title: 'Trusted by teams that move fast',
+    title: 'Trusted by growing teams',
     description:
       'Founders and product leaders rely on NovaRo Solution to deliver business-critical outcomes with confidence.',
     items: [
@@ -149,22 +149,22 @@ const siteContent = {
     ],
   },
   cta: {
-    title: 'Ready to build your next big product?',
+    title: 'Ready to build your next digital product?',
     description:
-      'Partner with NovaRo Solution for a dedicated product squad that turns ideas into measurable results.',
+      'Work with Novaro Solution for UI/UX design, web development, mobile app development, and SEO support.',
     primaryCta: 'Book a Strategy Call',
     secondaryCta: 'Discuss Your Roadmap',
   },
   aboutPage: {
     eyebrow: 'About NovaRo Solution',
-    title: 'A modern product studio built for ambitious teams.',
+    title: 'A simple and reliable digital product team.',
     paragraphs: [
-      'NovaRo Solution partners with startups and growth-stage companies to design, build, and scale products that feel world-class from day one.',
-      'We unite strategy, design, and engineering into one execution model so your team can launch faster with less operational overhead.',
+      'Novaro Solution helps businesses turn ideas into real products with UI/UX design, web development, and mobile app development.',
+      'Our goal is simple: build clear, high-quality products that users understand and businesses can scale.',
     ],
     workTitle: 'How we work with you',
     workDescription:
-      'Every engagement starts with deep product understanding. Then we align execution to your priorities, timeline, and business goals.',
+      'We start with your business goals, then create a clear plan, timeline, and delivery process.',
     workPoints: [
       'Product strategy and discovery workshops',
       'Design sprints and rapid prototyping',
@@ -206,9 +206,9 @@ const siteContent = {
   },
   servicesPage: {
     eyebrow: 'Services',
-    title: 'Everything you need to launch and scale with confidence.',
+    title: 'Everything you need to launch and grow online.',
     description:
-      'From early concept to production scale, NovaRo Solution delivers strategy, design, engineering, and growth support in one streamlined partner model.',
+      'From idea to launch, we provide UI/UX design, web development, mobile app development, and SEO in one service.',
   },
   projectsPage: {
     eyebrow: 'Our Projects',

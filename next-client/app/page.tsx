@@ -14,7 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     title: `${heroTitle} | Home`,
     description: heroDescription,
-    keywords: ['novaro', 'web development', 'seo', 'next.js', 'mern'],
+    keywords: [
+      'ui ux design',
+      'web development',
+      'mobile app development',
+      'digital product engineering',
+      'seo optimization'
+    ],
     path: '/'
   });
 }
@@ -37,7 +43,7 @@ export default async function HomePage() {
         title={`${content?.hero?.titleMain || 'NovaRo Solution'} | Home`}
         description={content?.hero?.description || 'Premium digital product development.'}
         canonical={canonical}
-        keywords={['novaro', 'services', 'development']}
+        keywords={['ui ux design', 'web development', 'mobile app development', 'seo']}
         schema={schema}
       />
       <HomePageClient data={content} />

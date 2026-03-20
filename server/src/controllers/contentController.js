@@ -3,6 +3,7 @@ import { getSiteContent, updateSiteContent } from '../services/siteContentServic
 export async function getSiteContentData(req, res) {
   try {
     const content = await getSiteContent();
+    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
     res.status(200).json({ ok: true, data: content });
   } catch (error) {
     res.status(500).json({
