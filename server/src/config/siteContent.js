@@ -2,9 +2,9 @@ const siteContent = {
   hero: {
     badge: 'Trusted product engineering partner',
     titleMain: 'NovaRo Solution',
-    titleGradient: 'Building the future of digital products.',
+    titleGradient: 'UI/UX design, web development, and mobile app development experts.',
     description:
-      'We help ambitious teams design, engineer, and scale premium digital products with speed, clarity, and enterprise-grade reliability.',
+      'We help ambitious teams with UI/UX design, web development, and mobile app development to engineer and scale premium digital products with speed, clarity, and enterprise-grade reliability.',
     primaryCta: 'Start Your Project',
     secondaryCta: 'View Services',
     highlights: [
@@ -23,9 +23,9 @@ const siteContent = {
     ],
   },
   services: {
-    title: 'Services built for modern teams',
+    title: 'UI/UX design, web development, and mobile app development services',
     description:
-      'From zero to one, or one to one hundred - NovaRo Solution is your full-stack product partner.',
+      'From zero to one, or one to one hundred, NovaRo Solution is your full-service digital product engineering partner across UI/UX design, web development, and mobile app development.',
     items: [
       {
         iconKey: 'web-development',
