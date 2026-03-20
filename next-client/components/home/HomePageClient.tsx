@@ -4,17 +4,21 @@ import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
+  FaAward,
   FaBullhorn,
   FaChartLine,
   FaCloud,
   FaCode,
   FaCogs,
+  FaComments,
   FaMobileAlt,
   FaPalette,
   FaRocket,
   FaSearch,
   FaServer,
-  FaShieldAlt
+  FaShieldAlt,
+  FaStar,
+  FaUsers
 } from 'react-icons/fa';
 import {
   createServiceAppointment,
@@ -26,32 +30,32 @@ type AnyRecord = Record<string, any>;
 const CreatorFeedPreview = lazy(() => import('./CreatorFeedPreview'));
 
 const defaultStats = [
-  { label: 'Projects Delivered', value: '500+', icon: '✨' },
-  { label: 'Active Clients', value: '200+', icon: '🤝' },
-  { label: 'Years Experience', value: '10+', icon: '🎯' },
-  { label: 'Experts on Team', value: '50+', icon: '👨‍💻' }
+  { label: 'Projects Delivered', value: '500+', iconKey: 'projects' },
+  { label: 'Active Clients', value: '200+', iconKey: 'clients' },
+  { label: 'Years Experience', value: '10+', iconKey: 'experience' },
+  { label: 'Experts on Team', value: '50+', iconKey: 'team' }
 ];
 
 const defaultFeatures = [
   {
     title: 'Fast and SEO-friendly',
     description: 'We optimize performance, structure, and content for better user experience and rankings.',
-    icon: '⚡'
+    iconKey: 'speed'
   },
   {
     title: 'Secure and stable',
     description: 'Security is built into every layer, from login flows to backend systems.',
-    icon: '🔒'
+    iconKey: 'security'
   },
   {
     title: 'Clear communication',
     description: 'You get clear updates, timelines, and direct communication with our team.',
-    icon: '💬'
+    iconKey: 'communication'
   },
   {
     title: 'Flexible pricing',
     description: 'Choose a service plan that matches your budget and growth stage.',
-    icon: '💰'
+    iconKey: 'value'
   }
 ];
 
@@ -127,6 +131,20 @@ const ICON_BY_KEY: Record<string, any> = {
   'search-strategy': FaSearch,
   'product-engineering': FaCogs,
   'launch-support': FaRocket
+};
+
+const STATS_ICON_BY_KEY: Record<string, any> = {
+  projects: FaAward,
+  clients: FaUsers,
+  experience: FaChartLine,
+  team: FaCogs
+};
+
+const FEATURE_ICON_BY_KEY: Record<string, any> = {
+  speed: FaRocket,
+  security: FaShieldAlt,
+  communication: FaComments,
+  value: FaChartLine
 };
 
 function resolveServiceIconKey(service: AnyRecord) {
@@ -284,7 +302,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section id="contact-form" className="w-full px-4 py-18 md:py-24">
         <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((item: AnyRecord, index: number) => (
+          {stats.map((item: AnyRecord, index: number) => {
+            const StatIcon = STATS_ICON_BY_KEY[String(item.iconKey || '').toLowerCase()] || FaAward;
+            return (
             <motion.article
               key={item.label}
               initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
@@ -294,11 +314,14 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               whileHover={reduceMotion ? undefined : { y: -3 }}
               className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center"
             >
-              <div className="text-2xl">{item.icon}</div>
+              <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-lg text-pink-200">
+                <StatIcon />
+              </div>
               <p className="text-2xl font-bold mt-1">{item.value}</p>
               <p className="text-sm text-slate-400">{item.label}</p>
             </motion.article>
-          ))}
+          );
+          })}
         </div>
         </section>
       </Reveal>
@@ -394,7 +417,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
           </h2>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature: AnyRecord, index: number) => (
+            {features.map((feature: AnyRecord, index: number) => {
+              const FeatureIcon =
+                FEATURE_ICON_BY_KEY[String(feature.iconKey || '').toLowerCase()] || FaRocket;
+              return (
               <motion.article
                 key={feature.title}
                 initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
@@ -404,11 +430,14 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 whileHover={reduceMotion ? undefined : { y: -4 }}
                 className="rounded-3xl border border-white/10 bg-white/5 p-6"
               >
-                <div className="text-3xl">{feature.icon}</div>
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-pink-200">
+                  <FeatureIcon />
+                </div>
                 <h3 className="mt-3 text-lg font-semibold">{feature.title}</h3>
                 <p className="mt-2 text-sm text-slate-300">{feature.description}</p>
               </motion.article>
-            ))}
+            );
+            })}
           </div>
         </div>
         </section>
@@ -430,8 +459,19 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 className="rounded-3xl border border-white/10 bg-white/5 p-6"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl">{t.avatar}</div>
-                  <div className="text-amber-400">{Array.from({ length: t.rating || 5 }).map((_, i) => <span key={i}>★</span>)}</div>
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-semibold">
+                    {String(t.name || 'N')
+                      .split(' ')
+                      .map((part: string) => part[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </div>
+                  <div className="flex items-center gap-1 text-amber-400">
+                    {Array.from({ length: t.rating || 5 }).map((_, i) => (
+                      <FaStar key={i} size={12} />
+                    ))}
+                  </div>
                 </div>
                 <p className="mt-4 text-slate-200">{t.content}</p>
                 <p className="mt-4 font-semibold">{t.name}</p>
