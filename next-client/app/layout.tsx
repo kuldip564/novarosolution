@@ -6,6 +6,7 @@ import { buildMetadata, generateOrganizationSchema, getSiteUrl } from '@/lib/seo
 import SEO from '@/components/SEO';
 import Providers from './providers';
 import RouteTransition from '@/components/animations/RouteTransition';
+import HeaderNav from '@/components/layout/HeaderNav';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,14 +38,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <header className="header">
           <div className="container header-content">
-            <strong>Novaro Solution</strong>
-            <nav className="nav" aria-label="Main navigation">
-              <Link href="/">Home</Link>
-              <Link href="/services">Services</Link>
-              <Link href="/projects">Projects</Link>
-              <Link href="/blog">Blog</Link>
-              <Link href="/contact">Contact</Link>
-            </nav>
+            <Link href="/" className="brand-title">Novaro Solution</Link>
+            <HeaderNav />
           </div>
         </header>
         <Providers>
