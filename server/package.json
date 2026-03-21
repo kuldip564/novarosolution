@@ -13,7 +13,8 @@
     "build:client": "npm --prefix ../clinte run build",
     "vercel-build": "npm --prefix ../clinte install && npm run build:client",
     "build": "npm run build:client",
-    "migrate:local-to-atlas": "node scripts/migrate-local-to-atlas.js"
+    "migrate:local-to-atlas": "node scripts/migrate-local-to-atlas.js",
+    "sync:site-content": "node scripts/temp-upload-sitecontent.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

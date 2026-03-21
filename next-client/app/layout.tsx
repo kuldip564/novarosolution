@@ -32,27 +32,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SEO
-          canonical={getSiteUrl()}
-          schema={generateOrganizationSchema()}
-        />
-        <header className="header">
-          <div className="container header-content">
-            <Link href="/" className="brand-title">Novaro Solution</Link>
-            <HeaderNav />
-          </div>
-        </header>
         <Providers>
+          <SEO
+            canonical={getSiteUrl()}
+            schema={generateOrganizationSchema()}
+          />
+          <header className="header">
+            <div className="container header-content">
+              <Link href="/" className="brand-title">Novaro Solution</Link>
+              <HeaderNav />
+            </div>
+          </header>
           <main className="main container">
             <RouteTransition>{children}</RouteTransition>
           </main>
+          <footer className="footer">
+            <div className="container footer-content">
+              <small>{new Date().getFullYear()} Novaro Solution</small>
+              <small>Built for performance and SEO.</small>
+            </div>
+          </footer>
         </Providers>
-        <footer className="footer">
-          <div className="container footer-content">
-            <small>{new Date().getFullYear()} Novaro Solution</small>
-            <small>Built for performance and SEO.</small>
-          </div>
-        </footer>
       </body>
     </html>
   );

@@ -44,9 +44,9 @@ body {
   padding: 0;
   min-height: 100%;
   background:
-    radial-gradient(920px circle at 20% -5%, rgba(244, 63, 94, 0.12), transparent 55%),
-    radial-gradient(820px circle at 88% -6%, rgba(59, 130, 246, 0.11), transparent 52%),
-    var(--bg);
+    radial-gradient(940px circle at 12% -8%, rgba(244, 63, 94, 0.1), transparent 58%),
+    radial-gradient(920px circle at 92% -10%, rgba(59, 130, 246, 0.1), transparent 56%),
+    linear-gradient(180deg, color-mix(in oklab, var(--bg) 95%, #111827 5%), var(--bg));
   color: var(--text);
   font-feature-settings: "cv11", "ss01";
   text-rendering: optimizeLegibility;
@@ -93,10 +93,10 @@ textarea:focus-visible {
 
 .header,
 .footer {
-  background: color-mix(in oklab, var(--surface) 86%, transparent);
+  background: color-mix(in oklab, var(--surface) 82%, transparent);
   border: 1px solid var(--border);
-  backdrop-filter: blur(16px) saturate(130%);
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(18px) saturate(130%);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
 }
 
 .header {
@@ -109,7 +109,7 @@ textarea:focus-visible {
 }
 
 .footer {
-  margin: 28px auto 12px;
+  margin: 36px auto 12px;
   width: min(1200px, 95%);
   border-radius: 16px;
 }
@@ -154,6 +154,7 @@ textarea:focus-visible {
 .brand-title {
   font-weight: 700;
   letter-spacing: -0.01em;
+  font-size: 1.02rem;
 }
 
 .nav-link {
@@ -194,6 +195,12 @@ textarea:focus-visible {
   border: 1px solid var(--border);
   background: color-mix(in oklab, var(--surface) 90%, transparent);
   color: var(--text);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  background: color-mix(in oklab, var(--surface) 82%, #a855f7 18%);
 }
 
 .mobile-menu-btn {
@@ -234,8 +241,12 @@ textarea:focus-visible {
   display: none;
 }
 
+.mobile-menu-overlay {
+  display: none;
+}
+
 .main {
-  padding: 36px 0 72px;
+  padding: 48px 0 72px;
 }
 
 .hero {
@@ -247,18 +258,29 @@ textarea:focus-visible {
 
 .btn {
   display: inline-block;
-  margin-top: 12px;
+  margin-top: 0;
   background: linear-gradient(90deg, #db2777 0%, #9333ea 100%);
   color: #ffffff;
   padding: 10px 16px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
 }
 
 .btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(219, 39, 119, 0.28);
+  filter: saturate(1.06);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.65;
 }
 
 .grid {
@@ -271,15 +293,35 @@ textarea:focus-visible {
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: 0 14px 28px rgba(2, 6, 23, 0.24);
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.16);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -120px -120px auto auto;
+  width: 240px;
+  height: 180px;
+  background:
+    radial-gradient(180px circle at 50% 50%, rgba(236, 72, 153, 0.16), transparent 72%);
+  pointer-events: none;
+  opacity: 0.75;
 }
 
 .card:hover {
   transform: translateY(-2px);
   border-color: rgba(236, 72, 153, 0.4);
+  box-shadow: 0 20px 42px rgba(2, 6, 23, 0.2);
+}
+
+.card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .post-list {
@@ -315,10 +357,169 @@ textarea:focus-visible {
 }
 
 input,
-textarea {
+textarea,
+select {
   color: var(--text);
   background: var(--surface-strong);
   border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  padding: 0.72rem 0.86rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in oklab, var(--muted) 84%, #ffffff 16%);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: color-mix(in oklab, var(--primary) 68%, #ffffff 32%);
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.16);
+  outline: none;
+}
+
+.section-title {
+  letter-spacing: -0.02em;
+  background: linear-gradient(to right, #ffffff, #dbeafe, #f1f5f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:root:not([data-theme='dark']) .section-title,
+:root[data-theme='light'] .section-title {
+  background: linear-gradient(to right, #0f172a, #1e293b, #334155);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.app-page-shell {
+  position: relative;
+}
+
+.app-page-shell::before {
+  content: '';
+  position: absolute;
+  inset: 20px 0 auto 0;
+  height: 280px;
+  pointer-events: none;
+  background:
+    radial-gradient(620px circle at 12% 0%, rgba(236, 72, 153, 0.1), transparent 56%),
+    radial-gradient(620px circle at 86% 2%, rgba(59, 130, 246, 0.09), transparent 54%);
+  z-index: 0;
+}
+
+.app-page-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero-shell,
+.page-content-card {
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+}
+
+.page-hero-shell {
+  padding: 24px;
+}
+
+.page-content-card {
+  padding: 20px;
+}
+
+.admin-shell {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-toolbar .btn {
+  padding: 8px 12px;
+  font-size: 0.78rem;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 0.72rem;
+  transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.admin-btn:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--border) 45%, #f472b6 55%);
+  background: color-mix(in oklab, var(--surface-strong) 78%, #f8fafc 22%);
+}
+
+.admin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.admin-btn-danger {
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #fca5a5;
+}
+
+.admin-btn-danger:hover {
+  border-color: rgba(248, 113, 113, 0.55);
+  background: rgba(127, 29, 29, 0.2);
+}
+
+.admin-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface-strong) 92%, transparent);
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.admin-stat-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--surface-strong) 92%, transparent);
+  padding: 12px;
+}
+
+.admin-list-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--surface-strong) 86%, transparent);
+  padding: 12px;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+
+.admin-list-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(236, 72, 153, 0.38);
 }
 
 .sr-only {
@@ -399,7 +600,7 @@ textarea {
   }
 
   .main {
-    padding-top: 28px;
+    padding-top: 34px;
   }
 
   .header,
@@ -410,6 +611,7 @@ textarea {
 
   .header-content {
     gap: 8px;
+    padding: 10px 0;
   }
 
   .nav-desktop {
@@ -423,11 +625,11 @@ textarea {
   .mobile-menu-panel {
     position: absolute;
     right: 0;
-    top: 48px;
+    top: 52px;
     display: flex;
-    width: min(90vw, 290px);
-    padding: 10px;
-    border-radius: 14px;
+    width: min(92vw, 320px);
+    padding: 12px;
+    border-radius: 16px;
     border: 1px solid var(--border);
     background: color-mix(in oklab, var(--surface) 92%, transparent);
     backdrop-filter: blur(14px);
@@ -435,6 +637,15 @@ textarea {
     flex-direction: column;
     gap: 6px;
     z-index: 80;
+  }
+
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    display: block;
+    background: rgba(2, 6, 23, 0.28);
+    border: 0;
+    z-index: 70;
   }
 
   .mobile-menu-panel .nav-link {

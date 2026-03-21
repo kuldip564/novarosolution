@@ -5,19 +5,19 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
+import { useAuth } from '@/context/AuthContext';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' }
+  { href: '/projects', label: 'Projects' }
 ];
 
 export default function HeaderNav() {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const { isAuthenticated, isCreator, isAdmin, isEmployee, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
@@ -62,6 +62,24 @@ export default function HeaderNav() {
     <div className="header-nav-wrap">
       <nav className="nav nav-desktop" aria-label="Main navigation">
         {NAV_ITEMS.map(renderLink)}
+        {isAuthenticated ? (
+          <>
+            {isCreator ? renderLink({ href: '/creator/studio', label: 'Creator Studio' }) : null}
+            {isEmployee ? renderLink({ href: '/employee/tasks', label: 'Tasks' }) : null}
+            {isAdmin ? renderLink({ href: '/admin/dashboard', label: 'Admin' }) : null}
+            {renderLink({ href: '/project-chat', label: 'Project Chat' })}
+            {renderLink({ href: '/creator-feed', label: 'Feed' })}
+            {renderLink({ href: '/profile', label: 'Profile' })}
+            <button type="button" className="nav-link" onClick={logout}>
+              <span>Logout</span>
+            </button>
+          </>
+        ) : (
+          <>
+            {renderLink({ href: '/login', label: 'Login' })}
+            {renderLink({ href: '/register', label: 'Register' })}
+          </>
+        )}
       </nav>
 
       <button
@@ -87,16 +105,44 @@ export default function HeaderNav() {
 
       <AnimatePresence>
         {menuOpen ? (
-          <motion.nav
-            className="mobile-menu-panel"
-            aria-label="Mobile navigation"
-            initial={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.98 }}
-            animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-            exit={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-          >
-            {NAV_ITEMS.map(renderLink)}
-          </motion.nav>
+          <>
+            <motion.button
+              aria-label="Close menu overlay"
+              className="mobile-menu-overlay"
+              onClick={() => setMenuOpen(false)}
+              initial={reduceMotion ? undefined : { opacity: 0 }}
+              animate={reduceMotion ? undefined : { opacity: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0 }}
+            />
+            <motion.nav
+              className="mobile-menu-panel"
+              aria-label="Mobile navigation"
+              initial={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.98 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {NAV_ITEMS.map(renderLink)}
+              {isAuthenticated ? (
+                <>
+                  {isCreator ? renderLink({ href: '/creator/studio', label: 'Creator Studio' }) : null}
+                  {isEmployee ? renderLink({ href: '/employee/tasks', label: 'Tasks' }) : null}
+                  {isAdmin ? renderLink({ href: '/admin/dashboard', label: 'Admin' }) : null}
+                  {renderLink({ href: '/project-chat', label: 'Project Chat' })}
+                  {renderLink({ href: '/creator-feed', label: 'Feed' })}
+                  {renderLink({ href: '/profile', label: 'Profile' })}
+                  <button type="button" className="nav-link" onClick={logout}>
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  {renderLink({ href: '/login', label: 'Login' })}
+                  {renderLink({ href: '/register', label: 'Register' })}
+                </>
+              )}
+            </motion.nav>
+          </>
         ) : null}
       </AnimatePresence>
     </div>

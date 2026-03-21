@@ -22,11 +22,13 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <section className="space-y-5">
-      <h1 className="text-3xl font-extrabold md:text-5xl">Projects</h1>
+    <main className="app-page-shell space-y-5">
+      <section className="page-hero-shell space-y-3">
+      <h1 className="section-title text-3xl font-extrabold md:text-5xl">Projects</h1>
       <p className="max-w-3xl text-slate-300">
         Real product work focused on speed, usability, and measurable growth.
       </p>
+      </section>
       <div className="post-list">
         {projects.map((project) => (
           <article className="card group" key={project._id}>
@@ -42,6 +44,6 @@ export default async function ProjectsPage() {
         ))}
       </div>
       {!projects.length ? <p className="mt-4 text-slate-400">No projects available yet.</p> : null}
-    </section>
+    </main>
   );
 }

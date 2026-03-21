@@ -4,34 +4,23 @@ const LoadingState = ({ label = 'Loading content...', className = '', screen = f
   if (screen) {
     return (
       <div className={`loading-screen fixed inset-0 z-70 flex items-center justify-center px-4 ${className}`}>
-        <div className="loading-screen-shell w-full max-w-xl rounded-3xl p-6 md:p-8">
-          <div className="loading-3d-scene" aria-hidden>
-            <div className="loading-3d-cube">
-              <span className="loading-3d-face loading-3d-face-front" />
-              <span className="loading-3d-face loading-3d-face-back" />
-              <span className="loading-3d-face loading-3d-face-left" />
-              <span className="loading-3d-face loading-3d-face-right" />
-              <span className="loading-3d-face loading-3d-face-top" />
-              <span className="loading-3d-face loading-3d-face-bottom" />
+        <div className="loading-screen-shell w-full max-w-sm rounded-3xl p-6 md:p-7">
+          <div className="loading-center" aria-hidden>
+            <div className="loading-orb">
+              <span className="loading-ring loading-ring-a" />
+              <span className="loading-ring loading-ring-b" />
+              <span className="loading-core" />
             </div>
-            <div className="loading-3d-ring" />
-            <div className="loading-3d-prism" />
           </div>
 
-          <div className="mt-5 text-center">
+          <div className="mt-4 text-center">
             <p className="loading-screen-kicker">NovaRo Solution</p>
-            <p className="loading-screen-title mt-2">Building Your Premium Experience</p>
+            <p className="loading-screen-title mt-2">Preparing Experience</p>
             <p className="loading-screen-label mt-2">{label}</p>
           </div>
 
-          <div className="loading-progress mt-6">
+          <div className="loading-progress mt-5">
             <span className="loading-progress-bar" />
-          </div>
-
-          <div className="loading-states mt-4">
-            <span>Design</span>
-            <span>Develop</span>
-            <span>Deliver</span>
           </div>
         </div>
       </div>

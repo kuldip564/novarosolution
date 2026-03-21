@@ -2035,3 +2035,129 @@ body,
   width: 0;
   height: 0;
 }
+
+.app-brand-title .text-white {
+  color: var(--app-text-primary) !important;
+}
+
+.app-brand-title {
+  letter-spacing: 0.01em;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-link span {
+  position: relative;
+  z-index: 1;
+}
+
+.nav-active-indicator {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #ef4444, #ec4899, #8b5cf6);
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+}
+
+.mobile-menu-btn {
+  border: 1px solid var(--app-border);
+  background: color-mix(in oklab, var(--app-bg-soft) 86%, transparent);
+  color: var(--app-text-primary);
+}
+
+.mobile-menu-btn:hover {
+  background: color-mix(in oklab, var(--app-bg-soft) 66%, #e2e8f0 34%);
+}
+
+.mobile-menu-overlay {
+  background: rgba(2, 6, 23, 0.45);
+  border: 0;
+}
+
+.mobile-menu-panel {
+  position: relative;
+  z-index: 40;
+  box-shadow: 0 20px 46px rgba(2, 6, 23, 0.32);
+  animation: mobileMenuIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes mobileMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+}
+
+.loading-orb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+}
+
+.loading-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid transparent;
+}
+
+.loading-ring-a {
+  border-top-color: rgba(236, 72, 153, 0.9);
+  border-right-color: rgba(59, 130, 246, 0.82);
+  animation: loadingRingA 1.3s linear infinite;
+}
+
+.loading-ring-b {
+  inset: 7px;
+  border-left-color: rgba(236, 72, 153, 0.7);
+  border-bottom-color: rgba(168, 85, 247, 0.72);
+  animation: loadingRingB 1.8s linear infinite reverse;
+}
+
+.loading-core {
+  position: absolute;
+  inset: 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ef4444, #ec4899, #8b5cf6);
+  box-shadow: 0 0 22px rgba(236, 72, 153, 0.42);
+}
+
+@keyframes loadingRingA {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loadingRingB {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-theme='light'] .mobile-menu-overlay {
+  background: rgba(15, 23, 42, 0.18);
+}

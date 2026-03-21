@@ -1,15 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
-  const { login } = useAuth();
+  const { register } = useAuth();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,21 +19,22 @@ export default function LoginPage() {
     setSubmitting(true);
     setError('');
     try {
-      await login({ email, password });
-      router.replace(redirect);
+      await register({ name, email, password });
+      router.replace('/');
     } catch (err: any) {
-      setError(err?.message || 'Login failed.');
+      setError(err?.message || 'Registration failed.');
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <main className="app-page-shell space-y-4">
+    <main className="app-page-shell">
     <section className="page-hero-shell space-y-4">
-      <h1 className="section-title text-3xl font-extrabold md:text-5xl">Login</h1>
-      <p className="text-slate-300">Sign in to continue.</p>
+      <h1 className="section-title text-3xl font-extrabold md:text-5xl">Create Account</h1>
+      <p className="text-slate-300">Join Novaro Solution portal.</p>
       <form className="page-content-card space-y-3" onSubmit={onSubmit}>
+        <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Name" required />
         <input
           type="email"
           value={email}
@@ -46,22 +46,22 @@ export default function LoginPage() {
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          placeholder="Password"
+          placeholder="Password (min 6 chars)"
+          minLength={6}
           required
         />
         {error ? <p className="text-sm text-red-400">{error}</p> : null}
         <button className="btn" type="submit" disabled={submitting}>
-          {submitting ? 'Signing in...' : 'Sign In'}
+          {submitting ? 'Creating...' : 'Register'}
         </button>
       </form>
       <p className="text-slate-300">
-        New user?{' '}
-        <Link className="text-pink-300" href="/register">
-          Create account
+        Already have an account?{' '}
+        <Link className="text-pink-300" href="/login">
+          Login
         </Link>
       </p>
     </section>
     </main>
   );
 }
-

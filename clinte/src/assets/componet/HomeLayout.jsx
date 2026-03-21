@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import Footer from './Footer'
 import { useAuth } from '../../context/AuthContext'
-import { FaUserCircle } from 'react-icons/fa'
+import { FaUserCircle, FaMoon, FaSun, FaBars, FaTimes } from 'react-icons/fa'
 import { fetchSiteContent } from '../../config/api'
 import { useTheme } from '../../context/ThemeContext'
 import { gsap } from 'gsap'
@@ -70,6 +70,10 @@ const HomeLayout = ({ children }) => {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname])
 
   useEffect(() => {
     if (!contentRef.current) return undefined
@@ -231,36 +235,33 @@ const HomeLayout = ({ children }) => {
       )}
       <header className="w-full sticky top-3 z-40 px-2 md:px-3">
         <div className="app-nav-card mx-auto mt-3 mb-2 flex w-full max-w-[1260px] items-center justify-between rounded-2xl px-4 py-2.5 backdrop-blur-2xl md:px-5">
-          <Link to="/" className="inline-flex items-center text-lg md:text-xl font-semibold tracking-wide">
+          <Link to="/" className="app-brand-title inline-flex items-center text-lg md:text-xl font-semibold tracking-wide">
             <span className="text-red-600">Nova</span>
             <span className="text-white">RoSolution</span>
           </Link>
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="app-link-hover p-2 rounded-xl transition-colors duration-300 lg:hidden"
+          className="mobile-menu-btn app-link-hover inline-flex h-10 w-10 items-center justify-center rounded-xl transition-colors duration-300 lg:hidden"
           aria-label="Toggle menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
+          {isMenuOpen ? <FaTimes className="text-base" /> : <FaBars className="text-base" />}
         </button>
         {/* Desktop Navigation */}
         <nav className="ml-auto mr-1 hidden flex-wrap items-center gap-1 text-sm lg:flex">
           <button
             type="button"
             onClick={toggleTheme}
-            className="theme-toggle-btn mr-2 rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-colors"
+            className="theme-toggle-btn mr-2 inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-colors"
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {isDark ? 'Light' : 'Dark'}
+            {isDark ? <FaSun className="text-[0.8rem]" /> : <FaMoon className="text-[0.8rem]" />}
+            <span>{isDark ? 'Light' : 'Dark'}</span>
           </button>
           {navItems.map((item) => (
-            <Link key={item.to} to={item.to} className={navLinkClass(item.to)}>
-              {item.label}
+            <Link key={item.to} to={item.to} className={`${navLinkClass(item.to)} nav-link`}>
+              <span>{item.label}</span>
+              {isActiveRoute(item.to) && <span className="nav-active-indicator" aria-hidden />}
             </Link>
           ))}
           {isAdmin && (
@@ -308,13 +309,21 @@ const HomeLayout = ({ children }) => {
       </header>
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="app-mobile-card mx-auto mt-1 w-full max-w-[1260px] rounded-2xl p-4 backdrop-blur-lg lg:hidden">
+        <>
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="mobile-menu-overlay fixed inset-0 z-30 lg:hidden"
+            onClick={() => setIsMenuOpen(false)}
+          />
+        <div className="app-mobile-card mobile-menu-panel mx-auto mt-1 w-full max-w-[1260px] rounded-2xl p-4 backdrop-blur-lg lg:hidden">
           <nav className="flex flex-col space-y-2">
             <button
               type="button"
               onClick={toggleTheme}
-              className="theme-toggle-btn mb-1 text-left px-4 py-2 rounded-md text-xs font-semibold uppercase tracking-wide transition-colors"
+              className="theme-toggle-btn mb-1 inline-flex items-center gap-2 text-left px-4 py-2 rounded-md text-xs font-semibold uppercase tracking-wide transition-colors"
             >
+              {isDark ? <FaSun className="text-[0.8rem]" /> : <FaMoon className="text-[0.8rem]" />}
               Switch to {isDark ? 'Light' : 'Dark'} Mode
             </button>
             {navItems.map((item) => (
@@ -400,6 +409,7 @@ const HomeLayout = ({ children }) => {
             )}
           </nav>
         </div>
+        </>
       )}
       <div ref={contentRef} className="w-full">
         {children}

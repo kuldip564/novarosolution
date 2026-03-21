@@ -63,7 +63,6 @@ const defaultTestimonials = [
   {
     name: 'Sarah Johnson',
     role: 'CEO, TechStart',
-    avatar: '👩‍💼',
     content:
       'NovaRo Solution felt like an internal product team. From strategy to launch, the quality bar stayed incredibly high.',
     rating: 5
@@ -71,7 +70,6 @@ const defaultTestimonials = [
   {
     name: 'Michael Chen',
     role: 'Founder, Pixel Labs',
-    avatar: '👨‍💻',
     content:
       'They shipped our new platform in record time without compromising on design or performance.',
     rating: 5
@@ -79,7 +77,6 @@ const defaultTestimonials = [
   {
     name: 'Emily Rodriguez',
     role: 'Head of Product, Flowly',
-    avatar: '👩‍💻',
     content:
       'Our customers keep telling us how premium everything feels. That is entirely NovaRo’s fingerprint.',
     rating: 5
@@ -288,7 +285,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           </h1>
           <p className="mt-6 text-base md:text-lg text-slate-300 max-w-3xl mx-auto">{hero.description}</p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/contact" className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold transition-transform duration-200 hover:-translate-y-0.5">
+            <Link href="/#contact-form" className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold transition-transform duration-200 hover:-translate-y-0.5">
               {hero.primaryCta}
             </Link>
             <Link href="/services" className="rounded-xl border border-white/20 bg-white/10 px-8 py-3 font-semibold transition-colors duration-200 hover:bg-white/15">
@@ -300,7 +297,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section id="contact-form" className="w-full px-4 py-18 md:py-24">
+        <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((item: AnyRecord, index: number) => {
             const StatIcon = STATS_ICON_BY_KEY[String(item.iconKey || '').toLowerCase()] || FaAward;
@@ -327,7 +324,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-18 md:py-24">
+        <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
             {data?.services?.title ||
@@ -411,7 +408,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </AnimatePresence>
 
       <Reveal>
-        <section className="w-full px-4 py-18 md:py-24">
+        <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
@@ -444,7 +441,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-18 md:py-24">
+        <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">{data?.testimonials?.title || 'Teams that ship with confidence'}</h2>
           <div className="grid gap-6 md:grid-cols-3">
@@ -484,20 +481,20 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-18 md:py-24">
+        <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-5xl rounded-3xl border border-white/20 bg-linear-to-br from-red-600/40 via-pink-600/40 to-purple-700/40 p-8 text-center">
           <h2 className="text-3xl md:text-5xl font-bold">{data?.cta?.title || 'Ready to ship your next product?'}</h2>
           <p className="mt-3 text-slate-300">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/contact" className="rounded-xl bg-black/90 px-8 py-3 font-semibold">Start a Project</Link>
-            <Link href="/contact" className="rounded-xl border border-white/30 bg-white/10 px-8 py-3 font-semibold">Schedule a Call</Link>
+            <Link href="/#contact-form" className="rounded-xl bg-black/90 px-8 py-3 font-semibold">Start a Project</Link>
+            <Link href="/#contact-form" className="rounded-xl border border-white/30 bg-white/10 px-8 py-3 font-semibold">Schedule a Call</Link>
           </div>
         </div>
         </section>
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-18 md:py-24">
+        <section id="contact-form" className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
           <h2 className="text-3xl md:text-5xl font-bold text-center">{data?.contactForm?.title || "Let's talk about your roadmap"}</h2>
           <p className="mt-3 text-center text-slate-400">

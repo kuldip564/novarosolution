@@ -1,19 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { getBlogPosts, getProjects } from '@/lib/api';
+import { getProjects } from '@/lib/api';
 import { getSiteUrl } from '@/lib/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
   let projects: Awaited<ReturnType<typeof getProjects>> = [];
-  let posts: Awaited<ReturnType<typeof getBlogPosts>> = [];
   try {
-    [projects, posts] = await Promise.all([
-      getProjects({ revalidate: 300 }),
-      getBlogPosts({ revalidate: 120 })
-    ]);
+    projects = await getProjects({ revalidate: 300 });
   } catch {
     projects = [];
-    posts = [];
   }
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -28,22 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9
     },
     {
-      url: `${base}/blog`,
-      changeFrequency: 'weekly',
-      priority: 0.9
-    },
-    {
       url: `${base}/about`,
       changeFrequency: 'monthly',
       priority: 0.8
     },
     {
       url: `${base}/services`,
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: `${base}/contact`,
       changeFrequency: 'monthly',
       priority: 0.8
     },
@@ -60,11 +45,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8
   }));
 
-  const blogRoutes = posts.map((post) => ({
-    url: `${base}/blog/${post.slug}`,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7
-  }));
-
-  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
+  return [...staticRoutes, ...projectRoutes];
 }
