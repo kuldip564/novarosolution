@@ -24,18 +24,22 @@ export default async function ProjectsPage() {
   return (
     <main className="app-page-shell space-y-5">
       <section className="page-hero-shell space-y-3">
-      <h1 className="section-title text-3xl font-extrabold md:text-5xl">Projects</h1>
-      <p className="max-w-3xl text-slate-300">
-        Real product work focused on speed, usability, and measurable growth.
-      </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Case Studies</p>
+        <h1 className="section-title text-3xl font-extrabold md:text-5xl">Projects</h1>
+        <p className="max-w-3xl text-slate-300">
+          Real product work focused on speed, usability, and measurable growth.
+        </p>
       </section>
       <div className="post-list">
         {projects.map((project) => (
           <article className="card group" key={project._id}>
+            <p className="text-xs uppercase tracking-[0.08em] text-slate-400">
+              {project.category || 'Digital Product'} {project.year ? `• ${project.year}` : ''}
+            </p>
             <h2 className="text-xl font-semibold">{project.title}</h2>
             <p className="mt-2 text-slate-300">{project.description}</p>
             <Link
-              className="mt-4 inline-flex rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm transition-colors hover:bg-white/10"
+              className="btn mt-4 inline-flex px-4 py-2 text-sm"
               href={`/projects/${project.slug}`}
             >
               View project

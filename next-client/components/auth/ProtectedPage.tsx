@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
 type ProtectedPageProps = {
@@ -18,12 +18,14 @@ export default function ProtectedPage({
   requireEmployee = false
 }: ProtectedPageProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { loading, isAuthenticated, isCreator, isAdmin, isEmployee } = useAuth();
 
   useEffect(() => {
     if (loading) return;
     if (!isAuthenticated) {
-      router.replace('/login');
+      const redirect = pathname ? `?redirect=${encodeURIComponent(pathname)}` : '';
+      router.replace(`/login${redirect}`);
       return;
     }
     if (requireCreator && !isCreator && !isAdmin) {
@@ -37,7 +39,18 @@ export default function ProtectedPage({
     if (requireEmployee && !isEmployee) {
       router.replace('/profile');
     }
-  }, [loading, isAuthenticated, isCreator, isAdmin, isEmployee, requireCreator, requireAdmin, requireEmployee, router]);
+  }, [
+    loading,
+    isAuthenticated,
+    isCreator,
+    isAdmin,
+    isEmployee,
+    requireCreator,
+    requireAdmin,
+    requireEmployee,
+    router,
+    pathname
+  ]);
 
   if (
     loading ||

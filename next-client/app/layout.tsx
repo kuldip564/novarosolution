@@ -8,6 +8,7 @@ import Providers from './providers';
 import RouteTransition from '@/components/animations/RouteTransition';
 import HeaderNav from '@/components/layout/HeaderNav';
 import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
+import SiteEnhancements from '@/components/layout/SiteEnhancements';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -48,10 +49,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="main container">
             <RouteTransition>{children}</RouteTransition>
           </main>
+          <SiteEnhancements />
           <footer className="footer">
-            <div className="container footer-content">
-              <small>{new Date().getFullYear()} Novaro Solution</small>
-              <small>Built for performance and SEO.</small>
+            <div className="container footer-content footer-grid">
+              <div className="footer-brand">
+                <p className="footer-title">Novaro Solution</p>
+                <small>Design-forward web, mobile, and product engineering.</small>
+              </div>
+              <nav className="footer-links" aria-label="Footer links">
+                <Link href="/">Home</Link>
+                <Link href="/about">About</Link>
+                <Link href="/services">Services</Link>
+                <Link href="/projects">Projects</Link>
+                <Link href="/contact">Contact</Link>
+              </nav>
+              <div className="footer-meta">
+                <small>{new Date().getFullYear()} Novaro Solution</small>
+                <small>Built for performance and SEO.</small>
+              </div>
             </div>
           </footer>
         </Providers>

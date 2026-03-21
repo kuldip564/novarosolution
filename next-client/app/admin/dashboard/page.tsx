@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import ProtectedPage from '@/components/auth/ProtectedPage';
@@ -23,8 +24,10 @@ export default function AdminDashboardPage() {
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [actionId, setActionId] = useState('');
   const [query, setQuery] = useState('');
+  const [globalQuery, setGlobalQuery] = useState('');
   const [overview, setOverview] = useState({
     totalUsers: 0,
     totalAdmins: 0,
@@ -140,6 +143,126 @@ export default function AdminDashboardPage() {
     return { roleCounts, taskStatus, monthlyTaskRows, conversionRate };
   }, [users, employeeTasks, contactSubmissions.length, appointments.length]);
 
+  const sectionSearch = globalQuery.trim().toLowerCase();
+
+  const filteredTasks = useMemo(() => {
+    if (!sectionSearch) return employeeTasks;
+    return employeeTasks.filter((item: any) => {
+      const text = `${item?.title || ''} ${item?.status || ''} ${item?.employeeName || ''}`.toLowerCase();
+      return text.includes(sectionSearch);
+    });
+  }, [employeeTasks, sectionSearch]);
+
+  const filteredContacts = useMemo(() => {
+    if (!sectionSearch) return contactSubmissions;
+    return contactSubmissions.filter((item: any) => {
+      const text = `${item?.name || ''} ${item?.email || ''} ${item?.subject || ''}`.toLowerCase();
+      return text.includes(sectionSearch);
+    });
+  }, [contactSubmissions, sectionSearch]);
+
+  const filteredAppointments = useMemo(() => {
+    if (!sectionSearch) return appointments;
+    return appointments.filter((item: any) => {
+      const text = `${item?.name || ''} ${item?.email || ''} ${item?.serviceTitle || ''} ${item?.phone || ''}`.toLowerCase();
+      return text.includes(sectionSearch);
+    });
+  }, [appointments, sectionSearch]);
+
+  const filteredCreatorContent = useMemo(() => {
+    if (!sectionSearch) return creatorContent;
+    return creatorContent.filter((item: any) => {
+      const text = `${item?.title || ''} ${item?.caption || ''} ${item?.creatorName || ''}`.toLowerCase();
+      return text.includes(sectionSearch);
+    });
+  }, [creatorContent, sectionSearch]);
+
+  const recentActivity = useMemo(() => {
+    const toMs = (value: any) => {
+      const time = new Date(value || '').getTime();
+      return Number.isFinite(time) ? time : 0;
+    };
+
+    const rows = [
+      ...employeeTasks.map((item: any) => ({
+        id: `task-${item.id || item._id || Math.random()}`,
+        type: 'Task',
+        title: item.title || 'Employee task updated',
+        meta: `${item.status || 'pending'}${item.employeeName ? ` - ${item.employeeName}` : ''}`,
+        time: toMs(item.updatedAt || item.createdAt || item.workDate),
+        href: '/admin/employee-manager'
+      })),
+      ...contactSubmissions.map((item: any) => ({
+        id: `contact-${item.id || item._id || Math.random()}`,
+        type: 'Contact',
+        title: item.subject || `Message from ${item.name || 'visitor'}`,
+        meta: item.email || '',
+        time: toMs(item.createdAt || item.updatedAt),
+        href: '/admin/contact-submissions'
+      })),
+      ...appointments.map((item: any) => ({
+        id: `appointment-${item.id || item._id || Math.random()}`,
+        type: 'Appointment',
+        title: item.serviceTitle || 'Service appointment request',
+        meta: item.name || item.email || '',
+        time: toMs(item.createdAt || item.updatedAt || item.preferredDate),
+        href: '/admin/service-manager'
+      })),
+      ...creatorContent.map((item: any) => ({
+        id: `creator-${item.id || item._id || Math.random()}`,
+        type: 'Creator',
+        title: item.title || 'Creator content update',
+        meta: item.creatorName || item.status || '',
+        time: toMs(item.createdAt || item.updatedAt),
+        href: '/admin/content-manager'
+      }))
+    ];
+
+    return rows.sort((a, b) => b.time - a.time).slice(0, 12);
+  }, [employeeTasks, contactSubmissions, appointments, creatorContent]);
+
+  function downloadSnapshot() {
+    const payload = {
+      generatedAt: new Date().toISOString(),
+      overview,
+      users,
+      employees,
+      employeeTasks,
+      contactSubmissions,
+      appointments,
+      creatorContent
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `admin-dashboard-snapshot-${new Date().toISOString().slice(0, 10)}.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setNotice('Admin snapshot downloaded.');
+  }
+
+  async function copySummary() {
+    const text = [
+      `Users: ${overview.totalUsers}`,
+      `Admins: ${overview.totalAdmins}`,
+      `Employees: ${overview.totalEmployees}`,
+      `Creators: ${overview.totalCreators}`,
+      `Contacts: ${overview.totalSubmissions}`,
+      `Appointments: ${overview.totalAppointments}`,
+      `Tasks: ${employeeTasks.length}`,
+      `Creator uploads: ${creatorContent.length}`,
+      `Conversion rate: ${analytics.conversionRate}%`
+    ].join(' | ');
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setNotice('Dashboard summary copied.');
+    } catch {
+      setNotice('Unable to copy summary on this browser.');
+    }
+  }
+
   async function refreshUsers() {
     if (!token) return;
     const rows = await fetchAdminUsers(token);
@@ -229,7 +352,6 @@ export default function AdminDashboardPage() {
           <Link className="admin-btn" href="/admin/service-manager">Service Manager</Link>
           <Link className="admin-btn" href="/admin/projects-manager">Projects Manager</Link>
           <Link className="admin-btn" href="/admin/employee-manager">Employee Manager</Link>
-          <Link className="admin-btn" href="/admin/project-chats">Admin Chats</Link>
           <Link className="admin-btn" href="/admin/contact-submissions">Contact Submissions</Link>
           <Link className="admin-btn" href="/admin/settings">Settings</Link>
           <button className="admin-btn" type="button" onClick={loadOverview}>Reload</button>
@@ -238,18 +360,74 @@ export default function AdminDashboardPage() {
 
         {loading ? <p className="text-slate-300">Loading dashboard...</p> : null}
         {error ? <p className="text-red-400">{error}</p> : null}
+        {notice ? <p className="text-emerald-400">{notice}</p> : null}
 
         {!loading ? (
           <>
             <div className="admin-stat-grid">
-              <article className="admin-stat-card"><p>Total Users</p><p className="text-2xl font-bold">{overview.totalUsers}</p></article>
-              <article className="admin-stat-card"><p>Admins</p><p className="text-2xl font-bold">{overview.totalAdmins}</p></article>
-              <article className="admin-stat-card"><p>Employees</p><p className="text-2xl font-bold">{overview.totalEmployees}</p></article>
-              <article className="admin-stat-card"><p>Creators</p><p className="text-2xl font-bold">{overview.totalCreators}</p></article>
-              <article className="admin-stat-card"><p>Creator Requests</p><p className="text-2xl font-bold">{overview.pendingCreatorRequests}</p></article>
-              <article className="admin-stat-card"><p>Contact Requests</p><p className="text-2xl font-bold">{overview.totalSubmissions}</p></article>
-              <article className="admin-stat-card"><p>Appointments</p><p className="text-2xl font-bold">{overview.totalAppointments}</p></article>
-              <article className="admin-stat-card"><p>Creator Uploads</p><p className="text-2xl font-bold">{creatorContent.length}</p></article>
+              {[
+                ['Total Users', overview.totalUsers],
+                ['Admins', overview.totalAdmins],
+                ['Employees', overview.totalEmployees],
+                ['Creators', overview.totalCreators],
+                ['Creator Requests', overview.pendingCreatorRequests],
+                ['Contact Requests', overview.totalSubmissions],
+                ['Appointments', overview.totalAppointments],
+                ['Creator Uploads', creatorContent.length]
+              ].map(([label, value], index) => (
+                <motion.article
+                  key={String(label)}
+                  className="admin-stat-card"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: index * 0.03 }}
+                >
+                  <p>{label}</p>
+                  <p className="text-2xl font-bold">{value}</p>
+                </motion.article>
+              ))}
+            </div>
+
+            <div className="page-content-card space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 className="text-xl font-semibold">All Sections Control Center</h2>
+                <div className="admin-toolbar">
+                  <button className="admin-btn" type="button" onClick={loadOverview}>Refresh All Data</button>
+                  <button className="admin-btn" type="button" onClick={downloadSnapshot}>Download Snapshot</button>
+                  <button className="admin-btn" type="button" onClick={copySummary}>Copy Summary</button>
+                </div>
+              </div>
+              <input
+                value={globalQuery}
+                onChange={(event) => setGlobalQuery(event.target.value)}
+                placeholder="Search across tasks, contacts, appointments, creator content..."
+              />
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Employee Tasks</p>
+                  <p className="text-2xl font-semibold">{filteredTasks.length}</p>
+                  <p className="text-xs text-slate-400">Total records: {employeeTasks.length}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/employee-manager">Open Tasks</Link>
+                </article>
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Contact Submissions</p>
+                  <p className="text-2xl font-semibold">{filteredContacts.length}</p>
+                  <p className="text-xs text-slate-400">Total records: {contactSubmissions.length}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/contact-submissions">Open Contacts</Link>
+                </article>
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Appointments</p>
+                  <p className="text-2xl font-semibold">{filteredAppointments.length}</p>
+                  <p className="text-xs text-slate-400">Total records: {appointments.length}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/service-manager">Open Services</Link>
+                </article>
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Creator Content</p>
+                  <p className="text-2xl font-semibold">{filteredCreatorContent.length}</p>
+                  <p className="text-xs text-slate-400">Total records: {creatorContent.length}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/content-manager">Open Creator Content</Link>
+                </article>
+              </div>
             </div>
 
             <div className="page-content-card space-y-2">
@@ -277,6 +455,35 @@ export default function AdminDashboardPage() {
                     <p className="text-sm text-slate-400">No task activity data yet.</p>
                   ) : null}
                 </div>
+              </div>
+            </div>
+
+            <div className="page-content-card space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-xl font-semibold">Recent Activity Across All Sections</h2>
+                <p className="text-xs text-slate-400">{recentActivity.length} recent updates</p>
+              </div>
+              <div className="space-y-2">
+                {recentActivity.map((item) => (
+                  <article key={item.id} className="admin-list-card">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">{item.type}</p>
+                        <p className="font-semibold">{item.title}</p>
+                        <p className="text-xs text-slate-400">{item.meta || 'No additional info'}</p>
+                      </div>
+                      <div className="admin-toolbar">
+                        <p className="text-xs text-slate-500">
+                          {item.time ? new Date(item.time).toLocaleString() : 'Time unavailable'}
+                        </p>
+                        <Link className="admin-btn" href={item.href}>Open</Link>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+                {recentActivity.length === 0 ? (
+                  <p className="text-slate-400">No activity yet across tasks, contacts, appointments, or creator updates.</p>
+                ) : null}
               </div>
             </div>
 

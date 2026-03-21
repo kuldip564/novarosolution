@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import {
@@ -12,7 +11,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProjectChatPage() {
-  const { token, isAdmin } = useAuth();
+  const { token } = useAuth();
   const [messages, setMessages] = useState<ProjectChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -141,19 +140,14 @@ export default function ProjectChatPage() {
 
   return (
     <ProtectedPage>
-      <section className="card space-y-4">
+      <section className="card project-chat-shell space-y-4">
         <h1 className="text-3xl font-extrabold md:text-5xl">Project Chat</h1>
         <p className="text-slate-300">Discuss your project directly with admin.</p>
-        {isAdmin ? (
-          <Link className="btn inline-block" href="/admin/project-chats">
-            Open Admin Chats
-          </Link>
-        ) : null}
-        <button className="btn" type="button" onClick={onDeleteRequest}>
+        <button className="btn btn-sm" type="button" onClick={onDeleteRequest}>
           {deleteRequested ? 'Delete Request Sent' : 'Request Delete Chat'}
         </button>
         {!showStarterForm ? (
-          <button className="btn" type="button" onClick={() => setShowStarterForm(true)}>
+          <button className="btn btn-sm" type="button" onClick={() => setShowStarterForm(true)}>
             {messages.length > 0 ? 'Update Project Data' : 'Start Project Discussion'}
           </button>
         ) : null}
@@ -213,10 +207,10 @@ export default function ProjectChatPage() {
               placeholder="Project details (features, references, target users...)"
             />
             <div className="admin-toolbar">
-              <button className="btn" type="submit" disabled={starterSending}>
+              <button className="btn btn-sm" type="submit" disabled={starterSending}>
                 {starterSending ? 'Sending...' : 'Send Project Details'}
               </button>
-              <button className="btn" type="button" onClick={() => setShowStarterForm(false)}>
+              <button className="btn btn-sm" type="button" onClick={() => setShowStarterForm(false)}>
                 Hide
               </button>
             </div>
@@ -240,18 +234,18 @@ export default function ProjectChatPage() {
         </div>
         <div className="admin-toolbar">
           {quickPrompts.map((prompt) => (
-            <button key={prompt} className="btn" type="button" onClick={() => setMessage(prompt)}>
+            <button key={prompt} className="btn btn-sm project-chat-prompt-btn" type="button" onClick={() => setMessage(prompt)}>
               {prompt}
             </button>
           ))}
         </div>
-        <form className="flex gap-2" onSubmit={onSend}>
+        <form className="flex flex-col gap-2 sm:flex-row" onSubmit={onSend}>
           <input
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             placeholder="Type your message"
           />
-          <button className="btn" type="submit" disabled={sending || message.trim().length < 3}>
+          <button className="btn btn-sm" type="submit" disabled={sending || message.trim().length < 3}>
             {sending ? 'Sending...' : 'Send'}
           </button>
         </form>

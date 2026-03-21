@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import { useAuth } from '@/context/AuthContext';
 import { fetchMyProjectMessages, requestCreatorAccess } from '@/lib/clientApi';
+import ProfileBuddy3D from '@/components/profile/ProfileBuddy3D';
 
 async function fileToDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
@@ -303,20 +304,22 @@ export default function ProfilePage() {
         <p className="text-slate-300">Manage account details and role access.</p>
         </article>
 
-        <motion.article className="page-content-card" {...sectionMotion}>
-        <div className="flex flex-wrap items-center gap-3">
-          {avatar ? (
-            <img src={avatar} alt="Profile" className="h-16 w-16 rounded-full object-cover border border-white/20" />
-          ) : (
-            <div className="h-16 w-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-sm font-bold">
-              {userInitials || 'U'}
+        <motion.article className="page-content-card profile-hero-card" {...sectionMotion}>
+        <div className="profile-hero-main">
+          <div className="flex flex-wrap items-center gap-3">
+            {avatar ? (
+              <img src={avatar} alt="Profile" className="h-16 w-16 rounded-full object-cover border border-white/20" />
+            ) : (
+              <div className="h-16 w-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-sm font-bold">
+                {userInitials || 'U'}
+              </div>
+            )}
+            <div className="text-sm text-slate-300">
+              <p>{user?.name}</p>
+              <p>{user?.email}</p>
+              <p className="capitalize">Role: {user?.role}</p>
+              <p>User ID: {user?.id}</p>
             </div>
-          )}
-          <div className="text-sm text-slate-300">
-            <p>{user?.name}</p>
-            <p>{user?.email}</p>
-            <p className="capitalize">Role: {user?.role}</p>
-            <p>User ID: {user?.id}</p>
           </div>
           <div className="admin-toolbar">
             <button className="btn" type="button" onClick={refreshMe}>
@@ -335,6 +338,9 @@ export default function ProfilePage() {
               Reset Form
             </button>
           </div>
+        </div>
+        <div className="profile-hero-buddy">
+          <ProfileBuddy3D statusText={status} errorText={error} isBusy={saving || activityLoading} />
         </div>
         </motion.article>
 
@@ -383,7 +389,7 @@ export default function ProfilePage() {
             {activityLoading ? 'Tracking latest account activity...' : `Last synced at ${lastSyncedAt || 'N/A'}`}
           </p>
           <div className="mt-3">
-            <Link className="btn" href="/project-chat">
+            <Link className="btn btn-sm" href="/project-chat">
               Open Project Chat
             </Link>
           </div>

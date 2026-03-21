@@ -46,6 +46,13 @@ function formatTimeValue(value?: string) {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+function formatDayLabel(value?: string) {
+  if (!value) return 'Unknown day';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Unknown day';
+  return date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
 async function readFileAsDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -109,6 +116,51 @@ export default function EmployeeTasksPage() {
   const completedCount = useMemo(
     () => filteredTasks.filter((task) => task.status === 'completed').length,
     [filteredTasks]
+  );
+
+  const taskAnalytics = useMemo(() => {
+    const now = new Date();
+    const thisMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    let monthTotal = 0;
+    let monthCompleted = 0;
+    let monthPendingApproval = 0;
+    let inProgress = 0;
+
+    for (const task of tasks) {
+      const taskDate = task.workDate ? new Date(task.workDate) : null;
+      const taskMonthKey =
+        taskDate && !Number.isNaN(taskDate.getTime())
+          ? `${taskDate.getFullYear()}-${String(taskDate.getMonth() + 1).padStart(2, '0')}`
+          : '';
+
+      if (taskMonthKey === thisMonthKey) {
+        monthTotal += 1;
+        if (task.status === 'completed') monthCompleted += 1;
+        if (task.status === 'completed' && !task.approvalRejected) monthPendingApproval += 1;
+      }
+
+      if (task.status === 'in_progress') inProgress += 1;
+    }
+
+    return {
+      total: tasks.length,
+      monthTotal,
+      monthCompleted,
+      monthPendingApproval,
+      inProgress
+    };
+  }, [tasks]);
+
+  const timelineItems = useMemo(
+    () =>
+      [...visibleTasks]
+        .sort(
+          (a, b) =>
+            new Date(b.workDate || b.updatedAt || 0).getTime() -
+            new Date(a.workDate || a.updatedAt || 0).getTime()
+        )
+        .slice(0, 12),
+    [visibleTasks]
   );
 
   const returnedTasks = useMemo(
@@ -388,6 +440,28 @@ export default function EmployeeTasksPage() {
 
         <article className="page-content-card space-y-3">
           <h2 className="text-lg font-semibold">Tasks</h2>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="admin-list-card">
+              <p className="text-xs text-slate-400">All Tasks</p>
+              <p className="text-2xl font-semibold">{taskAnalytics.total}</p>
+            </div>
+            <div className="admin-list-card">
+              <p className="text-xs text-slate-400">This Month</p>
+              <p className="text-2xl font-semibold">{taskAnalytics.monthTotal}</p>
+            </div>
+            <div className="admin-list-card">
+              <p className="text-xs text-slate-400">In Progress</p>
+              <p className="text-2xl font-semibold">{taskAnalytics.inProgress}</p>
+            </div>
+            <div className="admin-list-card">
+              <p className="text-xs text-slate-400">Month Completed</p>
+              <p className="text-2xl font-semibold">{taskAnalytics.monthCompleted}</p>
+            </div>
+            <div className="admin-list-card">
+              <p className="text-xs text-slate-400">Pending Approval</p>
+              <p className="text-2xl font-semibold">{taskAnalytics.monthPendingApproval}</p>
+            </div>
+          </div>
           {loading ? <p className="text-slate-300">Loading tasks...</p> : null}
           {!loading && visibleTasks.length === 0 ? (
             <p className="text-sm text-slate-400">No tasks for current filter. Try All Days and All status.</p>
@@ -422,6 +496,33 @@ export default function EmployeeTasksPage() {
               </div>
             ))}
           </div>
+        </article>
+
+        <article className="page-content-card space-y-3">
+          <h2 className="text-lg font-semibold">Recent Timeline</h2>
+          <p className="text-xs text-slate-400">
+            Latest updates from your filtered list. Open any item to edit quickly.
+          </p>
+          {!timelineItems.length ? (
+            <p className="text-sm text-slate-400">No timeline entries yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {timelineItems.map((task) => (
+                <div key={`timeline-${task.id}`} className="admin-list-card">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="font-medium">{task.title || 'Untitled task'}</p>
+                      <p className="text-xs text-slate-400">{formatDayLabel(task.workDate)}</p>
+                    </div>
+                    <button type="button" className="btn" onClick={() => handleEdit(task)}>
+                      Open
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400">{task.workUpdate || task.plannedTask || 'No details yet.'}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </article>
 
         {status.message ? (

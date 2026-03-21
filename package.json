@@ -9,9 +9,10 @@
     "express": "^4.18.2"
   },
   "scripts": {
+    "dev": "npm run dev:client",
     "vercel-build": "npm --prefix server run vercel-build",
-    "build": "npm --prefix clinte run build",
+    "build": "npm --prefix next-client run build",
     "dev:server": "npm --prefix server run dev",
-    "dev:client": "npm --prefix clinte run dev"
+    "dev:client": "npm --prefix next-client run dev"
   }
 }

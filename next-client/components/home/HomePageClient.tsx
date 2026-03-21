@@ -1,8 +1,9 @@
 'use client';
 
-import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion';
 import {
   FaAward,
   FaBullhorn,
@@ -25,9 +26,16 @@ import {
   submitContactForm
 } from '@/lib/api';
 import Reveal from '@/components/animations/Reveal';
+import { useAuth } from '@/context/AuthContext';
 
 type AnyRecord = Record<string, any>;
 const CreatorFeedPreview = lazy(() => import('./CreatorFeedPreview'));
+const FuturisticThreeHero = dynamic(() => import('./FuturisticThreeHero'), {
+  ssr: false
+});
+const FuturisticThreePanel = dynamic(() => import('@/components/shared/FuturisticThreePanel'), {
+  ssr: false
+});
 
 const defaultStats = [
   { label: 'Projects Delivered', value: '500+', iconKey: 'projects' },
@@ -168,10 +176,47 @@ function normalizeService(service: AnyRecord = {}) {
   };
 }
 
+function parseCounterValue(value: string | number) {
+  const text = String(value ?? '0');
+  const numeric = Number(text.replace(/[^\d.]/g, ''));
+  const suffix = text.replace(/[\d.\s]/g, '');
+  return { numeric: Number.isFinite(numeric) ? numeric : 0, suffix };
+}
+
+function CountUpValue({ value }: { value: string | number }) {
+  const ref = useRef<HTMLParagraphElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const { numeric, suffix } = parseCounterValue(value);
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    const durationMs = 900;
+    const start = performance.now();
+    let raf = 0;
+    const step = (time: number) => {
+      const progress = Math.min((time - start) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(numeric * eased));
+      if (progress < 1) raf = window.requestAnimationFrame(step);
+    };
+    raf = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(raf);
+  }, [inView, numeric]);
+
+  return (
+    <p ref={ref} className="text-2xl font-bold mt-1">
+      {display}
+      {suffix}
+    </p>
+  );
+}
+
 export default function HomePageClient({ data }: { data: AnyRecord }) {
   const reduceMotion = useReducedMotion();
-  const [token, setToken] = useState('');
+  const { token, isAuthenticated } = useAuth();
   const [selectedService, setSelectedService] = useState('');
+  const [focusedService, setFocusedService] = useState('');
   const [status, setStatus] = useState({ type: '', message: '' });
   const [formError, setFormError] = useState('');
   const [contactError, setContactError] = useState('');
@@ -185,12 +230,21 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
     'Platform updates are in progress. Some actions are temporarily unavailable. Please try again soon.';
   const allowContactSubmissions = Boolean(data?.systemSettings?.allowContactSubmissions ?? true) && !maintenanceMode;
 
-  useEffect(() => {
-    setToken(window.localStorage.getItem('novaro_auth_token') || '');
-  }, []);
+  const services: Array<ReturnType<typeof normalizeService>> = (data?.services?.items?.length
+    ? data.services.items
+    : defaultServices
+  ).map(normalizeService);
+  const activeService = useMemo(
+    () => services.find((item) => item.title === focusedService) || services[0] || null,
+    [focusedService, services]
+  );
 
-  const isAuthenticated = Boolean(token);
-  const services = (data?.services?.items?.length ? data.services.items : defaultServices).map(normalizeService);
+  useEffect(() => {
+    if (!focusedService && services.length) {
+      setFocusedService(services[0].title);
+    }
+  }, [focusedService, services]);
+
   const stats = data?.stats?.items?.length ? data.stats.items : defaultStats;
   const features = data?.features?.items?.length ? data.features.items : defaultFeatures;
   const testimonials = data?.testimonials?.items?.length ? data.testimonials.items : defaultTestimonials;
@@ -282,13 +336,14 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   return (
     <div className="w-full text-(--text)">
       <Reveal>
-        <section className="relative w-full min-h-[80vh] flex items-center justify-center px-4 py-24">
+        <section className="hero-mesh relative w-full min-h-[80vh] flex items-center justify-center px-4 py-24">
+        <FuturisticThreeHero />
         <div className="mx-auto max-w-6xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             {hero.badge}
           </p>
-          <h1 className="mt-6 text-4xl md:text-6xl lg:text-8xl font-extrabold tracking-tight">
+          <h1 className="mt-6 text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter">
             <span className="block">{hero.titleMain}</span>
             <span className="mt-2 block bg-linear-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
               {hero.titleGradient}
@@ -296,10 +351,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           </h1>
           <p className="mt-6 text-base md:text-lg text-slate-300 max-w-3xl mx-auto">{hero.description}</p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/#contact-form" className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold transition-transform duration-200 hover:-translate-y-0.5">
+            <Link href="/#contact-form" className="btn px-8 py-3">
               {hero.primaryCta}
             </Link>
-            <Link href="/services" className="rounded-xl border border-white/20 bg-white/10 px-8 py-3 font-semibold transition-colors duration-200 hover:bg-white/15">
+            <Link href="/services" className="btn px-8 py-3">
               {hero.secondaryCta}
             </Link>
           </div>
@@ -325,7 +380,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-lg text-pink-200">
                 <StatIcon />
               </div>
-              <p className="text-2xl font-bold mt-1">{item.value}</p>
+              <CountUpValue value={item.value} />
               <p className="text-sm text-slate-400">{item.label}</p>
             </motion.article>
           );
@@ -345,9 +400,17 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             {data?.services?.description ||
               'One team for design and development. We build simple, fast, and user-friendly digital products.'}
           </p>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-12 gap-6">
             {services.map((service: AnyRecord, index: number) => {
               const Icon = ICON_BY_KEY[service.iconKey] || FaRocket;
+              const bentoClass =
+                index % 4 === 0
+                  ? 'col-span-12 lg:col-span-7'
+                  : index % 4 === 1
+                    ? 'col-span-12 lg:col-span-5'
+                    : index % 4 === 2
+                      ? 'col-span-12 lg:col-span-5'
+                      : 'col-span-12 lg:col-span-7';
               return (
                 <motion.article
                   key={service.title}
@@ -356,7 +419,15 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: index * 0.08 }}
                   whileHover={reduceMotion ? undefined : { y: -4 }}
-                  className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                  onMouseMove={(event) => {
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    const x = event.clientX - rect.left;
+                    const y = event.clientY - rect.top;
+                    event.currentTarget.style.setProperty('--mx', `${x}px`);
+                    event.currentTarget.style.setProperty('--my', `${y}px`);
+                  }}
+                  onMouseEnter={() => setFocusedService(service.title)}
+                  className={`service-bento-card rounded-3xl border border-white/10 bg-white/5 p-6 ${bentoClass}`}
                 >
                   <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-pink-200">
                     <Icon />
@@ -368,18 +439,53 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                     <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs">{service.deliveryTime}</span>
                     <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs">{service.pricing}</span>
                   </div>
-                  <button
-                    type="button"
-                    disabled={!isAuthenticated}
-                    onClick={() => setSelectedService(service.title)}
-                    className="mt-5 rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-4 py-2 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5 disabled:opacity-60"
-                  >
-                    {!isAuthenticated ? 'Login Required' : 'Contact Us'}
-                  </button>
+                  <div className="mt-5 flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={!isAuthenticated}
+                      onClick={() => setSelectedService(service.title)}
+                      className="btn btn-sm service-contact-btn disabled:opacity-60"
+                    >
+                      {!isAuthenticated ? 'Login Required' : 'Contact Us'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFocusedService(service.title)}
+                      className="btn btn-sm btn-ghost"
+                    >
+                      Quick View
+                    </button>
+                  </div>
                 </motion.article>
               );
             })}
           </div>
+          <AnimatePresence mode="wait">
+            {activeService ? (
+              <motion.article
+                key={activeService.title}
+                initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                className="service-spotlight-card mt-5"
+              >
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Service Spotlight</p>
+                <h3 className="mt-2 text-2xl font-semibold">{activeService.title}</h3>
+                <p className="mt-2 text-slate-300">{activeService.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {(activeService.features || []).map((feature: string) => (
+                    <span
+                      key={`${activeService.title}-${feature}`}
+                      className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs"
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+              </motion.article>
+            ) : null}
+          </AnimatePresence>
           {!isAuthenticated ? (
             <p className="mt-4 text-sm text-amber-300">
               Login is required to book service appointments. <Link href="/login" className="underline">Go to Login</Link>
@@ -409,7 +515,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" type="date" required value={form.preferredDate} onChange={(e) => setForm({ ...form, preferredDate: e.target.value })} />
               <textarea className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" rows={4} placeholder="Notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               {formError ? <p className="text-sm text-amber-300">{formError}</p> : null}
-              <button disabled={isSubmittingService} className="rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-5 py-2.5 font-semibold">
+              <button disabled={isSubmittingService} className="btn px-5 py-2.5">
                 {isSubmittingService ? 'Submitting...' : 'Submit Request'}
               </button>
             </form>
@@ -448,6 +554,29 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             })}
           </div>
         </div>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="w-full px-4 py-16 md:py-20">
+          <div className="mx-auto max-w-6xl future-stack-card">
+            <div className="future-stack-copy">
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Future Stack Engine</p>
+              <h2 className="mt-2 text-3xl md:text-5xl font-bold">Immersive product experience layer</h2>
+              <p className="mt-3 text-slate-300">
+                We combine modern engineering with interactive visuals to make products feel alive, fast, and futuristic.
+                Use the live controls to pause, speed up, reset, or toggle pointer interaction.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">3D Interaction</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Scroll Reactive Motion</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Performance First</span>
+              </div>
+            </div>
+            <div className="future-stack-visual">
+              <FuturisticThreePanel />
+            </div>
+          </div>
         </section>
       </Reveal>
 
@@ -497,8 +626,8 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           <h2 className="text-3xl md:text-5xl font-bold">{data?.cta?.title || 'Ready to ship your next product?'}</h2>
           <p className="mt-3 text-slate-300">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/#contact-form" className="rounded-xl bg-black/90 px-8 py-3 font-semibold">Start a Project</Link>
-            <Link href="/#contact-form" className="rounded-xl border border-white/30 bg-white/10 px-8 py-3 font-semibold">Schedule a Call</Link>
+            <Link href="/#contact-form" className="btn px-8 py-3">Start a Project</Link>
+            <Link href="/#contact-form" className="btn px-8 py-3">Schedule a Call</Link>
           </div>
         </div>
         </section>
@@ -535,7 +664,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             <button
               type="submit"
               disabled={isSubmittingContact || !isAuthenticated || !allowContactSubmissions}
-              className="w-full rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold disabled:opacity-60"
+              className="btn w-full px-8 py-3 disabled:opacity-60"
             >
               {isSubmittingContact
                 ? 'Sending...'
