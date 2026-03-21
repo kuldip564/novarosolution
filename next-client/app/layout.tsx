@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import { buildMetadata, generateOrganizationSchema, getSiteUrl } from '@/lib/seo';
 import SEO from '@/components/SEO';
@@ -9,6 +10,8 @@ import RouteTransition from '@/components/animations/RouteTransition';
 import HeaderNav from '@/components/layout/HeaderNav';
 import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
 import SiteEnhancements from '@/components/layout/SiteEnhancements';
+
+const GA_MEASUREMENT_ID = 'G-3Z1Z971K06';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,6 +37,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
         <Providers>
           <SEO
             canonical={getSiteUrl()}
