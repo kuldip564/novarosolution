@@ -121,11 +121,23 @@ export default function AdminDashboardPage() {
       { completed: 0, inProgress: 0, pending: 0 }
     );
 
+    const monthMap = employeeTasks.reduce((acc: Record<string, number>, task: any) => {
+      if (!task?.workDate) return acc;
+      const date = new Date(task.workDate);
+      if (Number.isNaN(date.getTime())) return acc;
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+    const monthlyTaskRows = Object.entries(monthMap)
+      .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+      .slice(0, 6);
+
     const conversionRate = contactSubmissions.length
       ? ((appointments.length / contactSubmissions.length) * 100).toFixed(1)
       : '0.0';
 
-    return { roleCounts, taskStatus, conversionRate };
+    return { roleCounts, taskStatus, monthlyTaskRows, conversionRate };
   }, [users, employeeTasks, contactSubmissions.length, appointments.length]);
 
   async function refreshUsers() {
@@ -252,6 +264,20 @@ export default function AdminDashboardPage() {
                 Conversion - Contacts: {contactSubmissions.length}, Appointments: {appointments.length}, Rate: {analytics.conversionRate}%
               </p>
               <p className="text-slate-400 text-sm">Employees tracked: {employees.length}</p>
+              <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Monthly Task Activity</p>
+                <div className="mt-2 grid gap-2 md:grid-cols-3">
+                  {analytics.monthlyTaskRows.map(([month, count]) => (
+                    <div key={month} className="rounded-lg border border-white/10 bg-black/20 p-2">
+                      <p className="text-xs text-slate-400">{month}</p>
+                      <p className="text-sm font-semibold text-slate-200">{count} tasks</p>
+                    </div>
+                  ))}
+                  {analytics.monthlyTaskRows.length === 0 ? (
+                    <p className="text-sm text-slate-400">No task activity data yet.</p>
+                  ) : null}
+                </div>
+              </div>
             </div>
 
             <div className="page-content-card space-y-3">

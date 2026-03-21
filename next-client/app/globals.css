@@ -2,24 +2,25 @@
 
 :root {
   color-scheme: light;
-  --bg: #f6f9ff;
-  --surface: rgba(255, 255, 255, 0.9);
-  --surface-strong: rgba(255, 255, 255, 0.96);
-  --border: rgba(15, 23, 42, 0.14);
-  --text: #0f172a;
-  --muted: #475569;
-  --primary: #ec4899;
+  --bg: #f2f7ff;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --border: rgba(37, 99, 235, 0.18);
+  --text: #0b1220;
+  --muted: #3f4d63;
+  --primary: #7c3aed;
   --primary-2: #7c3aed;
+  --accent: #06b6d4;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
   --bg: #020617;
-  --surface: rgba(15, 23, 42, 0.78);
-  --surface-strong: rgba(15, 23, 42, 0.9);
-  --border: rgba(255, 255, 255, 0.14);
+  --surface: rgba(10, 18, 35, 0.82);
+  --surface-strong: rgba(9, 16, 30, 0.94);
+  --border: rgba(148, 163, 184, 0.2);
   --text: #f8fafc;
-  --muted: #94a3b8;
+  --muted: #9fb0c8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,8 +45,9 @@ body {
   padding: 0;
   min-height: 100%;
   background:
-    radial-gradient(940px circle at 12% -8%, rgba(244, 63, 94, 0.1), transparent 58%),
-    radial-gradient(920px circle at 92% -10%, rgba(59, 130, 246, 0.1), transparent 56%),
+    radial-gradient(980px circle at 10% -10%, rgba(244, 63, 94, 0.14), transparent 58%),
+    radial-gradient(980px circle at 90% -8%, rgba(99, 102, 241, 0.16), transparent 58%),
+    radial-gradient(720px circle at 50% 0%, rgba(6, 182, 212, 0.08), transparent 62%),
     linear-gradient(180deg, color-mix(in oklab, var(--bg) 95%, #111827 5%), var(--bg));
   color: var(--text);
   font-feature-settings: "cv11", "ss01";
@@ -96,7 +98,7 @@ textarea:focus-visible {
   background: color-mix(in oklab, var(--surface) 82%, transparent);
   border: 1px solid var(--border);
   backdrop-filter: blur(18px) saturate(130%);
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .header {
@@ -155,6 +157,7 @@ textarea:focus-visible {
   font-weight: 700;
   letter-spacing: -0.01em;
   font-size: 1.02rem;
+  color: var(--text);
 }
 
 .nav-link {
@@ -165,6 +168,7 @@ textarea:focus-visible {
   min-height: 38px;
   padding: 8px 12px;
   border-radius: 10px;
+  transition: transform 0.22s ease, background-color 0.22s ease, color 0.22s ease;
 }
 
 .nav-link span {
@@ -180,9 +184,9 @@ textarea:focus-visible {
   position: absolute;
   inset: 0;
   border-radius: 10px;
-  background: linear-gradient(90deg, #db2777 0%, #9333ea 100%);
+  background: var(--primary);
   z-index: 1;
-  box-shadow: 0 8px 18px rgba(219, 39, 119, 0.28);
+  box-shadow: 0 10px 22px rgba(236, 72, 153, 0.34);
 }
 
 .theme-toggle {
@@ -259,7 +263,7 @@ textarea:focus-visible {
 .btn {
   display: inline-block;
   margin-top: 0;
-  background: linear-gradient(90deg, #db2777 0%, #9333ea 100%);
+  background: var(--primary);
   color: #ffffff;
   padding: 10px 16px;
   border-radius: 12px;
@@ -271,8 +275,23 @@ textarea:focus-visible {
 
 .btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(219, 39, 119, 0.28);
+  box-shadow: 0 14px 30px rgba(124, 58, 237, 0.26);
   filter: saturate(1.06);
+}
+
+button[class*='bg-linear-to-r'],
+a[class*='bg-linear-to-r'],
+.project-chat-primary-btn {
+  background: var(--primary) !important;
+  background-image: none !important;
+  border-color: rgba(124, 58, 237, 0.4) !important;
+}
+
+button[class*='bg-linear-to-r']:hover,
+a[class*='bg-linear-to-r']:hover,
+.project-chat-primary-btn:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.24);
 }
 
 .btn:active {
@@ -295,7 +314,7 @@ textarea:focus-visible {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.16);
+  box-shadow: 0 18px 38px rgba(2, 6, 23, 0.14);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
   position: relative;
   overflow: hidden;
@@ -309,14 +328,19 @@ textarea:focus-visible {
   height: 180px;
   background:
     radial-gradient(180px circle at 50% 50%, rgba(236, 72, 153, 0.16), transparent 72%);
+  transition: opacity 0.28s ease;
   pointer-events: none;
   opacity: 0.75;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  border-color: rgba(236, 72, 153, 0.4);
-  box-shadow: 0 20px 42px rgba(2, 6, 23, 0.2);
+  border-color: color-mix(in oklab, var(--primary) 50%, var(--border) 50%);
+  box-shadow: 0 24px 48px rgba(2, 6, 23, 0.22);
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card > * {
@@ -396,6 +420,50 @@ select:focus {
   background-clip: text;
 }
 
+/* Light-mode compatibility layer for pages using dark utility classes. */
+:root[data-theme='light'] .text-white {
+  color: #0f172a !important;
+}
+
+:root[data-theme='light'] .text-slate-100 {
+  color: #0f172a !important;
+}
+
+:root[data-theme='light'] .text-slate-200 {
+  color: #1e293b !important;
+}
+
+:root[data-theme='light'] .text-slate-300 {
+  color: #334155 !important;
+}
+
+:root[data-theme='light'] .text-slate-400,
+:root[data-theme='light'] .text-slate-500 {
+  color: #475569 !important;
+}
+
+:root[data-theme='light'] .bg-slate-950,
+:root[data-theme='light'] .bg-slate-950\/80,
+:root[data-theme='light'] .bg-slate-950\/75,
+:root[data-theme='light'] .bg-slate-900,
+:root[data-theme='light'] .bg-slate-900\/60,
+:root[data-theme='light'] .bg-slate-900\/70,
+:root[data-theme='light'] .bg-slate-900\/50,
+:root[data-theme='light'] .bg-slate-900\/45,
+:root[data-theme='light'] .bg-slate-900\/35 {
+  background: color-mix(in oklab, #ffffff 92%, #e2e8f0 8%) !important;
+}
+
+:root[data-theme='light'] .border-white\/5,
+:root[data-theme='light'] .border-white\/10,
+:root[data-theme='light'] .border-white\/12,
+:root[data-theme='light'] .border-white\/15,
+:root[data-theme='light'] .border-white\/20,
+:root[data-theme='light'] .border-white\/25,
+:root[data-theme='light'] .border-white\/30 {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+}
+
 .app-page-shell {
   position: relative;
 }
@@ -422,6 +490,7 @@ select:focus {
   border: 1px solid var(--border);
   border-radius: 22px;
   background: color-mix(in oklab, var(--surface) 90%, transparent);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.12);
 }
 
 .page-hero-shell {
@@ -460,13 +529,14 @@ select:focus {
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.45rem 0.72rem;
-  transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+  transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .admin-btn:hover {
   transform: translateY(-1px);
-  border-color: color-mix(in oklab, var(--border) 45%, #f472b6 55%);
-  background: color-mix(in oklab, var(--surface-strong) 78%, #f8fafc 22%);
+  border-color: color-mix(in oklab, var(--border) 42%, var(--primary) 58%);
+  background: color-mix(in oklab, var(--surface-strong) 76%, #f8fafc 24%);
+  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.18);
 }
 
 .admin-btn:disabled {
@@ -570,8 +640,8 @@ select:focus {
   position: absolute;
   inset: 20px;
   border-radius: 999px;
-  background: linear-gradient(120deg, #ec4899, #9333ea);
-  box-shadow: 0 0 24px rgba(236, 72, 153, 0.5);
+  background: linear-gradient(120deg, #f43f5e, #8b5cf6, #06b6d4);
+  box-shadow: 0 0 24px rgba(236, 72, 153, 0.45);
 }
 
 .loading-text {
@@ -591,6 +661,7 @@ select:focus {
     transform: rotate(360deg);
   }
 }
+
 
 @media (max-width: 900px) {
   .hero,

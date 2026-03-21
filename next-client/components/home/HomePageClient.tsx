@@ -179,6 +179,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmittingService, setIsSubmittingService] = useState(false);
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+  const maintenanceMode = Boolean(data?.systemSettings?.maintenanceMode);
+  const maintenanceMessage =
+    String(data?.systemSettings?.maintenanceMessage || '').trim() ||
+    'Platform updates are in progress. Some actions are temporarily unavailable. Please try again soon.';
+  const allowContactSubmissions = Boolean(data?.systemSettings?.allowContactSubmissions ?? true) && !maintenanceMode;
 
   useEffect(() => {
     setToken(window.localStorage.getItem('novaro_auth_token') || '');
@@ -244,6 +249,12 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       !contactForm.message.trim()
     ) {
       setContactError('Please fill all fields with valid details.');
+      return;
+    }
+    if (!allowContactSubmissions) {
+      setContactError(
+        maintenanceMode ? maintenanceMessage : 'Contact form submissions are currently disabled by admin.'
+      );
       return;
     }
     setIsSubmittingContact(true);
@@ -511,6 +522,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 Login is required to submit contact requests. <Link href="/login" className="underline">Go to Login</Link>
               </p>
             ) : null}
+            {!allowContactSubmissions ? (
+              <p className="text-sm text-amber-300">
+                {maintenanceMode ? maintenanceMessage : 'Contact form submissions are currently disabled by admin.'}
+              </p>
+            ) : null}
             {status.message ? (
               <p className={`text-sm ${status.type === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
                 {status.message}
@@ -518,10 +534,16 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             ) : null}
             <button
               type="submit"
-              disabled={isSubmittingContact || !isAuthenticated}
+              disabled={isSubmittingContact || !isAuthenticated || !allowContactSubmissions}
               className="w-full rounded-xl bg-linear-to-r from-red-600 via-pink-600 to-purple-600 px-8 py-3 font-semibold disabled:opacity-60"
             >
-              {isSubmittingContact ? 'Sending...' : !isAuthenticated ? 'Login Required' : 'Send Message'}
+              {isSubmittingContact
+                ? 'Sending...'
+                : !isAuthenticated
+                  ? 'Login Required'
+                  : allowContactSubmissions
+                    ? 'Send Message'
+                    : 'Currently Disabled'}
             </button>
           </form>
         </div>

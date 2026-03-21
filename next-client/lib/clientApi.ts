@@ -101,12 +101,12 @@ export async function changePassword(payload: { currentPassword: string; newPass
   });
 }
 
-export async function requestCreatorAccess(token: string) {
+export async function requestCreatorAccess(token: string, message = '') {
   const data = await request<{ data: AuthUser }>('/api/auth/creator-request', {
     method: 'POST',
     token,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({})
+    body: JSON.stringify({ message: String(message || '').trim() })
   });
   return data.data;
 }
@@ -493,6 +493,40 @@ export async function downloadMyMonthlyTaskReport(year: number, month: number, t
       Authorization: `Bearer ${token}`
     }
   });
+  if (!response.ok) {
+    let message = 'Unable to download monthly report.';
+    try {
+      const data = await response.json();
+      message = data?.message || message;
+    } catch {
+      // ignore parse errors
+    }
+    throw new Error(message);
+  }
+  const blob = await response.blob();
+  const disposition = response.headers.get('content-disposition') || '';
+  const match = disposition.match(/filename="?([^"]+)"?/i);
+  const filename = match?.[1] || `employee-task-report-${year}-${String(month).padStart(2, '0')}.xlsx`;
+  return { blob, filename };
+}
+
+export async function downloadAdminEmployeeMonthlyReport(
+  employeeId: string,
+  year: number,
+  month: number,
+  token: string
+) {
+  const response = await fetch(
+    withBase(
+      `/api/admin/employee-tasks/monthly-report?employeeId=${encodeURIComponent(employeeId)}&year=${year}&month=${month}`
+    ),
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
   if (!response.ok) {
     let message = 'Unable to download monthly report.';
     try {

@@ -10,6 +10,7 @@ export default function AdminContactSubmissionsPage() {
   const [items, setItems] = useState<ContactSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const orderedItems = [...items].reverse();
 
   useEffect(() => {
     if (!token) return;
@@ -26,7 +27,7 @@ export default function AdminContactSubmissionsPage() {
         {loading ? <p className="text-slate-300">Loading submissions...</p> : null}
         {error ? <p className="text-red-400">{error}</p> : null}
         <div className="space-y-3">
-          {items.map((item) => (
+          {orderedItems.map((item) => (
             <article key={item.id} className="rounded-xl border border-white/10 bg-white/5 p-3">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="font-semibold">{item.subject}</h2>

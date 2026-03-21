@@ -8,14 +8,27 @@ import { useAuth } from '@/context/AuthContext';
 type ContactPageClientProps = {
   title?: string;
   description?: string;
+  maintenanceMode?: boolean;
+  maintenanceMessage?: string;
+  allowContactSubmissions?: boolean;
 };
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-export default function ContactPageClient({ title, description }: ContactPageClientProps) {
+export default function ContactPageClient({
+  title,
+  description,
+  maintenanceMode = false,
+  maintenanceMessage = '',
+  allowContactSubmissions = true
+}: ContactPageClientProps) {
   const { token } = useAuth();
+  const contactAllowed = allowContactSubmissions && !maintenanceMode;
+  const effectiveMaintenanceMessage =
+    maintenanceMessage ||
+    'Platform updates are in progress. Some actions are temporarily unavailable. Please try again soon.';
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -26,6 +39,12 @@ export default function ContactPageClient({ title, description }: ContactPageCli
     if (!token) return;
     if (!form.name.trim() || !isValidEmail(form.email.trim()) || !form.subject.trim() || !form.message.trim()) {
       setError('Please fill all fields with valid details.');
+      return;
+    }
+    if (!contactAllowed) {
+      setError(
+        maintenanceMode ? effectiveMaintenanceMessage : 'Contact form submissions are currently disabled by admin.'
+      );
       return;
     }
     setSubmitting(true);
@@ -92,12 +111,25 @@ export default function ContactPageClient({ title, description }: ContactPageCli
               </Link>
             </p>
           ) : null}
+          {!contactAllowed ? (
+            <p className="text-sm text-amber-300">
+              {maintenanceMode
+                ? effectiveMaintenanceMessage
+                : 'Contact form submissions are currently disabled by admin.'}
+            </p>
+          ) : null}
 
           {error ? <p className="text-sm text-red-400">{error}</p> : null}
           {status ? <p className="text-sm text-emerald-400">{status}</p> : null}
 
-          <button className="btn" type="submit" disabled={submitting || !token}>
-            {submitting ? 'Sending...' : !token ? 'Login Required' : 'Send Message'}
+          <button className="btn" type="submit" disabled={submitting || !token || !contactAllowed}>
+            {submitting
+              ? 'Sending...'
+              : !token
+                ? 'Login Required'
+                : contactAllowed
+                  ? 'Send Message'
+                  : 'Currently Disabled'}
           </button>
         </form>
       </section>

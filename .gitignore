@@ -8,6 +8,7 @@
 **/dist/
 **/build/
 **/.next/
+**/.next-dev/
 **/.vercel/
 **/*.db
 

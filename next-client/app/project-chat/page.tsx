@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import {
   fetchMyProjectMessages,
@@ -11,13 +12,35 @@ import {
 import { useAuth } from '@/context/AuthContext';
 
 export default function ProjectChatPage() {
-  const { token } = useAuth();
+  const { token, isAdmin } = useAuth();
   const [messages, setMessages] = useState<ProjectChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+  const [showStarterForm, setShowStarterForm] = useState(false);
+  const [starterSending, setStarterSending] = useState(false);
+  const [starter, setStarter] = useState({
+    topic: '',
+    service: 'Web Development',
+    projectType: 'New Project',
+    budget: 'Not Sure Yet',
+    timeline: 'Within 1 Month',
+    priority: 'Medium',
+    goal: '',
+    details: ''
+  });
+  const orderedMessages = useMemo(
+    () => [...messages].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
+    [messages]
+  );
+  const deleteRequested = orderedMessages.some((item) => item.userDeleteRequested);
+  const quickPrompts = [
+    'Please suggest best tech stack for this project.',
+    'Can we schedule a kickoff call this week?',
+    'What budget range is ideal for this requirement?'
+  ];
 
   async function loadMessages(silent = false) {
     if (!token) return;
@@ -34,6 +57,12 @@ export default function ProjectChatPage() {
 
   useEffect(() => {
     loadMessages();
+    const interval = window.setInterval(() => {
+      loadMessages(true);
+    }, 5000);
+    return () => {
+      window.clearInterval(interval);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -65,20 +94,141 @@ export default function ProjectChatPage() {
     }
   }
 
+  function onStarterChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
+    const { name, value } = event.target;
+    setStarter((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function onStarterSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!token) return;
+    const topic = starter.topic.trim();
+    const goal = starter.goal.trim();
+    const details = starter.details.trim();
+    if (!topic || topic.length < 3 || !goal || !details || details.length < 20) {
+      setError('Please add topic, goal, and at least 20 characters in details.');
+      return;
+    }
+    const starterMessage = [
+      messages.length > 0 ? 'Project Topic Update' : 'New Project Discussion Request',
+      `Topic: ${topic}`,
+      `Service: ${starter.service}`,
+      `Project Type: ${starter.projectType}`,
+      `Budget: ${starter.budget}`,
+      `Timeline: ${starter.timeline}`,
+      `Priority: ${starter.priority}`,
+      `Main Goal: ${goal}`,
+      `Project Details: ${details}`
+    ].join('\n');
+
+    setStarterSending(true);
+    setError('');
+    setStatus('');
+    try {
+      await sendMyProjectMessage({ message: starterMessage }, token);
+      setStarter((prev) => ({ ...prev, topic: '', goal: '', details: '' }));
+      setShowStarterForm(false);
+      await loadMessages(true);
+      setStatus(messages.length > 0 ? 'Project topic updated.' : 'Project details sent successfully.');
+    } catch (err: any) {
+      setError(err?.message || 'Unable to send project details.');
+    } finally {
+      setStarterSending(false);
+    }
+  }
+
   return (
     <ProtectedPage>
       <section className="card space-y-4">
         <h1 className="text-3xl font-extrabold md:text-5xl">Project Chat</h1>
         <p className="text-slate-300">Discuss your project directly with admin.</p>
+        {isAdmin ? (
+          <Link className="btn inline-block" href="/admin/project-chats">
+            Open Admin Chats
+          </Link>
+        ) : null}
         <button className="btn" type="button" onClick={onDeleteRequest}>
-          Request Delete Chat
+          {deleteRequested ? 'Delete Request Sent' : 'Request Delete Chat'}
         </button>
+        {!showStarterForm ? (
+          <button className="btn" type="button" onClick={() => setShowStarterForm(true)}>
+            {messages.length > 0 ? 'Update Project Data' : 'Start Project Discussion'}
+          </button>
+        ) : null}
+        {showStarterForm ? (
+          <form className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-2" onSubmit={onStarterSubmit}>
+            <input
+              name="topic"
+              value={starter.topic}
+              onChange={onStarterChange}
+              placeholder="Project topic"
+            />
+            <input
+              name="goal"
+              value={starter.goal}
+              onChange={onStarterChange}
+              placeholder="Main goal"
+            />
+            <div className="grid gap-2 md:grid-cols-3">
+              <select name="service" value={starter.service} onChange={onStarterChange}>
+                <option>Web Development</option>
+                <option>UI / UX Design</option>
+                <option>App Development</option>
+                <option>SEO & Growth</option>
+              </select>
+              <select name="projectType" value={starter.projectType} onChange={onStarterChange}>
+                <option>New Project</option>
+                <option>Existing Product Upgrade</option>
+                <option>MVP Build</option>
+              </select>
+              <select name="budget" value={starter.budget} onChange={onStarterChange}>
+                <option>Not Sure Yet</option>
+                <option>Under $1,000</option>
+                <option>$1,000 - $5,000</option>
+                <option>$5,000 - $15,000</option>
+                <option>$15,000+</option>
+              </select>
+            </div>
+            <div className="grid gap-2 md:grid-cols-2">
+              <select name="timeline" value={starter.timeline} onChange={onStarterChange}>
+                <option>Within 1 Month</option>
+                <option>1 - 3 Months</option>
+                <option>3 - 6 Months</option>
+                <option>Flexible</option>
+              </select>
+              <select name="priority" value={starter.priority} onChange={onStarterChange}>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Urgent</option>
+              </select>
+            </div>
+            <textarea
+              name="details"
+              rows={4}
+              value={starter.details}
+              onChange={onStarterChange}
+              placeholder="Project details (features, references, target users...)"
+            />
+            <div className="admin-toolbar">
+              <button className="btn" type="submit" disabled={starterSending}>
+                {starterSending ? 'Sending...' : 'Send Project Details'}
+              </button>
+              <button className="btn" type="button" onClick={() => setShowStarterForm(false)}>
+                Hide
+              </button>
+            </div>
+          </form>
+        ) : null}
+        {deleteRequested ? <p className="text-xs text-amber-300">Waiting for admin to delete chat permanently.</p> : null}
         {loading ? <p className="text-slate-300">Loading messages...</p> : null}
         <div className="space-y-2 rounded-xl border border-white/10 bg-white/5 p-3">
-          {messages.length === 0 ? (
+          {orderedMessages.length === 0 ? (
             <p className="text-slate-300">No messages yet.</p>
           ) : (
-            messages.map((item) => (
+            orderedMessages.map((item) => (
               <article key={item.id} className="rounded-lg border border-white/10 bg-black/20 p-3">
                 <p>{item.message}</p>
                 <p className="mt-1 text-xs text-slate-400">
@@ -87,6 +237,13 @@ export default function ProjectChatPage() {
               </article>
             ))
           )}
+        </div>
+        <div className="admin-toolbar">
+          {quickPrompts.map((prompt) => (
+            <button key={prompt} className="btn" type="button" onClick={() => setMessage(prompt)}>
+              {prompt}
+            </button>
+          ))}
         </div>
         <form className="flex gap-2" onSubmit={onSend}>
           <input

@@ -14,11 +14,15 @@ export const metadata: Metadata = buildMetadata({
 export default async function ContactPage() {
   const content = await fetchSiteContent({ revalidate: 180 }).catch(() => ({} as any));
   const section = (content as any)?.contactPage || (content as any)?.contactForm || {};
+  const settings = (content as any)?.systemSettings || {};
 
   return (
     <ContactPageClient
       title={section?.title || 'Contact Us'}
       description={section?.description || 'Tell us about your project goals and we will get back to you quickly.'}
+      maintenanceMode={Boolean(settings?.maintenanceMode)}
+      maintenanceMessage={String(settings?.maintenanceMessage || '')}
+      allowContactSubmissions={Boolean(settings?.allowContactSubmissions ?? true)}
     />
   );
 }

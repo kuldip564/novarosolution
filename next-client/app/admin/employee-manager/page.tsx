@@ -9,6 +9,7 @@ import {
   createAdminEmployeeTask,
   deleteAdminEmployee,
   deleteAdminEmployeeTask,
+  downloadAdminEmployeeMonthlyReport,
   fetchAdminEmployeeTasks,
   fetchAdminEmployees,
   updateAdminEmployee,
@@ -47,6 +48,7 @@ export default function AdminEmployeeManagerPage() {
   const [editingEmployeeId, setEditingEmployeeId] = useState('');
   const [taskForm, setTaskForm] = useState<any>(emptyTask);
   const [editingTaskId, setEditingTaskId] = useState('');
+  const [reportMonth, setReportMonth] = useState('');
 
   async function loadData() {
     if (!token) return;
@@ -72,6 +74,10 @@ export default function AdminEmployeeManagerPage() {
     if (!selectedEmployeeId) return [];
     return tasks.filter((item) => item.employeeId === selectedEmployeeId);
   }, [tasks, selectedEmployeeId]);
+  const selectedEmployee = useMemo(
+    () => employees.find((item) => (item.userId || item.id) === selectedEmployeeId) || null,
+    [employees, selectedEmployeeId]
+  );
 
   async function onEmployeeSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -150,6 +156,41 @@ export default function AdminEmployeeManagerPage() {
     }
   }
 
+  async function onDownloadMonthlyReport() {
+    if (!token) return;
+    if (!selectedEmployeeId) {
+      setError('Select employee first.');
+      return;
+    }
+    if (!reportMonth) {
+      setError('Select report month.');
+      return;
+    }
+    const [yearText, monthText] = reportMonth.split('-');
+    const year = Number(yearText);
+    const month = Number(monthText);
+    if (!year || !month) {
+      setError('Invalid report month.');
+      return;
+    }
+    setStatus('');
+    setError('');
+    try {
+      const { blob, filename } = await downloadAdminEmployeeMonthlyReport(selectedEmployeeId, year, month, token);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      setStatus('Monthly report downloaded.');
+    } catch (err: any) {
+      setError(err?.message || 'Unable to download monthly report.');
+    }
+  }
+
   return (
     <ProtectedPage requireAdmin>
       <main className="app-page-shell">
@@ -191,6 +232,25 @@ export default function AdminEmployeeManagerPage() {
             </select>
             <button className="admin-btn" type="submit">{editingTaskId ? 'Update Task' : 'Assign Task'}</button>
           </form>
+        </div>
+
+        <div className="page-content-card space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-xl font-semibold">Employee Profile + Monthly Report</h2>
+            <div className="admin-toolbar">
+              <input type="month" value={reportMonth} onChange={(e) => setReportMonth(e.target.value)} />
+              <button className="admin-btn" type="button" onClick={onDownloadMonthlyReport}>
+                Download XLS
+              </button>
+            </div>
+          </div>
+          {selectedEmployee ? (
+            <p className="text-sm text-slate-300">
+              {selectedEmployee.name} ({selectedEmployee.email}) - {selectedEmployee.department || 'No department'}
+            </p>
+          ) : (
+            <p className="text-sm text-slate-400">Select employee from list by clicking Edit.</p>
+          )}
         </div>
 
         <div className="page-content-card space-y-2">

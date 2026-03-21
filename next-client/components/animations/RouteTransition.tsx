@@ -16,10 +16,10 @@ export default function RouteTransition({ children }: { children: ReactNode }) {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={pathname}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -6 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
+        initial={{ opacity: 0, y: 12, scale: 0.992, filter: 'blur(4px)' }}
+        animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+        exit={{ opacity: 0, y: -10, scale: 0.995, filter: 'blur(3px)' }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       >
         {children}
       </motion.div>
