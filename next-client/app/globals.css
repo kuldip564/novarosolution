@@ -1634,6 +1634,74 @@ select:focus {
   box-shadow: 0 16px 28px rgba(2, 6, 23, 0.24);
 }
 
+.admin-chat-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.6fr);
+  gap: 12px;
+}
+
+.admin-chat-thread-list {
+  display: grid;
+  gap: 8px;
+  max-height: 62vh;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.admin-chat-thread-btn {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  color: var(--text);
+  text-align: left;
+  padding: 0.72rem;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.admin-chat-thread-btn:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--primary) 55%, var(--border) 45%);
+  box-shadow: 0 10px 18px rgba(2, 6, 23, 0.2);
+}
+
+.admin-chat-thread-btn.is-active {
+  border-color: color-mix(in oklab, var(--primary) 60%, var(--border) 40%);
+  background: color-mix(in oklab, var(--surface-strong) 92%, transparent);
+}
+
+.admin-chat-messages {
+  min-height: 240px;
+  max-height: 58vh;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  padding: 0.35rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+}
+
+.admin-chat-bubble {
+  border-radius: 12px;
+  padding: 0.62rem 0.72rem;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface-strong) 92%, transparent);
+}
+
+.admin-chat-bubble.is-admin {
+  border-color: color-mix(in oklab, var(--primary) 52%, var(--border) 48%);
+  background: color-mix(in oklab, var(--surface-strong) 86%, var(--primary) 14%);
+}
+
+.admin-chat-bubble.is-user {
+  border-color: color-mix(in oklab, var(--accent) 36%, var(--border) 64%);
+}
+
+.admin-chat-compose {
+  display: grid;
+  gap: 8px;
+}
+
 .employee-workspace-shell .page-content-card {
   overflow: hidden;
 }
@@ -1892,8 +1960,25 @@ select:focus {
   .services-future-preview,
   .about-3d-hero,
   .about-story-grid,
-  .profile-hero-card {
+  .profile-hero-card,
+  .admin-chat-layout {
     grid-template-columns: 1fr;
+  }
+
+  .admin-chat-thread-list,
+  .admin-chat-messages {
+    max-height: 46vh;
+  }
+
+  .project-chat-shell .admin-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .project-chat-shell .project-chat-prompt-btn,
+  .project-chat-shell .btn {
+    max-width: none;
+    width: 100%;
   }
 
   .future-panel-canvas {
@@ -1914,6 +1999,57 @@ select:focus {
 
   .profile-buddy-canvas {
     height: 220px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .nav-desktop {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .nav-shell-utilities {
+    padding: 3px;
+  }
+
+  .mobile-menu-panel {
+    position: absolute;
+    right: 0;
+    top: 52px;
+    display: flex;
+    width: min(92vw, 340px);
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(
+        140deg,
+        color-mix(in oklab, var(--surface-strong) 92%, #ffffff 8%),
+        color-mix(in oklab, var(--surface) 96%, transparent)
+      );
+    backdrop-filter: blur(18px);
+    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.2);
+    flex-direction: column;
+    gap: 7px;
+    z-index: 95;
+  }
+
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    display: block;
+    background: rgba(2, 6, 23, 0.28);
+    border: 0;
+    z-index: 85;
+  }
+
+  .mobile-menu-panel .nav-link {
+    justify-content: flex-start;
+    border-radius: 12px;
+    min-height: 40px;
   }
 }
 

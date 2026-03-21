@@ -43,6 +43,18 @@ export default function HeaderNav() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth > 1024) {
+        setMenuOpen(false);
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   function toggleTheme() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', nextTheme);
@@ -83,6 +95,7 @@ export default function HeaderNav() {
         ...(isCreator ? [{ href: '/creator/studio', label: 'Creator Studio' }] : []),
         ...(isEmployee ? [{ href: '/employee/tasks', label: 'Tasks' }] : []),
         ...(isAdmin ? [{ href: '/admin/dashboard', label: 'Admin' }] : []),
+        ...(isAdmin ? [{ href: '/admin/project-chats', label: 'Admin Chats' }] : []),
         { href: '/project-chat', label: 'Project Chat' },
         { href: '/creator-feed', label: 'Feed' },
         { href: '/profile', label: 'Profile' }

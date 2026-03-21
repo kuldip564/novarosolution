@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import {
+  fetchAdminChatThreads,
   deleteAdminUser,
   fetchAdminCreatorContent,
   fetchAdminEmployeeTasks,
@@ -44,13 +45,14 @@ export default function AdminDashboardPage() {
   const [contactSubmissions, setContactSubmissions] = useState<any[]>([]);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [creatorContent, setCreatorContent] = useState<any[]>([]);
+  const [chatThreads, setChatThreads] = useState<any[]>([]);
 
   async function loadOverview() {
     if (!token) return;
     setLoading(true);
     setError('');
     try {
-      const [overviewData, userRows, employeeRows, taskRows, submissionRows, appointmentRows, creatorRows] =
+      const [overviewData, userRows, employeeRows, taskRows, submissionRows, appointmentRows, creatorRows, chatRows] =
         await Promise.all([
           fetchAdminOverview(token),
           fetchAdminUsers(token),
@@ -58,7 +60,8 @@ export default function AdminDashboardPage() {
           fetchAdminEmployeeTasks(token),
           fetchContactSubmissions(token),
           fetchServiceAppointments(token),
-          fetchAdminCreatorContent(token)
+          fetchAdminCreatorContent(token),
+          fetchAdminChatThreads(token)
         ]);
       setOverview({
         totalUsers: overviewData?.totalUsers || 0,
@@ -76,6 +79,7 @@ export default function AdminDashboardPage() {
       setContactSubmissions(submissionRows || []);
       setAppointments(appointmentRows || []);
       setCreatorContent(creatorRows || []);
+      setChatThreads(chatRows || []);
     } catch (err: any) {
       setError(err?.message || 'Unable to load dashboard.');
     } finally {
@@ -177,6 +181,14 @@ export default function AdminDashboardPage() {
     });
   }, [creatorContent, sectionSearch]);
 
+  const filteredChats = useMemo(() => {
+    if (!sectionSearch) return chatThreads;
+    return chatThreads.filter((item: any) => {
+      const text = `${item?.userName || ''} ${item?.userEmail || ''} ${item?.lastMessage || ''}`.toLowerCase();
+      return text.includes(sectionSearch);
+    });
+  }, [chatThreads, sectionSearch]);
+
   const recentActivity = useMemo(() => {
     const toMs = (value: any) => {
       const time = new Date(value || '').getTime();
@@ -215,11 +227,19 @@ export default function AdminDashboardPage() {
         meta: item.creatorName || item.status || '',
         time: toMs(item.createdAt || item.updatedAt),
         href: '/admin/content-manager'
+      })),
+      ...chatThreads.map((item: any) => ({
+        id: `chat-${item.userId || item.id || Math.random()}`,
+        type: 'Chat',
+        title: item.userName ? `Chat with ${item.userName}` : 'Project chat update',
+        meta: item.lastMessage || '',
+        time: toMs(item.lastMessageAt),
+        href: '/admin/project-chats'
       }))
     ];
 
     return rows.sort((a, b) => b.time - a.time).slice(0, 12);
-  }, [employeeTasks, contactSubmissions, appointments, creatorContent]);
+  }, [employeeTasks, contactSubmissions, appointments, creatorContent, chatThreads]);
 
   function downloadSnapshot() {
     const payload = {
@@ -353,6 +373,7 @@ export default function AdminDashboardPage() {
           <Link className="admin-btn" href="/admin/projects-manager">Projects Manager</Link>
           <Link className="admin-btn" href="/admin/employee-manager">Employee Manager</Link>
           <Link className="admin-btn" href="/admin/contact-submissions">Contact Submissions</Link>
+          <Link className="admin-btn" href="/admin/project-chats">Project Chats</Link>
           <Link className="admin-btn" href="/admin/settings">Settings</Link>
           <button className="admin-btn" type="button" onClick={loadOverview}>Reload</button>
         </div>
@@ -402,7 +423,7 @@ export default function AdminDashboardPage() {
                 onChange={(event) => setGlobalQuery(event.target.value)}
                 placeholder="Search across tasks, contacts, appointments, creator content..."
               />
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                 <article className="admin-list-card space-y-2">
                   <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Employee Tasks</p>
                   <p className="text-2xl font-semibold">{filteredTasks.length}</p>
@@ -426,6 +447,12 @@ export default function AdminDashboardPage() {
                   <p className="text-2xl font-semibold">{filteredCreatorContent.length}</p>
                   <p className="text-xs text-slate-400">Total records: {creatorContent.length}</p>
                   <Link className="admin-btn inline-flex w-fit" href="/admin/content-manager">Open Creator Content</Link>
+                </article>
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Project Chats</p>
+                  <p className="text-2xl font-semibold">{filteredChats.length}</p>
+                  <p className="text-xs text-slate-400">Total records: {chatThreads.length}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/project-chats">Open Chats</Link>
                 </article>
               </div>
             </div>
