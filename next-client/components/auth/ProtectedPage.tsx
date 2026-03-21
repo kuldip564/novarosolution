@@ -26,7 +26,7 @@ export default function ProtectedPage({
       router.replace('/login');
       return;
     }
-    if (requireCreator && !isCreator) {
+    if (requireCreator && !isCreator && !isAdmin) {
       router.replace('/profile');
       return;
     }
@@ -42,7 +42,7 @@ export default function ProtectedPage({
   if (
     loading ||
     !isAuthenticated ||
-    (requireCreator && !isCreator) ||
+    (requireCreator && !isCreator && !isAdmin) ||
     (requireAdmin && !isAdmin) ||
     (requireEmployee && !isEmployee)
   ) {

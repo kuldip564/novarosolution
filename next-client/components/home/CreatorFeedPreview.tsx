@@ -6,7 +6,8 @@ import Image from 'next/image';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 type FeedItem = {
-  _id: string;
+  _id?: string;
+  id?: string;
   title: string;
   caption?: string;
   mediaUrl?: string;
@@ -53,9 +54,11 @@ export default function CreatorFeedPreview() {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {data?.slice(0, 3).map((item, index) => (
+      {data?.slice(0, 3).map((item, index) => {
+        const itemKey = item._id || item.id || `${item.title}-${item.mediaUrl || 'no-media'}-${index}`;
+        return (
         <motion.article
-          key={item._id}
+          key={itemKey}
           initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
           whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
@@ -79,7 +82,8 @@ export default function CreatorFeedPreview() {
           <h3 className="mt-3 text-base font-semibold">{item.title}</h3>
           <p className="mt-2 text-sm text-slate-300">{String(item.caption || '').slice(0, 90)}</p>
         </motion.article>
-      ))}
+      );
+      })}
     </div>
   );
 }

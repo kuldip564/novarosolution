@@ -23,9 +23,11 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState(user?.avatarUrl || '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const creatorRequestPending = user?.creatorRequestStatus === 'pending';
 
   const userInitials = String(user?.name || 'U')
     .split(/\s+/)
@@ -86,10 +88,15 @@ export default function ProfilePage() {
     event.preventDefault();
     setStatus('');
     setError('');
+    if (newPassword !== confirmNewPassword) {
+      setError('New password and confirm password do not match.');
+      return;
+    }
     try {
       await updateUserPassword({ currentPassword, newPassword });
       setCurrentPassword('');
       setNewPassword('');
+      setConfirmNewPassword('');
       setStatus('Password updated.');
     } catch (err: any) {
       setError(err?.message || 'Unable to update password.');
@@ -208,15 +215,27 @@ export default function ProfilePage() {
             minLength={6}
             required
           />
+          <input
+            type="password"
+            value={confirmNewPassword}
+            onChange={(event) => setConfirmNewPassword(event.target.value)}
+            placeholder="Confirm new password"
+            minLength={6}
+            required
+          />
           <button className="btn" type="submit">
             Update Password
           </button>
         </form>
 
         {!isCreator ? (
-          <button className="btn" type="button" onClick={onCreatorRequest}>
-            Request Creator Role
-          </button>
+          creatorRequestPending ? (
+            <p className="page-content-card text-sm text-amber-300">Creator request pending admin approval.</p>
+          ) : (
+            <button className="btn" type="button" onClick={onCreatorRequest}>
+              Request Creator Role
+            </button>
+          )
         ) : (
           <div className="admin-toolbar">
             <Link className="btn" href="/creator/studio">

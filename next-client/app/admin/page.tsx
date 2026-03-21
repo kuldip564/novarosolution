@@ -1,16 +1,24 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import Link from 'next/link';
+import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, loading, isAuthenticated, isAdmin } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated && isAdmin) {
+      router.replace('/admin/dashboard');
+    }
+  }, [loading, isAuthenticated, isAdmin, router]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,6 +54,12 @@ export default function AdminLoginPage() {
         </button>
       </form>
       {error ? <p className="text-red-400">{error}</p> : null}
+      <p className="text-sm text-slate-300">
+        Need regular user login?{' '}
+        <Link href="/login" className="underline">
+          Go to Login
+        </Link>
+      </p>
     </section>
   );
 }

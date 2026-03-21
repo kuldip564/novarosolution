@@ -7,6 +7,7 @@ import SEO from '@/components/SEO';
 import Providers from './providers';
 import RouteTransition from '@/components/animations/RouteTransition';
 import HeaderNav from '@/components/layout/HeaderNav';
+import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             canonical={getSiteUrl()}
             schema={generateOrganizationSchema()}
           />
+          <AnnouncementBanner />
           <header className="header">
             <div className="container header-content">
               <Link href="/" className="brand-title">Novaro Solution</Link>
