@@ -1702,6 +1702,113 @@ select:focus {
   gap: 8px;
 }
 
+.creator-shell {
+  display: grid;
+  gap: var(--section-space);
+}
+
+.creator-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.creator-stat-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
+}
+
+.creator-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(140px, 0.45fr) minmax(140px, 0.45fr) auto;
+  gap: 8px;
+}
+
+.creator-feed-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.creator-feed-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
+  display: grid;
+  gap: 8px;
+}
+
+.creator-feed-media-wrap {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.creator-feed-media {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
+.creator-media-chip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.7rem;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  color: var(--text);
+}
+
+.creator-comment-list {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  gap: 7px;
+  max-height: 180px;
+  overflow: auto;
+}
+
+.creator-comment-item {
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+
+.creator-comment-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.creator-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.creator-preview-shell {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+}
+
+.creator-studio-preview-media {
+  width: 100%;
+  max-height: 340px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
 .employee-workspace-shell .page-content-card {
   overflow: hidden;
 }
@@ -1979,6 +2086,19 @@ select:focus {
   .project-chat-shell .btn {
     max-width: none;
     width: 100%;
+  }
+
+  .creator-feed-grid,
+  .creator-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .creator-comment-form {
+    grid-template-columns: 1fr;
+  }
+
+  .creator-toolbar {
+    grid-template-columns: 1fr;
   }
 
   .future-panel-canvas {
