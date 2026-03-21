@@ -1437,6 +1437,14 @@ select:focus {
   border-color: color-mix(in oklab, var(--border) 55%, var(--primary) 45%);
 }
 
+.page-hero-shell,
+.page-content-card,
+.creator-feed-card,
+.admin-list-card,
+.admin-stat-card {
+  animation: softRiseIn 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .page-content-card h2,
 .page-hero-shell h2 {
   margin-bottom: 0.35rem;
@@ -1953,8 +1961,23 @@ select:focus {
   }
 }
 
+@keyframes softRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 
 @media (max-width: 900px) {
+  :root {
+    --section-space: 1.15rem;
+  }
+
   .hero,
   .grid,
   .post-list {
@@ -1962,11 +1985,11 @@ select:focus {
   }
 
   .main {
-    padding-top: 34px;
+    padding: 16px 0 26px;
   }
 
   main p {
-    line-height: 1.62;
+    line-height: 1.55;
   }
 
   .header,
@@ -1975,11 +1998,21 @@ select:focus {
     border-radius: 14px;
   }
 
+  .header {
+    top: 4px;
+    margin-top: 4px;
+  }
+
+  .footer {
+    margin: 18px auto 8px;
+  }
+
   .header-content {
     gap: 8px;
-    padding: 8px 0;
+    padding: 6px 0;
     flex-wrap: nowrap;
-    min-height: 54px;
+    min-height: 50px;
+    padding-inline: 8px;
   }
 
   .footer-grid {
@@ -2050,13 +2083,13 @@ select:focus {
   }
 
   .quick-dock {
-    right: 14px;
-    bottom: 14px;
+    right: 10px;
+    bottom: 10px;
   }
 
   .quick-dock-btn {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .hero-three-wrap {
@@ -2119,6 +2152,68 @@ select:focus {
 
   .profile-buddy-canvas {
     height: 220px;
+  }
+
+  .card,
+  .page-content-card,
+  .page-hero-shell {
+    padding: 0.88rem;
+    border-radius: 14px;
+    box-shadow: 0 10px 18px rgba(2, 6, 23, 0.14);
+    backdrop-filter: blur(10px);
+  }
+
+  .card:hover,
+  .page-content-card:hover,
+  .page-hero-shell:hover {
+    transform: none;
+    box-shadow: 0 10px 18px rgba(2, 6, 23, 0.14);
+  }
+
+  .app-page-shell > section + section,
+  .app-page-shell > div + section,
+  .app-page-shell > section + div {
+    margin-top: 0.85rem;
+  }
+
+  .btn {
+    padding: 9px 13px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --content-width: 94%;
+    --section-space: 0.95rem;
+  }
+
+  .main {
+    padding: 12px 0 20px;
+  }
+
+  .section-title {
+    letter-spacing: -0.01em;
+  }
+
+  .page-hero-shell,
+  .page-content-card,
+  .card {
+    padding: 0.78rem;
+  }
+
+  .footer-grid {
+    gap: 10px;
+    padding: 12px 0;
+  }
+
+  .footer-links {
+    gap: 6px;
+  }
+
+  .nav-link {
+    min-height: 34px;
+    padding: 6px 10px;
   }
 }
 
