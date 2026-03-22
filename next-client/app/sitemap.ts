@@ -1,14 +1,20 @@
 import type { MetadataRoute } from 'next';
-import { getProjects } from '@/lib/api';
+import { getBlogPosts, getProjects } from '@/lib/api';
 import { getSiteUrl } from '@/lib/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
   let projects: Awaited<ReturnType<typeof getProjects>> = [];
+  let blogPosts: Awaited<ReturnType<typeof getBlogPosts>> = [];
   try {
     projects = await getProjects({ revalidate: 300 });
   } catch {
     projects = [];
+  }
+  try {
+    blogPosts = await getBlogPosts({ revalidate: 120 });
+  } catch {
+    blogPosts = [];
   }
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -38,6 +44,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7
     },
     {
+      url: `${base}/blog`,
+      changeFrequency: 'weekly',
+      priority: 0.8
+    },
+    {
       url: `${base}/login`,
       changeFrequency: 'monthly',
       priority: 0.4
@@ -50,5 +61,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8
   }));
 
-  return [...staticRoutes, ...projectRoutes];
+  const blogRoutes = blogPosts.map((post) => ({
+    url: `${base}/blog/${post.slug}`,
+    changeFrequency: 'weekly' as const,
+    priority: 0.7
+  }));
+
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
 }

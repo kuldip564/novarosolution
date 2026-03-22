@@ -124,6 +124,23 @@ export type CreatorItem = {
   createdAt?: string;
 };
 
+export type AdminBlogPost = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  coverImageUrl?: string;
+  authorName?: string;
+  status: 'draft' | 'published';
+  publishedAt?: string | null;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export async function fetchCreatorFeed() {
   const data = await request<{ data: CreatorItem[] }>('/api/creator/feed');
   return Array.isArray(data?.data) ? data.data : [];
@@ -424,6 +441,35 @@ export async function fetchServiceAppointments(token: string) {
 export async function fetchAdminCreatorContent(token: string) {
   const data = await request<{ data: CreatorItem[] }>('/api/admin/creator-content', { token });
   return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function fetchAdminBlogPosts(token: string) {
+  const data = await request<{ data: AdminBlogPost[] }>('/api/admin/blog', { token });
+  return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function createAdminBlogPost(payload: Record<string, unknown>, token: string) {
+  const data = await request<{ data: AdminBlogPost }>('/api/admin/blog', {
+    method: 'POST',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return data.data;
+}
+
+export async function updateAdminBlogPost(blogId: string, payload: Record<string, unknown>, token: string) {
+  const data = await request<{ data: AdminBlogPost }>(`/api/admin/blog/${blogId}`, {
+    method: 'PATCH',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return data.data;
+}
+
+export async function deleteAdminBlogPost(blogId: string, token: string) {
+  return request(`/api/admin/blog/${blogId}`, { method: 'DELETE', token });
 }
 
 export async function fetchSiteContentClient() {

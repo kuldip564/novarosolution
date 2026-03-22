@@ -6,6 +6,7 @@ type BuildMetadataInput = {
   keywords?: string[];
   path?: string;
   image?: string;
+  other?: Record<string, string>;
 };
 
 const DEFAULT_SITE_NAME = 'Novaro Solution';
@@ -30,7 +31,8 @@ export function buildMetadata({
   description,
   keywords = [],
   path = '/',
-  image = DEFAULT_IMAGE
+  image = DEFAULT_IMAGE,
+  other
 }: BuildMetadataInput): Metadata {
   const canonical = buildCanonical(path);
   const openGraphImage = image.startsWith('http') ? image : `${getSiteUrl()}${image}`;
@@ -63,7 +65,8 @@ export function buildMetadata({
       title,
       description,
       images: [openGraphImage]
-    }
+    },
+    other
   };
 }
 

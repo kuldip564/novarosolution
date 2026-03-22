@@ -25,8 +25,11 @@ export type Article = {
   excerpt: string;
   content: string;
   imageUrl?: string;
-  creatorName?: string;
+  authorName?: string;
   publishedAt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
 };
 
 type FetchCacheMode = {
@@ -152,23 +155,27 @@ export async function getProjectBySlug(slug: string, cacheMode: FetchCacheMode =
 
 function mapArticle(item: Record<string, any>, index: number): Article {
   const title = String(item?.title || `Article ${index + 1}`);
-  const caption = String(item?.caption || '');
+  const excerpt = String(item?.excerpt || '');
+  const content = String(item?.content || '');
   return {
     _id: String(item?._id || item?.id || `article-${index + 1}`),
     title,
     slug: slugify(String(item?.slug || title)),
-    excerpt: caption.slice(0, 140) || 'Latest updates from our creator community.',
-    content: caption || 'No article content available.',
-    imageUrl: typeof item?.mediaUrl === 'string' ? item.mediaUrl : undefined,
-    creatorName: item?.creatorName || 'Creator',
-    publishedAt: item?.createdAt
+    excerpt: excerpt || content.slice(0, 140) || 'Latest updates from our team.',
+    content: content || 'No article content available.',
+    imageUrl: typeof item?.coverImageUrl === 'string' ? item.coverImageUrl : undefined,
+    authorName: item?.authorName || 'Novaro Team',
+    publishedAt: item?.publishedAt || item?.createdAt,
+    seoTitle: item?.seoTitle || '',
+    seoDescription: item?.seoDescription || '',
+    seoKeywords: Array.isArray(item?.seoKeywords) ? item.seoKeywords : []
   };
 }
 
 export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120 }) {
   try {
     const payload = await requestJson<{ ok: boolean; data: Array<Record<string, any>> }>(
-      '/api/creator/feed',
+      '/api/blog',
       cacheMode
     );
     if (!payload?.ok || !Array.isArray(payload?.data)) {
@@ -181,6 +188,14 @@ export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120
 }
 
 export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode = { revalidate: 120 }) {
-  const posts = await getBlogPosts(cacheMode);
-  return posts.find((post) => post.slug === slug) || null;
+  try {
+    const payload = await requestJson<{ ok: boolean; data: Record<string, any> }>(
+      `/api/blog/${encodeURIComponent(slug)}`,
+      cacheMode
+    );
+    if (!payload?.ok || !payload?.data) return null;
+    return mapArticle(payload.data, 0);
+  } catch {
+    return null;
+  }
 }

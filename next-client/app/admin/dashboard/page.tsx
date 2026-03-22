@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import {
+  fetchAdminBlogPosts,
   fetchAdminChatThreads,
   deleteAdminUser,
   fetchAdminCreatorContent,
@@ -45,6 +46,7 @@ export default function AdminDashboardPage() {
   const [contactSubmissions, setContactSubmissions] = useState<any[]>([]);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [creatorContent, setCreatorContent] = useState<any[]>([]);
+  const [blogPosts, setBlogPosts] = useState<any[]>([]);
   const [chatThreads, setChatThreads] = useState<any[]>([]);
 
   async function loadOverview() {
@@ -52,7 +54,7 @@ export default function AdminDashboardPage() {
     setLoading(true);
     setError('');
     try {
-      const [overviewData, userRows, employeeRows, taskRows, submissionRows, appointmentRows, creatorRows, chatRows] =
+      const [overviewData, userRows, employeeRows, taskRows, submissionRows, appointmentRows, creatorRows, blogRows, chatRows] =
         await Promise.all([
           fetchAdminOverview(token),
           fetchAdminUsers(token),
@@ -61,6 +63,7 @@ export default function AdminDashboardPage() {
           fetchContactSubmissions(token),
           fetchServiceAppointments(token),
           fetchAdminCreatorContent(token),
+          fetchAdminBlogPosts(token),
           fetchAdminChatThreads(token)
         ]);
       setOverview({
@@ -79,6 +82,7 @@ export default function AdminDashboardPage() {
       setContactSubmissions(submissionRows || []);
       setAppointments(appointmentRows || []);
       setCreatorContent(creatorRows || []);
+      setBlogPosts(blogRows || []);
       setChatThreads(chatRows || []);
     } catch (err: any) {
       setError(err?.message || 'Unable to load dashboard.');
@@ -189,6 +193,14 @@ export default function AdminDashboardPage() {
     });
   }, [chatThreads, sectionSearch]);
 
+  const filteredBlogPosts = useMemo(() => {
+    if (!sectionSearch) return blogPosts;
+    return blogPosts.filter((item: any) => {
+      const text = `${item?.title || ''} ${item?.slug || ''} ${item?.status || ''} ${item?.excerpt || ''}`.toLowerCase();
+      return text.includes(sectionSearch);
+    });
+  }, [blogPosts, sectionSearch]);
+
   const recentActivity = useMemo(() => {
     const toMs = (value: any) => {
       const time = new Date(value || '').getTime();
@@ -228,6 +240,14 @@ export default function AdminDashboardPage() {
         time: toMs(item.createdAt || item.updatedAt),
         href: '/admin/content-manager'
       })),
+      ...blogPosts.map((item: any) => ({
+        id: `blog-${item.id || item._id || Math.random()}`,
+        type: 'Blog',
+        title: item.title || 'Blog post update',
+        meta: item.status || '',
+        time: toMs(item.publishedAt || item.updatedAt || item.createdAt),
+        href: '/admin/blog-manager'
+      })),
       ...chatThreads.map((item: any) => ({
         id: `chat-${item.userId || item.id || Math.random()}`,
         type: 'Chat',
@@ -239,7 +259,7 @@ export default function AdminDashboardPage() {
     ];
 
     return rows.sort((a, b) => b.time - a.time).slice(0, 12);
-  }, [employeeTasks, contactSubmissions, appointments, creatorContent, chatThreads]);
+  }, [employeeTasks, contactSubmissions, appointments, creatorContent, blogPosts, chatThreads]);
 
   function downloadSnapshot() {
     const payload = {
@@ -250,7 +270,8 @@ export default function AdminDashboardPage() {
       employeeTasks,
       contactSubmissions,
       appointments,
-      creatorContent
+      creatorContent,
+      blogPosts
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -272,6 +293,7 @@ export default function AdminDashboardPage() {
       `Appointments: ${overview.totalAppointments}`,
       `Tasks: ${employeeTasks.length}`,
       `Creator uploads: ${creatorContent.length}`,
+      `Blog posts: ${blogPosts.length}`,
       `Conversion rate: ${analytics.conversionRate}%`
     ].join(' | ');
 
@@ -374,6 +396,7 @@ export default function AdminDashboardPage() {
           <Link className="admin-btn" href="/admin/employee-manager">Employee Manager</Link>
           <Link className="admin-btn" href="/admin/contact-submissions">Contact Submissions</Link>
           <Link className="admin-btn" href="/admin/project-chats">Project Chats</Link>
+          <Link className="admin-btn" href="/admin/blog-manager">Blog Manager</Link>
           <Link className="admin-btn" href="/admin/settings">Settings</Link>
           <button className="admin-btn" type="button" onClick={loadOverview}>Reload</button>
         </div>
@@ -395,6 +418,8 @@ export default function AdminDashboardPage() {
                 ['Contact Requests', overview.totalSubmissions],
                 ['Appointments', overview.totalAppointments],
                 ['Creator Uploads', creatorContent.length]
+                ,
+                ['Blog Posts', blogPosts.length]
               ].map(([label, value], index) => (
                 <motion.article
                   key={String(label)}
@@ -421,9 +446,9 @@ export default function AdminDashboardPage() {
               <input
                 value={globalQuery}
                 onChange={(event) => setGlobalQuery(event.target.value)}
-                placeholder="Search across tasks, contacts, appointments, creator content..."
+                placeholder="Search across tasks, contacts, appointments, creator content, blogs..."
               />
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
                 <article className="admin-list-card space-y-2">
                   <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Employee Tasks</p>
                   <p className="text-2xl font-semibold">{filteredTasks.length}</p>
@@ -453,6 +478,12 @@ export default function AdminDashboardPage() {
                   <p className="text-2xl font-semibold">{filteredChats.length}</p>
                   <p className="text-xs text-slate-400">Total records: {chatThreads.length}</p>
                   <Link className="admin-btn inline-flex w-fit" href="/admin/project-chats">Open Chats</Link>
+                </article>
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Blog Posts</p>
+                  <p className="text-2xl font-semibold">{filteredBlogPosts.length}</p>
+                  <p className="text-xs text-slate-400">Total records: {blogPosts.length}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/blog-manager">Open Blogs</Link>
                 </article>
               </div>
             </div>

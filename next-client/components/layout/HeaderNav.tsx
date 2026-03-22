@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' }
 ];
 
@@ -95,6 +96,7 @@ export default function HeaderNav() {
         ...(isCreator ? [{ href: '/creator/studio', label: 'Creator Studio' }] : []),
         ...(isEmployee ? [{ href: '/employee/tasks', label: 'Tasks' }] : []),
         ...(isAdmin ? [{ href: '/admin/dashboard', label: 'Admin' }] : []),
+        ...(isAdmin ? [{ href: '/admin/blog-manager', label: 'Blog Manager' }] : []),
         ...(isAdmin ? [{ href: '/admin/project-chats', label: 'Admin Chats' }] : []),
         { href: '/project-chat', label: 'Project Chat' },
         { href: '/creator-feed', label: 'Feed' },
