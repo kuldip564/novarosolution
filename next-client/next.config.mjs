@@ -3,13 +3,33 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isDev = process.env.NODE_ENV !== 'production';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+let apiOrigin = '';
+try {
+  apiOrigin = new URL(apiUrl).origin;
+} catch {
+  apiOrigin = '';
+}
+const connectSources = [
+  "'self'",
+  ...(apiOrigin ? [apiOrigin] : []),
+  ...(isDev ? ['http://localhost:5001'] : []),
+  'https://www.google-analytics.com',
+  'https://region1.google-analytics.com',
+  'https://stats.g.doubleclick.net',
+  'https://pagead2.googlesyndication.com',
+  'https://googleads.g.doubleclick.net',
+  'https://ep1.adtrafficquality.google',
+  'https://*.adtrafficquality.google',
+  'https://*.api.sanity.io'
+];
 const cspHeader = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagservices.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https:",
-  `connect-src 'self' ${isDev ? 'http://localhost:5001 ' : ''}https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.api.sanity.io`,
+  `connect-src ${connectSources.join(' ')}`,
   "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com",
   "object-src 'none'",
   "base-uri 'self'",

@@ -47,6 +47,7 @@ export default function LoginPage() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="Email"
+          autoComplete="email"
           required
         />
         <input
@@ -54,6 +55,7 @@ export default function LoginPage() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           placeholder="Password"
+          autoComplete="current-password"
           required
         />
         {error ? <p className="text-sm text-red-400">{error}</p> : null}

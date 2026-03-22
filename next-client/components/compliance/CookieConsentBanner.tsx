@@ -29,14 +29,14 @@ function updateGoogleConsent(choice: CookieConsentChoice) {
 
 function ensureAdSenseScript(clientId: string) {
   if (typeof window === 'undefined') return;
-  const existing = document.querySelector(`script[data-adsense-client="${clientId}"]`);
+  const existing = document.querySelector('script[data-adsense-loader="true"]');
   if (existing) return;
 
   const script = document.createElement('script');
   script.async = true;
   script.crossOrigin = 'anonymous';
   script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`;
-  script.setAttribute('data-adsense-client', clientId);
+  script.setAttribute('data-adsense-loader', 'true');
   document.head.appendChild(script);
 }
 
