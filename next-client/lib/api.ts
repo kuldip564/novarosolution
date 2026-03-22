@@ -176,18 +176,22 @@ function mapArticle(item: Record<string, any>, index: number): Article {
 }
 
 export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120 }) {
+  const mergedBySlug = new Map<string, Article>();
+
   try {
     const payload = await requestJson<{ ok: boolean; data: Array<Record<string, any>> }>('/api/blog', cacheMode);
     if (payload?.ok && Array.isArray(payload?.data) && payload.data.length) {
-      return payload.data.map(mapArticle);
+      payload.data.map(mapArticle).forEach((article) => {
+        mergedBySlug.set(article.slug, article);
+      });
     }
   } catch {
-    // Fall through to Sanity when backend is unavailable.
+    // Continue with Sanity even when backend is unavailable.
   }
 
   try {
     const sanityPosts = await sanityFetch<Array<Record<string, any>>>(
-      `*[_type == "blogPost" && status == "published"] | order(coalesce(publishedAt, _createdAt) desc) {
+      `*[_type == "blogPost" && !(_id in path("drafts.**")) && coalesce(status, "published") != "draft"] | order(coalesce(publishedAt, _createdAt) desc) {
         _id,
         title,
         slug,
@@ -202,13 +206,22 @@ export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120
       }`
     );
     if (Array.isArray(sanityPosts) && sanityPosts.length) {
-      return sanityPosts.map(mapArticle);
+      sanityPosts.map(mapArticle).forEach((article) => {
+        // Keep backend data as source of truth on conflicts.
+        if (!mergedBySlug.has(article.slug)) {
+          mergedBySlug.set(article.slug, article);
+        }
+      });
     }
   } catch {
-    // Ignore Sanity errors and return empty state.
+    // Ignore Sanity errors and return what we already have.
   }
 
-  return [];
+  return Array.from(mergedBySlug.values()).sort((a, b) => {
+    const aTime = a.publishedAt ? Date.parse(a.publishedAt) : 0;
+    const bTime = b.publishedAt ? Date.parse(b.publishedAt) : 0;
+    return bTime - aTime;
+  });
 }
 
 export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode = { revalidate: 120 }) {
@@ -226,7 +239,7 @@ export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode 
 
   try {
     const sanityPost = await sanityFetch<Record<string, any> | null>(
-      `*[_type == "blogPost" && status == "published" && slug.current == $slug][0] {
+      `*[_type == "blogPost" && !(_id in path("drafts.**")) && coalesce(status, "published") != "draft" && slug.current == $slug][0] {
         _id,
         title,
         slug,

@@ -7,7 +7,9 @@ import {
   createAdminBlogPost,
   deleteAdminBlogPost,
   fetchAdminBlogPosts,
+  fetchSanityAdminBlogPosts,
   type AdminBlogPost,
+  type SanityAdminBlogPost,
   updateAdminBlogPost
 } from '@/lib/clientApi';
 import { useAuth } from '@/context/AuthContext';
@@ -27,6 +29,7 @@ type FormState = {
 };
 
 const SANITY_STUDIO_URL = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'https://novarosolution.sanity.studio/';
+const SANITY_STUDIO_BASE_URL = SANITY_STUDIO_URL.replace(/\/+$/, '');
 
 const EMPTY_FORM: FormState = {
   title: '',
@@ -59,6 +62,7 @@ export default function AdminBlogManagerPage() {
   const [query, setQuery] = useState('');
   const [editingId, setEditingId] = useState('');
   const [rows, setRows] = useState<AdminBlogPost[]>([]);
+  const [sanityRows, setSanityRows] = useState<SanityAdminBlogPost[]>([]);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
 
   async function loadBlogs() {
@@ -66,8 +70,12 @@ export default function AdminBlogManagerPage() {
     setLoading(true);
     setErrorMessage('');
     try {
-      const items = await fetchAdminBlogPosts(token);
+      const [items, sanityItems] = await Promise.all([
+        fetchAdminBlogPosts(token),
+        fetchSanityAdminBlogPosts()
+      ]);
       setRows(items);
+      setSanityRows(sanityItems);
     } catch (error: any) {
       setErrorMessage(error?.message || 'Unable to load blog posts.');
     } finally {
@@ -172,6 +180,12 @@ export default function AdminBlogManagerPage() {
     }
   }
 
+  function getSanityEditUrl(documentId: string) {
+    return `${SANITY_STUDIO_BASE_URL}/intent/edit/id=${encodeURIComponent(documentId)};type=blogPost`;
+  }
+
+  const openSanityCreateUrl = `${SANITY_STUDIO_BASE_URL}/intent/create/template=blogPost;type=blogPost`;
+
   return (
     <ProtectedPage requireAdmin>
       <main className="app-page-shell admin-blog-manager-page">
@@ -182,13 +196,16 @@ export default function AdminBlogManagerPage() {
               Create and manage blog posts with SEO fields, publish status, and slug control.
             </p>
             <p className="text-xs text-slate-400">
-              Sanity Studio is also available for long-form editing and schema-driven content workflows.
+              For rich blog design, images, and republish flow, manage posts directly in Sanity Studio.
             </p>
             <div className="admin-toolbar">
               <button className="admin-btn" type="button" onClick={loadBlogs}>Refresh</button>
               <Link className="admin-btn" href="/blog">View Blog</Link>
               <a className="admin-btn" href={SANITY_STUDIO_URL} target="_blank" rel="noreferrer">
                 Open Sanity Studio
+              </a>
+              <a className="admin-btn" href={openSanityCreateUrl} target="_blank" rel="noreferrer">
+                Add Blog In Studio
               </a>
               <Link className="admin-btn" href="/admin/dashboard">Dashboard</Link>
             </div>
@@ -316,6 +333,45 @@ export default function AdminBlogManagerPage() {
                       >
                         {busyDeleteId === row.id ? 'Deleting...' : 'Delete'}
                       </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </article>
+
+          <article className="page-content-card space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-xl font-semibold">Sanity Studio Blog Posts</h2>
+              <a className="admin-btn" href={openSanityCreateUrl} target="_blank" rel="noreferrer">
+                Add New
+              </a>
+            </div>
+            <p className="text-sm text-slate-400">
+              Use these actions to edit post design, add photos/media blocks, publish, and republish updates.
+            </p>
+
+            {!loading && !sanityRows.length ? <p className="text-slate-400">No Sanity blog posts found.</p> : null}
+
+            <div className="space-y-2">
+              {sanityRows.map((row) => (
+                <article key={row.id} className="admin-list-card">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="font-semibold">{row.title}</p>
+                      <p className="text-xs text-slate-400">
+                        /blog/{row.slug || 'no-slug'} | {row.status} |{' '}
+                        {row.publishedAt ? new Date(row.publishedAt).toLocaleString() : 'No publish date'}
+                      </p>
+                    </div>
+                    <div className="admin-toolbar">
+                      {row.slug ? <Link className="admin-btn" href={`/blog/${row.slug}`}>Open</Link> : null}
+                      <a className="admin-btn" href={getSanityEditUrl(row.id)} target="_blank" rel="noreferrer">
+                        Edit In Studio
+                      </a>
+                      <a className="admin-btn" href={getSanityEditUrl(row.id)} target="_blank" rel="noreferrer">
+                        Republish
+                      </a>
                     </div>
                   </div>
                 </article>

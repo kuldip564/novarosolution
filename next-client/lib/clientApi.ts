@@ -1,7 +1,19 @@
 'use client';
 
+import { createClient } from '@sanity/client';
+
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').replace(/\/+$/, '');
 const REQUEST_TIMEOUT_MS = 12000;
+const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '2a50o6hm';
+const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+const SANITY_API_VERSION = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-01-01';
+
+const sanityClient = createClient({
+  projectId: SANITY_PROJECT_ID,
+  dataset: SANITY_DATASET,
+  apiVersion: SANITY_API_VERSION,
+  useCdn: false
+});
 
 type RequestOptions = RequestInit & { token?: string };
 
@@ -157,6 +169,15 @@ export type AdminBlogPost = {
   seoDescription?: string;
   seoKeywords?: string[];
   createdAt?: string;
+  updatedAt?: string;
+};
+
+export type SanityAdminBlogPost = {
+  id: string;
+  title: string;
+  slug: string;
+  status: 'draft' | 'published';
+  publishedAt?: string | null;
   updatedAt?: string;
 };
 
@@ -477,6 +498,28 @@ export async function fetchAdminCreatorContent(token: string) {
 export async function fetchAdminBlogPosts(token: string) {
   const data = await request<{ data: AdminBlogPost[] }>('/api/admin/blog', { token });
   return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function fetchSanityAdminBlogPosts() {
+  const rows = await sanityClient.fetch<Array<Record<string, any>>>(
+    `*[_type == "blogPost" && !(_id in path("drafts.**"))] | order(coalesce(publishedAt, _updatedAt) desc) {
+      _id,
+      _updatedAt,
+      title,
+      slug,
+      status,
+      publishedAt
+    }`
+  );
+  if (!Array.isArray(rows)) return [];
+  return rows.map((item): SanityAdminBlogPost => ({
+    id: String(item?._id || ''),
+    title: String(item?.title || 'Untitled'),
+    slug: String(item?.slug?.current || item?.slug || '').trim(),
+    status: item?.status === 'published' ? 'published' : 'draft',
+    publishedAt: item?.publishedAt || null,
+    updatedAt: item?._updatedAt || ''
+  }));
 }
 
 export async function createAdminBlogPost(payload: Record<string, unknown>, token: string) {
