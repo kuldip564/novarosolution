@@ -1,8 +1,12 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
-import AboutNebulaScene from '@/components/about/AboutNebulaScene';
+
+const AboutNebulaScene = dynamic(() => import('@/components/about/AboutNebulaScene'), {
+  ssr: false
+});
 
 type Owner = {
   name?: string;

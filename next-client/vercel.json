@@ -1,5 +1,25 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "headers": [
+    {
+      "source": "/ads.txt",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
 }

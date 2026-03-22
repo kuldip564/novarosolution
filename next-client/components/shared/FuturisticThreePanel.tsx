@@ -128,12 +128,27 @@ export default function FuturisticThreePanel() {
 
     let pointerX = 0;
     let pointerY = 0;
+    let pointerClientX = 0;
+    let pointerClientY = 0;
+    let pointerRaf = 0;
+    let hostRect = host.getBoundingClientRect();
+
+    const updateHostRect = () => {
+      hostRect = host.getBoundingClientRect();
+    };
+
+    const applyPointer = () => {
+      pointerRaf = 0;
+      pointerX = ((pointerClientX - hostRect.left) / Math.max(hostRect.width, 1) - 0.5) * 2;
+      pointerY = -((pointerClientY - hostRect.top) / Math.max(hostRect.height, 1) - 0.5) * 2;
+    };
 
     const onPointerMove = (event: PointerEvent) => {
       if (!interactionRef.current) return;
-      const rect = host.getBoundingClientRect();
-      pointerX = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 2;
-      pointerY = -((event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5) * 2;
+      pointerClientX = event.clientX;
+      pointerClientY = event.clientY;
+      if (pointerRaf) return;
+      pointerRaf = window.requestAnimationFrame(applyPointer);
     };
 
     const onResize = () => {
@@ -142,10 +157,12 @@ export default function FuturisticThreePanel() {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      updateHostRect();
     };
 
     host.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', updateHostRect, { passive: true });
     onResize();
 
     let frame = 0;
@@ -190,8 +207,12 @@ export default function FuturisticThreePanel() {
 
     return () => {
       window.cancelAnimationFrame(frame);
+      if (pointerRaf) {
+        window.cancelAnimationFrame(pointerRaf);
+      }
       host.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', updateHostRect);
       renderer.dispose();
       renderer.forceContextLoss();
       core.geometry.dispose();

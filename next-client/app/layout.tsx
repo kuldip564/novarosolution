@@ -1,15 +1,19 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import './globals.css';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { buildMetadata, generateOrganizationSchema, getSiteUrl } from '@/lib/seo';
 import SEO from '@/components/SEO';
 import Providers from './providers';
 import RouteTransition from '@/components/animations/RouteTransition';
 import HeaderNav from '@/components/layout/HeaderNav';
 import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
-import SiteEnhancements from '@/components/layout/SiteEnhancements';
+import FooterNavLinks from '@/components/layout/FooterNavLinks';
+
+const SiteEnhancements = dynamic(() => import('@/components/layout/SiteEnhancements'));
 
 const GA_MEASUREMENT_ID = 'G-3Z1Z971K06';
 const ADSENSE_CLIENT_ID = 'ca-pub-1997736983474353';
@@ -47,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <Script
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           crossOrigin="anonymous"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -80,14 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <p className="footer-title">Novaro Solution</p>
                 <small>Design-forward web, mobile, and product engineering.</small>
               </div>
-              <nav className="footer-links" aria-label="Footer links">
-                <Link href="/">Home</Link>
-                <Link href="/about">About</Link>
-                <Link href="/services">Services</Link>
-                <Link href="/projects">Projects</Link>
-                <Link href="/blog">Blog</Link>
-                <Link href="/contact">Contact</Link>
-              </nav>
+              <FooterNavLinks />
               <div className="footer-meta">
                 <small>{new Date().getFullYear()} Novaro Solution</small>
                 <small>Built for performance and SEO.</small>

@@ -180,7 +180,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell)
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 1.2fr 1.4fr 0.8fr;
   gap: 18px;
   padding: 18px 0;
 }
@@ -202,6 +202,36 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell)
 .footer-links {
   display: grid;
   gap: 8px;
+}
+
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.footer-link-group {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+}
+
+.footer-link-heading {
+  margin: 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: color-mix(in oklab, var(--muted) 90%, #ffffff 10%);
+}
+
+.footer-links-split,
+.footer-links-workspace {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
 }
 
 .footer-links a {
@@ -1908,6 +1938,10 @@ select:focus {
   object-fit: cover;
 }
 
+.admin-blog-manager-page .admin-toolbar > * {
+  min-width: 0;
+}
+
 .employee-workspace-shell .page-content-card {
   overflow: hidden;
 }
@@ -2111,6 +2145,17 @@ select:focus {
     gap: 14px;
   }
 
+  .footer-links-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .footer-links-split,
+  .footer-links-workspace {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
   .footer-meta {
     justify-items: start;
     text-align: left;
@@ -2234,6 +2279,25 @@ select:focus {
     height: 210px;
   }
 
+  .admin-blog-manager-page .admin-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .admin-blog-manager-page .admin-toolbar > * {
+    width: 100%;
+  }
+
+  .admin-blog-manager-page .admin-btn,
+  .admin-blog-manager-page .btn {
+    justify-content: center;
+  }
+
+  .admin-blog-manager-page :is(input, textarea, select) {
+    font-size: 16px;
+  }
+
   .future-panel-canvas {
     height: 210px;
   }
@@ -2314,6 +2378,12 @@ select:focus {
   .nav-link {
     min-height: 34px;
     padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-blog-manager-page .admin-toolbar {
+    grid-template-columns: 1fr;
   }
 }
 

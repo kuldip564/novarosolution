@@ -156,9 +156,21 @@ export default function FuturisticThreeHero() {
     }
 
     let scrollProgress = 0;
+    let scrollRaf = 0;
+    let scrollRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+
+    const updateScrollRange = () => {
+      scrollRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+
+    const applyScroll = () => {
+      scrollRaf = 0;
+      scrollProgress = Math.min(1, Math.max(0, window.scrollY / scrollRange));
+    };
+
     const onScroll = () => {
-      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      scrollProgress = Math.min(1, Math.max(0, window.scrollY / max));
+      if (scrollRaf) return;
+      scrollRaf = window.requestAnimationFrame(applyScroll);
     };
 
     const resize = () => {
@@ -167,7 +179,14 @@ export default function FuturisticThreeHero() {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      updateScrollRange();
     };
+
+    const documentResizeObserver = new ResizeObserver(() => {
+      updateScrollRange();
+      onScroll();
+    });
+    documentResizeObserver.observe(document.documentElement);
 
     onScroll();
     resize();
@@ -213,6 +232,10 @@ export default function FuturisticThreeHero() {
 
     return () => {
       window.cancelAnimationFrame(frameId);
+      if (scrollRaf) {
+        window.cancelAnimationFrame(scrollRaf);
+      }
+      documentResizeObserver.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resize);
       renderer.dispose();

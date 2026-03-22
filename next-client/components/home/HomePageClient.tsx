@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion';
@@ -224,6 +224,13 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmittingService, setIsSubmittingService] = useState(false);
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+  const hoverRafRef = useRef<number | null>(null);
+  const hoverPointerRef = useRef<{ target: HTMLElement | null; x: number; y: number }>({
+    target: null,
+    x: 0,
+    y: 0
+  });
+  const serviceRectMapRef = useRef(new WeakMap<HTMLElement, DOMRect>());
   const maintenanceMode = Boolean(data?.systemSettings?.maintenanceMode);
   const maintenanceMessage =
     String(data?.systemSettings?.maintenanceMessage || '').trim() ||
@@ -244,6 +251,39 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       setFocusedService(services[0].title);
     }
   }, [focusedService, services]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverRafRef.current) {
+        window.cancelAnimationFrame(hoverRafRef.current);
+      }
+    };
+  }, []);
+
+  function updateServicePointerEffect() {
+    hoverRafRef.current = null;
+    const target = hoverPointerRef.current.target;
+    if (!target) return;
+    const rect = serviceRectMapRef.current.get(target);
+    if (!rect) return;
+    const x = hoverPointerRef.current.x - rect.left;
+    const y = hoverPointerRef.current.y - rect.top;
+    target.style.setProperty('--mx', `${x}px`);
+    target.style.setProperty('--my', `${y}px`);
+  }
+
+  function handleServiceMouseEnter(event: MouseEvent<HTMLElement>, title: string) {
+    setFocusedService(title);
+    serviceRectMapRef.current.set(event.currentTarget, event.currentTarget.getBoundingClientRect());
+  }
+
+  function handleServiceMouseMove(event: MouseEvent<HTMLElement>) {
+    hoverPointerRef.current.target = event.currentTarget;
+    hoverPointerRef.current.x = event.clientX;
+    hoverPointerRef.current.y = event.clientY;
+    if (hoverRafRef.current) return;
+    hoverRafRef.current = window.requestAnimationFrame(updateServicePointerEffect);
+  }
 
   const stats = data?.stats?.items?.length ? data.stats.items : defaultStats;
   const features = data?.features?.items?.length ? data.features.items : defaultFeatures;
@@ -419,14 +459,8 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: index * 0.08 }}
                   whileHover={reduceMotion ? undefined : { y: -4 }}
-                  onMouseMove={(event) => {
-                    const rect = event.currentTarget.getBoundingClientRect();
-                    const x = event.clientX - rect.left;
-                    const y = event.clientY - rect.top;
-                    event.currentTarget.style.setProperty('--mx', `${x}px`);
-                    event.currentTarget.style.setProperty('--my', `${y}px`);
-                  }}
-                  onMouseEnter={() => setFocusedService(service.title)}
+                  onMouseMove={handleServiceMouseMove}
+                  onMouseEnter={(event) => handleServiceMouseEnter(event, service.title)}
                   className={`service-bento-card rounded-3xl border border-white/10 bg-white/5 p-6 ${bentoClass}`}
                 >
                   <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-pink-200">

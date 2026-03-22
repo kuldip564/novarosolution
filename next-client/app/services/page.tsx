@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { buildMetadata } from '@/lib/seo';
 import { fetchSiteContent } from '@/lib/api';
 import ServicesExplorer from '@/components/services/ServicesExplorer';
-import FuturisticThreePanel from '@/components/shared/FuturisticThreePanel';
+
+const FuturisticThreePanel = dynamic(() => import('@/components/shared/FuturisticThreePanel'));
 
 export const metadata: Metadata = buildMetadata({
   title: 'Services | Novaro Solution',

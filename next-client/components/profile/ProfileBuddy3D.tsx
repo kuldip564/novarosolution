@@ -323,10 +323,26 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
 
     let pointerX = 0;
     let pointerY = 0;
+    let pointerClientX = 0;
+    let pointerClientY = 0;
+    let pointerRaf = 0;
+    let hostRect = host.getBoundingClientRect();
+
+    const updateHostRect = () => {
+      hostRect = host.getBoundingClientRect();
+    };
+
+    const applyPointer = () => {
+      pointerRaf = 0;
+      pointerX = ((pointerClientX - hostRect.left) / Math.max(hostRect.width, 1) - 0.5) * 2;
+      pointerY = -((pointerClientY - hostRect.top) / Math.max(hostRect.height, 1) - 0.5) * 2;
+    };
+
     const onPointer = (event: PointerEvent) => {
-      const rect = host.getBoundingClientRect();
-      pointerX = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 2;
-      pointerY = -((event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5) * 2;
+      pointerClientX = event.clientX;
+      pointerClientY = event.clientY;
+      if (pointerRaf) return;
+      pointerRaf = window.requestAnimationFrame(applyPointer);
     };
 
     const onResize = () => {
@@ -335,10 +351,12 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      updateHostRect();
     };
 
     host.addEventListener('pointermove', onPointer, { passive: true });
     window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', updateHostRect, { passive: true });
     onResize();
 
     let frame = 0;
@@ -432,8 +450,12 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
 
     return () => {
       window.cancelAnimationFrame(frame);
+      if (pointerRaf) {
+        window.cancelAnimationFrame(pointerRaf);
+      }
       host.removeEventListener('pointermove', onPointer);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', updateHostRect);
       scene.traverse((object) => {
         if ((object as THREE.Mesh).isMesh) {
           const mesh = object as THREE.Mesh;

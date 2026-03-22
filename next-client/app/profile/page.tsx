@@ -6,7 +6,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import { useAuth } from '@/context/AuthContext';
 import { fetchMyProjectMessages, requestCreatorAccess } from '@/lib/clientApi';
-import ProfileBuddy3D from '@/components/profile/ProfileBuddy3D';
 
 async function fileToDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
@@ -304,8 +303,7 @@ export default function ProfilePage() {
         <p className="text-slate-300">Manage account details and role access.</p>
         </article>
 
-        <motion.article className="page-content-card profile-hero-card" {...sectionMotion}>
-        <div className="profile-hero-main">
+        <motion.article className="page-content-card" {...sectionMotion}>
           <div className="flex flex-wrap items-center gap-3">
             {avatar ? (
               <img src={avatar} alt="Profile" className="h-16 w-16 rounded-full object-cover border border-white/20" />
@@ -338,10 +336,6 @@ export default function ProfilePage() {
               Reset Form
             </button>
           </div>
-        </div>
-        <div className="profile-hero-buddy">
-          <ProfileBuddy3D statusText={status} errorText={error} isBusy={saving || activityLoading} />
-        </div>
         </motion.article>
 
         <motion.article className="page-content-card" {...sectionMotion}>

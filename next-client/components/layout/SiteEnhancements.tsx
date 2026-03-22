@@ -11,17 +11,47 @@ export default function SiteEnhancements() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
+    let rafId = 0;
+    let scrollHeightRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+
+    const updateRange = () => {
+      scrollHeightRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+
+    const runMeasure = () => {
+      rafId = 0;
       const y = window.scrollY;
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const nextProgress = pageHeight > 0 ? Math.min(1, Math.max(0, y / pageHeight)) : 0;
+      const nextProgress = Math.min(1, Math.max(0, y / scrollHeightRange));
       setScrollY(y);
       setProgress(nextProgress);
     };
 
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(runMeasure);
+    };
+
+    const onResize = () => {
+      updateRange();
+      onScroll();
+    };
+
+    const observer = new ResizeObserver(() => {
+      updateRange();
+      onScroll();
+    });
+    observer.observe(document.documentElement);
+
+    updateRange();
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   function scrollToTop() {

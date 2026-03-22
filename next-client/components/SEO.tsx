@@ -1,5 +1,3 @@
-import Script from 'next/script';
-
 type SEOProps = {
   title?: string;
   description?: string;
@@ -15,11 +13,11 @@ export default function SEO({
   return (
     <>
       {schema ? (
-        <Script
+        <script
           id={`jsonld-${canonical}`}
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-          strategy="afterInteractive"
         />
       ) : null}
     </>
