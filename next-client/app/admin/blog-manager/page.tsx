@@ -26,6 +26,8 @@ type FormState = {
   seoKeywords: string;
 };
 
+const SANITY_STUDIO_URL = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'https://novarosolution.sanity.studio/';
+
 const EMPTY_FORM: FormState = {
   title: '',
   slug: '',
@@ -185,7 +187,7 @@ export default function AdminBlogManagerPage() {
             <div className="admin-toolbar">
               <button className="admin-btn" type="button" onClick={loadBlogs}>Refresh</button>
               <Link className="admin-btn" href="/blog">View Blog</Link>
-              <a className="admin-btn" href="http://localhost:3333" target="_blank" rel="noreferrer">
+              <a className="admin-btn" href={SANITY_STUDIO_URL} target="_blank" rel="noreferrer">
                 Open Sanity Studio
               </a>
               <Link className="admin-btn" href="/admin/dashboard">Dashboard</Link>
