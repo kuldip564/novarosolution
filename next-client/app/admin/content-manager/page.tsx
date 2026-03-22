@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import { fetchSiteContentClient, updateSiteContent } from '@/lib/clientApi';
 import { useAuth } from '@/context/AuthContext';
+import { LEGAL_DEFAULT_CONTENT } from '@/lib/legalDefaultContent';
 
 type LegalDocForm = {
   title: string;
@@ -49,23 +50,37 @@ function toWordCount(text: string) {
     .filter(Boolean).length;
 }
 
+function sanitizePreviewHtml(rawHtml: string) {
+  return String(rawHtml || '')
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, '')
+    .replace(/\son[a-z]+\s*=\s*"[^"]*"/gi, '')
+    .replace(/\son[a-z]+\s*=\s*'[^']*'/gi, '')
+    .replace(/\son[a-z]+\s*=\s*[^\s>]+/gi, '')
+    .replace(/javascript:/gi, '');
+}
+
+function hasHtmlTags(content: string) {
+  return /<[a-z][\s\S]*>/i.test(String(content || ''));
+}
+
 function getLegalForms(content: Record<string, any>): LegalForms {
   const legal = content?.legalPages || {};
   return {
     privacyPolicy: {
       title: String(legal?.privacyPolicy?.title || 'Privacy Policy'),
       lastUpdated: String(legal?.privacyPolicy?.lastUpdated || 'March 2026'),
-      content: String(legal?.privacyPolicy?.content || '')
+      content: String(legal?.privacyPolicy?.content || LEGAL_DEFAULT_CONTENT.privacyPolicy)
     },
     termsAndConditions: {
       title: String(legal?.termsAndConditions?.title || 'Terms and Conditions'),
       lastUpdated: String(legal?.termsAndConditions?.lastUpdated || 'March 2026'),
-      content: String(legal?.termsAndConditions?.content || '')
+      content: String(legal?.termsAndConditions?.content || LEGAL_DEFAULT_CONTENT.termsAndConditions)
     },
     disclaimer: {
       title: String(legal?.disclaimer?.title || 'Disclaimer'),
       lastUpdated: String(legal?.disclaimer?.lastUpdated || 'March 2026'),
-      content: String(legal?.disclaimer?.content || '')
+      content: String(legal?.disclaimer?.content || LEGAL_DEFAULT_CONTENT.disclaimer)
     }
   };
 }
@@ -258,6 +273,15 @@ export default function AdminContentManagerPage() {
               <p className="text-xs text-slate-400">
                 Word count: {toWordCount(legalForms.privacyPolicy.content)}
               </p>
+              <p className="text-xs text-slate-400">
+                HTML editor supported (example: {'<h2>'}, {'<p>'}, {'<ul><li>...</li></ul>'}).
+              </p>
+              {hasHtmlTags(legalForms.privacyPolicy.content) ? (
+                <article
+                  className="rounded-xl border border-white/15 bg-white/5 p-3 legal-copy legal-html"
+                  dangerouslySetInnerHTML={{ __html: sanitizePreviewHtml(legalForms.privacyPolicy.content) }}
+                />
+              ) : null}
             </div>
 
             <div className="space-y-3">
@@ -296,6 +320,15 @@ export default function AdminContentManagerPage() {
               <p className="text-xs text-slate-400">
                 Word count: {toWordCount(legalForms.termsAndConditions.content)}
               </p>
+              <p className="text-xs text-slate-400">
+                HTML editor supported (example: {'<h2>'}, {'<p>'}, {'<ul><li>...</li></ul>'}).
+              </p>
+              {hasHtmlTags(legalForms.termsAndConditions.content) ? (
+                <article
+                  className="rounded-xl border border-white/15 bg-white/5 p-3 legal-copy legal-html"
+                  dangerouslySetInnerHTML={{ __html: sanitizePreviewHtml(legalForms.termsAndConditions.content) }}
+                />
+              ) : null}
             </div>
 
             <div className="space-y-3">
@@ -334,6 +367,15 @@ export default function AdminContentManagerPage() {
               <p className="text-xs text-slate-400">
                 Word count: {toWordCount(legalForms.disclaimer.content)}
               </p>
+              <p className="text-xs text-slate-400">
+                HTML editor supported (example: {'<h2>'}, {'<p>'}, {'<ul><li>...</li></ul>'}).
+              </p>
+              {hasHtmlTags(legalForms.disclaimer.content) ? (
+                <article
+                  className="rounded-xl border border-white/15 bg-white/5 p-3 legal-copy legal-html"
+                  dangerouslySetInnerHTML={{ __html: sanitizePreviewHtml(legalForms.disclaimer.content) }}
+                />
+              ) : null}
             </div>
 
             <div className="space-y-3">

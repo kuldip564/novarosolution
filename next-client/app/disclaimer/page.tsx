@@ -11,6 +11,16 @@ export const metadata: Metadata = buildMetadata({
 });
 
 function renderManagedContent(rawContent: string) {
+  const safeHtml = String(rawContent || '')
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, '')
+    .replace(/\son[a-z]+\s*=\s*"[^"]*"/gi, '')
+    .replace(/\son[a-z]+\s*=\s*'[^']*'/gi, '')
+    .replace(/\son[a-z]+\s*=\s*[^\s>]+/gi, '')
+    .replace(/javascript:/gi, '');
+  if (/<[a-z][\s\S]*>/i.test(safeHtml)) {
+    return <div className="legal-html" dangerouslySetInnerHTML={{ __html: safeHtml }} />;
+  }
   const blocks = String(rawContent || '')
     .split(/\n{2,}/)
     .map((part) => part.trim())

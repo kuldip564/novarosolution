@@ -311,6 +311,26 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell)
   max-width: 78ch;
 }
 
+.legal-html h1,
+.legal-html h2,
+.legal-html h3 {
+  margin: 0.6rem 0 0.35rem;
+}
+
+.legal-html p {
+  margin: 0.5rem 0;
+  max-width: 78ch;
+}
+
+.legal-html ul,
+.legal-html ol {
+  margin: 0.5rem 0 0.8rem 1.2rem;
+}
+
+.legal-html li {
+  margin: 0.25rem 0;
+}
+
 .ad-placeholder {
   border: 1px dashed color-mix(in oklab, var(--border) 80%, transparent);
   border-radius: 14px;
