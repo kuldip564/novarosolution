@@ -31,7 +31,10 @@ export const metadata: Metadata = buildMetadata({
     'digital product engineering',
     'seo services'
   ],
-  path: '/'
+  path: '/',
+  other: {
+    'google-adsense-account': ADSENSE_CLIENT_ID
+  }
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
