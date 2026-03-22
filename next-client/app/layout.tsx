@@ -26,9 +26,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Novaro Solution | UI/UX Design, Web and Mobile App Development',
+  title: 'NovaRo Solution | Scalable Tech Solutions for Modern Businesses',
   description:
-    'Novaro Solution is a full-service digital product engineering partner for UI/UX design, web development, mobile app development, and SEO.',
+    'NovaRo Solution is a company that helps build good websites and digital products. They are good at making things with Next.js. Can also make special apps for phones. NovaRo Solution also does a thing called UI/UX design for companies. This means they make sure things look good and work well. If you have an idea you want to make real you can work with the people, at NovaRo Solution. They will help you make it happen and make sure it is safe and works well. NovaRo Solution can help you with your project.',
   keywords: [
     'ui ux design',
     'web development company',

@@ -51,18 +51,22 @@ function renderExternalOptions(external: Record<string, any>, urlKey: 'privacyPo
 }
 
 export default async function DisclaimerPage() {
-  const siteContent = await fetchSiteContent({ revalidate: 180 }).catch(() => ({} as any));
+  const siteContent = await fetchSiteContent({ noStore: true }).catch(() => ({} as any));
   const managed = (siteContent as any)?.legalPages?.disclaimer || null;
   const external = (siteContent as any)?.legalPages?.externalOptions || {};
 
-  if (managed?.content) {
+  if (managed && (managed?.title || managed?.lastUpdated || managed?.content)) {
     return (
       <main className="app-page-shell">
         <section className="page-hero-shell space-y-3">
           <h1 className="section-title text-3xl font-extrabold md:text-5xl">{String(managed?.title || 'Disclaimer')}</h1>
           <p className="text-slate-300">Last updated: {String(managed?.lastUpdated || 'March 2026')}</p>
         </section>
-        <article className="page-content-card space-y-4 legal-copy">{renderManagedContent(String(managed.content))}</article>
+        <article className="page-content-card space-y-4 legal-copy">
+          {String(managed.content || '').trim()
+            ? renderManagedContent(String(managed.content))
+            : <p>No disclaimer content has been configured yet.</p>}
+        </article>
         {renderExternalOptions(external, 'disclaimerSourceUrl')}
       </main>
     );

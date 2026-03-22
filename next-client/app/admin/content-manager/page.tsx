@@ -124,7 +124,10 @@ export default function AdminContentManagerPage() {
     try {
       const payload = JSON.parse(jsonText);
       const updated = await updateSiteContent(payload, token);
+      setSiteContent(updated);
       setJsonText(JSON.stringify(updated, null, 2));
+      setLegalForms(getLegalForms(updated));
+      setExternalOptions(getExternalOptions(updated));
       setStatus('Content updated successfully.');
     } catch (err: any) {
       setError(err?.message || 'Invalid JSON or save failed.');

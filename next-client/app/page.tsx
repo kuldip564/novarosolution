@@ -4,21 +4,14 @@ import SEO from '@/components/SEO';
 import { fetchSiteContent } from '@/lib/api';
 import { buildCanonical, buildMetadata } from '@/lib/seo';
 
-export async function generateMetadata(): Promise<Metadata> {
-  let content: Awaited<ReturnType<typeof fetchSiteContent>> | null = null;
-  try {
-    content = await fetchSiteContent({ revalidate: 180 });
-  } catch {
-    content = null;
-  }
-  const heroTitle = content?.hero?.titleMain || 'NovaRo Solution';
-  const heroDescription =
-    content?.hero?.description ||
-    'Premium digital product development with modern web architecture.';
+const HOME_SEO_TITLE = 'NovaRo Solution | Scalable Tech Solutions for Modern Businesses';
+const HOME_SEO_DESCRIPTION =
+  'NovaRo Solution is a company that helps build good websites and digital products. They are good at making things with Next.js. Can also make special apps for phones. NovaRo Solution also does a thing called UI/UX design for companies. This means they make sure things look good and work well. If you have an idea you want to make real you can work with the people, at NovaRo Solution. They will help you make it happen and make sure it is safe and works well. NovaRo Solution can help you with your project.';
 
+export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
-    title: `${heroTitle} | Home`,
-    description: heroDescription,
+    title: HOME_SEO_TITLE,
+    description: HOME_SEO_DESCRIPTION,
     keywords: [
       'ui ux design',
       'web development',
@@ -42,16 +35,16 @@ export default async function HomePage() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: content?.hero?.titleMain || 'NovaRo Solution',
-    description: content?.hero?.description || 'Premium digital product development.',
+    name: HOME_SEO_TITLE,
+    description: HOME_SEO_DESCRIPTION,
     url: canonical
   };
 
   return (
     <>
       <SEO
-        title={`${content?.hero?.titleMain || 'NovaRo Solution'} | Home`}
-        description={content?.hero?.description || 'Premium digital product development.'}
+        title={HOME_SEO_TITLE}
+        description={HOME_SEO_DESCRIPTION}
         canonical={canonical}
         keywords={['ui ux design', 'web development', 'mobile app development', 'seo']}
         schema={schema}
