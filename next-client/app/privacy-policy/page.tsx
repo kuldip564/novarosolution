@@ -18,9 +18,42 @@ function renderManagedContent(rawContent: string) {
   return blocks.map((block, index) => <p key={`${index}-${block.slice(0, 16)}`}>{block}</p>);
 }
 
+function renderExternalOptions(external: Record<string, any>, urlKey: 'privacyPolicySourceUrl' | 'termsSourceUrl' | 'disclaimerSourceUrl') {
+  const sourceUrl = String(external?.[urlKey] || '').trim();
+  const supportEmail = String(external?.supportEmail || '').trim();
+  const supportPhone = String(external?.supportPhone || '').trim();
+  const companyAddress = String(external?.companyAddress || '').trim();
+  if (!sourceUrl && !supportEmail && !supportPhone && !companyAddress) return null;
+
+  return (
+    <section className="page-content-card space-y-2 legal-copy">
+      <h2>External Information</h2>
+      {sourceUrl ? (
+        <p>
+          Source reference:{' '}
+          <a href={sourceUrl} target="_blank" rel="noreferrer noopener" className="underline">
+            {sourceUrl}
+          </a>
+        </p>
+      ) : null}
+      {supportEmail ? (
+        <p>
+          Support email:{' '}
+          <a href={`mailto:${supportEmail}`} className="underline">
+            {supportEmail}
+          </a>
+        </p>
+      ) : null}
+      {supportPhone ? <p>Support phone: {supportPhone}</p> : null}
+      {companyAddress ? <p>Address: {companyAddress}</p> : null}
+    </section>
+  );
+}
+
 export default async function PrivacyPolicyPage() {
   const siteContent = await fetchSiteContent({ revalidate: 180 }).catch(() => ({} as any));
   const managed = (siteContent as any)?.legalPages?.privacyPolicy || null;
+  const external = (siteContent as any)?.legalPages?.externalOptions || {};
 
   if (managed?.content) {
     return (
@@ -32,6 +65,7 @@ export default async function PrivacyPolicyPage() {
           <p className="text-slate-300">Last updated: {String(managed?.lastUpdated || 'March 2026')}</p>
         </section>
         <article className="page-content-card space-y-4 legal-copy">{renderManagedContent(String(managed.content))}</article>
+        {renderExternalOptions(external, 'privacyPolicySourceUrl')}
       </main>
     );
   }

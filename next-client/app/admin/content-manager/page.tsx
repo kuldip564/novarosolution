@@ -18,10 +18,28 @@ type LegalForms = {
   disclaimer: LegalDocForm;
 };
 
+type ExternalOptionsForm = {
+  supportEmail: string;
+  supportPhone: string;
+  companyAddress: string;
+  privacyPolicySourceUrl: string;
+  termsSourceUrl: string;
+  disclaimerSourceUrl: string;
+};
+
 const EMPTY_LEGAL_DOC: LegalDocForm = {
   title: '',
   lastUpdated: '',
   content: ''
+};
+
+const EMPTY_EXTERNAL_OPTIONS: ExternalOptionsForm = {
+  supportEmail: '',
+  supportPhone: '',
+  companyAddress: '',
+  privacyPolicySourceUrl: '',
+  termsSourceUrl: '',
+  disclaimerSourceUrl: ''
 };
 
 function toWordCount(text: string) {
@@ -52,6 +70,18 @@ function getLegalForms(content: Record<string, any>): LegalForms {
   };
 }
 
+function getExternalOptions(content: Record<string, any>): ExternalOptionsForm {
+  const external = content?.legalPages?.externalOptions || {};
+  return {
+    supportEmail: String(external?.supportEmail || ''),
+    supportPhone: String(external?.supportPhone || ''),
+    companyAddress: String(external?.companyAddress || ''),
+    privacyPolicySourceUrl: String(external?.privacyPolicySourceUrl || ''),
+    termsSourceUrl: String(external?.termsSourceUrl || ''),
+    disclaimerSourceUrl: String(external?.disclaimerSourceUrl || '')
+  };
+}
+
 export default function AdminContentManagerPage() {
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -64,6 +94,7 @@ export default function AdminContentManagerPage() {
     termsAndConditions: EMPTY_LEGAL_DOC,
     disclaimer: EMPTY_LEGAL_DOC
   });
+  const [externalOptions, setExternalOptions] = useState<ExternalOptionsForm>(EMPTY_EXTERNAL_OPTIONS);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
 
@@ -74,6 +105,7 @@ export default function AdminContentManagerPage() {
         setSiteContent(content);
         setJsonText(JSON.stringify(content, null, 2));
         setLegalForms(getLegalForms(content));
+        setExternalOptions(getExternalOptions(content));
       } catch (err: any) {
         setError(err?.message || 'Unable to load content.');
       } finally {
@@ -113,6 +145,14 @@ export default function AdminContentManagerPage() {
         ...siteContent,
         legalPages: {
           ...(siteContent.legalPages || {}),
+          externalOptions: {
+            supportEmail: externalOptions.supportEmail.trim(),
+            supportPhone: externalOptions.supportPhone.trim(),
+            companyAddress: externalOptions.companyAddress.trim(),
+            privacyPolicySourceUrl: externalOptions.privacyPolicySourceUrl.trim(),
+            termsSourceUrl: externalOptions.termsSourceUrl.trim(),
+            disclaimerSourceUrl: externalOptions.disclaimerSourceUrl.trim()
+          },
           privacyPolicy: {
             title: legalForms.privacyPolicy.title.trim() || 'Privacy Policy',
             lastUpdated: legalForms.privacyPolicy.lastUpdated.trim() || 'March 2026',
@@ -134,6 +174,7 @@ export default function AdminContentManagerPage() {
       setSiteContent(updated);
       setJsonText(JSON.stringify(updated, null, 2));
       setLegalForms(getLegalForms(updated));
+      setExternalOptions(getExternalOptions(updated));
       setStatus('Legal pages updated successfully.');
     } catch (err: any) {
       setError(err?.message || 'Unable to save legal pages.');
@@ -290,6 +331,47 @@ export default function AdminContentManagerPage() {
               <p className="text-xs text-slate-400">
                 Word count: {toWordCount(legalForms.disclaimer.content)}
               </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-semibold">External Options (DB + Frontend)</h3>
+              <p className="text-xs text-slate-400">
+                These values are stored in database and displayed on frontend legal pages.
+              </p>
+              <input
+                value={externalOptions.supportEmail}
+                onChange={(event) => setExternalOptions((prev) => ({ ...prev, supportEmail: event.target.value }))}
+                placeholder="Support email (example: support@novarosolution.com)"
+              />
+              <input
+                value={externalOptions.supportPhone}
+                onChange={(event) => setExternalOptions((prev) => ({ ...prev, supportPhone: event.target.value }))}
+                placeholder="Support phone (optional)"
+              />
+              <input
+                value={externalOptions.companyAddress}
+                onChange={(event) => setExternalOptions((prev) => ({ ...prev, companyAddress: event.target.value }))}
+                placeholder="Company address (optional)"
+              />
+              <input
+                value={externalOptions.privacyPolicySourceUrl}
+                onChange={(event) =>
+                  setExternalOptions((prev) => ({ ...prev, privacyPolicySourceUrl: event.target.value }))
+                }
+                placeholder="Privacy policy external URL (optional)"
+              />
+              <input
+                value={externalOptions.termsSourceUrl}
+                onChange={(event) => setExternalOptions((prev) => ({ ...prev, termsSourceUrl: event.target.value }))}
+                placeholder="Terms external URL (optional)"
+              />
+              <input
+                value={externalOptions.disclaimerSourceUrl}
+                onChange={(event) =>
+                  setExternalOptions((prev) => ({ ...prev, disclaimerSourceUrl: event.target.value }))
+                }
+                placeholder="Disclaimer external URL (optional)"
+              />
             </div>
 
             <button className="admin-btn" type="submit" disabled={saving}>
