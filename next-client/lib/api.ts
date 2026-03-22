@@ -177,6 +177,15 @@ function mapArticle(item: Record<string, any>, index: number): Article {
 
 export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120 }) {
   try {
+    const payload = await requestJson<{ ok: boolean; data: Array<Record<string, any>> }>('/api/blog', cacheMode);
+    if (payload?.ok && Array.isArray(payload?.data) && payload.data.length) {
+      return payload.data.map(mapArticle);
+    }
+  } catch {
+    // Fall through to Sanity when backend is unavailable.
+  }
+
+  try {
     const sanityPosts = await sanityFetch<Array<Record<string, any>>>(
       `*[_type == "blogPost" && status == "published"] | order(coalesce(publishedAt, _createdAt) desc) {
         _id,
@@ -196,19 +205,25 @@ export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120
       return sanityPosts.map(mapArticle);
     }
   } catch {
-    // Fall back to backend API while Sanity content is empty or unavailable.
+    // Ignore Sanity errors and return empty state.
   }
 
-  try {
-    const payload = await requestJson<{ ok: boolean; data: Array<Record<string, any>> }>('/api/blog', cacheMode);
-    if (!payload?.ok || !Array.isArray(payload?.data)) return [];
-    return payload.data.map(mapArticle);
-  } catch {
-    return [];
-  }
+  return [];
 }
 
 export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode = { revalidate: 120 }) {
+  try {
+    const payload = await requestJson<{ ok: boolean; data: Record<string, any> }>(
+      `/api/blog/${encodeURIComponent(slug)}`,
+      cacheMode
+    );
+    if (payload?.ok && payload?.data) {
+      return mapArticle(payload.data, 0);
+    }
+  } catch {
+    // Fall through to Sanity when backend is unavailable.
+  }
+
   try {
     const sanityPost = await sanityFetch<Record<string, any> | null>(
       `*[_type == "blogPost" && status == "published" && slug.current == $slug][0] {
@@ -228,17 +243,8 @@ export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode 
     );
     if (sanityPost) return mapArticle(sanityPost, 0);
   } catch {
-    // Fall back to backend API while Sanity content is empty or unavailable.
+    // Ignore Sanity errors.
   }
 
-  try {
-    const payload = await requestJson<{ ok: boolean; data: Record<string, any> }>(
-      `/api/blog/${encodeURIComponent(slug)}`,
-      cacheMode
-    );
-    if (!payload?.ok || !payload?.data) return null;
-    return mapArticle(payload.data, 0);
-  } catch {
-    return null;
-  }
+  return null;
 }
