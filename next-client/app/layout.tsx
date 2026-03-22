@@ -12,6 +12,7 @@ import RouteTransition from '@/components/animations/RouteTransition';
 import HeaderNav from '@/components/layout/HeaderNav';
 import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
 import FooterNavLinks from '@/components/layout/FooterNavLinks';
+import CookieConsentBanner from '@/components/compliance/CookieConsentBanner';
 
 const SiteEnhancements = dynamic(() => import('@/components/layout/SiteEnhancements'));
 
@@ -49,17 +50,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="beforeInteractive"
         />
-        <Script
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-          strategy="lazyOnload"
-          crossOrigin="anonymous"
-        />
         <Script id="google-analytics" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied'
+            });
+            gtag('config', '${GA_MEASUREMENT_ID}', { anonymize_ip: true });
           `}
         </Script>
         <Providers>
@@ -91,6 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </div>
           </footer>
+          <CookieConsentBanner adsenseClientId={ADSENSE_CLIENT_ID} />
         </Providers>
       </body>
     </html>

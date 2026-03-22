@@ -16,7 +16,7 @@ const DEFAULT_IMAGE =
 export function getSiteUrl() {
   const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '';
-  const fallback = 'http://localhost:3000';
+  const fallback = 'https://novarosolution.com';
   return String(explicitSiteUrl || vercelUrl || fallback).replace(/\/+$/, '');
 }
 
@@ -77,6 +77,6 @@ export function generateOrganizationSchema() {
     name: DEFAULT_SITE_NAME,
     url: getSiteUrl(),
     logo: DEFAULT_IMAGE,
-    sameAs: []
+    sameAs: ['https://www.linkedin.com', 'https://github.com', 'https://www.youtube.com']
   };
 }

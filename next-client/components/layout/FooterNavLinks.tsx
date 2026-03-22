@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { OPEN_CONSENT_EVENT } from '@/lib/consent';
 
 export default function FooterNavLinks() {
   const { loading, isAuthenticated, isAdmin, isEmployee, isCreator } = useAuth();
@@ -13,6 +14,21 @@ export default function FooterNavLinks() {
     { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' }
   ];
+  const legalLinks = [
+    { href: '/privacy-policy', label: 'Privacy Policy' },
+    { href: '/terms-and-conditions', label: 'Terms & Conditions' },
+    { href: '/disclaimer', label: 'Disclaimer' }
+  ];
+  const socialLinks = [
+    { href: 'https://www.linkedin.com', label: 'LinkedIn' },
+    { href: 'https://github.com', label: 'GitHub' },
+    { href: 'https://www.youtube.com', label: 'YouTube' }
+  ];
+
+  function openCookiePreferences() {
+    if (typeof window === 'undefined') return;
+    window.dispatchEvent(new CustomEvent(OPEN_CONSENT_EVENT));
+  }
 
   return (
     <nav className="footer-links-grid" aria-label="Footer links">
@@ -39,6 +55,29 @@ export default function FooterNavLinks() {
           </div>
         </div>
       ) : null}
+
+      <div className="footer-link-group">
+        <p className="footer-link-heading">Legal</p>
+        <div className="footer-links">
+          {legalLinks.map((item) => (
+            <Link key={item.href} href={item.href}>{item.label}</Link>
+          ))}
+          <button className="footer-inline-btn" type="button" onClick={openCookiePreferences}>
+            Manage Cookies
+          </button>
+        </div>
+      </div>
+
+      <div className="footer-link-group">
+        <p className="footer-link-heading">Social</p>
+        <div className="footer-links">
+          {socialLinks.map((item) => (
+            <a key={item.href} href={item.href} target="_blank" rel="noreferrer noopener">
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </div>
     </nav>
   );
 }

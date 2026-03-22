@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo';
 import { fetchSiteContent } from '@/lib/api';
 import AboutStoryExperience from '@/components/about/AboutStoryExperience';
+import FAQSection from '@/components/shared/FAQSection';
 
 export const metadata: Metadata = buildMetadata({
   title: 'About | Novaro Solution',
@@ -50,15 +51,60 @@ export default async function AboutPage() {
           'Full-stack implementation with modern tooling',
           'Long-term support and growth iterations'
         ];
+  const faqItems = [
+    {
+      question: 'What services does Novaro Solution provide?',
+      answer:
+        'We provide UI/UX design, website development, mobile app development, product modernization, performance optimization, and SEO-ready implementation for startups and growing businesses.'
+    },
+    {
+      question: 'How do you handle project delivery and communication?',
+      answer:
+        'We work in milestone-based cycles with regular updates, shared progress reviews, and clear deliverables. Clients receive transparent timelines, scope visibility, and structured communication from kickoff to launch.'
+    },
+    {
+      question: 'Do you support long-term maintenance?',
+      answer:
+        'Yes. We provide post-launch support, iterative enhancements, bug fixes, and performance/SEO monitoring to keep digital products stable and growth-ready.'
+    },
+    {
+      question: 'Do you work with international clients?',
+      answer:
+        'Yes. We collaborate remotely with clients across regions and align project workflows for timezone-friendly communication and delivery cadence.'
+    }
+  ];
   return (
-    <AboutStoryExperience
-      about={about}
-      team={team}
-      statsItems={statsItems}
-      services={serviceItems}
-      workPoints={workPoints}
-      owners={owners}
-    />
+    <main className="app-page-shell space-y-4">
+      <AboutStoryExperience
+        about={about}
+        team={team}
+        statsItems={statsItems}
+        services={serviceItems}
+        workPoints={workPoints}
+        owners={owners}
+      />
+      <section className="page-content-card space-y-3">
+        <h2 className="text-2xl font-semibold">Business Overview</h2>
+        <p className="text-slate-300">
+          Novaro Solution is a product-focused digital engineering studio. We help businesses move from idea to
+          launch with practical design and modern development standards. Our engagement model is built around
+          reliability, transparent communication, and measurable outcomes.
+        </p>
+        <p className="text-slate-300">
+          Our core team works across product strategy, frontend/backend implementation, mobile delivery, and SEO-aware
+          performance optimization. We prioritize maintainable code, accessible interfaces, and scalable architecture
+          so projects remain stable as business needs evolve.
+        </p>
+        <p className="text-slate-300">
+          We operate through structured planning, sprint execution, and milestone sign-off. This process helps clients
+          maintain clarity on timeline, scope, and quality expectations from discovery through post-launch support.
+        </p>
+      </section>
+      <FAQSection
+        items={faqItems}
+        intro="Answers to common questions about our workflow, delivery model, and long-term support."
+      />
+    </main>
   );
 }
 

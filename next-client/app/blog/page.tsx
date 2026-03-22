@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/api';
 import { buildMetadata } from '@/lib/seo';
+import AdPlaceholder from '@/components/ads/AdPlaceholder';
 
 export const revalidate = 120;
 
@@ -47,6 +48,8 @@ export default async function BlogPage() {
             <p className="text-slate-300">No blog posts are published yet.</p>
           </article>
         )}
+
+        <AdPlaceholder slotName="Blog Feed" />
       </section>
     </main>
   );
