@@ -16,7 +16,7 @@ type FeedItem = {
 
 async function fetchCreatorFeed() {
   const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').replace(/\/+$/, '');
-  const response = await fetch(`${apiUrl}/api/creator/feed`, { cache: 'no-store' });
+  const response = await fetch(`${apiUrl}/api/creator/feed?limit=3&sort=latest&view=summary`, { cache: 'no-store' });
   if (!response.ok) throw new Error('Unable to load creator feed');
   const payload = await response.json();
   return (Array.isArray(payload?.data) ? payload.data : []) as FeedItem[];

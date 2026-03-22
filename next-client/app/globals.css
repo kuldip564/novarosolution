@@ -1734,6 +1734,14 @@ select:focus {
   gap: 8px;
 }
 
+.creator-toolbar .btn {
+  min-height: 42px;
+}
+
+.creator-spin {
+  animation: spinFast 0.9s linear infinite;
+}
+
 .creator-feed-grid {
   display: grid;
   gap: 12px;
@@ -1749,6 +1757,10 @@ select:focus {
   gap: 8px;
 }
 
+.creator-feed-card-skeleton {
+  pointer-events: none;
+}
+
 .creator-feed-media-wrap {
   position: relative;
   border-radius: 12px;
@@ -1761,6 +1773,11 @@ select:focus {
   object-fit: cover;
   display: block;
   border-radius: 12px;
+  transition: transform 220ms ease;
+}
+
+.creator-feed-media-wrap:hover .creator-feed-media {
+  transform: scale(1.03);
 }
 
 .creator-media-chip {
@@ -1785,10 +1802,84 @@ select:focus {
   overflow: auto;
 }
 
+.creator-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.creator-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.creator-social-btn.is-active {
+  border-color: color-mix(in oklab, var(--primary) 58%, var(--border) 42%);
+  box-shadow: 0 10px 22px color-mix(in oklab, var(--btn-shadow) 70%, transparent);
+}
+
 .creator-comment-item {
   border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
   border-radius: 10px;
   padding: 6px 8px;
+}
+
+.creator-comment-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-strong);
+}
+
+.creator-comment-input-wrap input {
+  border: 0;
+  border-radius: 0;
+  padding: 0.68rem 0;
+  background: transparent;
+}
+
+.creator-comment-input-wrap input:focus {
+  box-shadow: none;
+}
+
+.creator-comment-input-wrap svg {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.creator-toast-stack {
+  position: sticky;
+  top: 78px;
+  z-index: 20;
+  display: grid;
+  gap: 8px;
+}
+
+.creator-toast {
+  margin: 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 0.55rem 0.74rem;
+  font-size: 0.82rem;
+  background: color-mix(in oklab, var(--surface-strong) 92%, transparent);
+  box-shadow: 0 10px 20px rgba(2, 6, 23, 0.18);
+}
+
+.creator-toast.is-success {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.creator-toast.is-error {
+  border-color: rgba(248, 113, 113, 0.38);
+}
+
+.creator-loadmore-wrap {
+  display: flex;
+  justify-content: center;
 }
 
 .creator-comment-form {
@@ -2132,6 +2223,15 @@ select:focus {
 
   .creator-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .creator-social-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .creator-feed-media {
+    height: 210px;
   }
 
   .future-panel-canvas {

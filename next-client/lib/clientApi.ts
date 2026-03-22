@@ -119,9 +119,28 @@ export type CreatorItem = {
   mediaUrl: string;
   likesCount?: number;
   likedBy?: string[];
+  likedByMe?: boolean;
+  commentsCount?: number;
+  commentsPreview?: Array<{ id: string; userName?: string; text: string; createdAt?: string }>;
   comments?: Array<{ id: string; userName?: string; text: string }>;
   creatorName?: string;
   createdAt?: string;
+};
+
+export type CreatorFeedPagination = {
+  page: number;
+  limit: number | null;
+  total: number;
+  totalPages: number;
+  hasMore?: boolean;
+};
+
+export type FetchCreatorFeedParams = {
+  page?: number;
+  limit?: number;
+  sort?: 'latest' | 'popular' | 'discussed';
+  view?: 'summary' | 'full';
+  commentsPreviewLimit?: number;
 };
 
 export type AdminBlogPost = {
@@ -141,9 +160,21 @@ export type AdminBlogPost = {
   updatedAt?: string;
 };
 
-export async function fetchCreatorFeed() {
-  const data = await request<{ data: CreatorItem[] }>('/api/creator/feed');
-  return Array.isArray(data?.data) ? data.data : [];
+export async function fetchCreatorFeed(params: FetchCreatorFeedParams = {}, token?: string) {
+  const query = new URLSearchParams();
+  if (params.page) query.set('page', String(params.page));
+  if (params.limit) query.set('limit', String(params.limit));
+  if (params.sort) query.set('sort', params.sort);
+  query.set('view', params.view || 'summary');
+  if (params.commentsPreviewLimit !== undefined) {
+    query.set('commentsPreviewLimit', String(params.commentsPreviewLimit));
+  }
+  const path = `/api/creator/feed${query.toString() ? `?${query.toString()}` : ''}`;
+  const data = await request<{ data: CreatorItem[]; pagination?: CreatorFeedPagination }>(path, { token });
+  return {
+    items: Array.isArray(data?.data) ? data.data : [],
+    pagination: data?.pagination || null
+  };
 }
 
 export async function likeCreatorFeedContent(contentId: string, token: string) {

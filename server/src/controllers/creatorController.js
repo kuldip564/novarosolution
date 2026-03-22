@@ -13,6 +13,26 @@ import { findUserById, findUsersByIds } from '../models/userModel.js';
 import { uploadMediaDataUrl } from '../services/cloudinaryService.js';
 import { deleteCacheByPrefix, getCache, setCache } from '../services/cacheService.js';
 import { parsePagination } from '../utils/pagination.js';
+import { verifyAuthToken } from '../utils/token.js';
+
+const CREATOR_FEED_SORTS = new Set(['latest', 'popular', 'discussed']);
+
+async function resolveOptionalViewer(req) {
+  const authHeader = String(req.headers.authorization || '');
+  const [scheme, token] = authHeader.split(' ');
+  if (scheme !== 'Bearer' || !token) return null;
+  try {
+    const decoded = verifyAuthToken(token);
+    const user = await findUserById(decoded.userId);
+    if (!user || user.isActive === false) return null;
+    const tokenVersion = Number(decoded.tokenVersion || 0);
+    const currentTokenVersion = Number(user.tokenVersion || 0);
+    if (tokenVersion !== currentTokenVersion) return null;
+    return user;
+  } catch {
+    return null;
+  }
+}
 
 export async function getMyCreatorContent(req, res) {
   try {
@@ -169,8 +189,27 @@ export async function getAdminCreatorContent(req, res) {
 
 export async function getPublicCreatorFeed(req, res) {
   try {
-    const { page, limit } = parsePagination(req.query);
-    const cacheKey = `creator-feed:page:${page}:limit:${limit}`;
+    const { page, limit } = parsePagination(req.query, { page: 1, limit: 12 });
+    const sortBy = CREATOR_FEED_SORTS.has(String(req.query?.sort || ''))
+      ? String(req.query.sort)
+      : 'latest';
+    const summary = String(req.query?.view || 'summary') !== 'full';
+    const rawCommentsPreviewLimit = Number(req.query?.commentsPreviewLimit || 3);
+    const commentsPreviewLimit =
+      Number.isFinite(rawCommentsPreviewLimit) && rawCommentsPreviewLimit >= 0
+        ? Math.min(Math.max(Math.trunc(rawCommentsPreviewLimit), 0), 10)
+        : 3;
+    const viewer = await resolveOptionalViewer(req);
+    const viewerScope = viewer?.id || 'anon';
+    const cacheKey = [
+      'creator-feed',
+      `page:${page}`,
+      `limit:${limit}`,
+      `sort:${sortBy}`,
+      `view:${summary ? 'summary' : 'full'}`,
+      `commentsPreview:${commentsPreviewLimit}`,
+      `viewer:${viewerScope}`
+    ].join(':');
     const cached = await getCache(cacheKey);
     if (cached) {
       return res
@@ -179,8 +218,16 @@ export async function getPublicCreatorFeed(req, res) {
     }
 
     const [rows, total] = await Promise.all([
-      listAllCreatorContent({ page, limit }),
-      countCreatorContent()
+      listAllCreatorContent({
+        page,
+        limit,
+        sortBy,
+        summary,
+        status: 'published',
+        viewerId: viewer?.id || '',
+        commentsPreviewLimit
+      }),
+      countCreatorContent({ status: 'published' })
     ]);
     const creatorUsers = await findUsersByIds(rows.map((row) => row.creatorId), {
       projection: 'name'
@@ -193,7 +240,7 @@ export async function getPublicCreatorFeed(req, res) {
     const totalPages = limit ? Math.max(Math.ceil(total / limit), 1) : 1;
     const payload = {
       items: withCreator,
-      pagination: { page, limit, total, totalPages }
+      pagination: { page, limit, total, totalPages, hasMore: totalPages > page }
     };
     await setCache(cacheKey, payload, 60);
     res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
