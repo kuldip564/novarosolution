@@ -179,9 +179,15 @@ export default function AdminBlogManagerPage() {
             <p className="text-slate-300">
               Create and manage blog posts with SEO fields, publish status, and slug control.
             </p>
+            <p className="text-xs text-slate-400">
+              Sanity Studio is also available for long-form editing and schema-driven content workflows.
+            </p>
             <div className="admin-toolbar">
               <button className="admin-btn" type="button" onClick={loadBlogs}>Refresh</button>
               <Link className="admin-btn" href="/blog">View Blog</Link>
+              <a className="admin-btn" href="http://localhost:3333" target="_blank" rel="noreferrer">
+                Open Sanity Studio
+              </a>
               <Link className="admin-btn" href="/admin/dashboard">Dashboard</Link>
             </div>
           </article>

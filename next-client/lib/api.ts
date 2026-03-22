@@ -1,3 +1,5 @@
+import { sanityFetch } from '@/lib/sanity';
+
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001').replace(/\/+$/, '');
 
 export type Project = {
@@ -157,10 +159,11 @@ function mapArticle(item: Record<string, any>, index: number): Article {
   const title = String(item?.title || `Article ${index + 1}`);
   const excerpt = String(item?.excerpt || '');
   const content = String(item?.content || '');
+  const rawSlug = typeof item?.slug === 'string' ? item.slug : item?.slug?.current;
   return {
     _id: String(item?._id || item?.id || `article-${index + 1}`),
     title,
-    slug: slugify(String(item?.slug || title)),
+    slug: slugify(String(rawSlug || title)),
     excerpt: excerpt || content.slice(0, 140) || 'Latest updates from our team.',
     content: content || 'No article content available.',
     imageUrl: typeof item?.coverImageUrl === 'string' ? item.coverImageUrl : undefined,
@@ -174,13 +177,31 @@ function mapArticle(item: Record<string, any>, index: number): Article {
 
 export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120 }) {
   try {
-    const payload = await requestJson<{ ok: boolean; data: Array<Record<string, any>> }>(
-      '/api/blog',
-      cacheMode
+    const sanityPosts = await sanityFetch<Array<Record<string, any>>>(
+      `*[_type == "blogPost" && status == "published"] | order(coalesce(publishedAt, _createdAt) desc) {
+        _id,
+        title,
+        slug,
+        excerpt,
+        content,
+        coverImageUrl,
+        authorName,
+        publishedAt,
+        seoTitle,
+        seoDescription,
+        seoKeywords
+      }`
     );
-    if (!payload?.ok || !Array.isArray(payload?.data)) {
-      return [];
+    if (Array.isArray(sanityPosts) && sanityPosts.length) {
+      return sanityPosts.map(mapArticle);
     }
+  } catch {
+    // Fall back to backend API while Sanity content is empty or unavailable.
+  }
+
+  try {
+    const payload = await requestJson<{ ok: boolean; data: Array<Record<string, any>> }>('/api/blog', cacheMode);
+    if (!payload?.ok || !Array.isArray(payload?.data)) return [];
     return payload.data.map(mapArticle);
   } catch {
     return [];
@@ -188,6 +209,28 @@ export async function getBlogPosts(cacheMode: FetchCacheMode = { revalidate: 120
 }
 
 export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode = { revalidate: 120 }) {
+  try {
+    const sanityPost = await sanityFetch<Record<string, any> | null>(
+      `*[_type == "blogPost" && status == "published" && slug.current == $slug][0] {
+        _id,
+        title,
+        slug,
+        excerpt,
+        content,
+        coverImageUrl,
+        authorName,
+        publishedAt,
+        seoTitle,
+        seoDescription,
+        seoKeywords
+      }`,
+      { slug }
+    );
+    if (sanityPost) return mapArticle(sanityPost, 0);
+  } catch {
+    // Fall back to backend API while Sanity content is empty or unavailable.
+  }
+
   try {
     const payload = await requestJson<{ ok: boolean; data: Record<string, any> }>(
       `/api/blog/${encodeURIComponent(slug)}`,
