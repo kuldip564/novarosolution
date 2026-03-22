@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { fetchSiteContent } from '@/lib/api';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
@@ -9,7 +10,30 @@ export const metadata: Metadata = buildMetadata({
   path: '/disclaimer'
 });
 
-export default function DisclaimerPage() {
+function renderManagedContent(rawContent: string) {
+  const blocks = String(rawContent || '')
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return blocks.map((block, index) => <p key={`${index}-${block.slice(0, 16)}`}>{block}</p>);
+}
+
+export default async function DisclaimerPage() {
+  const siteContent = await fetchSiteContent({ revalidate: 180 }).catch(() => ({} as any));
+  const managed = (siteContent as any)?.legalPages?.disclaimer || null;
+
+  if (managed?.content) {
+    return (
+      <main className="app-page-shell">
+        <section className="page-hero-shell space-y-3">
+          <h1 className="section-title text-3xl font-extrabold md:text-5xl">{String(managed?.title || 'Disclaimer')}</h1>
+          <p className="text-slate-300">Last updated: {String(managed?.lastUpdated || 'March 2026')}</p>
+        </section>
+        <article className="page-content-card space-y-4 legal-copy">{renderManagedContent(String(managed.content))}</article>
+      </main>
+    );
+  }
+
   return (
     <main className="app-page-shell">
       <section className="page-hero-shell space-y-3">
