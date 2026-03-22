@@ -12,6 +12,7 @@ import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
 import SiteEnhancements from '@/components/layout/SiteEnhancements';
 
 const GA_MEASUREMENT_ID = 'G-3Z1Z971K06';
+const ADSENSE_CLIENT_ID = 'ca-pub-1997736983474353';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,6 +41,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
+        />
+        <Script
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`

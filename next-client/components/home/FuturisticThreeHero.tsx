@@ -174,10 +174,15 @@ export default function FuturisticThreeHero() {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', resize);
 
-    const clock = new THREE.Clock();
     let frameId = 0;
+    let lastFrameTime = performance.now();
+    let elapsed = 0;
     const animate = () => {
-      const t = clock.getElapsedTime();
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
+      lastFrameTime = now;
+      elapsed += dt;
+      const t = elapsed;
       group.rotation.y += 0.006 + scrollProgress * 0.004;
       group.rotation.x = Math.sin(t * 0.38) * 0.16 + scrollProgress * 0.5;
       group.position.y = -scrollProgress * 0.8 + Math.sin(t * 0.6) * 0.06;
@@ -211,6 +216,7 @@ export default function FuturisticThreeHero() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', resize);
       renderer.dispose();
+      renderer.forceContextLoss();
       knot.geometry.dispose();
       (knot.material as THREE.Material).dispose();
       shell.geometry.dispose();
@@ -231,7 +237,9 @@ export default function FuturisticThreeHero() {
         sat.geometry.dispose();
         (sat.material as THREE.Material).dispose();
       });
-      host.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode === host) {
+        host.removeChild(renderer.domElement);
+      }
     };
   }, []);
 

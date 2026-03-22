@@ -14,6 +14,10 @@ type BuddyMode = 'auto' | 'wave' | 'focus' | 'chill';
 export default function ProfileBuddy3D({ statusText, errorText, isBusy }: ProfileBuddy3DProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [mode, setMode] = useState<BuddyMode>('auto');
+  const modeRef = useRef<BuddyMode>('auto');
+  const statusTextRef = useRef('');
+  const errorTextRef = useRef('');
+  const isBusyRef = useRef(false);
 
   const actionLabel = useMemo(() => {
     if (mode !== 'auto') return `Mode: ${mode}`;
@@ -22,6 +26,22 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
     if (statusText) return 'Mood: happy';
     return 'Mood: idle';
   }, [mode, errorText, isBusy, statusText]);
+
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
+
+  useEffect(() => {
+    statusTextRef.current = statusText;
+  }, [statusText]);
+
+  useEffect(() => {
+    errorTextRef.current = errorText;
+  }, [errorText]);
+
+  useEffect(() => {
+    isBusyRef.current = isBusy;
+  }, [isBusy]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -321,20 +341,24 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
     window.addEventListener('resize', onResize);
     onResize();
 
-    const clock = new THREE.Clock();
     let frame = 0;
+    let lastFrameTime = performance.now();
+    let elapsed = 0;
     const blinkState = { timer: 1.5, value: 1 };
     const animate = () => {
-      const t = clock.getElapsedTime();
-      const dt = clock.getDelta();
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
+      lastFrameTime = now;
+      elapsed += dt;
+      const t = elapsed;
       const activeMode: BuddyMode =
-        mode !== 'auto'
-          ? mode
-          : errorText
+        modeRef.current !== 'auto'
+          ? modeRef.current
+          : errorTextRef.current
             ? 'focus'
-            : isBusy
+            : isBusyRef.current
               ? 'focus'
-              : statusText
+              : statusTextRef.current
                 ? 'wave'
                 : 'chill';
 
@@ -373,7 +397,7 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
         mouth.scale.y = 0.9;
       }
 
-      if (errorText) {
+      if (errorTextRef.current) {
         headGroup.rotation.y += Math.sin(t * 16) * 0.027;
         browL.position.y = 0.06;
         browR.position.y = 0.06;
@@ -422,10 +446,13 @@ export default function ProfileBuddy3D({ statusText, errorText, isBusy }: Profil
         }
       });
       renderer.dispose();
+      renderer.forceContextLoss();
       shirtTexture.dispose();
-      host.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode === host) {
+        host.removeChild(renderer.domElement);
+      }
     };
-  }, [mode, errorText, isBusy, statusText]);
+  }, []);
 
   return (
     <div className="profile-buddy-shell">

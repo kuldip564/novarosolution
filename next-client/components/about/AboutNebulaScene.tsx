@@ -118,10 +118,15 @@ export default function AboutNebulaScene({ intensity = 'soft' }: AboutNebulaScen
     window.addEventListener('resize', onResize);
     onResize();
 
-    const clock = new THREE.Clock();
     let frame = 0;
+    let lastFrameTime = performance.now();
+    let elapsed = 0;
     const animate = () => {
-      const t = clock.getElapsedTime();
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
+      lastFrameTime = now;
+      elapsed += dt;
+      const t = elapsed;
       const speed = intensity === 'bold' ? 1.4 : 1;
 
       coreGroup.rotation.y += 0.0045 * speed;
@@ -146,6 +151,7 @@ export default function AboutNebulaScene({ intensity = 'soft' }: AboutNebulaScen
       host.removeEventListener('pointermove', onPointer);
       window.removeEventListener('resize', onResize);
       renderer.dispose();
+      renderer.forceContextLoss();
       crystal.geometry.dispose();
       (crystal.material as THREE.Material).dispose();
       crystalShell.geometry.dispose();
@@ -156,7 +162,9 @@ export default function AboutNebulaScene({ intensity = 'soft' }: AboutNebulaScen
       (ringB.material as THREE.Material).dispose();
       dustGeometry.dispose();
       (dustPoints.material as THREE.Material).dispose();
-      host.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode === host) {
+        host.removeChild(renderer.domElement);
+      }
     };
   }, [intensity]);
 

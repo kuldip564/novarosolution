@@ -148,10 +148,15 @@ export default function FuturisticThreePanel() {
     window.addEventListener('resize', onResize);
     onResize();
 
-    const clock = new THREE.Clock();
     let frame = 0;
+    let lastFrameTime = performance.now();
+    let elapsed = 0;
     const tick = () => {
-      const t = clock.getElapsedTime();
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
+      lastFrameTime = now;
+      elapsed += dt;
+      const t = elapsed;
       const speedMultiplier = speedRef.current === 'fast' ? 1.8 : 1;
 
       if (resetRef.current) {
@@ -188,6 +193,7 @@ export default function FuturisticThreePanel() {
       host.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('resize', onResize);
       renderer.dispose();
+      renderer.forceContextLoss();
       core.geometry.dispose();
       (core.material as THREE.Material).dispose();
       shell.geometry.dispose();
@@ -196,7 +202,9 @@ export default function FuturisticThreePanel() {
       (orbit.material as THREE.Material).dispose();
       sparkGeometry.dispose();
       (sparks.material as THREE.Material).dispose();
-      host.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode === host) {
+        host.removeChild(renderer.domElement);
+      }
     };
   }, [hasLoaded]);
 
