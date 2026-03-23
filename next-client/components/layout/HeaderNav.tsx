@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
@@ -23,6 +23,7 @@ export default function HeaderNav() {
   const { loading, isAuthenticated, isCreator, isAdmin, isEmployee, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const root = document.documentElement;
@@ -35,6 +36,12 @@ export default function HeaderNav() {
 
   useEffect(() => {
     setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (pathname !== '/search') return;
+    const params = new URLSearchParams(window.location.search);
+    setSearchQuery(params.get('q') || '');
   }, [pathname]);
 
   useEffect(() => {
@@ -67,6 +74,18 @@ export default function HeaderNav() {
     logout();
     setMenuOpen(false);
     router.replace('/');
+  }
+
+  function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) {
+      router.push('/search');
+      setMenuOpen(false);
+      return;
+    }
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+    setMenuOpen(false);
   }
 
   function renderLink(item: { href: string; label: string }) {
@@ -108,6 +127,16 @@ export default function HeaderNav() {
 
   return (
     <div className="header-nav-wrap">
+      <form className="header-search-form" onSubmit={onSearchSubmit} role="search" aria-label="Site search">
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder="Search site..."
+          aria-label="Search site"
+        />
+      </form>
+
       <motion.nav
         className="nav nav-desktop nav-shell"
         aria-label="Main navigation"
@@ -173,6 +202,15 @@ export default function HeaderNav() {
               exit={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             >
+              <form className="header-search-form mobile-search-form" onSubmit={onSearchSubmit} role="search" aria-label="Mobile site search">
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search site..."
+                  aria-label="Search site"
+                />
+              </form>
               <div className="mobile-menu-heading">Menu</div>
               {NAV_ITEMS.map(renderLink)}
               {authLinks.length ? <span className="nav-divider mobile-nav-divider" aria-hidden="true" /> : null}
