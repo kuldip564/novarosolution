@@ -130,7 +130,7 @@ export default function AboutStoryExperience({
       animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <section className="page-hero-shell about-3d-hero">
+      <section className="premium-page-hero about-3d-hero">
         <motion.div
           className="about-3d-copy"
           initial={reduceMotion ? undefined : 'hidden'}

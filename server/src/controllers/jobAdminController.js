@@ -29,15 +29,25 @@ function sanitizeUserForAdmin(user) {
 
 function sanitizeJobForAdmin(job) {
   if (!job || !job._id) return null;
+  const deadline = job.applicationDeadline ? new Date(job.applicationDeadline) : null;
   return {
     id: String(job._id),
     title: job.title,
     description: job.description,
+    summary: job.summary || '',
+    responsibilities: job.responsibilities || '',
+    requirements: job.requirements || '',
+    benefits: job.benefits || '',
     category: job.category,
+    department: job.department || '',
     location: job.location || '',
     workMode: job.workMode,
     employmentType: job.employmentType,
+    experienceLevel: job.experienceLevel || 'any',
     salaryHint: job.salaryHint || '',
+    featured: job.featured === true,
+    sortOrder: typeof job.sortOrder === 'number' ? job.sortOrder : 0,
+    applicationDeadline: deadline && !Number.isNaN(deadline.getTime()) ? deadline.toISOString() : '',
     isPublished: job.isPublished !== false,
   };
 }
@@ -65,22 +75,44 @@ export async function postAdminJob(req, res) {
     const {
       title,
       description,
+      summary = '',
+      responsibilities = '',
+      requirements = '',
+      benefits = '',
       category = 'General',
+      department = '',
       location = '',
       workMode = 'remote',
       employmentType = 'full_time',
+      experienceLevel = 'any',
       salaryHint = '',
+      featured = false,
+      sortOrder = 0,
+      applicationDeadline = null,
       isPublished = true,
     } = req.body ?? {};
+
+    const deadlineRaw = applicationDeadline ? new Date(applicationDeadline) : null;
+    const deadline =
+      deadlineRaw && !Number.isNaN(deadlineRaw.getTime()) ? deadlineRaw : null;
 
     const job = await createJobRow({
       title: String(title).trim(),
       description: String(description).trim(),
+      summary: String(summary).trim(),
+      responsibilities: String(responsibilities).trim(),
+      requirements: String(requirements).trim(),
+      benefits: String(benefits).trim(),
       category: String(category).trim() || 'General',
+      department: String(department).trim(),
       location: String(location).trim(),
       workMode,
       employmentType,
+      experienceLevel,
       salaryHint: String(salaryHint).trim(),
+      featured: Boolean(featured),
+      sortOrder: Number.isFinite(Number(sortOrder)) ? Number(sortOrder) : 0,
+      applicationDeadline: deadline,
       isPublished: Boolean(isPublished),
     });
     await deleteCacheByPrefix('overview:');
@@ -106,11 +138,30 @@ export async function patchAdminJob(req, res) {
     const body = req.body ?? {};
     if (body.title !== undefined) patch.title = String(body.title).trim();
     if (body.description !== undefined) patch.description = String(body.description).trim();
+    if (body.summary !== undefined) patch.summary = String(body.summary).trim();
+    if (body.responsibilities !== undefined) patch.responsibilities = String(body.responsibilities).trim();
+    if (body.requirements !== undefined) patch.requirements = String(body.requirements).trim();
+    if (body.benefits !== undefined) patch.benefits = String(body.benefits).trim();
     if (body.category !== undefined) patch.category = String(body.category).trim() || 'General';
+    if (body.department !== undefined) patch.department = String(body.department).trim();
     if (body.location !== undefined) patch.location = String(body.location).trim();
     if (body.workMode !== undefined) patch.workMode = body.workMode;
     if (body.employmentType !== undefined) patch.employmentType = body.employmentType;
+    if (body.experienceLevel !== undefined) patch.experienceLevel = body.experienceLevel;
     if (body.salaryHint !== undefined) patch.salaryHint = String(body.salaryHint).trim();
+    if (body.featured !== undefined) patch.featured = Boolean(body.featured);
+    if (body.sortOrder !== undefined) {
+      const n = Number(body.sortOrder);
+      patch.sortOrder = Number.isFinite(n) ? n : 0;
+    }
+    if (body.applicationDeadline !== undefined) {
+      if (body.applicationDeadline === null || body.applicationDeadline === '') {
+        patch.applicationDeadline = null;
+      } else {
+        const d = new Date(body.applicationDeadline);
+        patch.applicationDeadline = Number.isNaN(d.getTime()) ? null : d;
+      }
+    }
     if (body.isPublished !== undefined) patch.isPublished = Boolean(body.isPublished);
 
     if (Object.keys(patch).length === 0) {

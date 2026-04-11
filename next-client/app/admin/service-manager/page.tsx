@@ -109,7 +109,7 @@ export default function AdminServiceManagerPage() {
     <ProtectedPage requireAdmin>
       <main className="app-page-shell">
       <section className="admin-shell">
-        <article className="page-hero-shell space-y-3">
+        <article className="premium-page-hero space-y-3">
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Admin Service Manager</h1>
         {loading ? <p className="text-slate-300">Loading services...</p> : null}
         </article>

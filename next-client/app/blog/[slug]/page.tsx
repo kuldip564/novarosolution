@@ -57,23 +57,30 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <article className="page-content-card space-y-4">
+    <>
       <SEO
         title={post.seoTitle || `${post.title} | Blog`}
         description={post.seoDescription || post.excerpt}
         canonical={canonical}
         schema={schema}
       />
-      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
-        {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}
-      </p>
-      <h1 className="section-title text-3xl font-extrabold md:text-5xl">{post.title}</h1>
-      <p className="text-sm text-slate-300">
-        {post.authorName ? `By ${post.authorName}` : 'By Novaro Team'}
-      </p>
-      <div className="prose prose-invert max-w-none whitespace-pre-wrap text-slate-200">
-        {post.content}
+      <div className="app-page-shell space-y-6">
+        <header className="premium-page-hero space-y-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Article</p>
+          <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}
+          </p>
+          <h1 className="section-title text-3xl font-extrabold md:text-5xl">{post.title}</h1>
+          <p className="text-sm text-slate-300">
+            {post.authorName ? `By ${post.authorName}` : 'By Novaro Team'}
+          </p>
+        </header>
+        <article className="page-content-card">
+          <div className="prose prose-invert max-w-none whitespace-pre-wrap text-slate-200">
+            {post.content}
+          </div>
+        </article>
       </div>
-    </article>
+    </>
   );
 }

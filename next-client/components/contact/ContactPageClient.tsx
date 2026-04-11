@@ -100,18 +100,22 @@ export default function ContactPageClient({
 
   return (
     <main className="app-page-shell">
-      <section className="page-hero-shell space-y-4">
-        <h1 className="section-title text-3xl font-extrabold md:text-5xl">{title || 'Contact Us'}</h1>
-        <p className="text-slate-300">
+      <section className="premium-page-hero space-y-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Contact</p>
+        <h1 className="section-title text-3xl font-extrabold md:text-5xl">{title || 'Contact us'}</h1>
+        <p className="max-w-2xl text-slate-300">
           {description || 'Tell us about your project goals and we will get back to you quickly.'}
         </p>
       </section>
 
-      <section className="page-content-card space-y-4">
-        <p className="text-sm text-slate-300">
-          Business contact: <a className="underline" href="mailto:chaudharykuldip453@gmail.com">chaudharykuldip453@gmail.com</a>
+      <section className="page-content-card space-y-5">
+        <p className="text-sm text-slate-400">
+          Prefer email?{' '}
+          <a className="font-medium text-cyan-300/90 underline-offset-2 hover:underline" href="mailto:chaudharykuldip453@gmail.com">
+            chaudharykuldip453@gmail.com
+          </a>
         </p>
-        <form className="space-y-3" onSubmit={onSubmit}>
+        <form className="space-y-4" onSubmit={onSubmit}>
           <input
             value={website}
             onChange={(event) => setWebsite(event.target.value)}
@@ -121,28 +125,52 @@ export default function ContactPageClient({
             className="sr-only"
             aria-hidden="true"
           />
-          <input
-            value={form.name}
-            onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-            placeholder="Name"
-          />
-          <input
-            type="email"
-            value={form.email}
-            onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-            placeholder="Email"
-          />
-          <input
-            value={form.subject}
-            onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))}
-            placeholder="Subject"
-          />
-          <textarea
-            rows={5}
-            value={form.message}
-            onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
-            placeholder="Message"
-          />
+          <div>
+            <label className="form-label-premium" htmlFor="contact-name">
+              Name
+            </label>
+            <input
+              id="contact-name"
+              value={form.name}
+              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+              placeholder="Your name"
+            />
+          </div>
+          <div>
+            <label className="form-label-premium" htmlFor="contact-email">
+              Email
+            </label>
+            <input
+              id="contact-email"
+              type="email"
+              value={form.email}
+              onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+              placeholder="you@company.com"
+            />
+          </div>
+          <div>
+            <label className="form-label-premium" htmlFor="contact-subject">
+              Subject
+            </label>
+            <input
+              id="contact-subject"
+              value={form.subject}
+              onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))}
+              placeholder="What is this about?"
+            />
+          </div>
+          <div>
+            <label className="form-label-premium" htmlFor="contact-message">
+              Message
+            </label>
+            <textarea
+              id="contact-message"
+              rows={5}
+              value={form.message}
+              onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
+              placeholder="Project goals, timeline, stack…"
+            />
+          </div>
 
           {!token ? (
             <p className="text-sm text-amber-300">
@@ -160,8 +188,8 @@ export default function ContactPageClient({
             </p>
           ) : null}
 
-          {error ? <p className="text-sm text-red-400">{error}</p> : null}
-          {status ? <p className="text-sm text-emerald-400">{status}</p> : null}
+          {error ? <p className="premium-alert premium-alert--error text-sm">{error}</p> : null}
+          {status ? <p className="premium-alert premium-alert--success text-sm">{status}</p> : null}
 
           <button className="btn" type="submit" disabled={submitting || !token || !contactAllowed}>
             {submitting

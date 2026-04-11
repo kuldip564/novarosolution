@@ -22,25 +22,31 @@ export default function AdminContactSubmissionsPage() {
 
   return (
     <ProtectedPage requireAdmin>
-      <section className="card space-y-4">
-        <h1 className="text-3xl font-extrabold md:text-5xl">Contact Submissions</h1>
-        {loading ? <p className="text-slate-300">Loading submissions...</p> : null}
-        {error ? <p className="text-red-400">{error}</p> : null}
-        <div className="space-y-3">
-          {orderedItems.map((item) => (
-            <article key={item.id} className="rounded-xl border border-white/10 bg-white/5 p-3">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="font-semibold">{item.subject}</h2>
-                <p className="text-xs text-slate-400">{new Date(item.createdAt).toLocaleString()}</p>
-              </div>
-              <p className="mt-2 text-slate-300">{item.message}</p>
-              <p className="mt-2 text-xs text-slate-400">
-                {item.name} - {item.email}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <main className="app-page-shell">
+        <section className="admin-shell">
+          <header className="premium-page-hero space-y-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Inbox</p>
+            <h1 className="section-title text-3xl font-extrabold md:text-5xl">Contact submissions</h1>
+            <p className="text-sm text-slate-400">Messages sent from the public contact form.</p>
+          </header>
+          {loading ? <p className="text-slate-400">Loading…</p> : null}
+          {error ? <p className="premium-alert premium-alert--error">{error}</p> : null}
+          <div className="space-y-4">
+            {orderedItems.map((item) => (
+              <article key={item.id} className="page-content-card space-y-2">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <h2 className="text-lg font-semibold text-slate-100">{item.subject}</h2>
+                  <p className="text-xs text-slate-500">{new Date(item.createdAt).toLocaleString()}</p>
+                </div>
+                <p className="text-slate-300">{item.message}</p>
+                <p className="text-xs text-slate-500">
+                  {item.name} · {item.email}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
     </ProtectedPage>
   );
 }

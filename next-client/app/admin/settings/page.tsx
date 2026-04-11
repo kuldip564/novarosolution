@@ -107,7 +107,7 @@ export default function AdminSettingsPage() {
     <ProtectedPage requireAdmin>
       <main className="app-page-shell">
       <section className="admin-shell">
-        <article className="page-hero-shell space-y-3">
+        <article className="premium-page-hero space-y-3">
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Admin Settings</h1>
         {loading ? <p className="text-slate-300">Loading settings...</p> : null}
         </article>

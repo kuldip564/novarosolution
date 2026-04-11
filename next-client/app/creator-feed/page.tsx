@@ -256,7 +256,8 @@ export default function CreatorFeedPage() {
     <ProtectedPage>
       <main className="app-page-shell">
         <section className="creator-shell">
-          <article className="page-hero-shell space-y-3">
+          <article className="premium-page-hero space-y-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Community</p>
             <h1 className="section-title text-3xl font-extrabold md:text-5xl">Creator Feed</h1>
             <p className="text-sm text-slate-300">
               Discover fresh creator uploads, react in real time, and engage with comments in a premium social feed.

@@ -165,7 +165,7 @@ export default function CreatorStudioPage() {
     <ProtectedPage requireCreator>
       <main className="app-page-shell">
         <section className="creator-shell">
-          <article className="page-hero-shell space-y-3">
+          <article className="premium-page-hero space-y-3">
             <h1 className="section-title text-3xl font-extrabold md:text-5xl">Creator Studio</h1>
             <p className="text-sm text-slate-300">Publish and update your photos/videos with stronger editing controls.</p>
             <div className="creator-stat-grid">

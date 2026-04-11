@@ -145,7 +145,7 @@ main p {
   line-height: 1.7;
 }
 
-main :where(article, section, form, .card, .page-content-card, .page-hero-shell) p {
+main :where(article, section, form, .card, .page-content-card, .page-hero-shell, .premium-page-hero) p {
   max-width: var(--reading-width);
 }
 
@@ -696,7 +696,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell)
 }
 
 .main {
-  padding: 34px 0 72px;
+  padding: 24px 0 56px;
 }
 
 .main > * {
@@ -706,7 +706,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell)
 .app-page-shell > section + section,
 .app-page-shell > div + section,
 .app-page-shell > section + div {
-  margin-top: clamp(1rem, 1.8vw, 1.5rem);
+  margin-top: clamp(1.35rem, 2.4vw, 2.25rem);
 }
 
 .route-transition-wrap {
@@ -1271,6 +1271,18 @@ a[class*='bg-linear-to-r']:hover,
   filter: none;
 }
 
+.btn-secondary {
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  color: var(--text);
+  border-color: color-mix(in oklab, var(--border) 72%, transparent);
+}
+
+.btn-secondary:hover {
+  background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
+  filter: none;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.12);
+}
+
 .service-contact-btn {
   box-shadow: 0 10px 22px color-mix(in oklab, var(--btn-shadow) 75%, transparent);
 }
@@ -1324,10 +1336,12 @@ a[class*='bg-linear-to-r']:hover,
 
 .card {
   background: color-mix(in oklab, var(--surface-elevated) 94%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: clamp(1.1rem, 1.8vw, 1.5rem);
-  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.16);
+  border: 1px solid color-mix(in oklab, var(--border) 85%, var(--primary) 15%);
+  border-radius: 20px;
+  padding: clamp(1.15rem, 1.9vw, 1.65rem);
+  box-shadow:
+    0 16px 40px rgba(2, 6, 23, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
   position: relative;
   overflow: hidden;
@@ -1373,7 +1387,13 @@ a[class*='bg-linear-to-r']:hover,
 .post-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: clamp(14px, 2vw, 22px);
+}
+
+.post-list > .page-content-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .text-slate-300,
@@ -1574,12 +1594,13 @@ select:focus {
 .app-page-shell::before {
   content: '';
   position: absolute;
-  inset: 20px 0 auto 0;
-  height: 280px;
+  inset: 8px 0 auto 0;
+  height: 200px;
   pointer-events: none;
   background:
-    radial-gradient(620px circle at 12% 0%, rgba(236, 72, 153, 0.1), transparent 56%),
-    radial-gradient(620px circle at 86% 2%, rgba(59, 130, 246, 0.09), transparent 54%);
+    radial-gradient(560px circle at 12% 0%, rgba(236, 72, 153, 0.09), transparent 58%),
+    radial-gradient(560px circle at 88% 0%, rgba(59, 130, 246, 0.08), transparent 56%),
+    radial-gradient(480px circle at 50% -20%, rgba(6, 182, 212, 0.05), transparent 55%);
   z-index: 0;
 }
 
@@ -1600,9 +1621,9 @@ select:focus {
 
 .page-content-card:hover,
 .page-hero-shell:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 22px 42px rgba(2, 6, 23, 0.22);
-  border-color: color-mix(in oklab, var(--border) 55%, var(--primary) 45%);
+  transform: translateY(-0.5px);
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.18);
+  border-color: color-mix(in oklab, var(--border) 60%, var(--primary) 40%);
 }
 
 .page-hero-shell,
@@ -1664,7 +1685,8 @@ select:focus {
   z-index: 1;
 }
 
-.admin-shell .page-hero-shell {
+.admin-shell .page-hero-shell,
+.admin-shell .premium-page-hero {
   background:
     linear-gradient(
       140deg,
@@ -1808,6 +1830,206 @@ select:focus {
   transform: translateY(-1px);
   border-color: color-mix(in oklab, var(--primary) 54%, var(--border) 46%);
   box-shadow: 0 16px 28px rgba(2, 6, 23, 0.24);
+}
+
+.admin-stat-card p {
+  max-width: none;
+}
+
+/* Premium account / profile layout */
+.profile-shell {
+  display: grid;
+  gap: var(--section-space);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 58rem;
+  margin-inline: auto;
+}
+
+.profile-shell::before,
+.profile-shell::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(44px);
+  opacity: 0.38;
+}
+
+.profile-shell::before {
+  width: min(420px, 90vw);
+  height: 420px;
+  right: -120px;
+  top: -100px;
+  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 52%, transparent), transparent 68%);
+}
+
+.profile-shell::after {
+  width: min(360px, 80vw);
+  height: 360px;
+  left: -100px;
+  bottom: 8%;
+  background: radial-gradient(circle, color-mix(in oklab, #ec4899 42%, transparent), transparent 72%);
+}
+
+.profile-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-shell .page-hero-shell,
+.profile-shell .premium-page-hero {
+  background:
+    linear-gradient(
+      128deg,
+      color-mix(in oklab, var(--surface-strong) 80%, #0f172a 20%),
+      color-mix(in oklab, var(--surface) 94%, #111827 6%)
+    );
+  border-color: color-mix(in oklab, var(--border) 44%, var(--accent) 56%);
+  box-shadow:
+    0 26px 52px rgba(2, 6, 23, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: clamp(1.5rem, 3.2vw, 2.35rem);
+}
+
+.profile-shell .page-content-card {
+  box-shadow:
+    0 22px 44px rgba(2, 6, 23, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.profile-section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.profile-section-head::before {
+  content: '';
+  width: 3px;
+  border-radius: 999px;
+  min-height: 2.75rem;
+  margin-top: 0.1rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--accent) 75%, transparent),
+    color-mix(in oklab, var(--primary) 45%, transparent)
+  );
+  flex-shrink: 0;
+}
+
+.profile-upload-label {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.68rem 1.15rem;
+  border-radius: 12px;
+  border: 1px dashed color-mix(in oklab, var(--border) 50%, var(--accent) 50%);
+  background: color-mix(in oklab, var(--surface-strong) 88%, #020617 12%);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.profile-upload-label:hover {
+  border-color: color-mix(in oklab, var(--accent) 65%, var(--border) 35%);
+  color: var(--text);
+  background: color-mix(in oklab, var(--surface-strong) 92%, #0f172a 8%);
+}
+
+.premium-alert {
+  border-radius: 16px;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.45;
+  border: 1px solid transparent;
+}
+
+.premium-alert--success {
+  background: color-mix(in oklab, #10b981 16%, var(--surface-strong));
+  border-color: color-mix(in oklab, #10b981 32%, var(--border));
+  color: color-mix(in oklab, #6ee7b7 78%, var(--text));
+}
+
+.premium-alert--error {
+  background: color-mix(in oklab, #f43f5e 12%, var(--surface-strong));
+  border-color: color-mix(in oklab, #f43f5e 26%, var(--border));
+  color: color-mix(in oklab, #fda4af 72%, var(--text));
+}
+
+.form-label-premium {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+/* Shared marketing / content hero (contact, projects, etc.) */
+.premium-page-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--surface-strong) 78%, #0f172a 22%),
+      color-mix(in oklab, var(--surface) 92%, #111827 8%)
+    );
+  box-shadow: 0 22px 48px rgba(2, 6, 23, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: clamp(1.35rem, 2.8vw, 2.25rem);
+}
+
+.premium-page-hero::before {
+  content: '';
+  position: absolute;
+  right: -15%;
+  top: -40%;
+  width: 55%;
+  height: 140%;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 22%, transparent), transparent 72%);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.premium-page-hero::after {
+  content: '';
+  position: absolute;
+  left: -10%;
+  bottom: -35%;
+  width: 45%;
+  height: 120%;
+  background: radial-gradient(closest-side, color-mix(in oklab, #6366f1 18%, transparent), transparent 75%);
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.premium-page-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.premium-auth-panel {
+  border-radius: 24px;
+  border: 1px solid color-mix(in oklab, var(--border) 65%, var(--accent) 35%);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--surface-strong) 88%, #0f172a 12%),
+      color-mix(in oklab, var(--surface) 95%, transparent)
+    );
+  box-shadow:
+    0 28px 56px rgba(2, 6, 23, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  padding: clamp(1.35rem, 2.5vw, 1.85rem);
 }
 
 .admin-chat-layout {
@@ -2592,6 +2814,21 @@ select:focus {
     border-radius: 12px;
     min-height: 40px;
   }
+}
+
+.search-result-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1rem 1.125rem;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.search-result-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .search-page-form input {

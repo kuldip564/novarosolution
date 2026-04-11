@@ -5,24 +5,8 @@ import {
   listApplicationsByUserId,
   markApplicantMessagesRead,
 } from '../models/jobApplicationModel.js';
-import { findJobByIdRaw } from '../models/jobModel.js';
+import { findJobByIdRaw, listPublishedJobs, toPublicJob } from '../models/jobModel.js';
 import { validateJobApplicationPayload } from '../utils/validators.js';
-
-function toPublicJobFromDoc(job) {
-  if (!job) return null;
-  return {
-    id: String(job._id),
-    title: job.title,
-    description: job.description,
-    category: job.category,
-    location: job.location || '',
-    workMode: job.workMode,
-    employmentType: job.employmentType,
-    salaryHint: job.salaryHint || '',
-    createdAt: job.createdAt,
-    updatedAt: job.updatedAt,
-  };
-}
 
 export async function getPublishedJobs(req, res) {
   try {
@@ -45,7 +29,7 @@ export async function getPublishedJobById(req, res) {
     if (!job || !job.isPublished) {
       return res.status(404).json({ ok: false, message: 'Job not found.' });
     }
-    return res.status(200).json({ ok: true, data: toPublicJobFromDoc(job) });
+    return res.status(200).json({ ok: true, data: toPublicJob(job) });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -62,6 +46,16 @@ export async function postJobApplication(req, res) {
     const job = await findJobByIdRaw(jobId);
     if (!job || !job.isPublished) {
       return res.status(404).json({ ok: false, message: 'This job is not open for applications.' });
+    }
+
+    if (job.applicationDeadline) {
+      const end = new Date(job.applicationDeadline);
+      if (!Number.isNaN(end.getTime()) && end.getTime() < Date.now()) {
+        return res.status(400).json({
+          ok: false,
+          message: 'Applications for this role are no longer accepted.',
+        });
+      }
     }
 
     const validationMessage = validateJobApplicationPayload(req.body);

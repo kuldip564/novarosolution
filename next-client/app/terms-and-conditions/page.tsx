@@ -68,7 +68,7 @@ export default async function TermsAndConditionsPage() {
   if (managed && (managed?.title || managed?.lastUpdated || managed?.content)) {
     return (
       <main className="app-page-shell">
-        <section className="page-hero-shell space-y-3">
+        <section className="premium-page-hero space-y-3">
           <h1 className="section-title text-3xl font-extrabold md:text-5xl">
             {String(managed?.title || 'Terms and Conditions')}
           </h1>
@@ -86,7 +86,7 @@ export default async function TermsAndConditionsPage() {
 
   return (
     <main className="app-page-shell">
-      <section className="page-hero-shell space-y-3">
+      <section className="premium-page-hero space-y-3">
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Terms and Conditions</h1>
         <p className="text-slate-300">Last updated: March 2026</p>
       </section>

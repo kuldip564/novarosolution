@@ -6,7 +6,7 @@ import { buildCanonical, buildMetadata } from '@/lib/seo';
 
 const HOME_SEO_TITLE = 'NovaRo Solution | Scalable Tech Solutions for Modern Businesses';
 const HOME_SEO_DESCRIPTION =
-  'NovaRo Solution is a company that helps build good websites and digital products. They are good at making things with Next.js. Can also make special apps for phones. NovaRo Solution also does a thing called UI/UX design for companies. This means they make sure things look good and work well. If you have an idea you want to make real you can work with the people, at NovaRo Solution. They will help you make it happen and make sure it is safe and works well. NovaRo Solution can help you with your project.';
+  'NovaRo Solution delivers UI/UX design, web and mobile development, and SEO-ready products for modern businesses.';
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({

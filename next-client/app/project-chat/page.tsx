@@ -140,17 +140,26 @@ export default function ProjectChatPage() {
 
   return (
     <ProtectedPage>
-      <section className="card project-chat-shell space-y-4">
-        <h1 className="text-3xl font-extrabold md:text-5xl">Project Chat</h1>
-        <p className="text-slate-300">Discuss your project directly with admin.</p>
-        <button className="btn btn-sm" type="button" onClick={onDeleteRequest}>
-          {deleteRequested ? 'Delete Request Sent' : 'Request Delete Chat'}
-        </button>
-        {!showStarterForm ? (
-          <button className="btn btn-sm" type="button" onClick={() => setShowStarterForm(true)}>
-            {messages.length > 0 ? 'Update Project Data' : 'Start Project Discussion'}
-          </button>
-        ) : null}
+      <main className="app-page-shell space-y-6">
+        <header className="premium-page-hero space-y-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Workspace</p>
+            <h1 className="section-title mt-1 text-3xl font-extrabold md:text-5xl">Project chat</h1>
+            <p className="mt-2 max-w-2xl text-slate-300">Discuss your project directly with our team.</p>
+          </div>
+          <div className="admin-toolbar">
+            <button className="btn btn-sm" type="button" onClick={onDeleteRequest}>
+              {deleteRequested ? 'Delete request sent' : 'Request delete chat'}
+            </button>
+            {!showStarterForm ? (
+              <button className="btn btn-sm" type="button" onClick={() => setShowStarterForm(true)}>
+                {messages.length > 0 ? 'Update project data' : 'Start project discussion'}
+              </button>
+            ) : null}
+          </div>
+        </header>
+
+        <section className="page-content-card project-chat-shell space-y-4">
         {showStarterForm ? (
           <form className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-2" onSubmit={onStarterSubmit}>
             <input
@@ -251,7 +260,8 @@ export default function ProjectChatPage() {
         </form>
         {status ? <p className="text-emerald-400">{status}</p> : null}
         {error ? <p className="text-red-400">{error}</p> : null}
-      </section>
+        </section>
+      </main>
     </ProtectedPage>
   );
 }

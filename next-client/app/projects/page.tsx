@@ -22,9 +22,9 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <main className="app-page-shell space-y-5">
-      <section className="page-hero-shell space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Case Studies</p>
+    <main className="app-page-shell space-y-6">
+      <section className="premium-page-hero space-y-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Case studies</p>
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Projects</h1>
         <p className="max-w-3xl text-slate-300">
           Real product work focused on speed, usability, and measurable growth.
@@ -32,14 +32,14 @@ export default async function ProjectsPage() {
       </section>
       <div className="post-list">
         {projects.map((project) => (
-          <article className="card group" key={project._id}>
+          <article className="page-content-card group transition-transform duration-300 hover:-translate-y-0.5" key={project._id}>
             <p className="text-xs uppercase tracking-[0.08em] text-slate-400">
               {project.category || 'Digital Product'} {project.year ? `• ${project.year}` : ''}
             </p>
-            <h2 className="text-xl font-semibold">{project.title}</h2>
-            <p className="mt-2 text-slate-300">{project.description}</p>
+            <h2 className="text-xl font-semibold text-slate-100">{project.title}</h2>
+            <p className="mt-2 flex-1 text-slate-300">{project.description}</p>
             <Link
-              className="btn mt-4 inline-flex px-4 py-2 text-sm"
+              className="btn mt-5 inline-flex w-fit px-4 py-2 text-sm"
               href={`/projects/${project.slug}`}
             >
               View project

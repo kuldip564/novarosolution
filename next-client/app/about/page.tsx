@@ -74,7 +74,7 @@ export default async function AboutPage() {
     }
   ];
   return (
-    <main className="app-page-shell space-y-4">
+    <main className="app-page-shell space-y-6">
       <AboutStoryExperience
         about={about}
         team={team}
@@ -83,22 +83,27 @@ export default async function AboutPage() {
         workPoints={workPoints}
         owners={owners}
       />
-      <section className="page-content-card space-y-3">
-        <h2 className="text-2xl font-semibold">Business Overview</h2>
-        <p className="text-slate-300">
-          Novaro Solution is a product-focused digital engineering studio. We help businesses move from idea to
-          launch with practical design and modern development standards. Our engagement model is built around
-          reliability, transparent communication, and measurable outcomes.
-        </p>
-        <p className="text-slate-300">
-          Our core team works across product strategy, frontend/backend implementation, mobile delivery, and SEO-aware
-          performance optimization. We prioritize maintainable code, accessible interfaces, and scalable architecture
-          so projects remain stable as business needs evolve.
-        </p>
-        <p className="text-slate-300">
-          We operate through structured planning, sprint execution, and milestone sign-off. This process helps clients
-          maintain clarity on timeline, scope, and quality expectations from discovery through post-launch support.
-        </p>
+      <section className="page-content-card space-y-4">
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Company</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Business Overview</h2>
+        </div>
+        <div className="space-y-3 text-sm leading-relaxed">
+          <p className="text-slate-300">
+            Novaro Solution is a product-focused digital engineering studio. We help businesses move from idea to
+            launch with practical design and modern development standards. Our engagement model is built around
+            reliability, transparent communication, and measurable outcomes.
+          </p>
+          <p className="text-slate-300">
+            Our core team works across product strategy, frontend/backend implementation, mobile delivery, and SEO-aware
+            performance optimization. We prioritize maintainable code, accessible interfaces, and scalable architecture
+            so projects remain stable as business needs evolve.
+          </p>
+          <p className="text-slate-300">
+            We operate through structured planning, sprint execution, and milestone sign-off. This process helps clients
+            maintain clarity on timeline, scope, and quality expectations from discovery through post-launch support.
+          </p>
+        </div>
       </section>
       <FAQSection
         items={faqItems}

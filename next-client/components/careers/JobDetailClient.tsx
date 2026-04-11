@@ -6,7 +6,12 @@ import type { JobApplicationRow, PublicJob } from '@/lib/clientApi';
 import { applyToJob, fetchMyJobApplications, markJobApplicationRead } from '@/lib/clientApi';
 import { useAuth } from '@/context/AuthContext';
 import { formatApplicationStatus, formatInterviewRound } from './interviewLabels';
-import { formatEmployment, formatWorkMode } from './jobLabels';
+import {
+  formatApplicationDeadline,
+  formatEmployment,
+  formatExperienceLevel,
+  formatWorkMode
+} from './jobLabels';
 
 type Props = {
   job: PublicJob;
@@ -77,35 +82,82 @@ export default function JobDetailClient({ job }: Props) {
     }
   }
 
+  const deadline = formatApplicationDeadline(job.applicationDeadline);
+  const hasResp = Boolean((job.responsibilities || '').trim());
+  const hasReq = Boolean((job.requirements || '').trim());
+  const hasBenefits = Boolean((job.benefits || '').trim());
+
   return (
     <main className="app-page-shell">
-      <article className="space-y-6">
+      <article className="space-y-8">
         <nav className="text-sm text-slate-400">
-          <Link href="/careers" className="hover:text-cyan-200">
+          <Link href="/careers" className="transition hover:text-cyan-200">
             ← All careers
           </Link>
         </nav>
 
-        <header className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-200">{job.category}</span>
-            <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
-              {formatEmployment(job.employmentType)}
-            </span>
-            <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
-              {formatWorkMode(job.workMode)}
-            </span>
-          </div>
-          <h1 className="section-title text-3xl font-extrabold md:text-5xl">{job.title}</h1>
-          <div className="flex flex-wrap gap-3 text-sm text-slate-400">
-            {job.location ? <span>{job.location}</span> : null}
-            {job.salaryHint ? <span className="text-slate-300">{job.salaryHint}</span> : null}
+        <header className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 via-slate-950/80 to-cyan-950/40 px-6 py-8 md:px-10 md:py-10">
+          <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/3 -translate-y-1/4 rounded-full bg-cyan-500/15 blur-3xl" />
+          <div className="relative space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              {job.featured ? (
+                <span className="rounded-full bg-amber-500/25 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-100">
+                  Featured
+                </span>
+              ) : null}
+              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-200">{job.category}</span>
+              {job.department ? (
+                <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">{job.department}</span>
+              ) : null}
+              <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
+                {formatEmployment(job.employmentType)}
+              </span>
+              <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
+                {formatWorkMode(job.workMode)}
+              </span>
+              <span className="rounded-full bg-indigo-500/25 px-3 py-1 text-xs text-indigo-100">
+                {formatExperienceLevel(job.experienceLevel || 'any')}
+              </span>
+            </div>
+            <h1 className="section-title text-3xl font-extrabold md:text-5xl">{job.title}</h1>
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-400">
+              {job.location ? <span>{job.location}</span> : null}
+              {job.salaryHint ? <span className="text-slate-200">{job.salaryHint}</span> : null}
+              {deadline ? (
+                <span className={deadline.past ? 'text-rose-300' : 'text-emerald-300'}>
+                  {deadline.past ? 'Applications closed · ' : 'Apply by '}
+                  {deadline.label}
+                </span>
+              ) : null}
+            </div>
           </div>
         </header>
 
-        <div className="prose prose-invert max-w-none rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-slate-200">
-          <p className="whitespace-pre-wrap text-base leading-relaxed">{job.description}</p>
+        <div className="prose prose-invert max-w-none rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-slate-200 md:p-8">
+          <h2 className="!mt-0 text-lg font-bold text-slate-50">About the role</h2>
+          <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-300">{job.description}</p>
         </div>
+
+        {hasResp ? (
+          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <h2 className="text-lg font-bold text-slate-50">Responsibilities</h2>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">{job.responsibilities}</p>
+          </section>
+        ) : null}
+
+        {hasReq ? (
+          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <h2 className="text-lg font-bold text-slate-50">Requirements</h2>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">{job.requirements}</p>
+          </section>
+        ) : null}
+
+        {hasBenefits ? (
+          <section className="rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/10 to-transparent p-6 md:p-8">
+            <h2 className="text-lg font-bold text-emerald-50">Benefits & perks</h2>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-emerald-100/90">{job.benefits}</p>
+          </section>
+        ) : null}
 
         {!isAuthenticated ? (
           <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-6 text-amber-100">
@@ -113,6 +165,11 @@ export default function JobDetailClient({ job }: Props) {
             <p className="mt-1 text-sm text-amber-200/90">
               Create an account or sign in to submit your application. We attach your profile name and email automatically.
             </p>
+            {deadline?.past ? (
+              <p className="mt-3 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-100">
+                The application window for this role has closed ({deadline.label}).
+              </p>
+            ) : null}
             <div className="mt-4 flex flex-wrap gap-3">
               <Link href={`/login?redirect=${encodeURIComponent(`/careers/${job.id}`)}`} className="btn inline-flex">
                 Sign in
@@ -174,6 +231,16 @@ export default function JobDetailClient({ job }: Props) {
             <p className="font-semibold">You have already applied for this role.</p>
             <Link href="/careers" className="btn-secondary mt-4 inline-flex">
               Browse more roles
+            </Link>
+          </div>
+        ) : deadline?.past ? (
+          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-100">
+            <p className="font-semibold">Applications are closed</p>
+            <p className="mt-1 text-sm text-rose-200/90">
+              This role stopped accepting new applications after {deadline.label}.
+            </p>
+            <Link href="/careers" className="btn-secondary mt-4 inline-flex">
+              Browse open roles
             </Link>
           </div>
         ) : (

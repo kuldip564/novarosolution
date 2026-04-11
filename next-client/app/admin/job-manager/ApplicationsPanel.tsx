@@ -147,8 +147,12 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
   const job = detail?.job;
 
   return (
-    <div className="grid min-h-[560px] gap-4 lg:grid-cols-[minmax(280px,340px)_1fr]">
-      <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[var(--surface)]/40 p-4">
+    <div className="grid min-h-[560px] gap-6 lg:grid-cols-[minmax(280px,340px)_1fr]">
+      <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-[var(--surface)]/30 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+        <div className="border-b border-white/10 pb-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400/80">Pipeline</p>
+          <p className="mt-1 text-sm text-slate-500">Search and filter applicants.</p>
+        </div>
         <div>
           <label className="flex flex-col gap-1 text-xs text-slate-400">
             Search name or email
@@ -269,7 +273,7 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-5 md:p-6">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-transparent p-5 shadow-[0_24px_60px_rgba(0,0,0,0.28)] md:p-6">
         {!selectedId ? (
           <div className="flex h-full min-h-[320px] flex-col items-center justify-center text-center text-slate-500">
             <p className="text-lg font-medium text-slate-400">Select an applicant</p>

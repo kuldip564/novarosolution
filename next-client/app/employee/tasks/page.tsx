@@ -306,7 +306,7 @@ export default function EmployeeTasksPage() {
   return (
     <ProtectedPage requireEmployee>
       <section className="admin-shell app-page-shell">
-        <article className="page-hero-shell space-y-2">
+        <article className="premium-page-hero space-y-2">
           <h1 className="section-title text-3xl font-extrabold md:text-5xl">Daily Task Manager</h1>
           <p className="text-slate-300">Update work status, upload proof, and download monthly report.</p>
         </article>

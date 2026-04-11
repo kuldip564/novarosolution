@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { FaArrowUp, FaEnvelope, FaFolderOpen } from 'react-icons/fa';
+import { FaArrowUp, FaEnvelope } from 'react-icons/fa';
 
 export default function SiteEnhancements() {
   const reduceMotion = useReducedMotion();
@@ -72,9 +72,6 @@ export default function SiteEnhancements() {
       <div className="quick-dock" aria-label="Quick actions">
         <Link href="/contact" className="quick-dock-btn" aria-label="Contact us">
           <FaEnvelope />
-        </Link>
-        <Link href="/projects" className="quick-dock-btn" aria-label="View projects">
-          <FaFolderOpen />
         </Link>
         <AnimatePresence>
           {scrollY > 260 ? (

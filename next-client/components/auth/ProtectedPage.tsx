@@ -60,9 +60,18 @@ export default function ProtectedPage({
     (requireEmployee && !isEmployee)
   ) {
     return (
-      <section className="card">
-        <p className="text-slate-300">Checking access...</p>
-      </section>
+      <div className="app-page-shell flex min-h-[38vh] flex-col items-center justify-center px-4 py-16">
+        <div className="premium-page-hero flex max-w-sm flex-col items-center gap-4 text-center">
+          <span
+            className="h-11 w-11 animate-pulse rounded-2xl border border-white/15 bg-linear-to-br from-white/12 to-white/5 shadow-[0_12px_32px_rgba(0,0,0,0.25)]"
+            aria-hidden
+          />
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-400/85">Secure</p>
+            <p className="mt-2 text-sm text-slate-400">Verifying your session…</p>
+          </div>
+        </div>
+      </div>
     );
   }
 

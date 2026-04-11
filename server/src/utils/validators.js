@@ -64,16 +64,26 @@ export function validateJobApplicationPayload(payload) {
 
 const ALLOWED_WORK_MODES = new Set(['remote', 'onsite', 'hybrid']);
 const ALLOWED_EMPLOYMENT = new Set(['full_time', 'part_time', 'contract', 'internship']);
+const ALLOWED_EXPERIENCE = new Set(['entry', 'mid', 'senior', 'lead', 'any']);
 
 export function validateAdminJobPayload(payload, { partial } = {}) {
   const {
     title,
     description,
+    summary,
+    responsibilities,
+    requirements,
+    benefits,
     category,
+    department,
     location,
     workMode,
     employmentType,
+    experienceLevel,
     salaryHint,
+    featured,
+    sortOrder,
+    applicationDeadline,
     isPublished,
   } = payload ?? {};
 
@@ -93,8 +103,23 @@ export function validateAdminJobPayload(payload, { partial } = {}) {
     }
   }
 
+  if (summary !== undefined && String(summary).length > 500) {
+    return 'Summary is too long (max 500 characters).';
+  }
+  if (responsibilities !== undefined && String(responsibilities).length > 16000) {
+    return 'Responsibilities text is too long.';
+  }
+  if (requirements !== undefined && String(requirements).length > 16000) {
+    return 'Requirements text is too long.';
+  }
+  if (benefits !== undefined && String(benefits).length > 16000) {
+    return 'Benefits text is too long.';
+  }
   if (category !== undefined && String(category).length > 120) {
     return 'Category is too long.';
+  }
+  if (department !== undefined && String(department).length > 120) {
+    return 'Department is too long.';
   }
   if (location !== undefined && String(location).length > 200) {
     return 'Location is too long.';
@@ -107,6 +132,24 @@ export function validateAdminJobPayload(payload, { partial } = {}) {
   }
   if (employmentType !== undefined && !ALLOWED_EMPLOYMENT.has(employmentType)) {
     return 'Invalid employment type.';
+  }
+  if (experienceLevel !== undefined && !ALLOWED_EXPERIENCE.has(experienceLevel)) {
+    return 'Invalid experience level.';
+  }
+  if (featured !== undefined && typeof featured !== 'boolean') {
+    return 'featured must be a boolean.';
+  }
+  if (sortOrder !== undefined) {
+    const n = Number(sortOrder);
+    if (!Number.isFinite(n) || n < -9999 || n > 99999) {
+      return 'sortOrder must be a number between -9999 and 99999.';
+    }
+  }
+  if (applicationDeadline !== undefined && applicationDeadline !== null && applicationDeadline !== '') {
+    const d = new Date(applicationDeadline);
+    if (Number.isNaN(d.getTime())) {
+      return 'applicationDeadline must be a valid date.';
+    }
   }
   if (isPublished !== undefined && typeof isPublished !== 'boolean') {
     return 'isPublished must be a boolean.';

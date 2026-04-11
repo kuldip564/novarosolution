@@ -18,10 +18,11 @@ export default async function BlogPage() {
 
   return (
     <main className="app-page-shell">
-      <section className="space-y-4">
-        <article className="page-hero-shell space-y-3">
+      <section className="space-y-6">
+        <article className="premium-page-hero space-y-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Journal</p>
           <h1 className="section-title text-3xl font-extrabold md:text-5xl">Blog</h1>
-          <p className="text-slate-300">
+          <p className="max-w-2xl text-slate-300">
             Product thinking, engineering practices, and digital growth insights from our team.
           </p>
         </article>
@@ -45,7 +46,7 @@ export default async function BlogPage() {
           </div>
         ) : (
           <article className="page-content-card">
-            <p className="text-slate-300">No blog posts are published yet.</p>
+            <p className="text-sm text-slate-300">No articles are published yet. Check back soon.</p>
           </article>
         )}
 

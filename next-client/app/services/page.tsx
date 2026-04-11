@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { buildMetadata } from '@/lib/seo';
 import { fetchSiteContent } from '@/lib/api';
 import ServicesExplorer from '@/components/services/ServicesExplorer';
-
-const FuturisticThreePanel = dynamic(() => import('@/components/shared/FuturisticThreePanel'));
 
 export const metadata: Metadata = buildMetadata({
   title: 'Services | Novaro Solution',
@@ -80,29 +77,17 @@ export default async function ServicesPage() {
 
   return (
     <main className="app-page-shell">
-      <section className="page-hero-shell space-y-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+      <section className="premium-page-hero space-y-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">
           {servicesPage?.eyebrow || 'Services'}
         </p>
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">
           {servicesPage?.title || 'Everything you need to launch and grow online.'}
         </h1>
-        <p className="text-slate-300">
+        <p className="max-w-2xl text-slate-300">
           {servicesPage?.description ||
-            'From idea to launch, we provide UI/UX design, web development, mobile app development, and SEO in one service.'}
+            'UI/UX, web, and mobile development in one team—from discovery to launch.'}
         </p>
-        <div className="services-future-preview">
-          <div className="services-future-copy">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Futuristic Product Layer</p>
-            <p className="text-sm text-slate-300">
-              Interactive 3D visual systems can be integrated in your website, dashboard, or SaaS onboarding to improve engagement and brand recall.
-              Try the panel controls to test interaction, speed, and reset behavior.
-            </p>
-          </div>
-          <div className="services-future-canvas">
-            <FuturisticThreePanel />
-          </div>
-        </div>
       </section>
       <ServicesExplorer services={services} />
     </main>

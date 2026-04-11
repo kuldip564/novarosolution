@@ -190,7 +190,7 @@ export default function AdminBlogManagerPage() {
     <ProtectedPage requireAdmin>
       <main className="app-page-shell admin-blog-manager-page">
         <section className="admin-shell space-y-4">
-          <article className="page-hero-shell space-y-3">
+          <article className="premium-page-hero space-y-3">
             <h1 className="section-title text-3xl font-extrabold md:text-5xl">Admin Blog Manager</h1>
             <p className="text-slate-300">
               Create and manage blog posts with SEO fields, publish status, and slug control.

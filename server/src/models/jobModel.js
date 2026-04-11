@@ -4,7 +4,13 @@ const jobSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
+    /** Short teaser for listings (optional; falls back to description on the client). */
+    summary: { type: String, default: '', trim: true },
+    responsibilities: { type: String, default: '', trim: true },
+    requirements: { type: String, default: '', trim: true },
+    benefits: { type: String, default: '', trim: true },
     category: { type: String, required: true, trim: true, default: 'General' },
+    department: { type: String, default: '', trim: true },
     location: { type: String, default: '', trim: true },
     workMode: {
       type: String,
@@ -18,7 +24,16 @@ const jobSchema = new mongoose.Schema(
       default: 'full_time',
       index: true,
     },
+    experienceLevel: {
+      type: String,
+      enum: ['entry', 'mid', 'senior', 'lead', 'any'],
+      default: 'any',
+      index: true,
+    },
     salaryHint: { type: String, default: '', trim: true },
+    featured: { type: Boolean, default: false, index: true },
+    sortOrder: { type: Number, default: 0 },
+    applicationDeadline: { type: Date, default: null },
     isPublished: { type: Boolean, default: true, index: true },
   },
   {
@@ -28,21 +43,32 @@ const jobSchema = new mongoose.Schema(
 
 jobSchema.index({ isPublished: 1, category: 1, createdAt: -1 });
 jobSchema.index({ createdAt: -1 });
+jobSchema.index({ isPublished: 1, featured: -1, sortOrder: -1, createdAt: -1 });
 
 const Job = mongoose.models.Job || mongoose.model('Job', jobSchema);
 
-function toPublicJob(doc) {
+export function toPublicJob(doc) {
   if (!doc) return null;
   const row = doc._id ? doc : doc;
+  const deadline = row.applicationDeadline ? new Date(row.applicationDeadline) : null;
   return {
     id: String(row._id),
     title: row.title,
     description: row.description,
+    summary: row.summary || '',
+    responsibilities: row.responsibilities || '',
+    requirements: row.requirements || '',
+    benefits: row.benefits || '',
     category: row.category,
+    department: row.department || '',
     location: row.location || '',
     workMode: row.workMode,
     employmentType: row.employmentType,
+    experienceLevel: row.experienceLevel || 'any',
     salaryHint: row.salaryHint || '',
+    featured: row.featured === true,
+    sortOrder: typeof row.sortOrder === 'number' ? row.sortOrder : 0,
+    applicationDeadline: deadline && !Number.isNaN(deadline.getTime()) ? deadline.toISOString() : '',
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
@@ -81,7 +107,7 @@ export async function listPublishedJobs({ category } = {}) {
   if (category && String(category).trim()) {
     filter.category = new RegExp(`^${String(category).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
   }
-  const rows = await Job.find(filter).sort({ createdAt: -1 }).lean();
+  const rows = await Job.find(filter).sort({ featured: -1, sortOrder: -1, createdAt: -1 }).lean();
   return rows.map(toPublicJob);
 }
 

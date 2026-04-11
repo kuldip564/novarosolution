@@ -297,248 +297,404 @@ export default function ProfilePage() {
   return (
     <ProtectedPage>
       <main className="app-page-shell">
-      <section className="admin-shell">
-        <article className="page-hero-shell space-y-3">
-        <h1 className="section-title text-3xl font-extrabold md:text-5xl">Profile</h1>
-        <p className="text-slate-300">Manage account details and role access.</p>
-        </article>
+        <section className="profile-shell">
+          {status || error ? (
+            <div className="flex flex-col gap-2">
+              {status ? <div className="premium-alert premium-alert--success">{status}</div> : null}
+              {error ? <div className="premium-alert premium-alert--error">{error}</div> : null}
+            </div>
+          ) : null}
 
-        <motion.article className="page-content-card" {...sectionMotion}>
-          <div className="flex flex-wrap items-center gap-3">
-            {avatar ? (
-              <img src={avatar} alt="Profile" className="h-16 w-16 rounded-full object-cover border border-white/20" />
-            ) : (
-              <div className="h-16 w-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-sm font-bold">
-                {userInitials || 'U'}
-              </div>
-            )}
-            <div className="text-sm text-slate-300">
-              <p>{user?.name}</p>
-              <p>{user?.email}</p>
-              <p className="capitalize">Role: {user?.role}</p>
-              <p>User ID: {user?.id}</p>
-            </div>
-          </div>
-          <div className="admin-toolbar">
-            <button className="btn" type="button" onClick={refreshMe}>
-              Refresh Activity
-            </button>
-            <button className="btn" type="button" onClick={onCopyUserId}>
-              Copy User ID
-            </button>
-            <button className="btn" type="button" onClick={onCopyEmail}>
-              Copy Email
-            </button>
-            <button className="btn" type="button" onClick={onDownloadProfile}>
-              Download Profile
-            </button>
-            <button className="btn" type="button" onClick={onResetProfileForm}>
-              Reset Form
-            </button>
-          </div>
-        </motion.article>
-
-        <motion.article className="page-content-card" {...sectionMotion}>
-          <h2 className="text-lg font-semibold">Activity Tracker</h2>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="admin-list-card">
-              <p className="text-xs text-slate-400">Project Messages</p>
-              <p className="text-xl font-semibold">{projectMessages.length}</p>
-            </div>
-            <div className="admin-list-card">
-              <p className="text-xs text-slate-400">Admin Replies</p>
-              <p className="text-xl font-semibold">{adminRepliesCount}</p>
-            </div>
-            <div className="admin-list-card">
-              <p className="text-xs text-slate-400">Account Age</p>
-              <p className="text-xl font-semibold">{accountAgeDays} days</p>
-            </div>
-            <div className="admin-list-card">
-              <p className="text-xs text-slate-400">Joined Date</p>
-              <p className="text-sm font-semibold">
-                {joinedDate && !Number.isNaN(joinedDate.getTime()) ? joinedDate.toLocaleDateString() : 'N/A'}
-              </p>
-            </div>
-            <div className="admin-list-card">
-              <p className="text-xs text-slate-400">Profile Completion</p>
-              <p className="text-xl font-semibold">{profileScore}%</p>
-            </div>
-          </div>
-          <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-300">
-            {activityLoading ? (
-              <p>Loading activity...</p>
-            ) : lastMessage ? (
-              <>
-                <p className="font-semibold">Last message</p>
-                <p className="mt-1">{lastMessage.message}</p>
-                <p className="mt-1 text-xs text-slate-400">
-                  {lastMessage.senderRole} - {lastMessage.createdAt ? new Date(lastMessage.createdAt).toLocaleString() : 'N/A'}
-                </p>
-              </>
-            ) : (
-              <p>No project messages yet.</p>
-            )}
-          </div>
-          <p className="mt-2 text-xs text-slate-500">
-            {activityLoading ? 'Tracking latest account activity...' : `Last synced at ${lastSyncedAt || 'N/A'}`}
-          </p>
-          <div className="mt-3">
-            <Link className="btn btn-sm" href="/project-chat">
-              Open Project Chat
-            </Link>
-          </div>
-        </motion.article>
-
-        <motion.form className="page-content-card space-y-3" onSubmit={onProfileSubmit} {...sectionMotion}>
-          <h2 className="text-lg font-semibold">Profile Details</h2>
-          <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Name" required />
-          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email" required />
-          <input type="file" accept="image/*" onChange={onAvatarChange} />
-          {photoEditorSource ? (
-            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Photo Fit Editor</p>
-              <p className="mt-1 text-xs text-slate-400">Adjust zoom and position, then click Apply Fit.</p>
-              <div className="mt-3 flex flex-wrap gap-5">
-                <div className="h-24 w-24 overflow-hidden rounded-full border border-white/20 bg-black/40">
-                  <img
-                    src={photoEditorSource}
-                    alt="Photo fit preview"
-                    className="h-full w-full object-cover"
-                    style={{
-                      transform: `translate(${photoOffsetX * 0.4}%, ${photoOffsetY * 0.4}%) scale(${photoZoom})`,
-                      transformOrigin: 'center'
-                    }}
-                  />
+          <motion.article className="premium-page-hero overflow-hidden" {...sectionMotion}>
+            <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:24px_24px]" />
+            <div className="relative flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
+              <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
+                <div className="relative shrink-0">
+                  <div className="absolute -inset-1 rounded-full bg-linear-to-br from-cyan-400/25 via-indigo-500/20 to-fuchsia-500/30 blur-lg" />
+                  <div className="relative rounded-full p-[4px] ring-2 ring-white/20 ring-offset-[3px] ring-offset-slate-950">
+                    {avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={avatar}
+                        alt=""
+                        className="relative h-32 w-32 rounded-full border border-white/25 object-cover shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:h-36 sm:w-36"
+                      />
+                    ) : (
+                      <div className="flex h-32 w-32 items-center justify-center rounded-full border border-white/20 bg-linear-to-br from-white/18 to-white/5 text-3xl font-bold tracking-tight text-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:h-36 sm:w-36">
+                        {userInitials || 'U'}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="min-w-[220px] flex-1 space-y-3">
-                  <label className="block text-xs text-slate-300">
-                    Zoom ({photoZoom.toFixed(2)}x)
-                    <input
-                      type="range"
-                      min="1"
-                      max="3"
-                      step="0.05"
-                      value={photoZoom}
-                      onChange={(event) => setPhotoZoom(Number(event.target.value))}
-                      className="mt-1 w-full"
-                    />
-                  </label>
-                  <label className="block text-xs text-slate-300">
-                    Move Left/Right ({photoOffsetX})
-                    <input
-                      type="range"
-                      min="-100"
-                      max="100"
-                      step="1"
-                      value={photoOffsetX}
-                      onChange={(event) => setPhotoOffsetX(Number(event.target.value))}
-                      className="mt-1 w-full"
-                    />
-                  </label>
-                  <label className="block text-xs text-slate-300">
-                    Move Up/Down ({photoOffsetY})
-                    <input
-                      type="range"
-                      min="-100"
-                      max="100"
-                      step="1"
-                      value={photoOffsetY}
-                      onChange={(event) => setPhotoOffsetY(Number(event.target.value))}
-                      className="mt-1 w-full"
-                    />
-                  </label>
-                  <div className="admin-toolbar">
-                    <button className="btn" type="button" onClick={onApplyPhotoFit} disabled={isApplyingPhotoFit}>
-                      {isApplyingPhotoFit ? 'Applying...' : 'Apply Fit'}
-                    </button>
-                    <button className="btn" type="button" onClick={onResetPhotoFit}>
-                      Reset Fit
-                    </button>
+                <div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Account</p>
+                    <h1 className="section-title mt-1 text-3xl font-extrabold md:text-4xl">Your profile</h1>
+                    <p className="mt-2 max-w-lg text-sm leading-relaxed text-slate-400">
+                      Manage how you appear across Novaro, keep your password secure, and open tools for your role.
+                    </p>
+                    {joinedDate && !Number.isNaN(joinedDate.getTime()) ? (
+                      <p className="mt-2 text-xs text-slate-500">
+                        Member since <span className="text-slate-400">{joinedDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="mx-auto max-w-xs sm:mx-0">
+                    <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                      <span>Profile strength</span>
+                      <span className="text-cyan-300/90">{profileScore}%</span>
+                    </div>
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/5">
+                      <div
+                        className="h-full rounded-full bg-linear-to-r from-cyan-400/90 via-sky-500/90 to-indigo-500/90 transition-[width] duration-500 ease-out"
+                        style={{ width: `${profileScore}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                    <span className="rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium capitalize text-slate-100 shadow-sm shadow-black/20">
+                      {user?.role || 'Member'}
+                    </span>
+                    {creatorRequestPending ? (
+                      <span className="rounded-full border border-amber-400/35 bg-amber-500/15 px-3.5 py-1.5 text-xs font-medium text-amber-100">
+                        Creator request pending
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="space-y-1.5 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-400">
+                    <p className="font-semibold text-slate-100">{user?.name}</p>
+                    <p className="break-all text-slate-300">{user?.email}</p>
+                    <p className="font-mono text-[11px] text-slate-500">ID · {user?.id}</p>
                   </div>
                 </div>
               </div>
             </div>
-          ) : null}
-          <div className="admin-toolbar">
-          <button className="btn" type="submit" disabled={saving}>
-            {saving ? 'Saving...' : 'Save Profile'}
-          </button>
-          <button className="btn" type="button" onClick={onAvatarOnlyUpdate} disabled={saving}>
-            {saving ? 'Saving...' : 'Update Photo Only'}
-          </button>
-          </div>
-        </motion.form>
+          </motion.article>
 
-        <motion.form className="page-content-card space-y-3" onSubmit={onPasswordSubmit} {...sectionMotion}>
-          <h2 className="text-lg font-semibold">Password</h2>
-          <input
-            type={showCurrentPassword ? 'text' : 'password'}
-            value={currentPassword}
-            onChange={(event) => setCurrentPassword(event.target.value)}
-            placeholder="Current password"
-            required
-          />
-          <input
-            type={showNewPassword ? 'text' : 'password'}
-            value={newPassword}
-            onChange={(event) => setNewPassword(event.target.value)}
-            placeholder="New password"
-            minLength={6}
-            required
-          />
-          <input
-            type={showNewPassword ? 'text' : 'password'}
-            value={confirmNewPassword}
-            onChange={(event) => setConfirmNewPassword(event.target.value)}
-            placeholder="Confirm new password"
-            minLength={6}
-            required
-          />
-          <div className="admin-toolbar">
-            <button className="btn" type="button" onClick={() => setShowCurrentPassword((prev) => !prev)}>
-              {showCurrentPassword ? 'Hide Current Password' : 'Show Current Password'}
-            </button>
-            <button className="btn" type="button" onClick={() => setShowNewPassword((prev) => !prev)}>
-              {showNewPassword ? 'Hide New Password' : 'Show New Password'}
-            </button>
-          </div>
-          <button className="btn" type="submit">
-            Update Password
-          </button>
-        </motion.form>
+          <motion.article className="page-content-card" {...sectionMotion}>
+            <div className="profile-section-head">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Quick actions</h2>
+                <p className="mt-1 text-xs text-slate-500">Shortcuts for support and data export.</p>
+              </div>
+            </div>
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
+              {(
+                [
+                  { label: 'Refresh', onClick: refreshMe },
+                  { label: 'Copy ID', onClick: onCopyUserId },
+                  { label: 'Copy email', onClick: onCopyEmail },
+                  { label: 'Export JSON', onClick: onDownloadProfile },
+                  { label: 'Reset form', onClick: onResetProfileForm }
+                ] as const
+              ).map((action) => (
+                <button
+                  key={action.label}
+                  type="button"
+                  className="rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2.5 text-center text-xs font-medium text-slate-200 shadow-sm shadow-black/5 transition hover:border-cyan-500/25 hover:bg-white/[0.08] hover:text-white"
+                  onClick={action.onClick}
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          </motion.article>
 
-        {!isCreator ? (
-          creatorRequestPending ? (
-            <p className="page-content-card text-sm text-amber-300">Creator request pending admin approval.</p>
+          <motion.article className="page-content-card" {...sectionMotion}>
+            <div className="profile-section-head">
+              <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-100">Activity</h2>
+                  <p className="text-sm text-slate-500">Project chat and account signals.</p>
+                </div>
+                <p className="text-xs text-slate-500 sm:text-right">
+                  {activityLoading ? 'Syncing…' : `Updated ${lastSyncedAt || '—'}`}
+                </p>
+              </div>
+            </div>
+            <div className="admin-stat-grid mt-5">
+              <div className="admin-stat-card">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Messages</p>
+                <p className="relative z-[1] mt-1 text-2xl font-semibold tabular-nums text-slate-100">{projectMessages.length}</p>
+              </div>
+              <div className="admin-stat-card">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Admin replies</p>
+                <p className="relative z-[1] mt-1 text-2xl font-semibold tabular-nums text-slate-100">{adminRepliesCount}</p>
+              </div>
+              <div className="admin-stat-card">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Tenure</p>
+                <p className="relative z-[1] mt-1 text-2xl font-semibold tabular-nums text-slate-100">{accountAgeDays}d</p>
+              </div>
+              <div className="admin-stat-card">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Joined</p>
+                <p className="relative z-[1] mt-1 text-base font-semibold text-slate-100">
+                  {joinedDate && !Number.isNaN(joinedDate.getTime()) ? joinedDate.toLocaleDateString() : '—'}
+                </p>
+              </div>
+              <div className="admin-stat-card">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">Profile</p>
+                <p className="relative z-[1] mt-1 text-2xl font-semibold tabular-nums text-slate-100">{profileScore}%</p>
+              </div>
+            </div>
+            <div className="mt-5 rounded-2xl border border-white/10 bg-linear-to-br from-white/12 to-transparent p-5 md:p-6">
+              {activityLoading ? (
+                <p className="text-sm text-slate-500">Loading activity…</p>
+              ) : lastMessage ? (
+                <div className="border-l-2 border-cyan-400/50 pl-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">Latest project message</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-200">{lastMessage.message}</p>
+                  <p className="mt-3 text-xs text-slate-500">
+                    {lastMessage.senderRole} ·{' '}
+                    {lastMessage.createdAt ? new Date(lastMessage.createdAt).toLocaleString() : '—'}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500">No project messages yet — start a thread from project chat.</p>
+              )}
+            </div>
+            <div className="mt-4">
+              <Link className="btn inline-flex text-sm" href="/project-chat">
+                Open project chat
+              </Link>
+            </div>
+          </motion.article>
+
+          <motion.form className="page-content-card space-y-5" onSubmit={onProfileSubmit} {...sectionMotion}>
+            <div className="profile-section-head">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-100">Profile details</h2>
+                <p className="mt-1 text-sm text-slate-500">Name, email, and photo apply across the product.</p>
+              </div>
+            </div>
+            <div>
+              <label className="form-label-premium" htmlFor="profile-name">
+                Display name
+              </label>
+              <input id="profile-name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" required />
+            </div>
+            <div>
+              <label className="form-label-premium" htmlFor="profile-email">
+                Email
+              </label>
+              <input
+                id="profile-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@company.com"
+                required
+              />
+            </div>
+            <div>
+              <span className="form-label-premium">Profile photo</span>
+              <label className="profile-upload-label mt-2 inline-flex">
+                <input className="sr-only" type="file" accept="image/*" onChange={onAvatarChange} />
+                Choose image · JPG / PNG · max 5MB
+              </label>
+            </div>
+            {photoEditorSource ? (
+              <div className="rounded-2xl border border-white/12 bg-white/[0.04] p-5 ring-1 ring-white/5">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">Photo fit</p>
+                <p className="mt-1 text-xs text-slate-500">Adjust zoom and position, then apply fit before saving.</p>
+                <div className="mt-4 flex flex-wrap gap-6">
+                  <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full border border-white/20 bg-black/40">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photoEditorSource}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      style={{
+                        transform: `translate(${photoOffsetX * 0.4}%, ${photoOffsetY * 0.4}%) scale(${photoZoom})`,
+                        transformOrigin: 'center'
+                      }}
+                    />
+                  </div>
+                  <div className="min-w-[220px] flex-1 space-y-4">
+                    <label className="block text-xs text-slate-400">
+                      Zoom ({photoZoom.toFixed(2)}×)
+                      <input
+                        type="range"
+                        min="1"
+                        max="3"
+                        step="0.05"
+                        value={photoZoom}
+                        onChange={(event) => setPhotoZoom(Number(event.target.value))}
+                        className="mt-1 w-full accent-cyan-500"
+                      />
+                    </label>
+                    <label className="block text-xs text-slate-400">
+                      Horizontal ({photoOffsetX})
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={photoOffsetX}
+                        onChange={(event) => setPhotoOffsetX(Number(event.target.value))}
+                        className="mt-1 w-full accent-cyan-500"
+                      />
+                    </label>
+                    <label className="block text-xs text-slate-400">
+                      Vertical ({photoOffsetY})
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={photoOffsetY}
+                        onChange={(event) => setPhotoOffsetY(Number(event.target.value))}
+                        className="mt-1 w-full accent-cyan-500"
+                      />
+                    </label>
+                    <div className="admin-toolbar">
+                      <button className="btn text-sm" type="button" onClick={onApplyPhotoFit} disabled={isApplyingPhotoFit}>
+                        {isApplyingPhotoFit ? 'Applying…' : 'Apply fit'}
+                      </button>
+                      <button className="btn-secondary text-sm" type="button" onClick={onResetPhotoFit}>
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            <div className="admin-toolbar border-t border-white/10 pt-5">
+              <button className="btn" type="submit" disabled={saving}>
+                {saving ? 'Saving…' : 'Save profile'}
+              </button>
+              <button className="btn-secondary" type="button" onClick={onAvatarOnlyUpdate} disabled={saving}>
+                {saving ? 'Saving…' : 'Save photo only'}
+              </button>
+            </div>
+          </motion.form>
+
+          <motion.form className="page-content-card space-y-5 ring-1 ring-white/[0.04]" onSubmit={onPasswordSubmit} {...sectionMotion}>
+            <div className="profile-section-head">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-100">Password</h2>
+                <p className="mt-1 text-sm text-slate-500">Use at least six characters for your new password.</p>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="form-label-premium" htmlFor="pw-current">
+                  Current password
+                </label>
+                <input
+                  id="pw-current"
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(event) => setCurrentPassword(event.target.value)}
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              <div>
+                <label className="form-label-premium" htmlFor="pw-new">
+                  New password
+                </label>
+                <input
+                  id="pw-new"
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(event) => setNewPassword(event.target.value)}
+                  placeholder="Min. 6 characters"
+                  minLength={6}
+                  required
+                />
+              </div>
+              <div>
+                <label className="form-label-premium" htmlFor="pw-confirm">
+                  Confirm new password
+                </label>
+                <input
+                  id="pw-confirm"
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={confirmNewPassword}
+                  onChange={(event) => setConfirmNewPassword(event.target.value)}
+                  placeholder="Repeat password"
+                  minLength={6}
+                  required
+                />
+              </div>
+            </div>
+            <div className="admin-toolbar">
+              <button className="btn-secondary text-sm" type="button" onClick={() => setShowCurrentPassword((prev) => !prev)}>
+                {showCurrentPassword ? 'Hide current' : 'Show current'}
+              </button>
+              <button className="btn-secondary text-sm" type="button" onClick={() => setShowNewPassword((prev) => !prev)}>
+                {showNewPassword ? 'Hide new' : 'Show new'}
+              </button>
+            </div>
+            <button className="btn" type="submit">
+              Update password
+            </button>
+          </motion.form>
+
+          {!isCreator ? (
+            creatorRequestPending ? (
+              <div className="page-content-card border-amber-400/25 bg-amber-500/[0.07] text-sm text-amber-100">
+                Creator request is pending admin approval. You will gain studio access once it is approved.
+              </div>
+            ) : (
+              <div className="page-content-card flex flex-col gap-4 border border-cyan-500/15 bg-linear-to-br from-cyan-500/[0.07] to-transparent sm:flex-row sm:items-center sm:justify-between">
+                <div className="profile-section-head min-w-0 flex-1">
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-100">Creator program</h2>
+                    <p className="mt-1 text-sm text-slate-500">Publish content and manage posts in Creator Studio.</p>
+                  </div>
+                </div>
+                <button className="btn shrink-0" type="button" onClick={onCreatorRequest}>
+                  Request creator role
+                </button>
+              </div>
+            )
           ) : (
-            <button className="btn" type="button" onClick={onCreatorRequest}>
-              Request Creator Role
+            <div className="page-content-card border border-emerald-500/15 bg-linear-to-br from-emerald-500/[0.06] to-transparent">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-400/90">Creator</h2>
+              <div className="admin-toolbar mt-4">
+                <Link className="btn" href="/creator/studio">
+                  Creator Studio
+                </Link>
+                <Link className="btn-secondary" href="/creator-feed">
+                  Creator feed
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {(isAdmin || isEmployee) ? (
+            <div className="page-content-card space-y-4 border border-indigo-500/15 bg-linear-to-br from-indigo-500/[0.06] to-transparent">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-300/90">Workspace access</h2>
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                {isAdmin ? (
+                  <Link className="btn inline-flex flex-1 justify-center sm:flex-none" href="/admin/dashboard">
+                    Admin dashboard
+                  </Link>
+                ) : null}
+                {isEmployee ? (
+                  <Link className="btn inline-flex flex-1 justify-center sm:flex-none" href="/employee/tasks">
+                    Employee tasks
+                  </Link>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="page-content-card flex flex-col gap-4 border border-red-500/25 bg-linear-to-br from-red-500/[0.08] to-transparent sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-200">Sign out on this device</p>
+              <p className="text-xs text-slate-500">You will need to sign in again to access your account.</p>
+            </div>
+            <button
+              className="btn shrink-0 border border-red-400/35 bg-red-500/15 text-red-100 hover:bg-red-500/25"
+              type="button"
+              onClick={logout}
+            >
+              Log out
             </button>
-          )
-        ) : (
-          <div className="admin-toolbar">
-            <Link className="btn" href="/creator/studio">
-              Open Creator Studio
-            </Link>
-            <Link className="btn" href="/creator-feed">
-              Open Creator Feed
-            </Link>
           </div>
-        )}
-
-        <div className="text-sm text-slate-300 page-content-card">
-          {isAdmin ? <p>Admin access enabled.</p> : null}
-          {isAdmin ? <Link className="btn inline-block" href="/admin/dashboard">Open Admin Dashboard</Link> : null}
-          {isEmployee ? <p>Employee access enabled.</p> : null}
-          {isEmployee ? <Link className="btn inline-block" href="/employee/tasks">Open Employee Tasks</Link> : null}
-        </div>
-
-        <button className="btn" type="button" onClick={logout}>
-          Logout
-        </button>
-        {status ? <p className="text-emerald-400">{status}</p> : null}
-        {error ? <p className="text-red-400">{error}</p> : null}
-      </section>
+        </section>
       </main>
     </ProtectedPage>
   );

@@ -7,7 +7,13 @@ import type { PublicJob, JobApplicationRow } from '@/lib/clientApi';
 import { fetchPublishedJobsClient, fetchMyJobApplications, markJobApplicationRead } from '@/lib/clientApi';
 import { useAuth } from '@/context/AuthContext';
 import { formatApplicationStatus, formatInterviewRound } from './interviewLabels';
-import { formatEmployment, formatWorkMode } from './jobLabels';
+import {
+  formatApplicationDeadline,
+  formatEmployment,
+  formatExperienceLevel,
+  formatWorkMode,
+  jobCardTeaser
+} from './jobLabels';
 
 type Props = {
   initialJobs: PublicJob[];
@@ -65,37 +71,39 @@ export default function CareersPageClient({ initialJobs }: Props) {
 
   return (
     <main className="app-page-shell">
-      <section className="page-hero-shell space-y-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Careers</p>
-        <h1 className="section-title text-3xl font-extrabold md:text-5xl">Build with us</h1>
-        <p className="max-w-2xl text-slate-300">
-          Explore open roles across design, engineering, and operations. Sign in to apply and track your submissions in
-          one place.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Link href="/" className="btn-secondary inline-flex">
-            Back to home
-          </Link>
-          {!isAuthenticated ? (
-            <Link href="/login" className="btn inline-flex">
-              Sign in to apply
+      <section className="premium-page-hero relative space-y-4 px-6 py-10 md:px-10">
+        <div className="relative z-[1] space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Careers</p>
+          <h1 className="section-title text-3xl font-extrabold md:text-5xl">Build with us</h1>
+          <p className="max-w-2xl text-slate-300">
+            Explore open roles across design, engineering, and operations. Sign in to apply and track your applications
+            in one place.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Link href="/" className="btn-secondary inline-flex">
+              Back to home
             </Link>
-          ) : null}
+            {!isAuthenticated ? (
+              <Link href="/login" className="btn inline-flex">
+                Sign in to apply
+              </Link>
+            ) : null}
+          </div>
         </div>
       </section>
 
-      <section className="mt-10 space-y-6">
+      <section className="mt-12 space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-xl font-bold text-slate-100">Open positions</h2>
-            <p className="text-sm text-slate-400">Filter by team category.</p>
+            <p className="text-sm text-slate-400">Featured roles first · filter by category.</p>
           </div>
           <label className="flex flex-col gap-1 text-sm text-slate-300">
             <span className="text-xs uppercase tracking-[0.2em] text-slate-500">Category</span>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-2.5 text-slate-100 outline-none focus:border-[var(--primary)]"
+              className="min-w-[200px] rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-2.5 text-slate-100 outline-none focus:border-[var(--primary)]"
             >
               <option value="">All categories</option>
               {categories.map((c) => (
@@ -110,30 +118,58 @@ export default function CareersPageClient({ initialJobs }: Props) {
         {loading ? <p className="text-slate-400">Refreshing listings…</p> : null}
 
         <div className="grid gap-5 md:grid-cols-2">
-          {jobs.map((job, index) => (
+          {jobs.map((job, index) => {
+            const deadline = formatApplicationDeadline(job.applicationDeadline);
+            const featured = job.featured === true;
+            return (
             <motion.article
               key={job.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.04 }}
-              className="careers-card group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-transparent p-6 shadow-[0_18px_60px_rgba(15,23,42,0.35)]"
+              className={`careers-card group relative overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.08] to-transparent p-6 shadow-[0_18px_60px_rgba(15,23,42,0.35)] ${
+                featured
+                  ? 'border-amber-400/35 ring-1 ring-amber-400/20'
+                  : 'border-white/10'
+              }`}
             >
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-indigo-500/10 opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="relative flex flex-col gap-3">
                 <div className="flex flex-wrap items-center gap-2">
+                  {featured ? (
+                    <span className="rounded-full bg-amber-500/25 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-100">
+                      Featured
+                    </span>
+                  ) : null}
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-200">{job.category}</span>
+                  {job.department ? (
+                    <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">{job.department}</span>
+                  ) : null}
                   <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
                     {formatEmployment(job.employmentType)}
                   </span>
                   <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
                     {formatWorkMode(job.workMode)}
                   </span>
+                  <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-xs text-indigo-100">
+                    {formatExperienceLevel(job.experienceLevel || 'any')}
+                  </span>
                 </div>
                 <h3 className="text-xl font-bold text-slate-50">{job.title}</h3>
-                <p className="line-clamp-3 text-sm text-slate-300">{job.description}</p>
-                <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-400">
+                <p className="line-clamp-3 text-sm leading-relaxed text-slate-300">{jobCardTeaser(job)}</p>
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
                   {job.location ? <span>{job.location}</span> : null}
-                  {job.salaryHint ? <span className="text-slate-300">· {job.salaryHint}</span> : null}
+                  {job.salaryHint ? <span className="text-slate-300">{job.salaryHint}</span> : null}
+                  {deadline ? (
+                    <span
+                      className={
+                        deadline.past ? 'text-rose-300/90' : 'text-emerald-300/90'
+                      }
+                    >
+                      {deadline.past ? 'Closed ' : 'Apply by '}
+                      {deadline.label}
+                    </span>
+                  ) : null}
                 </div>
                 <Link
                   href={`/careers/${job.id}`}
@@ -143,7 +179,7 @@ export default function CareersPageClient({ initialJobs }: Props) {
                 </Link>
               </div>
             </motion.article>
-          ))}
+          );})}
         </div>
 
         {!loading && jobs.length === 0 ? (

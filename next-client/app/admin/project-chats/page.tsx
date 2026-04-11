@@ -147,7 +147,7 @@ export default function AdminProjectChatsPage() {
     <ProtectedPage requireAdmin>
       <main className="app-page-shell">
         <section className="admin-shell">
-          <article className="page-hero-shell space-y-3">
+          <article className="premium-page-hero space-y-3">
             <h1 className="section-title text-3xl font-extrabold md:text-5xl">Admin Project Chats</h1>
             <p className="text-sm text-slate-300">Read user messages and send direct replies from one place.</p>
             <div className="admin-toolbar">

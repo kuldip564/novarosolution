@@ -27,7 +27,7 @@ function FeedSkeleton() {
     <SkeletonTheme baseColor="#1e293b" highlightColor="#334155">
       <div className="grid gap-4 md:grid-cols-3" aria-hidden>
         {[1, 2, 3].map((key) => (
-          <div key={key} className="card">
+          <div key={key} className="page-content-card">
             <Skeleton height={160} borderRadius={8} />
             <div className="mt-3">
               <Skeleton height={16} width="70%" />
@@ -64,7 +64,7 @@ export default function CreatorFeedPreview() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.35, delay: index * 0.08 }}
           whileHover={reduceMotion ? undefined : { y: -3 }}
-          className="card overflow-hidden"
+          className="page-content-card overflow-hidden"
         >
           {item.mediaUrl ? (
             <div className="overflow-hidden rounded-md">

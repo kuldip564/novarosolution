@@ -33,9 +33,6 @@ const CreatorFeedPreview = lazy(() => import('./CreatorFeedPreview'));
 const FuturisticThreeHero = dynamic(() => import('./FuturisticThreeHero'), {
   ssr: false
 });
-const FuturisticThreePanel = dynamic(() => import('@/components/shared/FuturisticThreePanel'), {
-  ssr: false
-});
 
 const defaultStats = [
   { label: 'Projects Delivered', value: '500+', iconKey: 'projects' },
@@ -59,11 +56,6 @@ const defaultFeatures = [
     title: 'Clear communication',
     description: 'You get clear updates, timelines, and direct communication with our team.',
     iconKey: 'communication'
-  },
-  {
-    title: 'Flexible pricing',
-    description: 'Choose a service plan that matches your budget and growth stage.',
-    iconKey: 'value'
   }
 ];
 
@@ -537,7 +529,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
         >
-          <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-2xl">
+          <div className="page-content-card mx-auto max-w-3xl shadow-2xl shadow-black/40">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">Contact Us for {selectedService}</h3>
               <button type="button" onClick={() => setSelectedService('')} className="rounded-lg px-2 py-1 hover:bg-white/10">x</button>
@@ -564,7 +556,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
           </h2>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature: AnyRecord, index: number) => {
               const FeatureIcon =
                 FEATURE_ICON_BY_KEY[String(feature.iconKey || '').toLowerCase()] || FaRocket;
@@ -588,29 +580,6 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             })}
           </div>
         </div>
-        </section>
-      </Reveal>
-
-      <Reveal>
-        <section className="w-full px-4 py-16 md:py-20">
-          <div className="mx-auto max-w-6xl future-stack-card">
-            <div className="future-stack-copy">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Future Stack Engine</p>
-              <h2 className="mt-2 text-3xl md:text-5xl font-bold">Immersive product experience layer</h2>
-              <p className="mt-3 text-slate-300">
-                We combine modern engineering with interactive visuals to make products feel alive, fast, and futuristic.
-                Use the live controls to pause, speed up, reset, or toggle pointer interaction.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">3D Interaction</span>
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Scroll Reactive Motion</span>
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Performance First</span>
-              </div>
-            </div>
-            <div className="future-stack-visual">
-              <FuturisticThreePanel />
-            </div>
-          </div>
         </section>
       </Reveal>
 
@@ -660,8 +629,12 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           <h2 className="text-3xl md:text-5xl font-bold">{data?.cta?.title || 'Ready to ship your next product?'}</h2>
           <p className="mt-3 text-slate-300">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/#contact-form" className="btn px-8 py-3">Start a Project</Link>
-            <Link href="/#contact-form" className="btn px-8 py-3">Schedule a Call</Link>
+            <Link href="/#contact-form" className="btn px-8 py-3">
+              {data?.cta?.primaryLabel || 'Start a project'}
+            </Link>
+            <Link href="/contact" className="btn-secondary px-8 py-3">
+              {data?.cta?.secondaryLabel || 'Contact'}
+            </Link>
           </div>
         </div>
         </section>
@@ -718,7 +691,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
         <div className="mx-auto max-w-6xl">
           <h2 className="text-2xl md:text-3xl font-bold">Latest Creator Feed</h2>
           <p className="mt-2 mb-4 text-sm text-slate-400">Client-cached updates powered by React Query.</p>
-          <Suspense fallback={<div className="card">Loading latest feed...</div>}>
+          <Suspense
+            fallback={
+              <div className="page-content-card py-10 text-center text-sm text-slate-500">Loading latest feed…</div>
+            }
+          >
             <CreatorFeedPreview />
           </Suspense>
         </div>

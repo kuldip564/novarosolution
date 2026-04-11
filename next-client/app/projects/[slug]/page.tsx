@@ -58,28 +58,35 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   };
 
   return (
-    <article className="card space-y-4">
+    <>
       <SEO
         title={`${project.title} | Project`}
         description={project.description}
         canonical={canonical}
         schema={schema}
       />
-      <h1 className="text-3xl font-extrabold md:text-5xl">{project.title}</h1>
-      <p className="text-slate-300">{project.description}</p>
-      <div className="overflow-hidden rounded-xl">
-        <Image
-          src={
-            project.imageUrl ||
-            'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200'
-          }
-          alt={`${project.title} preview`}
-          width={900}
-          height={520}
-          className="rounded-xl object-cover transition-transform duration-500 hover:scale-105"
-          priority
-        />
+      <div className="app-page-shell space-y-6">
+        <header className="premium-page-hero space-y-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Case study</p>
+          <h1 className="section-title text-3xl font-extrabold md:text-5xl">{project.title}</h1>
+          <p className="max-w-3xl text-slate-300">{project.description}</p>
+        </header>
+        <article className="page-content-card overflow-hidden !p-0">
+          <div className="overflow-hidden rounded-[inherit]">
+            <Image
+              src={
+                project.imageUrl ||
+                'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200'
+              }
+              alt={`${project.title} preview`}
+              width={900}
+              height={520}
+              className="h-auto w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+              priority
+            />
+          </div>
+        </article>
       </div>
-    </article>
+    </>
   );
 }

@@ -28,7 +28,7 @@ const inter = Inter({
 export const metadata: Metadata = buildMetadata({
   title: 'NovaRo Solution | Scalable Tech Solutions for Modern Businesses',
   description:
-    'NovaRo Solution is a company that helps build good websites and digital products. They are good at making things with Next.js. Can also make special apps for phones. NovaRo Solution also does a thing called UI/UX design for companies. This means they make sure things look good and work well. If you have an idea you want to make real you can work with the people, at NovaRo Solution. They will help you make it happen and make sure it is safe and works well. NovaRo Solution can help you with your project.',
+    'NovaRo Solution is a product engineering and design studio. We ship UI/UX, web, and mobile apps with modern stacks—Next.js, performance, and SEO in mind.',
   keywords: [
     'ui ux design',
     'web development company',
@@ -84,12 +84,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="container footer-content footer-grid">
               <div className="footer-brand">
                 <p className="footer-title">Novaro Solution</p>
-                <small>Design-forward web, mobile, and product engineering.</small>
+                <small>Web, mobile, and product engineering.</small>
               </div>
               <FooterNavLinks />
               <div className="footer-meta">
-                <small>{new Date().getFullYear()} Novaro Solution</small>
-                <small>Built for performance and SEO.</small>
+                <small>© {new Date().getFullYear()} Novaro Solution</small>
               </div>
             </div>
           </footer>

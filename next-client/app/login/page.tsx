@@ -37,36 +37,50 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="app-page-shell space-y-4">
-    <section className="page-hero-shell space-y-4">
-      <h1 className="section-title text-3xl font-extrabold md:text-5xl">Login</h1>
-      <p className="text-slate-300">Sign in to continue.</p>
-      <form className="page-content-card space-y-3" onSubmit={onSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="Email"
-          autoComplete="email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="Password"
-          autoComplete="current-password"
-          required
-        />
-        {error ? <p className="text-sm text-red-400">{error}</p> : null}
+    <main className="app-page-shell flex min-h-[60vh] flex-col items-center justify-center px-4 py-8">
+      <section className="premium-auth-panel w-full max-w-md space-y-5">
+      <div>
+        <h1 className="section-title text-2xl font-extrabold md:text-4xl">Sign in</h1>
+        <p className="mt-1 text-sm text-slate-400">Use your account to continue.</p>
+      </div>
+      <form className="space-y-4" onSubmit={onSubmit}>
+        <div>
+          <label className="form-label-premium" htmlFor="login-email">
+            Email
+          </label>
+          <input
+            id="login-email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@company.com"
+            autoComplete="email"
+            required
+          />
+        </div>
+        <div>
+          <label className="form-label-premium" htmlFor="login-password">
+            Password
+          </label>
+          <input
+            id="login-password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="••••••••"
+            autoComplete="current-password"
+            required
+          />
+        </div>
+        {error ? <p className="premium-alert premium-alert--error text-sm">{error}</p> : null}
         <button className="btn" type="submit" disabled={submitting}>
           {submitting ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
-      <p className="text-slate-300">
-        New user?{' '}
-        <Link className="text-pink-300" href="/register">
-          Create account
+      <p className="text-center text-sm text-slate-400">
+        New here?{' '}
+        <Link className="text-cyan-300/90 underline-offset-2 hover:underline" href="/register">
+          Create an account
         </Link>
       </p>
     </section>

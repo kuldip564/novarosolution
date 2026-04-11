@@ -337,7 +337,7 @@ export default function AdminEmployeeManagerPage() {
     <ProtectedPage requireAdmin>
       <main className="app-page-shell">
       <section className="admin-shell employee-workspace-shell">
-        <article className="page-hero-shell space-y-3">
+        <article className="premium-page-hero space-y-3">
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Admin Employee Workspace</h1>
         <p className="max-w-3xl text-slate-300">
           Manage employees, assign and review tasks, and monitor work analytics from one clean dashboard.
