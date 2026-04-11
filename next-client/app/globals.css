@@ -425,15 +425,24 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 
 .header-content {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  /* Brand column must not shrink below title width — prevents nav overlapping the logo/title */
+  grid-template-columns: minmax(min-content, auto) minmax(0, 1fr);
   align-items: center;
-  column-gap: 16px;
+  column-gap: clamp(14px, 2.2vw, 24px);
   border-radius: 12px;
   background: color-mix(in oklab, var(--surface) 90%, transparent);
   border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
-  padding-inline: 12px;
+  padding: 14px 16px;
   transition: background-color 220ms ease, border-color 220ms ease;
-  min-height: 62px;
+  min-height: 76px;
+  min-width: 0;
+}
+
+.header-content > .brand-block {
+  justify-self: start;
+}
+
+.header-content > .header-nav-wrap {
   min-width: 0;
 }
 
@@ -474,7 +483,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 
 .header-search-form input {
   width: 100%;
-  min-height: 34px;
+  min-height: 38px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: color-mix(in oklab, var(--surface) 92%, transparent);
@@ -541,7 +550,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   gap: 10px;
   flex: 0 0 auto;
   flex-shrink: 0;
-  min-width: 0;
+  min-width: min-content;
   position: relative;
   z-index: 2;
   text-decoration: none;
@@ -559,9 +568,9 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 
 .brand-mark {
   display: inline-flex;
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   flex-shrink: 0;
   background:
     linear-gradient(145deg, color-mix(in oklab, var(--primary) 72%, #0f172a 28%), #0f172a 92%),
@@ -582,7 +591,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 .brand-title {
   font-weight: 700;
   letter-spacing: -0.01em;
-  font-size: 1.02rem;
+  font-size: 1.08rem;
   color: var(--text);
   white-space: nowrap;
 }
@@ -607,8 +616,8 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
-  padding: 7px 12px;
+  min-height: 38px;
+  padding: 8px 12px;
   border-radius: 999px;
   overflow: hidden;
   flex-shrink: 0;
@@ -826,7 +835,11 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 }
 
 .main {
-  padding: 24px 0 56px;
+  position: relative;
+  z-index: 1;
+  padding: 28px 0 64px;
+  /* Ensures page body clears the sticky header and stays above background noise */
+  min-height: 28vh;
 }
 
 .main > * {
@@ -1715,8 +1728,9 @@ select:focus {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: clamp(1.25rem, 2.4vw, 2rem);
+  gap: clamp(1.35rem, 2.6vw, 2.35rem);
   align-items: stretch;
+  width: 100%;
 }
 
 .app-page-shell::before {
@@ -1967,11 +1981,11 @@ select:focus {
 /* Premium account / profile layout */
 .profile-shell {
   display: grid;
-  gap: var(--section-space);
+  gap: clamp(1.25rem, 2.5vw, 2.5rem);
   position: relative;
   isolation: isolate;
   width: 100%;
-  max-width: 58rem;
+  max-width: 60rem;
   margin-inline: auto;
 }
 
@@ -2031,6 +2045,27 @@ select:focus {
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
+}
+
+.profile-shell input:not([type='file']):not([type='range']):not([type='checkbox']):not([type='radio']) {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 94%, transparent);
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.profile-shell input:not([type='file']):not([type='range']):not([type='checkbox']):not([type='radio']):focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, var(--primary) 52%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 22%, transparent);
 }
 
 .profile-section-head::before {
@@ -2598,7 +2633,8 @@ select:focus {
   }
 
   .main {
-    padding: 16px 0 26px;
+    padding: 20px 0 40px;
+    min-height: 40vh;
   }
 
   main p {
@@ -2622,9 +2658,8 @@ select:focus {
 
   .header-content {
     gap: 8px;
-    padding: 6px 0;
-    min-height: 50px;
-    padding-inline: 8px;
+    padding: 10px 10px;
+    min-height: 62px;
   }
 
   .footer-grid {
@@ -2667,7 +2702,7 @@ select:focus {
   .mobile-menu-panel {
     position: absolute;
     right: 0;
-    top: 52px;
+    top: 64px;
     display: flex;
     width: min(92vw, 340px);
     padding: 12px;
@@ -2838,7 +2873,8 @@ select:focus {
   }
 
   .main {
-    padding: 12px 0 20px;
+    padding: 16px 0 32px;
+    min-height: 36vh;
   }
 
   .section-title {
@@ -2906,7 +2942,7 @@ select:focus {
   .mobile-menu-panel {
     position: absolute;
     right: 0;
-    top: 52px;
+    top: 64px;
     display: flex;
     width: min(92vw, 340px);
     padding: 12px;

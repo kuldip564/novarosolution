@@ -296,7 +296,7 @@ export default function ProfilePage() {
 
   return (
     <ProtectedPage>
-      <main className="app-page-shell">
+      <div className="app-page-shell">
         <section className="profile-shell">
           {status || error ? (
             <div className="flex flex-col gap-2">
@@ -695,7 +695,7 @@ export default function ProfilePage() {
             </button>
           </div>
         </section>
-      </main>
+      </div>
     </ProtectedPage>
   );
 }
