@@ -41,8 +41,9 @@ export default function RegisterPage() {
     <main className="app-page-shell flex min-h-[60vh] flex-col items-center justify-center px-4 py-8">
       <section className="premium-auth-panel w-full max-w-md space-y-5">
       <div>
-        <h1 className="section-title text-2xl font-extrabold md:text-4xl">Create account</h1>
-        <p className="mt-1 text-sm text-slate-400">One account for careers, chat, and tools.</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Account</p>
+        <h1 className="section-title mt-1 text-2xl font-extrabold md:text-4xl">Create account</h1>
+        <p className="mt-1 text-sm text-slate-400">One account for jobs, chat, and tools.</p>
       </div>
       <form className="space-y-4" onSubmit={onSubmit}>
         <div>

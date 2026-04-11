@@ -82,6 +82,8 @@ export async function postJobApplication(req, res) {
       linkedInUrl = '',
       portfolioUrl = '',
       resumeUrl = '',
+      additionalDocumentUrl = '',
+      additionalDocumentName = '',
       yearsExperience = '',
     } = req.body ?? {};
 
@@ -95,6 +97,8 @@ export async function postJobApplication(req, res) {
       linkedInUrl: String(linkedInUrl || '').trim(),
       portfolioUrl: String(portfolioUrl || '').trim(),
       resumeUrl: String(resumeUrl || '').trim(),
+      additionalDocumentUrl: String(additionalDocumentUrl || '').trim(),
+      additionalDocumentName: String(additionalDocumentName || '').trim(),
       yearsExperience: String(yearsExperience || '').trim(),
     });
 

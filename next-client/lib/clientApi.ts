@@ -678,6 +678,8 @@ export type JobApplicationRow = {
   linkedInUrl?: string;
   portfolioUrl?: string;
   resumeUrl?: string;
+  additionalDocumentUrl?: string;
+  additionalDocumentName?: string;
   yearsExperience?: string;
   status:
     | 'pending'
@@ -751,6 +753,16 @@ export async function fetchPublishedJobClient(jobId: string) {
   return data?.data || null;
 }
 
+export async function uploadApplicationDocument(dataUrl: string, token: string) {
+  const res = await request<{ ok?: boolean; data?: { url: string } }>('/api/me/application-documents', {
+    method: 'POST',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dataUrl })
+  });
+  return res?.data?.url || '';
+}
+
 export async function applyToJob(
   jobId: string,
   payload: {
@@ -759,6 +771,8 @@ export async function applyToJob(
     linkedInUrl?: string;
     portfolioUrl?: string;
     resumeUrl?: string;
+    additionalDocumentUrl?: string;
+    additionalDocumentName?: string;
     yearsExperience?: string;
   },
   token: string

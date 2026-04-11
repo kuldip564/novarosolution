@@ -31,7 +31,16 @@ function isSafeOptionalUrl(value) {
 }
 
 export function validateJobApplicationPayload(payload) {
-  const { phone, coverLetter, linkedInUrl, portfolioUrl, resumeUrl, yearsExperience } = payload ?? {};
+  const {
+    phone,
+    coverLetter,
+    linkedInUrl,
+    portfolioUrl,
+    resumeUrl,
+    additionalDocumentUrl,
+    additionalDocumentName,
+    yearsExperience,
+  } = payload ?? {};
 
   if (!coverLetter || String(coverLetter).trim().length < 20) {
     return 'Cover letter must be at least 20 characters.';
@@ -57,6 +66,21 @@ export function validateJobApplicationPayload(payload) {
   }
   if (!isSafeOptionalUrl(resumeUrl)) {
     return 'Resume URL must be a valid http(s) link.';
+  }
+  if (!isSafeOptionalUrl(additionalDocumentUrl)) {
+    return 'Additional document URL must be a valid http(s) link.';
+  }
+  if (
+    additionalDocumentName !== undefined &&
+    additionalDocumentName !== null &&
+    String(additionalDocumentName).length > 200
+  ) {
+    return 'Additional document name is too long.';
+  }
+
+  const resume = String(resumeUrl || '').trim();
+  if (!resume) {
+    return 'Please upload a resume (PDF or Word) or paste a link to your resume.';
   }
 
   return '';

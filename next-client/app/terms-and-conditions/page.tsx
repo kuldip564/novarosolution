@@ -69,6 +69,7 @@ export default async function TermsAndConditionsPage() {
     return (
       <main className="app-page-shell">
         <section className="premium-page-hero space-y-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Legal</p>
           <h1 className="section-title text-3xl font-extrabold md:text-5xl">
             {String(managed?.title || 'Terms and Conditions')}
           </h1>
@@ -87,6 +88,7 @@ export default async function TermsAndConditionsPage() {
   return (
     <main className="app-page-shell">
       <section className="premium-page-hero space-y-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Legal</p>
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Terms and Conditions</h1>
         <p className="text-slate-300">Last updated: March 2026</p>
       </section>

@@ -13,6 +13,8 @@ import HeaderNav from '@/components/layout/HeaderNav';
 import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
 import FooterNavLinks from '@/components/layout/FooterNavLinks';
 import CookieConsentBanner from '@/components/compliance/CookieConsentBanner';
+import { fetchSiteContent } from '@/lib/api';
+import { normalizeSiteChrome } from '@/lib/siteChrome';
 
 const SiteEnhancements = dynamic(() => import('@/components/layout/SiteEnhancements'));
 
@@ -42,7 +44,15 @@ export const metadata: Metadata = buildMetadata({
   }
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  let siteChrome = normalizeSiteChrome(undefined);
+  try {
+    const content = await fetchSiteContent({ revalidate: 120 });
+    siteChrome = normalizeSiteChrome((content as Record<string, unknown>)?.siteChrome);
+  } catch {
+    /* API unavailable at build or offline — defaults from normalizeSiteChrome */
+  }
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -72,8 +82,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AnnouncementBanner />
           <header className="header">
             <div className="container header-content">
-              <Link href="/" className="brand-title">Novaro Solution</Link>
-              <HeaderNav />
+              <Link href="/" className="brand-block">
+                <span className="brand-mark" aria-hidden="true" />
+                <span className="brand-text">
+                  <span className="brand-title">{siteChrome.brandName}</span>
+                  <span className="brand-subtitle">{siteChrome.brandSubtitle}</span>
+                </span>
+              </Link>
+              <HeaderNav chrome={siteChrome} />
             </div>
           </header>
           <main className="main container">
@@ -83,12 +99,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <footer className="footer">
             <div className="container footer-content footer-grid">
               <div className="footer-brand">
-                <p className="footer-title">Novaro Solution</p>
-                <small>Web, mobile, and product engineering.</small>
+                <p className="footer-title">{siteChrome.brandName}</p>
+                <small>{siteChrome.footerTagline}</small>
               </div>
-              <FooterNavLinks />
+              <FooterNavLinks chrome={siteChrome} />
               <div className="footer-meta">
-                <small>© {new Date().getFullYear()} Novaro Solution</small>
+                <small>
+                  © {new Date().getFullYear()} {siteChrome.copyrightName}
+                </small>
               </div>
             </div>
           </footer>

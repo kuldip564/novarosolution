@@ -459,7 +459,7 @@ export default function AdminDashboardPage() {
               />
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-7">
                 <article className="admin-list-card space-y-2">
-                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Careers</p>
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Jobs</p>
                   <p className="text-2xl font-semibold">{overview.totalJobApplications}</p>
                   <p className="text-xs text-slate-400">Open roles: {overview.totalJobs}</p>
                   <Link className="admin-btn inline-flex w-fit" href="/admin/job-manager">Open Job Manager</Link>

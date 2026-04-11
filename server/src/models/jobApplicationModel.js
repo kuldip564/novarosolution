@@ -40,6 +40,9 @@ const jobApplicationSchema = new mongoose.Schema(
     linkedInUrl: { type: String, default: '', trim: true },
     portfolioUrl: { type: String, default: '', trim: true },
     resumeUrl: { type: String, default: '', trim: true },
+    /** Optional second file (e.g. portfolio PDF, certificate). */
+    additionalDocumentUrl: { type: String, default: '', trim: true },
+    additionalDocumentName: { type: String, default: '', trim: true },
     yearsExperience: { type: String, default: '', trim: true },
     status: {
       type: String,
@@ -103,6 +106,8 @@ function mapApp(doc, extras = {}) {
     linkedInUrl: row.linkedInUrl || '',
     portfolioUrl: row.portfolioUrl || '',
     resumeUrl: row.resumeUrl || '',
+    additionalDocumentUrl: row.additionalDocumentUrl || '',
+    additionalDocumentName: row.additionalDocumentName || '',
     yearsExperience: row.yearsExperience || '',
     status: row.status,
     interviewRound: row.interviewRound || 'none',

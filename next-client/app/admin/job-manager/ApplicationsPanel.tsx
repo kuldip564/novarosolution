@@ -385,6 +385,16 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
                     Resume
                   </a>
                 ) : null}
+                {safeHttpUrl(app.additionalDocumentUrl || '') ? (
+                  <a
+                    href={safeHttpUrl(app.additionalDocumentUrl || '')}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-300 hover:bg-white/15"
+                  >
+                    {app.additionalDocumentName?.trim() || 'Extra document'}
+                  </a>
+                ) : null}
               </div>
             </div>
 
@@ -403,7 +413,7 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
 
             <div>
               <p className="text-sm font-semibold text-slate-200">Messages to candidate</p>
-              <p className="text-xs text-slate-500">These appear on their Careers page and job application view.</p>
+              <p className="text-xs text-slate-500">These appear on their Jobs page and job application view.</p>
               <div className="mt-3 max-h-48 space-y-3 overflow-y-auto rounded-xl border border-white/10 bg-black/25 p-3">
                 {(app.applicantMessages || []).length === 0 ? (
                   <p className="text-sm text-slate-500">No messages yet.</p>

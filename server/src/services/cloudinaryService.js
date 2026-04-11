@@ -52,6 +52,34 @@ export async function uploadImageDataUrl(dataUrl, { folder = 'novarosolution/upl
   return result.secure_url;
 }
 
+const APPLICATION_DOC_DATA_URL =
+  /^data:(application\/pdf|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document);base64,/i;
+
+/** PDF or Word (.doc, .docx) for job applications — uploaded as raw assets on Cloudinary. */
+export function isApplicationDocumentDataUrl(value) {
+  if (typeof value !== 'string') return false;
+  if (!APPLICATION_DOC_DATA_URL.test(value)) return false;
+  if (value.length > 14_000_000) return false;
+  return true;
+}
+
+export async function uploadApplicationDocumentDataUrl(
+  dataUrl,
+  { folder = 'novarosolution/job-documents', publicIdPrefix = 'doc' } = {},
+) {
+  if (!isApplicationDocumentDataUrl(dataUrl)) {
+    throw new Error('Invalid document. Use PDF or Word (.doc, .docx), max ~10MB.');
+  }
+  ensureConfigured();
+  const publicId = `${publicIdPrefix}-${Date.now()}`;
+  const result = await cloudinary.uploader.upload(dataUrl, {
+    folder,
+    public_id: publicId,
+    resource_type: 'raw',
+  });
+  return result.secure_url;
+}
+
 export async function uploadMediaDataUrl(
   dataUrl,
   { folder = 'novarosolution/uploads', publicIdPrefix = 'media' } = {},

@@ -166,12 +166,46 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   border-radius: 16px;
   animation: navEnter 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
   transition: box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--primary) 55%, transparent),
+    color-mix(in oklab, #22d3ee 40%, transparent),
+    transparent
+  );
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 .footer {
+  position: relative;
   margin: 36px auto 12px;
   width: min(1200px, 95%);
   border-radius: 16px;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--border) 80%, var(--primary) 20%),
+    transparent
+  );
+  pointer-events: none;
 }
 
 .footer-content {
@@ -183,6 +217,27 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   grid-template-columns: 1.2fr 1.4fr 0.8fr;
   gap: 18px;
   padding: 18px 0;
+}
+
+.footer-brand {
+  position: relative;
+  padding: 0.35rem 0.5rem 0.35rem 0.85rem;
+}
+
+.footer-brand::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--primary) 70%, transparent),
+    color-mix(in oklab, #22d3ee 55%, transparent)
+  );
+  opacity: 0.75;
 }
 
 .footer-brand small,
@@ -463,13 +518,68 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   flex-shrink: 0;
 }
 
+.brand-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  padding: 4px 6px 4px 4px;
+  margin: -4px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.brand-block:hover {
+  background: color-mix(in oklab, var(--surface-strong) 88%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--border) 70%, transparent);
+}
+
+.brand-mark {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  flex-shrink: 0;
+  background:
+    linear-gradient(145deg, color-mix(in oklab, var(--primary) 72%, #0f172a 28%), #0f172a 92%),
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.35), transparent 52%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 22px rgba(15, 23, 42, 0.22);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.15;
+}
+
 .brand-title {
   font-weight: 700;
   letter-spacing: -0.01em;
   font-size: 1.02rem;
   color: var(--text);
   white-space: nowrap;
-  flex: 0 0 auto;
+}
+
+.brand-subtitle {
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--muted) 92%, #ffffff 8%);
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .brand-subtitle {
+    display: none;
+  }
 }
 
 .nav-link {
@@ -701,12 +811,6 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 
 .main > * {
   animation: sectionFade 340ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.app-page-shell > section + section,
-.app-page-shell > div + section,
-.app-page-shell > section + div {
-  margin-top: clamp(1.35rem, 2.4vw, 2.25rem);
 }
 
 .route-transition-wrap {
@@ -1589,6 +1693,10 @@ select:focus {
 
 .app-page-shell {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  align-items: stretch;
 }
 
 .app-page-shell::before {
@@ -2696,12 +2804,6 @@ select:focus {
   .page-hero-shell:hover {
     transform: none;
     box-shadow: 0 10px 18px rgba(2, 6, 23, 0.14);
-  }
-
-  .app-page-shell > section + section,
-  .app-page-shell > div + section,
-  .app-page-shell > section + div {
-    margin-top: 0.85rem;
   }
 
   .btn {

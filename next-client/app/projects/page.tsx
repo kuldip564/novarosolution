@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <main className="app-page-shell space-y-6">
+    <main className="app-page-shell">
       <section className="premium-page-hero space-y-3">
         <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Case studies</p>
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Projects</h1>

@@ -266,7 +266,7 @@ export default function AdminJobManagerPage() {
                         list="category-suggestions"
                         value={jobForm.category}
                         onChange={(e) => setJobForm((f) => ({ ...f, category: e.target.value }))}
-                        placeholder="Shown on careers filter"
+                        placeholder="Shown on jobs filter"
                       />
                       <datalist id="category-suggestions">
                         {CATEGORY_SUGGESTIONS.map((c) => (
@@ -296,7 +296,7 @@ export default function AdminJobManagerPage() {
                       className={`${inputClass} min-h-[72px] resize-y`}
                       value={jobForm.summary}
                       onChange={(e) => setJobForm((f) => ({ ...f, summary: e.target.value }))}
-                      placeholder="2–3 sentences for the careers grid. If empty, the first lines of the description are used."
+                      placeholder="2–3 sentences for the jobs grid. If empty, the first lines of the description are used."
                     />
                     <span className="text-[10px] font-normal normal-case tracking-normal text-slate-600">
                       {jobForm.summary.length}/500
@@ -453,7 +453,7 @@ export default function AdminJobManagerPage() {
                     <span>
                       <span className="font-semibold text-slate-200">Featured role</span>
                       <span className="mt-0.5 block text-xs font-normal normal-case text-slate-500">
-                        Pinned to the top of the careers page with a badge.
+                        Pinned to the top of the jobs page with a badge.
                       </span>
                     </span>
                   </label>
@@ -467,7 +467,7 @@ export default function AdminJobManagerPage() {
                     <span>
                       <span className="font-semibold text-slate-200">Published</span>
                       <span className="mt-0.5 block text-xs font-normal normal-case text-slate-500">
-                        Visible on the public careers page when enabled.
+                        Visible on the public jobs page when enabled.
                       </span>
                     </span>
                   </label>
@@ -487,7 +487,7 @@ export default function AdminJobManagerPage() {
 
               <div className="lg:sticky lg:top-24 lg:self-start">
                 <h2 className="text-lg font-bold text-slate-100">All jobs ({jobs.length})</h2>
-                <p className="mt-1 text-xs text-slate-500">Featured and higher priority sort first on careers.</p>
+                <p className="mt-1 text-xs text-slate-500">Featured and higher priority sort first on the jobs page.</p>
                 <ul className="mt-4 max-h-[70vh] space-y-3 overflow-y-auto pr-1">
                   {jobs.map((job) => (
                     <li

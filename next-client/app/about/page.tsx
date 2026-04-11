@@ -74,7 +74,7 @@ export default async function AboutPage() {
     }
   ];
   return (
-    <main className="app-page-shell space-y-6">
+    <main className="app-page-shell">
       <AboutStoryExperience
         about={about}
         team={team}

@@ -140,7 +140,7 @@ export default function ProjectChatPage() {
 
   return (
     <ProtectedPage>
-      <main className="app-page-shell space-y-6">
+      <main className="app-page-shell">
         <header className="premium-page-hero space-y-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Workspace</p>

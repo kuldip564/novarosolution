@@ -301,6 +301,47 @@ const siteContent = {
     announcementText:
       'New: Premium project strategy sessions are now available. Book your slot this week.',
   },
+  siteChrome: {
+    brandName: 'Novaro Solution',
+    brandSubtitle: 'Web · mobile · product',
+    searchPlaceholder: 'Search site…',
+    navItems: [
+      { href: '/', label: 'Home' },
+      { href: '/about', label: 'About' },
+      { href: '/services', label: 'Services' },
+      { href: '/projects', label: 'Projects' },
+      { href: '/jobs', label: 'Jobs' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/contact', label: 'Contact' },
+    ],
+    footerTagline: 'Web, mobile, and product engineering.',
+    copyrightName: 'Novaro Solution',
+    headings: {
+      explore: 'Explore',
+      workspace: 'Workspace',
+      legal: 'Legal',
+      social: 'Social',
+    },
+    exploreLinks: [
+      { href: '/', label: 'Home' },
+      { href: '/about', label: 'About' },
+      { href: '/services', label: 'Services' },
+      { href: '/projects', label: 'Projects' },
+      { href: '/jobs', label: 'Jobs' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/contact', label: 'Contact' },
+    ],
+    legalLinks: [
+      { href: '/privacy-policy', label: 'Privacy Policy' },
+      { href: '/terms-and-conditions', label: 'Terms & Conditions' },
+      { href: '/disclaimer', label: 'Disclaimer' },
+    ],
+    socialLinks: [
+      { href: 'https://www.linkedin.com', label: 'LinkedIn' },
+      { href: 'https://github.com', label: 'GitHub' },
+      { href: 'https://www.youtube.com', label: 'YouTube' },
+    ],
+  },
 };
 
 export default siteContent;

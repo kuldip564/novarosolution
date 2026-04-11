@@ -6,6 +6,12 @@ import ProtectedPage from '@/components/auth/ProtectedPage';
 import { fetchSiteContentClient, updateSiteContent } from '@/lib/clientApi';
 import { useAuth } from '@/context/AuthContext';
 import { LEGAL_DEFAULT_CONTENT } from '@/lib/legalDefaultContent';
+import {
+  linkRowsToNavItems,
+  linkRowsToSocial,
+  normalizeSiteChrome,
+  type SiteChromeHeadings
+} from '@/lib/siteChrome';
 
 type LegalDocForm = {
   title: string;
@@ -42,6 +48,35 @@ const EMPTY_EXTERNAL_OPTIONS: ExternalOptionsForm = {
   termsSourceUrl: '',
   disclaimerSourceUrl: ''
 };
+
+type ChromeFormState = {
+  brandName: string;
+  brandSubtitle: string;
+  searchPlaceholder: string;
+  footerTagline: string;
+  copyrightName: string;
+  headings: SiteChromeHeadings;
+  navItems: Array<{ href: string; label: string }>;
+  exploreLinks: Array<{ href: string; label: string }>;
+  legalLinks: Array<{ href: string; label: string }>;
+  socialLinks: Array<{ href: string; label: string }>;
+};
+
+function getChromeFormState(content: Record<string, unknown> | null | undefined): ChromeFormState {
+  const c = normalizeSiteChrome(content?.siteChrome);
+  return {
+    brandName: c.brandName,
+    brandSubtitle: c.brandSubtitle,
+    searchPlaceholder: c.searchPlaceholder,
+    footerTagline: c.footerTagline,
+    copyrightName: c.copyrightName,
+    headings: { ...c.headings },
+    navItems: c.navItems.map((x) => ({ href: x.href, label: x.label })),
+    exploreLinks: c.exploreLinks.map((x) => ({ href: x.href, label: x.label })),
+    legalLinks: c.legalLinks.map((x) => ({ href: x.href, label: x.label })),
+    socialLinks: c.socialLinks.map((x) => ({ href: x.href, label: x.label }))
+  };
+}
 
 function toWordCount(text: string) {
   return String(text || '')
@@ -101,7 +136,7 @@ export default function AdminContentManagerPage() {
   const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [mode, setMode] = useState<'json' | 'legal'>('legal');
+  const [mode, setMode] = useState<'json' | 'legal' | 'chrome'>('chrome');
   const [siteContent, setSiteContent] = useState<Record<string, any> | null>(null);
   const [jsonText, setJsonText] = useState('{}');
   const [legalForms, setLegalForms] = useState<LegalForms>({
@@ -110,6 +145,7 @@ export default function AdminContentManagerPage() {
     disclaimer: EMPTY_LEGAL_DOC
   });
   const [externalOptions, setExternalOptions] = useState<ExternalOptionsForm>(EMPTY_EXTERNAL_OPTIONS);
+  const [chromeForm, setChromeForm] = useState<ChromeFormState>(() => getChromeFormState(null));
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
 
@@ -121,6 +157,7 @@ export default function AdminContentManagerPage() {
         setJsonText(JSON.stringify(content, null, 2));
         setLegalForms(getLegalForms(content));
         setExternalOptions(getExternalOptions(content));
+        setChromeForm(getChromeFormState(content));
       } catch (err: any) {
         setError(err?.message || 'Unable to load content.');
       } finally {
@@ -143,6 +180,7 @@ export default function AdminContentManagerPage() {
       setJsonText(JSON.stringify(updated, null, 2));
       setLegalForms(getLegalForms(updated));
       setExternalOptions(getExternalOptions(updated));
+      setChromeForm(getChromeFormState(updated));
       setStatus('Content updated successfully.');
     } catch (err: any) {
       setError(err?.message || 'Invalid JSON or save failed.');
@@ -193,9 +231,53 @@ export default function AdminContentManagerPage() {
       setJsonText(JSON.stringify(updated, null, 2));
       setLegalForms(getLegalForms(updated));
       setExternalOptions(getExternalOptions(updated));
+      setChromeForm(getChromeFormState(updated));
       setStatus('Legal pages updated successfully.');
     } catch (err: any) {
       setError(err?.message || 'Unable to save legal pages.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function onSaveChrome(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!token) return;
+    if (!siteContent) return;
+    setSaving(true);
+    setStatus('');
+    setError('');
+    try {
+      const siteChrome = normalizeSiteChrome({
+        brandName: chromeForm.brandName.trim(),
+        brandSubtitle: chromeForm.brandSubtitle.trim(),
+        searchPlaceholder: chromeForm.searchPlaceholder.trim(),
+        footerTagline: chromeForm.footerTagline.trim(),
+        copyrightName: chromeForm.copyrightName.trim(),
+        headings: {
+          explore: chromeForm.headings.explore.trim(),
+          workspace: chromeForm.headings.workspace.trim(),
+          legal: chromeForm.headings.legal.trim(),
+          social: chromeForm.headings.social.trim()
+        },
+        navItems: linkRowsToNavItems(chromeForm.navItems),
+        exploreLinks: linkRowsToNavItems(chromeForm.exploreLinks),
+        legalLinks: linkRowsToNavItems(chromeForm.legalLinks),
+        socialLinks: linkRowsToSocial(chromeForm.socialLinks)
+      });
+      const payload = {
+        ...siteContent,
+        siteChrome
+      };
+      const updated = await updateSiteContent(payload, token);
+      setSiteContent(updated);
+      setJsonText(JSON.stringify(updated, null, 2));
+      setChromeForm(getChromeFormState(updated));
+      setLegalForms(getLegalForms(updated));
+      setExternalOptions(getExternalOptions(updated));
+      setStatus('Header and footer content saved. Refresh the site to see changes.');
+    } catch (err: any) {
+      setError(err?.message || 'Unable to save header and footer content.');
     } finally {
       setSaving(false);
     }
@@ -207,17 +289,334 @@ export default function AdminContentManagerPage() {
       <section className="admin-shell">
         <article className="premium-page-hero space-y-3">
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">Admin Content Manager</h1>
-        <p className="text-slate-300">Manage full site content JSON and legal pages stored in database.</p>
+        <p className="text-slate-300">
+          Manage header, footer, legal pages, and full JSON stored in the database.
+        </p>
         {loading ? <p className="text-slate-300">Loading content...</p> : null}
-        <div className="admin-toolbar">
+        <div className="admin-toolbar flex-wrap">
+          <button className="admin-btn" type="button" onClick={() => setMode('chrome')}>
+            Header &amp; footer
+          </button>
           <button className="admin-btn" type="button" onClick={() => setMode('legal')}>
-            Legal Manage
+            Legal
           </button>
           <button className="admin-btn" type="button" onClick={() => setMode('json')}>
-            JSON Manage
+            JSON
           </button>
         </div>
         </article>
+        {mode === 'chrome' ? (
+          <form className="page-content-card space-y-5" onSubmit={onSaveChrome}>
+            <div>
+              <h2 className="text-xl font-semibold">Header &amp; footer</h2>
+              <p className="text-sm text-slate-300">
+                Branding, navigation labels, and footer links apply across the public site. Invalid URLs are dropped on
+                save.
+              </p>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="form-label-premium">Brand name</label>
+                <input
+                  value={chromeForm.brandName}
+                  onChange={(e) => setChromeForm((p) => ({ ...p, brandName: e.target.value }))}
+                  placeholder="Novaro Solution"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="form-label-premium">Brand subtitle (header)</label>
+                <input
+                  value={chromeForm.brandSubtitle}
+                  onChange={(e) => setChromeForm((p) => ({ ...p, brandSubtitle: e.target.value }))}
+                  placeholder="Web · mobile · product"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="form-label-premium">Search placeholder</label>
+                <input
+                  value={chromeForm.searchPlaceholder}
+                  onChange={(e) => setChromeForm((p) => ({ ...p, searchPlaceholder: e.target.value }))}
+                  placeholder="Search site…"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="form-label-premium">Copyright name</label>
+                <input
+                  value={chromeForm.copyrightName}
+                  onChange={(e) => setChromeForm((p) => ({ ...p, copyrightName: e.target.value }))}
+                  placeholder="Novaro Solution"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="form-label-premium">Footer tagline</label>
+              <input
+                value={chromeForm.footerTagline}
+                onChange={(e) => setChromeForm((p) => ({ ...p, footerTagline: e.target.value }))}
+                placeholder="Short line under the brand in the footer."
+              />
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {(['explore', 'workspace', 'legal', 'social'] as const).map((key) => (
+                <div key={key} className="space-y-2">
+                  <label className="form-label-premium">{`Heading: ${key}`}</label>
+                  <input
+                    value={chromeForm.headings[key]}
+                    onChange={(e) =>
+                      setChromeForm((p) => ({
+                        ...p,
+                        headings: { ...p.headings, [key]: e.target.value }
+                      }))
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-semibold">Main navigation</h3>
+                <button
+                  className="btn btn-sm btn-ghost"
+                  type="button"
+                  onClick={() =>
+                    setChromeForm((p) => ({
+                      ...p,
+                      navItems: [...p.navItems, { href: '', label: '' }]
+                    }))
+                  }
+                >
+                  Add link
+                </button>
+              </div>
+              {chromeForm.navItems.map((row, i) => (
+                <div key={`nav-${i}`} className="grid gap-2 md:grid-cols-[1fr_1fr_auto] md:items-end">
+                  <input
+                    value={row.href}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.navItems];
+                        next[i] = { ...next[i], href: e.target.value };
+                        return { ...p, navItems: next };
+                      })
+                    }
+                    placeholder="/about"
+                  />
+                  <input
+                    value={row.label}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.navItems];
+                        next[i] = { ...next[i], label: e.target.value };
+                        return { ...p, navItems: next };
+                      })
+                    }
+                    placeholder="Label"
+                  />
+                  <button
+                    type="button"
+                    className="admin-btn"
+                    onClick={() =>
+                      setChromeForm((p) => ({
+                        ...p,
+                        navItems: p.navItems.filter((_, j) => j !== i)
+                      }))
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-semibold">Footer — Explore column</h3>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    className="btn btn-sm btn-ghost"
+                    type="button"
+                    onClick={() => setChromeForm((p) => ({ ...p, exploreLinks: p.navItems.map((x) => ({ ...x })) }))}
+                  >
+                    Copy from main nav
+                  </button>
+                  <button
+                    className="btn btn-sm btn-ghost"
+                    type="button"
+                    onClick={() =>
+                      setChromeForm((p) => ({
+                        ...p,
+                        exploreLinks: [...p.exploreLinks, { href: '', label: '' }]
+                      }))
+                    }
+                  >
+                    Add link
+                  </button>
+                </div>
+              </div>
+              {chromeForm.exploreLinks.map((row, i) => (
+                <div key={`ex-${i}`} className="grid gap-2 md:grid-cols-[1fr_1fr_auto] md:items-end">
+                  <input
+                    value={row.href}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.exploreLinks];
+                        next[i] = { ...next[i], href: e.target.value };
+                        return { ...p, exploreLinks: next };
+                      })
+                    }
+                    placeholder="/projects"
+                  />
+                  <input
+                    value={row.label}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.exploreLinks];
+                        next[i] = { ...next[i], label: e.target.value };
+                        return { ...p, exploreLinks: next };
+                      })
+                    }
+                    placeholder="Label"
+                  />
+                  <button
+                    type="button"
+                    className="admin-btn"
+                    onClick={() =>
+                      setChromeForm((p) => ({
+                        ...p,
+                        exploreLinks: p.exploreLinks.filter((_, j) => j !== i)
+                      }))
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-semibold">Footer — Legal links</h3>
+                <button
+                  className="btn btn-sm btn-ghost"
+                  type="button"
+                  onClick={() =>
+                    setChromeForm((p) => ({
+                      ...p,
+                      legalLinks: [...p.legalLinks, { href: '', label: '' }]
+                    }))
+                  }
+                >
+                  Add link
+                </button>
+              </div>
+              {chromeForm.legalLinks.map((row, i) => (
+                <div key={`lg-${i}`} className="grid gap-2 md:grid-cols-[1fr_1fr_auto] md:items-end">
+                  <input
+                    value={row.href}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.legalLinks];
+                        next[i] = { ...next[i], href: e.target.value };
+                        return { ...p, legalLinks: next };
+                      })
+                    }
+                    placeholder="/privacy-policy"
+                  />
+                  <input
+                    value={row.label}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.legalLinks];
+                        next[i] = { ...next[i], label: e.target.value };
+                        return { ...p, legalLinks: next };
+                      })
+                    }
+                    placeholder="Label"
+                  />
+                  <button
+                    type="button"
+                    className="admin-btn"
+                    onClick={() =>
+                      setChromeForm((p) => ({
+                        ...p,
+                        legalLinks: p.legalLinks.filter((_, j) => j !== i)
+                      }))
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-semibold">Social links (https only)</h3>
+                <button
+                  className="btn btn-sm btn-ghost"
+                  type="button"
+                  onClick={() =>
+                    setChromeForm((p) => ({
+                      ...p,
+                      socialLinks: [...p.socialLinks, { href: '', label: '' }]
+                    }))
+                  }
+                >
+                  Add link
+                </button>
+              </div>
+              {chromeForm.socialLinks.map((row, i) => (
+                <div key={`so-${i}`} className="grid gap-2 md:grid-cols-[1fr_1fr_auto] md:items-end">
+                  <input
+                    value={row.href}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.socialLinks];
+                        next[i] = { ...next[i], href: e.target.value };
+                        return { ...p, socialLinks: next };
+                      })
+                    }
+                    placeholder="https://"
+                  />
+                  <input
+                    value={row.label}
+                    onChange={(e) =>
+                      setChromeForm((p) => {
+                        const next = [...p.socialLinks];
+                        next[i] = { ...next[i], label: e.target.value };
+                        return { ...p, socialLinks: next };
+                      })
+                    }
+                    placeholder="LinkedIn"
+                  />
+                  <button
+                    type="button"
+                    className="admin-btn"
+                    onClick={() =>
+                      setChromeForm((p) => ({
+                        ...p,
+                        socialLinks: p.socialLinks.filter((_, j) => j !== i)
+                      }))
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button className="admin-btn" type="submit" disabled={saving}>
+              {saving ? 'Saving…' : 'Save header & footer'}
+            </button>
+          </form>
+        ) : null}
         {mode === 'json' ? (
           <form className="page-content-card space-y-3" onSubmit={onSave}>
             <textarea
@@ -230,7 +629,8 @@ export default function AdminContentManagerPage() {
               {saving ? 'Saving...' : 'Save Website Content'}
             </button>
           </form>
-        ) : (
+        ) : null}
+        {mode === 'legal' ? (
           <form className="page-content-card space-y-4" onSubmit={onSaveLegal}>
             <h2 className="text-xl font-semibold">Legal Manage</h2>
             <p className="text-sm text-slate-300">
@@ -423,7 +823,7 @@ export default function AdminContentManagerPage() {
               {saving ? 'Saving...' : 'Save Legal Content'}
             </button>
           </form>
-        )}
+        ) : null}
         {status ? <p className="text-emerald-400">{status}</p> : null}
         {error ? <p className="text-red-400">{error}</p> : null}
         <Link className="admin-btn inline-block" href="/admin/dashboard">

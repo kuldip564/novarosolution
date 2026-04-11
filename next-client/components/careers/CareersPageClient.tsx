@@ -73,8 +73,8 @@ export default function CareersPageClient({ initialJobs }: Props) {
     <main className="app-page-shell">
       <section className="premium-page-hero relative space-y-4 px-6 py-10 md:px-10">
         <div className="relative z-[1] space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Careers</p>
-          <h1 className="section-title text-3xl font-extrabold md:text-5xl">Build with us</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Jobs</p>
+          <h1 className="section-title text-3xl font-extrabold md:text-5xl">Open roles</h1>
           <p className="max-w-2xl text-slate-300">
             Explore open roles across design, engineering, and operations. Sign in to apply and track your applications
             in one place.
@@ -92,10 +92,10 @@ export default function CareersPageClient({ initialJobs }: Props) {
         </div>
       </section>
 
-      <section className="mt-12 space-y-6">
+      <section className="space-y-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-100">Open positions</h2>
+            <h2 className="text-xl font-bold text-slate-100">All jobs</h2>
             <p className="text-sm text-slate-400">Featured roles first · filter by category.</p>
           </div>
           <label className="flex flex-col gap-1 text-sm text-slate-300">
@@ -172,7 +172,7 @@ export default function CareersPageClient({ initialJobs }: Props) {
                   ) : null}
                 </div>
                 <Link
-                  href={`/careers/${job.id}`}
+                  href={`/jobs/${job.id}`}
                   className="btn mt-2 inline-flex w-fit"
                 >
                   View role & apply
@@ -191,7 +191,7 @@ export default function CareersPageClient({ initialJobs }: Props) {
       </section>
 
       {isAuthenticated && mine.length > 0 ? (
-        <section className="mt-14 space-y-5">
+        <section className="space-y-5">
           <div>
             <h2 className="text-xl font-bold text-slate-100">Your applications</h2>
             <p className="text-sm text-slate-400">Track status, interview stage, and messages from the hiring team.</p>
@@ -225,7 +225,7 @@ export default function CareersPageClient({ initialJobs }: Props) {
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Link
-                          href={`/careers/${row.jobId}`}
+                          href={`/jobs/${row.jobId}`}
                           className="text-lg font-semibold text-slate-50 hover:text-cyan-200"
                           onClick={(e) => e.stopPropagation()}
                         >
@@ -272,7 +272,7 @@ export default function CareersPageClient({ initialJobs }: Props) {
                           ))}
                         </ul>
                       )}
-                      <Link href={`/careers/${row.jobId}`} className="btn-secondary mt-4 inline-flex text-sm">
+                      <Link href={`/jobs/${row.jobId}`} className="btn-secondary mt-4 inline-flex text-sm">
                         Open role page
                       </Link>
                     </div>

@@ -47,6 +47,7 @@ type SiteContentShape = {
   projectsPage?: {
     items?: Array<Record<string, unknown>>;
   };
+  siteChrome?: Record<string, unknown>;
 } & Record<string, unknown>;
 
 function slugify(input: string) {

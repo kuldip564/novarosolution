@@ -3,7 +3,12 @@
 import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import type { JobApplicationRow, PublicJob } from '@/lib/clientApi';
-import { applyToJob, fetchMyJobApplications, markJobApplicationRead } from '@/lib/clientApi';
+import {
+  applyToJob,
+  fetchMyJobApplications,
+  markJobApplicationRead,
+  uploadApplicationDocument
+} from '@/lib/clientApi';
 import { useAuth } from '@/context/AuthContext';
 import { formatApplicationStatus, formatInterviewRound } from './interviewLabels';
 import {
@@ -17,6 +22,17 @@ type Props = {
   job: PublicJob;
 };
 
+const MAX_DOC_BYTES = 10 * 1024 * 1024;
+
+async function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Could not read file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function JobDetailClient({ job }: Props) {
   const { token, isAuthenticated, user } = useAuth();
   const [form, setForm] = useState({
@@ -25,8 +41,12 @@ export default function JobDetailClient({ job }: Props) {
     linkedInUrl: '',
     portfolioUrl: '',
     resumeUrl: '',
+    additionalDocumentUrl: '',
+    additionalDocumentName: '',
     yearsExperience: ''
   });
+  const [resumeSourceLabel, setResumeSourceLabel] = useState('');
+  const [uploading, setUploading] = useState<'resume' | 'extra' | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
@@ -66,6 +86,8 @@ export default function JobDetailClient({ job }: Props) {
           linkedInUrl: form.linkedInUrl.trim(),
           portfolioUrl: form.portfolioUrl.trim(),
           resumeUrl: form.resumeUrl.trim(),
+          additionalDocumentUrl: form.additionalDocumentUrl.trim(),
+          additionalDocumentName: form.additionalDocumentName.trim(),
           yearsExperience: form.yearsExperience.trim()
         },
         token
@@ -87,12 +109,51 @@ export default function JobDetailClient({ job }: Props) {
   const hasReq = Boolean((job.requirements || '').trim());
   const hasBenefits = Boolean((job.benefits || '').trim());
 
+  async function handleResumeFile(file: File | null) {
+    if (!file || !token) return;
+    if (file.size > MAX_DOC_BYTES) {
+      setError('Resume must be under 10MB.');
+      return;
+    }
+    setUploading('resume');
+    setError('');
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      const url = await uploadApplicationDocument(dataUrl, token);
+      setForm((f) => ({ ...f, resumeUrl: url }));
+      setResumeSourceLabel(file.name);
+    } catch (err: any) {
+      setError(err?.message || 'Resume upload failed.');
+    } finally {
+      setUploading(null);
+    }
+  }
+
+  async function handleExtraFile(file: File | null) {
+    if (!file || !token) return;
+    if (file.size > MAX_DOC_BYTES) {
+      setError('Document must be under 10MB.');
+      return;
+    }
+    setUploading('extra');
+    setError('');
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      const url = await uploadApplicationDocument(dataUrl, token);
+      setForm((f) => ({ ...f, additionalDocumentUrl: url, additionalDocumentName: file.name }));
+    } catch (err: any) {
+      setError(err?.message || 'Document upload failed.');
+    } finally {
+      setUploading(null);
+    }
+  }
+
   return (
     <main className="app-page-shell">
-      <article className="space-y-8">
-        <nav className="text-sm text-slate-400">
-          <Link href="/careers" className="transition hover:text-cyan-200">
-            ← All careers
+      <div className="flex flex-col gap-6">
+        <nav className="page-content-card py-3 text-sm text-slate-400">
+          <Link href="/jobs" className="font-medium transition hover:text-cyan-200">
+            ← All jobs
           </Link>
         </nav>
 
@@ -171,10 +232,10 @@ export default function JobDetailClient({ job }: Props) {
               </p>
             ) : null}
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link href={`/login?redirect=${encodeURIComponent(`/careers/${job.id}`)}`} className="btn inline-flex">
+              <Link href={`/login?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`} className="btn inline-flex">
                 Sign in
               </Link>
-              <Link href={`/register?redirect=${encodeURIComponent(`/careers/${job.id}`)}`} className="btn-secondary inline-flex">
+              <Link href={`/register?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`} className="btn-secondary inline-flex">
                 Register
               </Link>
             </div>
@@ -196,6 +257,28 @@ export default function JobDetailClient({ job }: Props) {
               <p className="mt-2 text-sm text-slate-400">
                 Submitted {myApplication.createdAt ? new Date(myApplication.createdAt).toLocaleString() : '—'}
               </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {myApplication.resumeUrl ? (
+                  <a
+                    href={myApplication.resumeUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-200 hover:bg-white/15"
+                  >
+                    View resume
+                  </a>
+                ) : null}
+                {myApplication.additionalDocumentUrl ? (
+                  <a
+                    href={myApplication.additionalDocumentUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-200 hover:bg-white/15"
+                  >
+                    {myApplication.additionalDocumentName?.trim() || 'Other document'}
+                  </a>
+                ) : null}
+              </div>
             </div>
 
             {(myApplication.applicantMessages || []).length > 0 ? (
@@ -222,14 +305,14 @@ export default function JobDetailClient({ job }: Props) {
               </p>
             )}
 
-            <Link href="/careers" className="btn-secondary inline-flex">
-              ← All careers
+            <Link href="/jobs" className="btn-secondary inline-flex">
+              ← All jobs
             </Link>
           </div>
         ) : already ? (
           <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-emerald-100">
             <p className="font-semibold">You have already applied for this role.</p>
-            <Link href="/careers" className="btn-secondary mt-4 inline-flex">
+            <Link href="/jobs" className="btn-secondary mt-4 inline-flex">
               Browse more roles
             </Link>
           </div>
@@ -239,7 +322,7 @@ export default function JobDetailClient({ job }: Props) {
             <p className="mt-1 text-sm text-rose-200/90">
               This role stopped accepting new applications after {deadline.label}.
             </p>
-            <Link href="/careers" className="btn-secondary mt-4 inline-flex">
+            <Link href="/jobs" className="btn-secondary mt-4 inline-flex">
               Browse open roles
             </Link>
           </div>
@@ -251,27 +334,6 @@ export default function JobDetailClient({ job }: Props) {
                 Applying as <span className="text-slate-200">{user?.name}</span> ({user?.email})
               </p>
             </div>
-
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-slate-300">Phone (optional)</span>
-              <input
-                className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
-                value={form.phone}
-                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                placeholder="+1 …"
-                autoComplete="tel"
-              />
-            </label>
-
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-slate-300">Years of experience (optional)</span>
-              <input
-                className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
-                value={form.yearsExperience}
-                onChange={(e) => setForm((f) => ({ ...f, yearsExperience: e.target.value }))}
-                placeholder="e.g. 3 years in product design"
-              />
-            </label>
 
             <label className="flex flex-col gap-2 text-sm">
               <span className="text-slate-300">Cover letter *</span>
@@ -286,9 +348,85 @@ export default function JobDetailClient({ job }: Props) {
               />
             </label>
 
-            <div className="grid gap-4 md:grid-cols-3">
-              <label className="flex flex-col gap-2 text-sm md:col-span-1">
-                <span className="text-slate-300">LinkedIn URL</span>
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-3">
+              <p className="text-sm font-semibold text-slate-200">Resume *</p>
+              <p className="text-xs text-slate-500">Upload PDF or Word (max ~10MB), or paste a public https link.</p>
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="btn-secondary inline-flex cursor-pointer px-4 py-2 text-sm">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    className="sr-only"
+                    disabled={!!uploading || submitting}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      e.target.value = '';
+                      void handleResumeFile(f || null);
+                    }}
+                  />
+                  {uploading === 'resume' ? 'Uploading…' : 'Upload file'}
+                </label>
+                {form.resumeUrl && resumeSourceLabel ? (
+                  <span className="text-xs text-emerald-300/90">Ready: {resumeSourceLabel}</span>
+                ) : form.resumeUrl ? (
+                  <span className="text-xs text-emerald-300/90">Resume link ready</span>
+                ) : (
+                  <span className="text-xs text-amber-200/80">Add a file or link before submitting.</span>
+                )}
+              </div>
+              <label className="flex flex-col gap-1.5 text-sm">
+                <span className="text-slate-400">Or resume URL (https)</span>
+                <input
+                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  value={form.resumeUrl}
+                  onChange={(e) => {
+                    setResumeSourceLabel('');
+                    setForm((f) => ({ ...f, resumeUrl: e.target.value }));
+                  }}
+                  placeholder="https://…"
+                  type="url"
+                />
+              </label>
+            </div>
+
+            <div className="rounded-xl border border-white/10 bg-black/15 p-4 space-y-3">
+              <p className="text-sm font-semibold text-slate-200">Additional document (optional)</p>
+              <p className="text-xs text-slate-500">Portfolio PDF, certificate, or other supporting file.</p>
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="btn-secondary inline-flex cursor-pointer px-4 py-2 text-sm">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    className="sr-only"
+                    disabled={!!uploading || submitting}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      e.target.value = '';
+                      void handleExtraFile(f || null);
+                    }}
+                  />
+                  {uploading === 'extra' ? 'Uploading…' : 'Upload'}
+                </label>
+                {form.additionalDocumentUrl ? (
+                  <span className="truncate text-xs text-emerald-300/90">{form.additionalDocumentName || 'File attached'}</span>
+                ) : (
+                  <span className="text-xs text-slate-500">No extra file</span>
+                )}
+                {form.additionalDocumentUrl ? (
+                  <button
+                    type="button"
+                    className="text-xs text-rose-300 underline"
+                    onClick={() => setForm((f) => ({ ...f, additionalDocumentUrl: '', additionalDocumentName: '' }))}
+                  >
+                    Remove
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="flex flex-col gap-2 text-sm">
+                <span className="text-slate-300">LinkedIn URL (optional)</span>
                 <input
                   className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
                   value={form.linkedInUrl}
@@ -297,8 +435,8 @@ export default function JobDetailClient({ job }: Props) {
                   type="url"
                 />
               </label>
-              <label className="flex flex-col gap-2 text-sm md:col-span-1">
-                <span className="text-slate-300">Portfolio URL</span>
+              <label className="flex flex-col gap-2 text-sm">
+                <span className="text-slate-300">Portfolio URL (optional)</span>
                 <input
                   className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
                   value={form.portfolioUrl}
@@ -307,14 +445,26 @@ export default function JobDetailClient({ job }: Props) {
                   type="url"
                 />
               </label>
-              <label className="flex flex-col gap-2 text-sm md:col-span-1">
-                <span className="text-slate-300">Resume URL</span>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="flex flex-col gap-2 text-sm">
+                <span className="text-slate-300">Phone (optional)</span>
                 <input
                   className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
-                  value={form.resumeUrl}
-                  onChange={(e) => setForm((f) => ({ ...f, resumeUrl: e.target.value }))}
-                  placeholder="Link to PDF or site"
-                  type="url"
+                  value={form.phone}
+                  onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                  placeholder="+1 …"
+                  autoComplete="tel"
+                />
+              </label>
+              <label className="flex flex-col gap-2 text-sm">
+                <span className="text-slate-300">Years of experience (optional)</span>
+                <input
+                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  value={form.yearsExperience}
+                  onChange={(e) => setForm((f) => ({ ...f, yearsExperience: e.target.value }))}
+                  placeholder="e.g. 3 years in product design"
                 />
               </label>
             </div>
@@ -322,12 +472,16 @@ export default function JobDetailClient({ job }: Props) {
             {error ? <p className="text-sm text-red-400">{error}</p> : null}
             {status ? <p className="text-sm text-emerald-400">{status}</p> : null}
 
-            <button type="submit" className="btn inline-flex disabled:opacity-60" disabled={submitting}>
+            <button
+              type="submit"
+              className="btn inline-flex disabled:opacity-60"
+              disabled={submitting || !form.resumeUrl.trim()}
+            >
               {submitting ? 'Submitting…' : 'Submit application'}
             </button>
           </form>
         )}
-      </article>
+      </div>
     </main>
   );
 }

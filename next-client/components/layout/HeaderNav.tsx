@@ -6,18 +6,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import type { SiteChrome } from '@/lib/siteChrome';
+import { DEFAULT_SITE_CHROME } from '@/lib/siteChrome';
 
-const NAV_ITEMS = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/services', label: 'Services' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/careers', label: 'Careers' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' }
-];
+type HeaderNavProps = {
+  chrome?: SiteChrome;
+};
 
-export default function HeaderNav() {
+export default function HeaderNav({ chrome = DEFAULT_SITE_CHROME }: HeaderNavProps) {
   const router = useRouter();
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
@@ -25,6 +21,8 @@ export default function HeaderNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [searchQuery, setSearchQuery] = useState('');
+  const navItems = chrome.navItems?.length ? chrome.navItems : DEFAULT_SITE_CHROME.navItems;
+  const searchPlaceholder = chrome.searchPlaceholder || DEFAULT_SITE_CHROME.searchPlaceholder;
 
   useEffect(() => {
     const root = document.documentElement;
@@ -133,7 +131,7 @@ export default function HeaderNav() {
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Search site..."
+          placeholder={searchPlaceholder}
           aria-label="Search site"
         />
       </form>
@@ -145,7 +143,7 @@ export default function HeaderNav() {
         animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
         transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
       >
-        {NAV_ITEMS.map(renderLink)}
+        {navItems.map(renderLink)}
         {authLinks.length ? (
           <>
             <span className="nav-divider" aria-hidden="true" />
@@ -208,12 +206,12 @@ export default function HeaderNav() {
                   type="search"
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search site..."
+                  placeholder={searchPlaceholder}
                   aria-label="Search site"
                 />
               </form>
               <div className="mobile-menu-heading">Menu</div>
-              {NAV_ITEMS.map(renderLink)}
+              {navItems.map(renderLink)}
               {authLinks.length ? <span className="nav-divider mobile-nav-divider" aria-hidden="true" /> : null}
               {authLinks.map(renderLink)}
               {!loading && isAuthenticated ? (

@@ -81,7 +81,8 @@ const jsonLargePayload = express.json({ limit: '25mb' });
 app.use((req, res, next) => {
   const needsLargePayload =
     req.path.startsWith('/api/employee') ||
-    req.path.startsWith('/api/creator');
+    req.path.startsWith('/api/creator') ||
+    req.path.startsWith('/api/me/application-documents');
   if (needsLargePayload) return jsonLargePayload(req, res, next);
   return jsonSmallPayload(req, res, next);
 });

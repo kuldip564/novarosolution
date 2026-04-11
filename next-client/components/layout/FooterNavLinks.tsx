@@ -3,28 +3,19 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { OPEN_CONSENT_EVENT } from '@/lib/consent';
+import type { SiteChrome } from '@/lib/siteChrome';
+import { DEFAULT_SITE_CHROME } from '@/lib/siteChrome';
 
-export default function FooterNavLinks() {
+type FooterNavLinksProps = {
+  chrome?: SiteChrome;
+};
+
+export default function FooterNavLinks({ chrome = DEFAULT_SITE_CHROME }: FooterNavLinksProps) {
   const { loading, isAuthenticated, isAdmin, isEmployee, isCreator } = useAuth();
-  const exploreLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/services', label: 'Services' },
-    { href: '/projects', label: 'Projects' },
-    { href: '/careers', label: 'Careers' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/contact', label: 'Contact' }
-  ];
-  const legalLinks = [
-    { href: '/privacy-policy', label: 'Privacy Policy' },
-    { href: '/terms-and-conditions', label: 'Terms & Conditions' },
-    { href: '/disclaimer', label: 'Disclaimer' }
-  ];
-  const socialLinks = [
-    { href: 'https://www.linkedin.com', label: 'LinkedIn' },
-    { href: 'https://github.com', label: 'GitHub' },
-    { href: 'https://www.youtube.com', label: 'YouTube' }
-  ];
+  const exploreLinks = chrome.exploreLinks?.length ? chrome.exploreLinks : chrome.navItems;
+  const legalLinks = chrome.legalLinks?.length ? chrome.legalLinks : DEFAULT_SITE_CHROME.legalLinks;
+  const socialLinks = chrome.socialLinks?.length ? chrome.socialLinks : DEFAULT_SITE_CHROME.socialLinks;
+  const h = chrome.headings || DEFAULT_SITE_CHROME.headings;
 
   function openCookiePreferences() {
     if (typeof window === 'undefined') return;
@@ -34,7 +25,7 @@ export default function FooterNavLinks() {
   return (
     <nav className="footer-links-grid" aria-label="Footer links">
       <div className="footer-link-group">
-        <p className="footer-link-heading">Explore</p>
+        <p className="footer-link-heading">{h.explore}</p>
         <div className="footer-links footer-links-split">
           {exploreLinks.map((item) => (
             <Link key={item.href} href={item.href}>{item.label}</Link>
@@ -44,7 +35,7 @@ export default function FooterNavLinks() {
 
       {!loading && isAuthenticated ? (
         <div className="footer-link-group">
-          <p className="footer-link-heading">Workspace</p>
+          <p className="footer-link-heading">{h.workspace}</p>
           <div className="footer-links footer-links-workspace">
             <Link href="/project-chat">Project Chat</Link>
             <Link href="/creator-feed">Feed</Link>
@@ -59,7 +50,7 @@ export default function FooterNavLinks() {
       ) : null}
 
       <div className="footer-link-group">
-        <p className="footer-link-heading">Legal</p>
+        <p className="footer-link-heading">{h.legal}</p>
         <div className="footer-links">
           {legalLinks.map((item) => (
             <Link key={item.href} href={item.href}>{item.label}</Link>
@@ -71,7 +62,7 @@ export default function FooterNavLinks() {
       </div>
 
       <div className="footer-link-group">
-        <p className="footer-link-heading">Social</p>
+        <p className="footer-link-heading">{h.social}</p>
         <div className="footer-links">
           {socialLinks.map((item) => (
             <a key={item.href} href={item.href} target="_blank" rel="noreferrer noopener">
