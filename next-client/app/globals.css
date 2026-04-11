@@ -431,6 +431,7 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   transition: background-color 220ms ease, border-color 220ms ease;
   flex-wrap: nowrap;
   min-height: 62px;
+  min-width: 0;
 }
 
 .nav {
@@ -443,16 +444,25 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex: 1 1 auto;
   min-width: 0;
-  gap: 12px;
+  gap: 10px;
+}
+
+/* Nav fills space between brand and search so the search bar never sits over the logo */
+.header-nav-desktop {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-end;
 }
 
 .header-search-form {
   display: inline-flex;
   align-items: center;
-  flex: 0 0 210px;
+  flex: 0 1 220px;
+  min-width: 0;
+  max-width: min(220px, 30vw);
 }
 
 .header-search-form input {
@@ -523,7 +533,10 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   align-items: center;
   gap: 10px;
   flex: 0 0 auto;
+  flex-shrink: 0;
   min-width: 0;
+  position: relative;
+  z-index: 2;
   text-decoration: none;
   color: inherit;
   border-radius: 12px;

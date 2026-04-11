@@ -126,18 +126,8 @@ export default function HeaderNav({ chrome = DEFAULT_SITE_CHROME }: HeaderNavPro
 
   return (
     <div className="header-nav-wrap">
-      <form className="header-search-form" onSubmit={onSearchSubmit} role="search" aria-label="Site search">
-        <input
-          type="search"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder={searchPlaceholder}
-          aria-label="Search site"
-        />
-      </form>
-
       <motion.nav
-        className="nav nav-desktop nav-shell"
+        className="nav nav-desktop nav-shell header-nav-desktop"
         aria-label="Main navigation"
         initial={reduceMotion ? undefined : { opacity: 0, y: -6 }}
         animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -158,6 +148,16 @@ export default function HeaderNav({ chrome = DEFAULT_SITE_CHROME }: HeaderNavPro
           <span className="nav-link nav-link-loading"><span>Loading...</span></span>
         )}
       </motion.nav>
+
+      <form className="header-search-form" onSubmit={onSearchSubmit} role="search" aria-label="Site search">
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder={searchPlaceholder}
+          aria-label="Search site"
+        />
+      </form>
 
       <div className="nav-utilities nav-shell-utilities">
         <button
