@@ -16,6 +16,8 @@ import {
   listEmployees,
   updateEmployeeById,
 } from '../models/employeeModel.js';
+import { countJobApplications } from '../models/jobApplicationModel.js';
+import { countAllJobs } from '../models/jobModel.js';
 import { countServiceAppointments } from '../models/serviceAppointmentModel.js';
 import {
   countActiveUsersByRole,
@@ -38,7 +40,18 @@ export async function getAdminOverview(req, res) {
     const cacheKey = 'overview:admin';
     const cached = await getCache(cacheKey);
     if (cached) return res.status(200).json({ ok: true, data: cached });
-    const [totalUsers, totalAdmins, totalMembers, totalEmployees, totalCreators, totalSubmissions, totalAppointments, pendingCreatorRequests] =
+    const [
+      totalUsers,
+      totalAdmins,
+      totalMembers,
+      totalEmployees,
+      totalCreators,
+      totalSubmissions,
+      totalAppointments,
+      pendingCreatorRequests,
+      totalJobs,
+      totalJobApplications,
+    ] =
       await Promise.all([
       countUsers(),
       countUsersByRole('admin'),
@@ -48,6 +61,8 @@ export async function getAdminOverview(req, res) {
       countContactSubmissions(),
       countServiceAppointments(),
       countUsersWithFilter({ creatorRequestStatus: 'pending' }),
+      countAllJobs(),
+      countJobApplications(),
     ]);
     const payload = {
       totalUsers,
@@ -58,6 +73,8 @@ export async function getAdminOverview(req, res) {
       pendingCreatorRequests,
       totalSubmissions,
       totalAppointments,
+      totalJobs,
+      totalJobApplications,
     };
     await setCache(cacheKey, payload, 45);
 

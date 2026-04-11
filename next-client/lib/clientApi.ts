@@ -318,6 +318,8 @@ export type AdminOverview = {
   pendingCreatorRequests: number;
   totalSubmissions: number;
   totalAppointments: number;
+  totalJobs: number;
+  totalJobApplications: number;
 };
 
 export type AdminUser = AuthUser & {
@@ -633,4 +635,225 @@ export async function downloadAdminEmployeeMonthlyReport(
   const match = disposition.match(/filename="?([^"]+)"?/i);
   const filename = match?.[1] || `employee-task-report-${year}-${String(month).padStart(2, '0')}.xlsx`;
   return { blob, filename };
+}
+
+export type PublicJob = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  workMode: 'remote' | 'onsite' | 'hybrid';
+  employmentType: 'full_time' | 'part_time' | 'contract' | 'internship';
+  salaryHint?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  isPublished?: boolean;
+};
+
+export type ApplicantMessage = {
+  id: string;
+  body: string;
+  sentAt?: string;
+  sentByAdminId?: string;
+};
+
+export type JobApplicationRow = {
+  id: string;
+  jobId: string;
+  userId: string;
+  applicantName: string;
+  applicantEmail: string;
+  phone?: string;
+  coverLetter: string;
+  linkedInUrl?: string;
+  portfolioUrl?: string;
+  resumeUrl?: string;
+  yearsExperience?: string;
+  status:
+    | 'pending'
+    | 'reviewing'
+    | 'shortlisted'
+    | 'interview'
+    | 'offer'
+    | 'rejected'
+    | 'hired';
+  interviewRound?: string;
+  adminNote?: string;
+  applicantMessages?: ApplicantMessage[];
+  applicantLastReadAt?: string | null;
+  unreadUpdates?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  jobTitle?: string;
+  jobCategory?: string;
+  jobDescription?: string;
+  jobIsPublished?: boolean;
+  userName?: string;
+  userEmail?: string;
+  userAvatarUrl?: string;
+  userRole?: string;
+  userMemberSince?: string;
+  userIsActive?: boolean;
+};
+
+export type AdminJobApplicantDetail = {
+  application: JobApplicationRow;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl?: string;
+    role?: string;
+    isActive?: boolean;
+    createdAt?: string;
+    creatorRequestStatus?: string;
+  } | null;
+  job: {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    location: string;
+    workMode: string;
+    employmentType: string;
+    salaryHint?: string;
+    isPublished?: boolean;
+  } | null;
+};
+
+export async function fetchPublishedJobsClient(category?: string) {
+  const q = category ? `?category=${encodeURIComponent(category)}` : '';
+  const data = await request<{ data: PublicJob[] }>(`/api/jobs${q}`);
+  return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function fetchPublishedJobClient(jobId: string) {
+  const data = await request<{ data: PublicJob }>(`/api/jobs/${encodeURIComponent(jobId)}`);
+  return data?.data || null;
+}
+
+export async function applyToJob(
+  jobId: string,
+  payload: {
+    phone?: string;
+    coverLetter: string;
+    linkedInUrl?: string;
+    portfolioUrl?: string;
+    resumeUrl?: string;
+    yearsExperience?: string;
+  },
+  token: string
+) {
+  const data = await request<{ data: JobApplicationRow }>(`/api/jobs/${encodeURIComponent(jobId)}/apply`, {
+    method: 'POST',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return data.data;
+}
+
+export async function fetchMyJobApplications(token: string) {
+  const data = await request<{ data: JobApplicationRow[] }>('/api/me/job-applications', { token });
+  return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function markJobApplicationRead(applicationId: string, token: string) {
+  const data = await request<{ data: JobApplicationRow }>(
+    `/api/me/job-applications/${encodeURIComponent(applicationId)}/read`,
+    { method: 'POST', token }
+  );
+  return data.data;
+}
+
+export async function fetchAdminJobs(token: string) {
+  const data = await request<{ data: PublicJob[] }>('/api/admin/jobs', { token });
+  return Array.isArray(data?.data) ? data.data : [];
+}
+
+export async function createAdminJob(payload: Record<string, unknown>, token: string) {
+  const data = await request<{ data: PublicJob }>('/api/admin/jobs', {
+    method: 'POST',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return data.data;
+}
+
+export async function updateAdminJob(jobId: string, payload: Record<string, unknown>, token: string) {
+  const data = await request<{ data: PublicJob }>(`/api/admin/jobs/${encodeURIComponent(jobId)}`, {
+    method: 'PATCH',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return data.data;
+}
+
+export async function deleteAdminJob(jobId: string, token: string) {
+  return request(`/api/admin/jobs/${encodeURIComponent(jobId)}`, { method: 'DELETE', token });
+}
+
+export type AdminJobApplicationsResult = {
+  items: JobApplicationRow[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+export async function fetchAdminJobApplications(
+  token: string,
+  params: { page?: number; limit?: number; jobId?: string; status?: string; q?: string } = {}
+) {
+  const query = new URLSearchParams();
+  if (params.page) query.set('page', String(params.page));
+  if (params.limit) query.set('limit', String(params.limit));
+  if (params.jobId) query.set('jobId', params.jobId);
+  if (params.status) query.set('status', params.status);
+  if (params.q) query.set('q', params.q);
+  const qs = query.toString();
+  const data = await request<AdminJobApplicationsResult & { ok: boolean }>(
+    `/api/admin/job-applications${qs ? `?${qs}` : ''}`,
+    { token }
+  );
+  return {
+    items: Array.isArray(data?.items) ? data.items : [],
+    total: data?.total ?? 0,
+    page: data?.page ?? 1,
+    limit: data?.limit ?? 50,
+    totalPages: data?.totalPages ?? 1
+  };
+}
+
+export async function fetchAdminJobApplicationDetail(applicationId: string, token: string) {
+  const data = await request<{ data: AdminJobApplicantDetail }>(
+    `/api/admin/job-applications/${encodeURIComponent(applicationId)}`,
+    { token }
+  );
+  return data.data;
+}
+
+export async function updateAdminJobApplication(
+  applicationId: string,
+  payload: {
+    status?: JobApplicationRow['status'];
+    adminNote?: string;
+    interviewRound?: string;
+    appendApplicantMessage?: string;
+  },
+  token: string
+) {
+  const data = await request<{ data: JobApplicationRow }>(
+    `/api/admin/job-applications/${encodeURIComponent(applicationId)}`,
+    {
+      method: 'PATCH',
+      token,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }
+  );
+  return data.data;
 }

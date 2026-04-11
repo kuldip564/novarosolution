@@ -17,6 +17,15 @@ import {
   postAdminEmployeeTask,
   postAdminUserRevokeSession,
 } from '../controllers/adminController.js';
+import {
+  deleteAdminJob,
+  getAdminJobApplicationById,
+  getAdminJobApplications,
+  getAdminJobs,
+  patchAdminJob,
+  patchAdminJobApplication,
+  postAdminJob,
+} from '../controllers/jobAdminController.js';
 import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js';
 
 const adminRoutes = Router();
@@ -47,6 +56,24 @@ adminRoutes.post(
   postAdminUserRevokeSession,
 );
 adminRoutes.delete('/admin/users/:userId', requireAuth, requireAdmin, deleteAdminUser);
+
+adminRoutes.get('/admin/jobs', requireAuth, requireAdmin, getAdminJobs);
+adminRoutes.post('/admin/jobs', requireAuth, requireAdmin, postAdminJob);
+adminRoutes.patch('/admin/jobs/:jobId', requireAuth, requireAdmin, patchAdminJob);
+adminRoutes.delete('/admin/jobs/:jobId', requireAuth, requireAdmin, deleteAdminJob);
+adminRoutes.get('/admin/job-applications', requireAuth, requireAdmin, getAdminJobApplications);
+adminRoutes.get(
+  '/admin/job-applications/:applicationId',
+  requireAuth,
+  requireAdmin,
+  getAdminJobApplicationById,
+);
+adminRoutes.patch(
+  '/admin/job-applications/:applicationId',
+  requireAuth,
+  requireAdmin,
+  patchAdminJobApplication,
+);
 
 export default adminRoutes;
 

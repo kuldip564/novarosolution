@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/projects', label: 'Projects' },
+  { href: '/careers', label: 'Careers' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' }
 ];

@@ -11,6 +11,7 @@ export default function FooterNavLinks() {
     { href: '/about', label: 'About' },
     { href: '/services', label: 'Services' },
     { href: '/projects', label: 'Projects' },
+    { href: '/careers', label: 'Careers' },
     { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' }
   ];
@@ -52,6 +53,7 @@ export default function FooterNavLinks() {
             {isAdmin ? <Link href="/admin/dashboard">Admin Dashboard</Link> : null}
             {isAdmin ? <Link href="/admin/blog-manager">Blog Manager</Link> : null}
             {isAdmin ? <Link href="/admin/project-chats">Admin Chats</Link> : null}
+            {isAdmin ? <Link href="/admin/job-manager">Job Manager</Link> : null}
           </div>
         </div>
       ) : null}

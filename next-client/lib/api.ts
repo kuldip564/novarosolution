@@ -261,3 +261,39 @@ export async function getBlogPostBySlug(slug: string, cacheMode: FetchCacheMode 
 
   return null;
 }
+
+export type PublicJob = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  workMode: 'remote' | 'onsite' | 'hybrid';
+  employmentType: 'full_time' | 'part_time' | 'contract' | 'internship';
+  salaryHint?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export async function fetchPublishedJobs(cacheMode: FetchCacheMode = { revalidate: 120 }) {
+  try {
+    const payload = await requestJson<{ ok: boolean; data: PublicJob[] }>('/api/jobs', cacheMode);
+    if (payload?.ok && Array.isArray(payload.data)) return payload.data;
+  } catch {
+    // Backend may be unavailable during build or offline.
+  }
+  return [];
+}
+
+export async function fetchPublishedJobById(jobId: string, cacheMode: FetchCacheMode = { revalidate: 60 }) {
+  try {
+    const payload = await requestJson<{ ok: boolean; data: PublicJob }>(
+      `/api/jobs/${encodeURIComponent(jobId)}`,
+      cacheMode
+    );
+    if (payload?.ok && payload.data) return payload.data;
+  } catch {
+    // ignore
+  }
+  return null;
+}

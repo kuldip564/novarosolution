@@ -9,6 +9,7 @@ import projectChatRoutes from './projectChatRoutes.js';
 import employeeTaskRoutes from './employeeTaskRoutes.js';
 import creatorRoutes from './creatorRoutes.js';
 import blogRoutes from './blogRoutes.js';
+import jobRoutes from './jobRoutes.js';
 
 const apiRoutes = Router();
 
@@ -22,6 +23,7 @@ apiRoutes.use(projectChatRoutes);
 apiRoutes.use(employeeTaskRoutes);
 apiRoutes.use(creatorRoutes);
 apiRoutes.use(blogRoutes);
+apiRoutes.use(jobRoutes);
 
 export default apiRoutes;
 

@@ -38,7 +38,9 @@ export default function AdminDashboardPage() {
     totalCreators: 0,
     pendingCreatorRequests: 0,
     totalSubmissions: 0,
-    totalAppointments: 0
+    totalAppointments: 0,
+    totalJobs: 0,
+    totalJobApplications: 0
   });
   const [users, setUsers] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
@@ -74,7 +76,9 @@ export default function AdminDashboardPage() {
         totalCreators: overviewData?.totalCreators || 0,
         pendingCreatorRequests: overviewData?.pendingCreatorRequests || 0,
         totalSubmissions: overviewData?.totalSubmissions || 0,
-        totalAppointments: overviewData?.totalAppointments || 0
+        totalAppointments: overviewData?.totalAppointments || 0,
+        totalJobs: overviewData?.totalJobs || 0,
+        totalJobApplications: overviewData?.totalJobApplications || 0
       });
       setUsers(userRows || []);
       setEmployees(employeeRows || []);
@@ -291,6 +295,8 @@ export default function AdminDashboardPage() {
       `Creators: ${overview.totalCreators}`,
       `Contacts: ${overview.totalSubmissions}`,
       `Appointments: ${overview.totalAppointments}`,
+      `Jobs: ${overview.totalJobs}`,
+      `Job applications: ${overview.totalJobApplications}`,
       `Tasks: ${employeeTasks.length}`,
       `Creator uploads: ${creatorContent.length}`,
       `Blog posts: ${blogPosts.length}`,
@@ -397,6 +403,7 @@ export default function AdminDashboardPage() {
           <Link className="admin-btn" href="/admin/contact-submissions">Contact Submissions</Link>
           <Link className="admin-btn" href="/admin/project-chats">Project Chats</Link>
           <Link className="admin-btn" href="/admin/blog-manager">Blog Manager</Link>
+          <Link className="admin-btn" href="/admin/job-manager">Job Manager</Link>
           <Link className="admin-btn" href="/admin/settings">Settings</Link>
           <button className="admin-btn" type="button" onClick={loadOverview}>Reload</button>
         </div>
@@ -417,6 +424,8 @@ export default function AdminDashboardPage() {
                 ['Creator Requests', overview.pendingCreatorRequests],
                 ['Contact Requests', overview.totalSubmissions],
                 ['Appointments', overview.totalAppointments],
+                ['Job Listings', overview.totalJobs],
+                ['Job Applications', overview.totalJobApplications],
                 ['Creator Uploads', creatorContent.length]
                 ,
                 ['Blog Posts', blogPosts.length]
@@ -448,7 +457,13 @@ export default function AdminDashboardPage() {
                 onChange={(event) => setGlobalQuery(event.target.value)}
                 placeholder="Search across tasks, contacts, appointments, creator content, blogs..."
               />
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-7">
+                <article className="admin-list-card space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Careers</p>
+                  <p className="text-2xl font-semibold">{overview.totalJobApplications}</p>
+                  <p className="text-xs text-slate-400">Open roles: {overview.totalJobs}</p>
+                  <Link className="admin-btn inline-flex w-fit" href="/admin/job-manager">Open Job Manager</Link>
+                </article>
                 <article className="admin-list-card space-y-2">
                   <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Employee Tasks</p>
                   <p className="text-2xl font-semibold">{filteredTasks.length}</p>
