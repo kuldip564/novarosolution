@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import dynamic from 'next/dynamic';
@@ -9,9 +8,9 @@ import { buildMetadata, generateOrganizationSchema, getSiteUrl } from '@/lib/seo
 import SEO from '@/components/SEO';
 import Providers from './providers';
 import RouteTransition from '@/components/animations/RouteTransition';
-import HeaderNav from '@/components/layout/HeaderNav';
 import AnnouncementBanner from '@/components/layout/AnnouncementBanner';
-import FooterNavLinks from '@/components/layout/FooterNavLinks';
+import SiteHeader from '@/components/layout/SiteHeader';
+import SiteFooter from '@/components/layout/SiteFooter';
 import CookieConsentBanner from '@/components/compliance/CookieConsentBanner';
 import { fetchSiteContent } from '@/lib/api';
 import { normalizeSiteChrome } from '@/lib/siteChrome';
@@ -80,36 +79,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             schema={generateOrganizationSchema()}
           />
           <AnnouncementBanner />
-          <header className="header">
-            <div className="container header-content">
-              <Link href="/" className="brand-block">
-                <span className="brand-mark" aria-hidden="true" />
-                <span className="brand-text">
-                  <span className="brand-title">{siteChrome.brandName}</span>
-                  <span className="brand-subtitle">{siteChrome.brandSubtitle}</span>
-                </span>
-              </Link>
-              <HeaderNav chrome={siteChrome} />
-            </div>
-          </header>
+          <SiteHeader chrome={siteChrome} />
           <main className="main container">
             <RouteTransition>{children}</RouteTransition>
           </main>
           <SiteEnhancements />
-          <footer className="footer">
-            <div className="container footer-content footer-grid">
-              <div className="footer-brand">
-                <p className="footer-title">{siteChrome.brandName}</p>
-                <small>{siteChrome.footerTagline}</small>
-              </div>
-              <FooterNavLinks chrome={siteChrome} />
-              <div className="footer-meta">
-                <small>
-                  © {new Date().getFullYear()} {siteChrome.copyrightName}
-                </small>
-              </div>
-            </div>
-          </footer>
+          <SiteFooter chrome={siteChrome} />
           <CookieConsentBanner adsenseClientId={ADSENSE_CLIENT_ID} />
         </Providers>
       </body>
