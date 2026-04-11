@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
+import SafeImage from '@/components/ui/SafeImage';
 
 const AboutNebulaScene = dynamic(() => import('@/components/about/AboutNebulaScene'), {
   ssr: false
@@ -336,7 +337,14 @@ export default function AboutStoryExperience({
               <div className="mt-3 flex items-start gap-3">
                 <div className="h-14 w-14 overflow-hidden rounded-2xl border border-white/15 bg-white/10 text-sm font-bold flex items-center justify-center">
                   {isImageAvatar(item.avatar) ? (
-                    <img src={normalizeAvatarValue(item.avatar)} alt={item.name || 'Owner'} className="h-full w-full object-cover" />
+                    <SafeImage
+                      src={normalizeAvatarValue(item.avatar)}
+                      alt={item.name ? `Photo of ${item.name}` : 'Team member photo'}
+                      width={56}
+                      height={56}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
                   ) : (
                     getInitials(item.name)
                   )}

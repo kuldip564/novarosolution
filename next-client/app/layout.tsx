@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import './globals.css';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { buildMetadata, generateOrganizationSchema, getSiteUrl } from '@/lib/seo';
+import { buildMetadata, generateRootJsonLd, getSiteUrl } from '@/lib/seo';
 import SEO from '@/components/SEO';
 import Providers from './providers';
 import RouteTransition from '@/components/animations/RouteTransition';
@@ -25,6 +25,15 @@ const inter = Inter({
   display: 'swap',
   preload: true
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f0f6ff' },
+    { media: '(prefers-color-scheme: dark)', color: '#020617' }
+  ]
+};
 
 export const metadata: Metadata = buildMetadata({
   title: 'NovaRo Solution | Scalable Tech Solutions for Modern Businesses',
@@ -74,10 +83,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           `}
         </Script>
         <Providers>
-          <SEO
-            canonical={getSiteUrl()}
-            schema={generateOrganizationSchema()}
-          />
+          <SEO canonical={getSiteUrl()} schema={generateRootJsonLd()} />
           <AnnouncementBanner />
           <SiteHeader chrome={siteChrome} />
           <main className="main container">

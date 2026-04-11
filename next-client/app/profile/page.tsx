@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import SafeImage from '@/components/ui/SafeImage';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import { useAuth } from '@/context/AuthContext';
 import { fetchMyProjectMessages, requestCreatorAccess } from '@/lib/clientApi';
@@ -297,7 +298,7 @@ export default function ProfilePage() {
   return (
     <ProtectedPage>
       <div className="app-page-shell">
-        <section className="profile-shell">
+        <section className="profile-shell profile-shell--premium">
           {status || error ? (
             <div className="flex flex-col gap-2">
               {status ? <div className="premium-alert premium-alert--success">{status}</div> : null}
@@ -305,19 +306,22 @@ export default function ProfilePage() {
             </div>
           ) : null}
 
-          <motion.article className="premium-page-hero overflow-hidden" {...sectionMotion}>
+          <motion.article className="premium-page-hero profile-hero-premium overflow-hidden rounded-[1.75rem]" {...sectionMotion}>
             <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:24px_24px]" />
+            <div className="profile-hero-premium__accent" aria-hidden />
             <div className="relative flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
               <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
                 <div className="relative shrink-0">
-                  <div className="absolute -inset-1 rounded-full bg-linear-to-br from-cyan-400/25 via-indigo-500/20 to-fuchsia-500/30 blur-lg" />
-                  <div className="relative rounded-full p-[4px] ring-2 ring-white/20 ring-offset-[3px] ring-offset-slate-950">
+                  <div className="absolute -inset-2 rounded-full bg-linear-to-br from-cyan-400/30 via-indigo-500/25 to-fuchsia-500/35 blur-xl" />
+                  <div className="relative rounded-full p-[5px] ring-1 ring-white/25 ring-offset-4 ring-offset-slate-950 shadow-[0_0_0_1px_rgba(255,255,255,0.06)]">
                     {avatar ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <SafeImage
                         src={avatar}
-                        alt=""
+                        alt={user?.name ? `Profile photo of ${user.name}` : 'Your profile photo'}
+                        width={144}
+                        height={144}
                         className="relative h-32 w-32 rounded-full border border-white/25 object-cover shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:h-36 sm:w-36"
+                        priority
                       />
                     ) : (
                       <div className="flex h-32 w-32 items-center justify-center rounded-full border border-white/20 bg-linear-to-br from-white/18 to-white/5 text-3xl font-bold tracking-tight text-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:h-36 sm:w-36">
@@ -326,10 +330,12 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </div>
-                <div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
+                <div className="min-w-0 flex-1 space-y-5 text-center sm:text-left">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Account</p>
-                    <h1 className="section-title mt-1 text-3xl font-extrabold md:text-4xl">Your profile</h1>
+                    <h1 className="section-title mt-1 bg-linear-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl">
+                      Your profile
+                    </h1>
                     <p className="mt-2 max-w-lg text-sm leading-relaxed text-slate-400">
                       Manage how you appear across Novaro, keep your password secure, and open tools for your role.
                     </p>
@@ -352,7 +358,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                    <span className="rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium capitalize text-slate-100 shadow-sm shadow-black/20">
+                    <span className="profile-role-pill">
                       {user?.role || 'Member'}
                     </span>
                     {creatorRequestPending ? (
@@ -361,7 +367,7 @@ export default function ProfilePage() {
                       </span>
                     ) : null}
                   </div>
-                  <div className="space-y-1.5 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-400">
+                  <div className="profile-identity-panel">
                     <p className="font-semibold text-slate-100">{user?.name}</p>
                     <p className="break-all text-slate-300">{user?.email}</p>
                     <p className="font-mono text-[11px] text-slate-500">ID · {user?.id}</p>
@@ -371,14 +377,14 @@ export default function ProfilePage() {
             </div>
           </motion.article>
 
-          <motion.article className="page-content-card" {...sectionMotion}>
+          <motion.article className="page-content-card profile-card-premium" {...sectionMotion}>
             <div className="profile-section-head">
               <div className="min-w-0 flex-1">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Quick actions</h2>
                 <p className="mt-1 text-xs text-slate-500">Shortcuts for support and data export.</p>
               </div>
             </div>
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
+            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
               {(
                 [
                   { label: 'Refresh', onClick: refreshMe },
@@ -391,7 +397,7 @@ export default function ProfilePage() {
                 <button
                   key={action.label}
                   type="button"
-                  className="rounded-xl border border-white/12 bg-white/[0.05] px-3 py-2.5 text-center text-xs font-medium text-slate-200 shadow-sm shadow-black/5 transition hover:border-cyan-500/25 hover:bg-white/[0.08] hover:text-white"
+                  className="profile-quick-action-btn"
                   onClick={action.onClick}
                 >
                   {action.label}
@@ -400,11 +406,11 @@ export default function ProfilePage() {
             </div>
           </motion.article>
 
-          <motion.article className="page-content-card" {...sectionMotion}>
+          <motion.article className="page-content-card profile-card-premium" {...sectionMotion}>
             <div className="profile-section-head">
               <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-100">Activity</h2>
+                  <h2 className="text-lg font-semibold tracking-tight text-slate-100">Activity</h2>
                   <p className="text-sm text-slate-500">Project chat and account signals.</p>
                 </div>
                 <p className="text-xs text-slate-500 sm:text-right">
@@ -459,7 +465,8 @@ export default function ProfilePage() {
             </div>
           </motion.article>
 
-          <motion.form className="page-content-card space-y-5" onSubmit={onProfileSubmit} {...sectionMotion}>
+          <div className="profile-forms-grid">
+          <motion.form className="page-content-card profile-card-premium space-y-5" onSubmit={onProfileSubmit} {...sectionMotion}>
             <div className="profile-section-head">
               <div>
                 <h2 className="text-lg font-semibold text-slate-100">Profile details</h2>
@@ -568,7 +575,7 @@ export default function ProfilePage() {
             </div>
           </motion.form>
 
-          <motion.form className="page-content-card space-y-5 ring-1 ring-white/[0.04]" onSubmit={onPasswordSubmit} {...sectionMotion}>
+          <motion.form className="page-content-card profile-card-premium space-y-5 ring-1 ring-white/[0.04]" onSubmit={onPasswordSubmit} {...sectionMotion}>
             <div className="profile-section-head">
               <div>
                 <h2 className="text-lg font-semibold text-slate-100">Password</h2>
@@ -630,6 +637,7 @@ export default function ProfilePage() {
               Update password
             </button>
           </motion.form>
+          </div>
 
           {!isCreator ? (
             creatorRequestPending ? (

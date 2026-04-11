@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
+import SafeImage from '@/components/ui/SafeImage';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -224,9 +225,15 @@ export default function CreatorStudioPage() {
                 <div className="creator-preview-shell">
                   <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Preview</p>
                   {mediaType === 'video' ? (
-                    <video className="creator-studio-preview-media" controls src={draftPreviewUrl} />
+                    <video className="creator-studio-preview-media" controls src={draftPreviewUrl} preload="none" />
                   ) : (
-                    <img className="creator-studio-preview-media" src={draftPreviewUrl} alt="Preview" />
+                    <SafeImage
+                      src={draftPreviewUrl}
+                      alt="Draft media preview"
+                      width={960}
+                      height={540}
+                      className="creator-studio-preview-media"
+                    />
                   )}
                 </div>
               ) : null}
@@ -275,11 +282,18 @@ export default function CreatorStudioPage() {
             {loading ? <p className="text-slate-300">Loading content...</p> : null}
             {visibleItems.map((item) => (
               <article key={item.id} className="creator-feed-card">
-                <div className="creator-feed-media-wrap">
+                <div className="creator-feed-media-wrap h-[230px]">
                   {item.mediaType === 'video' ? (
-                    <video className="creator-feed-media" controls src={item.mediaUrl} />
+                    <video className="creator-feed-media" controls src={item.mediaUrl} preload="none" />
                   ) : (
-                    <img className="creator-feed-media" src={item.mediaUrl} alt={item.title} />
+                    <SafeImage
+                      src={item.mediaUrl}
+                      alt={item.title ? `Studio post image: ${item.title}` : 'Creator content image'}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="creator-feed-media"
+                      loading="lazy"
+                    />
                   )}
                   <span className="creator-media-chip">{item.mediaType === 'video' ? 'Video' : 'Photo'}</span>
                 </div>

@@ -42,6 +42,10 @@ const cspHeader = [
 const nextConfig = {
   distDir: isDev ? '.next-dev' : '.next',
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
       { protocol: 'http', hostname: '**' }
@@ -49,6 +53,9 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  compiler: {
+    removeConsole: isDev ? false : { exclude: ['error', 'warn'] }
+  },
   outputFileTracingRoot: path.join(__dirname, '..'),
   experimental: {
     optimizePackageImports: ['react-icons', 'framer-motion']
@@ -59,6 +66,19 @@ const nextConfig = {
         source: '/ads.txt',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400' }
+        ]
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+      },
+      {
+        source: '/_next/image',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, stale-while-revalidate=604800'
+          }
         ]
       },
       {

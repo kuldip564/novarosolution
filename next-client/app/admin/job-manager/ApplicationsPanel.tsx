@@ -10,6 +10,7 @@ import {
   updateAdminJobApplication
 } from '@/lib/clientApi';
 import { formatApplicationStatus, formatInterviewRound } from '@/components/careers/interviewLabels';
+import SafeImage from '@/components/ui/SafeImage';
 
 const STATUS_OPTIONS: JobApplicationRow['status'][] = [
   'pending',
@@ -218,8 +219,13 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
               <div className="flex items-start gap-2">
                 {row.userAvatarUrl ? (
                   <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/10">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={row.userAvatarUrl} alt="" className="h-full w-full object-cover" />
+                    <SafeImage
+                      src={row.userAvatarUrl}
+                      alt={row.userName || row.applicantName ? `Avatar of ${row.userName || row.applicantName}` : 'Applicant avatar'}
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover"
+                    />
                   </span>
                 ) : (
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-slate-200">
@@ -287,8 +293,13 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
               <div className="flex gap-4">
                 {user.avatarUrl ? (
                   <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-white/10">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    <SafeImage
+                      src={user.avatarUrl}
+                      alt={user.name ? `Profile photo of ${user.name}` : 'Applicant profile photo'}
+                      width={64}
+                      height={64}
+                      className="h-full w-full object-cover"
+                    />
                   </span>
                 ) : (
                   <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-2xl font-bold">

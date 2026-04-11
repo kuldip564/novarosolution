@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
-import { FaMoon, FaSun } from 'react-icons/fa';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FaMoon, FaSearch, FaSun } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import type { SiteChrome } from '@/lib/siteChrome';
 import { DEFAULT_SITE_CHROME } from '@/lib/siteChrome';
@@ -21,8 +21,10 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
   const reduceMotion = useReducedMotion();
   const { loading, isAuthenticated, isCreator, isAdmin, isEmployee, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [searchQuery, setSearchQuery] = useState('');
+  const searchFieldRef = useRef<HTMLInputElement>(null);
 
   const navItems = chrome.navItems?.length ? chrome.navItems : DEFAULT_SITE_CHROME.navItems;
   const searchPlaceholder = chrome.searchPlaceholder || DEFAULT_SITE_CHROME.searchPlaceholder;
@@ -38,6 +40,7 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
 
   useEffect(() => {
     setMenuOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -47,11 +50,26 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    document.body.style.overflow = menuOpen || searchOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [menuOpen]);
+  }, [menuOpen, searchOpen]);
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    const t = window.setTimeout(() => searchFieldRef.current?.focus(), 50);
+    return () => window.clearTimeout(t);
+  }, [searchOpen]);
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setSearchOpen(false);
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [searchOpen]);
 
   useEffect(() => {
     function onResize() {
@@ -80,10 +98,20 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
     if (!q) {
       router.push('/search');
       setMenuOpen(false);
+      setSearchOpen(false);
       return;
     }
     router.push(`/search?q=${encodeURIComponent(q)}`);
     setMenuOpen(false);
+    setSearchOpen(false);
+  }
+
+  function openSearch() {
+    if (pathname === '/search') {
+      const params = new URLSearchParams(window.location.search);
+      setSearchQuery(params.get('q') || '');
+    }
+    setSearchOpen(true);
   }
 
   function linkClass(isActive: boolean) {
@@ -160,22 +188,17 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
               ) : null}
             </nav>
 
-            <form
-              className="site-header__search site-header__search--desktop"
-              onSubmit={onSearchSubmit}
-              role="search"
-              aria-label="Site search"
-            >
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={searchPlaceholder}
-                aria-label="Search site"
-              />
-            </form>
-
             <div className="site-header__tools">
+              <button
+                type="button"
+                className="site-header__icon-btn"
+                aria-label="Open search"
+                aria-expanded={searchOpen}
+                aria-haspopup="dialog"
+                onClick={() => (searchOpen ? setSearchOpen(false) : openSearch())}
+              >
+                <FaSearch size={14} aria-hidden />
+              </button>
               <button type="button" className="site-header__icon-btn" aria-label="Toggle theme" onClick={toggleTheme}>
                 {theme === 'dark' ? <FaSun size={15} /> : <FaMoon size={15} />}
               </button>
@@ -215,15 +238,6 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
               exit={reduceMotion ? undefined : { opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             >
-              <form className="site-header__search site-header__search--mobile" onSubmit={onSearchSubmit} role="search">
-                <input
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={searchPlaceholder}
-                  aria-label="Search site"
-                />
-              </form>
               <p className="site-header__drawer-label">Menu</p>
               {navItems.map(renderNavLink)}
               {loading ? (
@@ -242,6 +256,58 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
                 </>
               )}
             </motion.nav>
+          </>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {searchOpen ? (
+          <>
+            <motion.button
+              key="search-backdrop"
+              type="button"
+              aria-label="Close search"
+              className="site-header__search-popover-backdrop"
+              onClick={() => setSearchOpen(false)}
+              initial={reduceMotion ? undefined : { opacity: 0 }}
+              animate={reduceMotion ? undefined : { opacity: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0 }}
+            />
+            <motion.div
+              key="search-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Search"
+              className="site-header__search-popover"
+              initial={reduceMotion ? undefined : { opacity: 0, y: -10, scale: 0.98 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <form onSubmit={onSearchSubmit} role="search" className="site-header__search-popover-form">
+                <label className="site-header__search-popover-label" htmlFor="site-header-search-q">
+                  Search the site
+                </label>
+                <div className="site-header__search-popover-row">
+                  <input
+                    ref={searchFieldRef}
+                    id="site-header-search-q"
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={searchPlaceholder}
+                    autoComplete="off"
+                    aria-label="Search site"
+                  />
+                  <button type="submit" className="site-header__search-popover-submit">
+                    Go
+                  </button>
+                </div>
+                <button type="button" className="site-header__search-popover-cancel" onClick={() => setSearchOpen(false)}>
+                  Cancel
+                </button>
+              </form>
+            </motion.div>
           </>
         ) : null}
       </AnimatePresence>

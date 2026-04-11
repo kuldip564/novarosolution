@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MessageCircle, RefreshCw, Search, ThumbsUp } from 'lucide-react';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import SafeImage from '@/components/ui/SafeImage';
 import ProtectedPage from '@/components/auth/ProtectedPage';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -344,11 +345,18 @@ export default function CreatorFeedPage() {
                 transition={{ duration: 0.32, delay: index * 0.04 }}
                 whileHover={reduceMotion ? undefined : { y: -3 }}
               >
-                <div className="creator-feed-media-wrap">
+                <div className="creator-feed-media-wrap h-[230px]">
                   {item.mediaType === 'video' ? (
-                    <video className="creator-feed-media" controls src={item.mediaUrl} />
+                    <video className="creator-feed-media" controls src={item.mediaUrl} preload="none" />
                   ) : (
-                    <img className="creator-feed-media" src={item.mediaUrl} alt={item.title} loading="lazy" />
+                    <SafeImage
+                      src={item.mediaUrl}
+                      alt={item.title ? `Creator feed image: ${item.title}` : 'Creator feed image'}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="creator-feed-media"
+                      loading="lazy"
+                    />
                   )}
                   <span className="creator-media-chip">{item.mediaType === 'video' ? 'Video' : 'Photo'}</span>
                 </div>
