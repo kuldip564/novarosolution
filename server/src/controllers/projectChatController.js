@@ -137,7 +137,6 @@ export async function getAdminProjectMessages(req, res) {
     });
   }
 }
-
 export async function postAdminProjectMessage(req, res) {
   try {
     const validationError = validateMessageInput(req.body);
