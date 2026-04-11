@@ -366,27 +366,27 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   }
 
   return (
-    <div className="w-full text-(--text)">
+    <div className="home-premium w-full text-(--text)">
       <Reveal>
-        <section className="hero-mesh relative w-full min-h-[80vh] flex items-center justify-center px-4 py-24">
+        <section className="hero-mesh relative flex min-h-[82vh] w-full items-center justify-center px-4 py-28">
         <FuturisticThreeHero />
         <div className="mx-auto max-w-6xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-5 py-1.5 text-xs uppercase tracking-[0.22em] text-slate-200 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-md">
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
             {hero.badge}
           </p>
-          <h1 className="mt-6 text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter">
-            <span className="block">{hero.titleMain}</span>
-            <span className="mt-2 block bg-linear-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="mt-8 text-4xl font-black tracking-tighter md:text-6xl lg:text-8xl">
+            <span className="block text-[var(--text)] drop-shadow-[0_2px_24px_rgba(15,23,42,0.45)]">{hero.titleMain}</span>
+            <span className="mt-3 block bg-linear-to-r from-cyan-200 via-violet-300 to-fuchsia-400 bg-clip-text text-transparent">
               {hero.titleGradient}
             </span>
           </h1>
-          <p className="mt-6 text-base md:text-lg text-slate-300 max-w-3xl mx-auto">{hero.description}</p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <p className="mx-auto mt-7 max-w-3xl text-base leading-relaxed text-slate-300 md:text-lg">{hero.description}</p>
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href="/#contact-form" className="btn px-8 py-3">
               {hero.primaryCta}
             </Link>
-            <Link href="/services" className="btn px-8 py-3">
+            <Link href="/services" className="btn-secondary px-8 py-3">
               {hero.secondaryCta}
             </Link>
           </div>
@@ -407,9 +407,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.35, delay: index * 0.06 }}
               whileHover={reduceMotion ? undefined : { y: -3 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center"
+              className="home-stat-card p-5 text-center"
             >
-              <div className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-lg text-pink-200">
+              <div className="mx-auto inline-flex h-11 w-11 items-center justify-center rounded-xl border border-violet-400/25 bg-linear-to-br from-violet-500/25 to-cyan-500/15 text-lg text-cyan-100 shadow-inner shadow-black/20">
                 <StatIcon />
               </div>
               <CountUpValue value={item.value} />
@@ -424,7 +424,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
+          <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
             {data?.services?.title ||
               'UI/UX design, web development, and mobile app development services'}
           </h2>
@@ -453,15 +453,17 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                   whileHover={reduceMotion ? undefined : { y: -4 }}
                   onMouseMove={handleServiceMouseMove}
                   onMouseEnter={(event) => handleServiceMouseEnter(event, service.title)}
-                  className={`service-bento-card rounded-3xl border border-white/10 bg-white/5 p-6 ${bentoClass}`}
+                  className={`service-bento-card rounded-3xl p-6 ${bentoClass}`}
                 >
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-pink-200">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-violet-400/30 bg-linear-to-br from-violet-600/30 to-cyan-500/20 text-cyan-100 shadow-lg shadow-black/20">
                     <Icon />
                   </span>
                   <h3 className="mt-4 text-xl font-semibold">{service.title}</h3>
                   <p className="mt-2 text-slate-300">{service.description}</p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <span className="rounded-full border border-pink-400/30 bg-pink-500/15 px-3 py-1 text-xs">{service.badge}</span>
+                    <span className="rounded-full border border-fuchsia-400/35 bg-fuchsia-500/15 px-3 py-1 text-xs text-fuchsia-100/95">
+                      {service.badge}
+                    </span>
                     <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs">{service.deliveryTime}</span>
                     <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs">{service.pricing}</span>
                   </div>
@@ -553,7 +555,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
+          <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
           </h2>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -568,9 +570,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.35, delay: index * 0.06 }}
                 whileHover={reduceMotion ? undefined : { y: -4 }}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                className="home-mini-card p-6"
               >
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-pink-200">
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/25 bg-linear-to-br from-cyan-500/20 to-violet-600/25 text-cyan-100">
                   <FeatureIcon />
                 </div>
                 <h3 className="mt-3 text-lg font-semibold">{feature.title}</h3>
@@ -586,7 +588,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">{data?.testimonials?.title || 'Teams that ship with confidence'}</h2>
+          <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
+            {data?.testimonials?.title || 'Teams that ship with confidence'}
+          </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {testimonials.map((t: AnyRecord, index: number) => (
               <motion.article
@@ -596,10 +600,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.35, delay: index * 0.07 }}
                 whileHover={reduceMotion ? undefined : { y: -3 }}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                className="home-mini-card p-6"
               >
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-semibold">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-violet-400/30 bg-linear-to-br from-violet-600/35 to-slate-800/80 text-sm font-semibold text-slate-100">
                     {String(t.name || 'N')
                       .split(' ')
                       .map((part: string) => part[0])
@@ -625,9 +629,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
 
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
-        <div className="mx-auto max-w-5xl rounded-3xl border border-white/20 bg-linear-to-br from-red-600/40 via-pink-600/40 to-purple-700/40 p-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold">{data?.cta?.title || 'Ready to ship your next product?'}</h2>
-          <p className="mt-3 text-slate-300">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
+        <div className="home-cta-strip mx-auto max-w-5xl p-8 text-center md:p-10">
+          <h2 className="text-3xl font-bold tracking-tight text-white md:text-5xl">
+            {data?.cta?.title || 'Ready to ship your next product?'}
+          </h2>
+          <p className="mt-4 text-slate-100/85">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/#contact-form" className="btn px-8 py-3">
               {data?.cta?.primaryLabel || 'Start a project'}
@@ -642,8 +648,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
 
       <Reveal>
         <section id="contact-form" className="w-full px-4 py-20 md:py-24">
-        <div className="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-center">{data?.contactForm?.title || "Let's talk about your roadmap"}</h2>
+        <div className="home-contact-shell mx-auto max-w-5xl p-6 md:p-10">
+          <h2 className="home-section-heading text-center text-3xl md:text-5xl">
+            {data?.contactForm?.title || "Let's talk about your roadmap"}
+          </h2>
           <p className="mt-3 text-center text-slate-400">
             {data?.contactForm?.description || 'Share your goals and timelines. We will follow up quickly.'}
           </p>
@@ -689,7 +697,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 pb-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-2xl md:text-3xl font-bold">Latest Creator Feed</h2>
+          <h2 className="home-section-heading text-2xl md:text-3xl">Latest Creator Feed</h2>
           <p className="mt-2 mb-4 text-sm text-slate-400">Client-cached updates powered by React Query.</p>
           <Suspense
             fallback={
