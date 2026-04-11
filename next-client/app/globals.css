@@ -424,12 +424,15 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 }
 
 .header-content {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
   border-radius: 12px;
   background: color-mix(in oklab, var(--surface) 90%, transparent);
   border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   padding-inline: 12px;
   transition: background-color 220ms ease, border-color 220ms ease;
-  flex-wrap: nowrap;
   min-height: 62px;
   min-width: 0;
 }
@@ -442,27 +445,31 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 
 .header-nav-wrap {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1 1 auto;
   min-width: 0;
-  gap: 10px;
+  width: 100%;
 }
 
-/* Nav fills space between brand and search so the search bar never sits over the logo */
+/* Three columns: links (scroll) | search | theme + menu — cannot overlap each other */
+.header-nav-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, min(220px, 26vw)) auto;
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
 .header-nav-desktop {
-  flex: 1 1 auto;
   min-width: 0;
   justify-content: flex-end;
 }
 
 .header-search-form {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  flex: 0 1 220px;
+  width: 100%;
   min-width: 0;
-  max-width: min(220px, 30vw);
 }
 
 .header-search-form input {
@@ -2616,7 +2623,6 @@ select:focus {
   .header-content {
     gap: 8px;
     padding: 6px 0;
-    flex-wrap: nowrap;
     min-height: 50px;
     padding-inline: 8px;
   }
@@ -2858,10 +2864,6 @@ select:focus {
     min-height: 34px;
     padding: 6px 10px;
   }
-
-  .header-search-form {
-    flex-basis: 150px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -2871,6 +2873,14 @@ select:focus {
 }
 
 @media (max-width: 1024px) {
+  /* Nav + desktop search hidden — only utilities remain; flex keeps them right-aligned */
+  .header-nav-main {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+
   .header-search-form {
     display: none;
   }

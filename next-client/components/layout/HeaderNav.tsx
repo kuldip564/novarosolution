@@ -126,60 +126,62 @@ export default function HeaderNav({ chrome = DEFAULT_SITE_CHROME }: HeaderNavPro
 
   return (
     <div className="header-nav-wrap">
-      <motion.nav
-        className="nav nav-desktop nav-shell header-nav-desktop"
-        aria-label="Main navigation"
-        initial={reduceMotion ? undefined : { opacity: 0, y: -6 }}
-        animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {navItems.map(renderLink)}
-        {authLinks.length ? (
-          <>
-            <span className="nav-divider" aria-hidden="true" />
-            {authLinks.map(renderLink)}
-            {!loading && isAuthenticated ? (
-              <button type="button" className="nav-link nav-link-ghost" onClick={handleLogout}>
-                <span>Logout</span>
-              </button>
-            ) : null}
-          </>
-        ) : (
-          <span className="nav-link nav-link-loading"><span>Loading...</span></span>
-        )}
-      </motion.nav>
-
-      <form className="header-search-form" onSubmit={onSearchSubmit} role="search" aria-label="Site search">
-        <input
-          type="search"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder={searchPlaceholder}
-          aria-label="Search site"
-        />
-      </form>
-
-      <div className="nav-utilities nav-shell-utilities">
-        <button
-          type="button"
-          aria-label="Toggle theme"
-          className="theme-toggle"
-          onClick={toggleTheme}
+      <div className="header-nav-main">
+        <motion.nav
+          className="nav nav-desktop nav-shell header-nav-desktop"
+          aria-label="Main navigation"
+          initial={reduceMotion ? undefined : { opacity: 0, y: -6 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
         >
-          {theme === 'dark' ? <FaSun size={14} /> : <FaMoon size={14} />}
-        </button>
+          {navItems.map(renderLink)}
+          {authLinks.length ? (
+            <>
+              <span className="nav-divider" aria-hidden="true" />
+              {authLinks.map(renderLink)}
+              {!loading && isAuthenticated ? (
+                <button type="button" className="nav-link nav-link-ghost" onClick={handleLogout}>
+                  <span>Logout</span>
+                </button>
+              ) : null}
+            </>
+          ) : (
+            <span className="nav-link nav-link-loading"><span>Loading...</span></span>
+          )}
+        </motion.nav>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-          className={`mobile-menu-btn ${menuOpen ? 'is-open' : ''}`}
-          onClick={() => setMenuOpen((prev) => !prev)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        <form className="header-search-form" onSubmit={onSearchSubmit} role="search" aria-label="Site search">
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder={searchPlaceholder}
+            aria-label="Search site"
+          />
+        </form>
+
+        <div className="nav-utilities nav-shell-utilities">
+          <button
+            type="button"
+            aria-label="Toggle theme"
+            className="theme-toggle"
+            onClick={toggleTheme}
+          >
+            {theme === 'dark' ? <FaSun size={14} /> : <FaMoon size={14} />}
+          </button>
+
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            className={`mobile-menu-btn ${menuOpen ? 'is-open' : ''}`}
+            onClick={() => setMenuOpen((prev) => !prev)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
