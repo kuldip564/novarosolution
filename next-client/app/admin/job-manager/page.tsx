@@ -165,62 +165,57 @@ export default function AdminJobManagerPage() {
     }
   }
 
-  const inputClass =
-    'rounded-xl border border-white/15 bg-black/30 px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/30';
-  const labelClass = 'flex flex-col gap-1.5 text-xs font-medium uppercase tracking-wide text-slate-500';
-
   return (
     <ProtectedPage requireAdmin>
       <main className="app-page-shell">
-        <section className="premium-page-hero space-y-4 border-b border-white/10 pb-8">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-400/80">Hiring</p>
-              <h1 className="section-title mt-1 text-3xl font-extrabold md:text-4xl">Job manager</h1>
-              <p className="mt-2 max-w-xl text-sm text-slate-400">
-                Craft rich listings with summary, responsibilities, and benefits. Feature priority roles and set optional
-                deadlines.
-              </p>
+        <section className="admin-shell">
+          <article className="premium-page-hero space-y-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="premium-eyebrow">Hiring</p>
+                <h1 className="section-title mt-2 text-3xl font-extrabold md:text-4xl">Job manager</h1>
+                <p className="mt-2 max-w-xl text-sm text-slate-400">
+                  Craft rich listings with summary, responsibilities, and benefits. Feature priority roles and set optional
+                  deadlines.
+                </p>
+              </div>
+              <Link className="admin-btn inline-flex shrink-0 self-start" href="/admin/dashboard">
+                ← Dashboard
+              </Link>
             </div>
-            <Link className="admin-btn inline-flex shrink-0 self-start" href="/admin/dashboard">
-              ← Dashboard
-            </Link>
-          </div>
 
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-                tab === 'jobs' ? 'bg-white text-slate-900 shadow-lg shadow-cyan-500/10' : 'bg-white/5 text-slate-300 hover:bg-white/10'
-              }`}
-              onClick={() => setTab('jobs')}
-            >
-              Jobs
-            </button>
-            <button
-              type="button"
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
-                tab === 'applications'
-                  ? 'bg-white text-slate-900 shadow-lg shadow-cyan-500/10'
-                  : 'bg-white/5 text-slate-300 hover:bg-white/10'
-              }`}
-              onClick={() => setTab('applications')}
-            >
-              Applications
-            </button>
-          </div>
-        </section>
+            <div className="premium-tab-group" role="tablist" aria-label="Job manager sections">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === 'jobs'}
+                className={tab === 'jobs' ? 'premium-tab premium-tab--active' : 'premium-tab'}
+                onClick={() => setTab('jobs')}
+              >
+                Jobs
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === 'applications'}
+                className={tab === 'applications' ? 'premium-tab premium-tab--active' : 'premium-tab'}
+                onClick={() => setTab('applications')}
+              >
+                Applications
+              </button>
+            </div>
+          </article>
 
-        <section className="mt-8 space-y-4">
+        <section className="mt-2 space-y-4">
           {loading ? <p className="text-slate-400">Loading…</p> : null}
-          {error ? <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">{error}</p> : null}
-          {notice ? <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">{notice}</p> : null}
+          {error ? <p className="premium-alert premium-alert--error text-sm">{error}</p> : null}
+          {notice ? <p className="premium-alert premium-alert--success text-sm">{notice}</p> : null}
 
           {tab === 'jobs' ? (
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,400px)]">
-              <form onSubmit={onSaveJob} className="space-y-8 rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-transparent p-6 md:p-8">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-                  <h2 className="text-xl font-bold text-slate-50">{editingId ? 'Edit job' : 'New job posting'}</h2>
+              <form onSubmit={onSaveJob} className="premium-form-panel space-y-8">
+                <div className="premium-form-panel__head">
+                  <h2 className="text-xl font-bold text-slate-100">{editingId ? 'Edit job' : 'New job posting'}</h2>
                   {editingId ? (
                     <button type="button" className="btn-secondary text-sm" onClick={resetJobForm}>
                       Cancel edit
@@ -229,22 +224,22 @@ export default function AdminJobManagerPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Basics</p>
+                  <p className="premium-form-section-label">Basics</p>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Title *
                       <input
                         required
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.title}
                         onChange={(e) => setJobForm((f) => ({ ...f, title: e.target.value }))}
                         placeholder="e.g. Senior Product Designer"
                       />
                     </label>
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Department
                       <input
-                        className={inputClass}
+                        className="premium-field-input"
                         list="department-suggestions"
                         value={jobForm.department}
                         onChange={(e) => setJobForm((f) => ({ ...f, department: e.target.value }))}
@@ -258,11 +253,11 @@ export default function AdminJobManagerPage() {
                     </label>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Category *
                       <input
                         required
-                        className={inputClass}
+                        className="premium-field-input"
                         list="category-suggestions"
                         value={jobForm.category}
                         onChange={(e) => setJobForm((f) => ({ ...f, category: e.target.value }))}
@@ -274,10 +269,10 @@ export default function AdminJobManagerPage() {
                         ))}
                       </datalist>
                     </label>
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Location
                       <input
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.location}
                         onChange={(e) => setJobForm((f) => ({ ...f, location: e.target.value }))}
                         placeholder="City, country, or “Global”"
@@ -287,13 +282,13 @@ export default function AdminJobManagerPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Listing copy</p>
-                  <label className={labelClass}>
+                  <p className="premium-form-section-label">Listing copy</p>
+                  <label className="premium-field-label">
                     Short summary
                     <textarea
                       rows={3}
                       maxLength={500}
-                      className={`${inputClass} min-h-[72px] resize-y`}
+                      className="premium-field-input min-h-[72px] resize-y"
                       value={jobForm.summary}
                       onChange={(e) => setJobForm((f) => ({ ...f, summary: e.target.value }))}
                       placeholder="2–3 sentences for the jobs grid. If empty, the first lines of the description are used."
@@ -302,13 +297,13 @@ export default function AdminJobManagerPage() {
                       {jobForm.summary.length}/500
                     </span>
                   </label>
-                  <label className={labelClass}>
+                  <label className="premium-field-label">
                     About the role *
                     <textarea
                       required
                       minLength={20}
                       rows={5}
-                      className={`${inputClass} min-h-[120px] resize-y`}
+                      className="premium-field-input min-h-[120px] resize-y"
                       value={jobForm.description}
                       onChange={(e) => setJobForm((f) => ({ ...f, description: e.target.value }))}
                       placeholder="Overview: mission, team, and what success looks like."
@@ -317,32 +312,32 @@ export default function AdminJobManagerPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Role details (optional)</p>
-                  <label className={labelClass}>
+                  <p className="premium-form-section-label">Role details (optional)</p>
+                  <label className="premium-field-label">
                     Responsibilities
                     <textarea
                       rows={5}
-                      className={`${inputClass} min-h-[100px] resize-y font-mono text-[13px] leading-relaxed`}
+                      className="premium-field-input min-h-[100px] resize-y font-mono text-[13px] leading-relaxed"
                       value={jobForm.responsibilities}
                       onChange={(e) => setJobForm((f) => ({ ...f, responsibilities: e.target.value }))}
                       placeholder={'Bullet-style lines OK:\n• Own the roadmap for…\n• Partner with engineering…'}
                     />
                   </label>
-                  <label className={labelClass}>
+                  <label className="premium-field-label">
                     Requirements
                     <textarea
                       rows={5}
-                      className={`${inputClass} min-h-[100px] resize-y font-mono text-[13px] leading-relaxed`}
+                      className="premium-field-input min-h-[100px] resize-y font-mono text-[13px] leading-relaxed"
                       value={jobForm.requirements}
                       onChange={(e) => setJobForm((f) => ({ ...f, requirements: e.target.value }))}
                       placeholder={'Years of experience, tools, education…'}
                     />
                   </label>
-                  <label className={labelClass}>
+                  <label className="premium-field-label">
                     Benefits & perks
                     <textarea
                       rows={4}
-                      className={`${inputClass} min-h-[88px] resize-y`}
+                      className="premium-field-input min-h-[88px] resize-y"
                       value={jobForm.benefits}
                       onChange={(e) => setJobForm((f) => ({ ...f, benefits: e.target.value }))}
                       placeholder="Health, PTO, learning budget, remote stipend…"
@@ -351,21 +346,21 @@ export default function AdminJobManagerPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Compensation & arrangement</p>
+                  <p className="premium-form-section-label">Compensation & arrangement</p>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Salary / comp hint
                       <input
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.salaryHint}
                         onChange={(e) => setJobForm((f) => ({ ...f, salaryHint: e.target.value }))}
                         placeholder="e.g. $90k–$115k · Equity"
                       />
                     </label>
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Experience level
                       <select
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.experienceLevel}
                         onChange={(e) =>
                           setJobForm((f) => ({
@@ -383,10 +378,10 @@ export default function AdminJobManagerPage() {
                     </label>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Work mode
                       <select
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.workMode}
                         onChange={(e) => setJobForm((f) => ({ ...f, workMode: e.target.value as PublicJob['workMode'] }))}
                       >
@@ -395,10 +390,10 @@ export default function AdminJobManagerPage() {
                         <option value="onsite">On-site</option>
                       </select>
                     </label>
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Employment type
                       <select
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.employmentType}
                         onChange={(e) =>
                           setJobForm((f) => ({ ...f, employmentType: e.target.value as PublicJob['employmentType'] }))
@@ -414,13 +409,13 @@ export default function AdminJobManagerPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Visibility</p>
+                  <p className="premium-form-section-label">Visibility</p>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Application deadline
                       <input
                         type="datetime-local"
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.applicationDeadlineLocal}
                         onChange={(e) => setJobForm((f) => ({ ...f, applicationDeadlineLocal: e.target.value }))}
                       />
@@ -428,13 +423,13 @@ export default function AdminJobManagerPage() {
                         Leave empty for no deadline. Shown on listings when set.
                       </span>
                     </label>
-                    <label className={labelClass}>
+                    <label className="premium-field-label">
                       Sort priority
                       <input
                         type="number"
                         min={-9999}
                         max={99999}
-                        className={inputClass}
+                        className="premium-field-input"
                         value={jobForm.sortOrder}
                         onChange={(e) => setJobForm((f) => ({ ...f, sortOrder: Number(e.target.value) || 0 }))}
                       />
@@ -443,29 +438,27 @@ export default function AdminJobManagerPage() {
                       </span>
                     </label>
                   </div>
-                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <label className="premium-inset-option">
                     <input
                       type="checkbox"
-                      className="mt-1 h-4 w-4 rounded border-white/20 bg-black/40 text-cyan-500 focus:ring-cyan-500/40"
                       checked={jobForm.featured}
                       onChange={(e) => setJobForm((f) => ({ ...f, featured: e.target.checked }))}
                     />
                     <span>
-                      <span className="font-semibold text-slate-200">Featured role</span>
+                      <span className="font-semibold text-slate-100">Featured role</span>
                       <span className="mt-0.5 block text-xs font-normal normal-case text-slate-500">
                         Pinned to the top of the jobs page with a badge.
                       </span>
                     </span>
                   </label>
-                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <label className="premium-inset-option">
                     <input
                       type="checkbox"
-                      className="mt-1 h-4 w-4 rounded border-white/20 bg-black/40 text-cyan-500 focus:ring-cyan-500/40"
                       checked={jobForm.isPublished}
                       onChange={(e) => setJobForm((f) => ({ ...f, isPublished: e.target.checked }))}
                     />
                     <span>
-                      <span className="font-semibold text-slate-200">Published</span>
+                      <span className="font-semibold text-slate-100">Published</span>
                       <span className="mt-0.5 block text-xs font-normal normal-case text-slate-500">
                         Visible on the public jobs page when enabled.
                       </span>
@@ -473,7 +466,7 @@ export default function AdminJobManagerPage() {
                   </label>
                 </div>
 
-                <div className="flex flex-wrap gap-3 border-t border-white/10 pt-6">
+                <div className="premium-form-panel__actions">
                   <button type="submit" className="admin-btn" disabled={saving}>
                     {saving ? 'Saving…' : editingId ? 'Save changes' : 'Publish job'}
                   </button>
@@ -486,14 +479,11 @@ export default function AdminJobManagerPage() {
               </form>
 
               <div className="lg:sticky lg:top-24 lg:self-start">
-                <h2 className="text-lg font-bold text-slate-100">All jobs ({jobs.length})</h2>
+                <h2 className="text-lg font-bold tracking-tight text-slate-100">All jobs ({jobs.length})</h2>
                 <p className="mt-1 text-xs text-slate-500">Featured and higher priority sort first on the jobs page.</p>
                 <ul className="mt-4 max-h-[70vh] space-y-3 overflow-y-auto pr-1">
                   {jobs.map((job) => (
-                    <li
-                      key={job.id}
-                      className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)] transition hover:border-cyan-500/25"
-                    >
+                    <li key={job.id} className="admin-list-card">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div className="min-w-0">
                           <p className="font-semibold text-slate-100">{job.title}</p>
@@ -530,16 +520,12 @@ export default function AdminJobManagerPage() {
                         <div className="flex shrink-0 gap-2">
                           <button
                             type="button"
-                            className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-cyan-200 hover:bg-white/10"
+                            className="btn-secondary btn-sm"
                             onClick={() => startEdit(job)}
                           >
                             Edit
                           </button>
-                          <button
-                            type="button"
-                            className="rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs text-red-300 hover:bg-red-500/20"
-                            onClick={() => onDeleteJob(job.id)}
-                          >
+                          <button type="button" className="btn btn-danger btn-sm" onClick={() => onDeleteJob(job.id)}>
                             Delete
                           </button>
                         </div>
@@ -562,6 +548,7 @@ export default function AdminJobManagerPage() {
               setNotice={setNotice}
             />
           ) : null}
+        </section>
         </section>
       </main>
     </ProtectedPage>

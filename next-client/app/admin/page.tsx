@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
     <main className="app-page-shell flex min-h-[50vh] flex-col items-center justify-center px-4 py-12">
       <section className="premium-auth-panel w-full max-w-md space-y-6">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Restricted</p>
+          <p className="premium-eyebrow">Restricted</p>
           <h1 className="section-title mt-1 text-2xl font-extrabold md:text-4xl">Admin sign in</h1>
           <p className="mt-2 text-sm text-slate-500">Use an administrator account to open the control panel.</p>
         </div>

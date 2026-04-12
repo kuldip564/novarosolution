@@ -151,41 +151,29 @@ export default function JobDetailClient({ job }: Props) {
   return (
     <main className="app-page-shell">
       <div className="flex flex-col gap-6">
-        <nav className="page-content-card py-3 text-sm text-slate-400">
-          <Link href="/jobs" className="font-medium transition hover:text-cyan-200">
-            ← All jobs
-          </Link>
+        <nav className="page-content-card job-detail-nav text-sm">
+          <Link href="/jobs">← All jobs</Link>
         </nav>
 
-        <header className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 via-slate-950/80 to-cyan-950/40 px-6 py-8 md:px-10 md:py-10">
-          <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/3 -translate-y-1/4 rounded-full bg-cyan-500/15 blur-3xl" />
-          <div className="relative space-y-4">
+        <header className="premium-page-hero space-y-5">
+          <div className="relative z-[1] space-y-4">
+            <p className="premium-eyebrow">Role</p>
             <div className="flex flex-wrap items-center gap-2">
-              {job.featured ? (
-                <span className="rounded-full bg-amber-500/25 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-100">
-                  Featured
-                </span>
-              ) : null}
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-200">{job.category}</span>
-              {job.department ? (
-                <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">{job.department}</span>
-              ) : null}
-              <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
-                {formatEmployment(job.employmentType)}
-              </span>
-              <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
-                {formatWorkMode(job.workMode)}
-              </span>
-              <span className="rounded-full bg-indigo-500/25 px-3 py-1 text-xs text-indigo-100">
+              {job.featured ? <span className="job-meta-chip job-meta-chip--featured">Featured</span> : null}
+              <span className="job-meta-chip job-meta-chip--category">{job.category}</span>
+              {job.department ? <span className="job-meta-chip job-meta-chip--soft">{job.department}</span> : null}
+              <span className="job-meta-chip job-meta-chip--soft">{formatEmployment(job.employmentType)}</span>
+              <span className="job-meta-chip job-meta-chip--soft">{formatWorkMode(job.workMode)}</span>
+              <span className="job-meta-chip job-meta-chip--indigo">
                 {formatExperienceLevel(job.experienceLevel || 'any')}
               </span>
             </div>
             <h1 className="section-title text-3xl font-extrabold md:text-5xl">{job.title}</h1>
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-400">
               {job.location ? <span>{job.location}</span> : null}
-              {job.salaryHint ? <span className="text-slate-200">{job.salaryHint}</span> : null}
+              {job.salaryHint ? <span className="font-medium text-slate-200">{job.salaryHint}</span> : null}
               {deadline ? (
-                <span className={deadline.past ? 'text-rose-300' : 'text-emerald-300'}>
+                <span className={deadline.past ? 'font-medium text-rose-300' : 'font-medium text-emerald-300'}>
                   {deadline.past ? 'Applications closed · ' : 'Apply by '}
                   {deadline.label}
                 </span>
@@ -194,76 +182,75 @@ export default function JobDetailClient({ job }: Props) {
           </div>
         </header>
 
-        <div className="prose prose-invert max-w-none rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-slate-200 md:p-8">
-          <h2 className="!mt-0 text-lg font-bold text-slate-50">About the role</h2>
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-300">{job.description}</p>
+        <div className="job-detail-section">
+          <p className="profile-panel-label">Overview</p>
+          <h2>About the role</h2>
+          <p className="whitespace-pre-wrap text-base">{job.description}</p>
         </div>
 
         {hasResp ? (
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-            <h2 className="text-lg font-bold text-slate-50">Responsibilities</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">{job.responsibilities}</p>
+          <section className="job-detail-section">
+            <h2>Responsibilities</h2>
+            <p className="whitespace-pre-wrap text-sm">{job.responsibilities}</p>
           </section>
         ) : null}
 
         {hasReq ? (
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-            <h2 className="text-lg font-bold text-slate-50">Requirements</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">{job.requirements}</p>
+          <section className="job-detail-section">
+            <h2>Requirements</h2>
+            <p className="whitespace-pre-wrap text-sm">{job.requirements}</p>
           </section>
         ) : null}
 
         {hasBenefits ? (
-          <section className="rounded-2xl border border-emerald-500/15 bg-gradient-to-br from-emerald-500/10 to-transparent p-6 md:p-8">
-            <h2 className="text-lg font-bold text-emerald-50">Benefits & perks</h2>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-emerald-100/90">{job.benefits}</p>
+          <section className="job-detail-section job-detail-section--benefits">
+            <h2>Benefits & perks</h2>
+            <p className="whitespace-pre-wrap text-sm">{job.benefits}</p>
           </section>
         ) : null}
 
         {!isAuthenticated ? (
-          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-6 text-amber-100">
-            <p className="font-semibold">Sign in required</p>
-            <p className="mt-1 text-sm text-amber-200/90">
+          <div className="page-content-card profile-callout profile-callout--amber space-y-3">
+            <p className="profile-panel-title">Sign in required</p>
+            <p className="profile-panel-desc">
               Create an account or sign in to submit your application. We attach your profile name and email automatically.
             </p>
             {deadline?.past ? (
-              <p className="mt-3 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-100">
+              <p className="premium-alert premium-alert--error text-sm">
                 The application window for this role has closed ({deadline.label}).
               </p>
             ) : null}
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link href={`/login?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`} className="btn inline-flex">
+            <div className="flex flex-wrap gap-3 pt-1">
+              <Link href={`/login?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`} className="btn btn-sm">
                 Sign in
               </Link>
-              <Link href={`/register?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`} className="btn-secondary inline-flex">
+              <Link href={`/register?redirect=${encodeURIComponent(`/jobs/${job.id}`)}`} className="btn-secondary btn-sm">
                 Register
               </Link>
             </div>
           </div>
         ) : already && myApplication ? (
           <div className="space-y-5">
-            <div className="rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/15 to-transparent p-6">
-              <p className="font-semibold text-emerald-100">You have applied for this role</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">
-                  {formatApplicationStatus(myApplication.status)}
-                </span>
+            <div className="page-content-card profile-callout profile-callout--emerald space-y-3">
+              <p className="profile-panel-title">You have applied for this role</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="job-meta-chip job-meta-chip--soft">{formatApplicationStatus(myApplication.status)}</span>
                 {myApplication.interviewRound && myApplication.interviewRound !== 'none' ? (
-                  <span className="rounded-full bg-indigo-500/25 px-3 py-1 text-xs text-indigo-100">
+                  <span className="job-meta-chip job-meta-chip--indigo">
                     {formatInterviewRound(myApplication.interviewRound)}
                   </span>
                 ) : null}
               </div>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="profile-panel-desc">
                 Submitted {myApplication.createdAt ? new Date(myApplication.createdAt).toLocaleString() : '—'}
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {myApplication.resumeUrl ? (
                   <a
                     href={myApplication.resumeUrl}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-200 hover:bg-white/15"
+                    className="btn-secondary btn-sm"
                   >
                     View resume
                   </a>
@@ -273,7 +260,7 @@ export default function JobDetailClient({ job }: Props) {
                     href={myApplication.additionalDocumentUrl}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-200 hover:bg-white/15"
+                    className="btn-secondary btn-sm"
                   >
                     {myApplication.additionalDocumentName?.trim() || 'Other document'}
                   </a>
@@ -282,15 +269,12 @@ export default function JobDetailClient({ job }: Props) {
             </div>
 
             {(myApplication.applicantMessages || []).length > 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-                <h2 className="text-lg font-bold text-slate-50">Updates from our team</h2>
-                <p className="text-sm text-slate-400">Messages about your interview stages and next steps.</p>
-                <ul className="mt-4 space-y-4">
+              <div className="job-detail-section">
+                <h2>Updates from our team</h2>
+                <p className="profile-panel-desc">Messages about your interview stages and next steps.</p>
+                <ul className="mt-4 space-y-3">
                   {(myApplication.applicantMessages || []).map((m) => (
-                    <li
-                      key={m.id}
-                      className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-200"
-                    >
+                    <li key={m.id} className="jobs-application-msg text-sm text-slate-200">
                       <p className="whitespace-pre-wrap">{m.body}</p>
                       <p className="mt-2 text-[10px] text-slate-500">
                         {m.sentAt ? new Date(m.sentAt).toLocaleString() : ''}
@@ -300,59 +284,60 @@ export default function JobDetailClient({ job }: Props) {
                 </ul>
               </div>
             ) : (
-              <p className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-6 text-center text-sm text-slate-400">
+              <p className="premium-empty-hint text-sm">
                 When your status changes or an interview is scheduled, updates will appear here.
               </p>
             )}
 
-            <Link href="/jobs" className="btn-secondary inline-flex">
+            <Link href="/jobs" className="btn-secondary btn-sm inline-flex">
               ← All jobs
             </Link>
           </div>
         ) : already ? (
-          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-emerald-100">
-            <p className="font-semibold">You have already applied for this role.</p>
-            <Link href="/jobs" className="btn-secondary mt-4 inline-flex">
+          <div className="page-content-card profile-callout profile-callout--emerald">
+            <p className="profile-panel-title">You have already applied for this role.</p>
+            <Link href="/jobs" className="btn-secondary btn-sm mt-4 inline-flex">
               Browse more roles
             </Link>
           </div>
         ) : deadline?.past ? (
-          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-100">
-            <p className="font-semibold">Applications are closed</p>
-            <p className="mt-1 text-sm text-rose-200/90">
+          <div className="page-content-card profile-callout profile-callout--rose">
+            <p className="profile-panel-title">Applications are closed</p>
+            <p className="profile-panel-desc">
               This role stopped accepting new applications after {deadline.label}.
             </p>
-            <Link href="/jobs" className="btn-secondary mt-4 inline-flex">
+            <Link href="/jobs" className="btn-secondary btn-sm mt-4 inline-flex">
               Browse open roles
             </Link>
           </div>
         ) : (
-          <form onSubmit={onSubmit} className="careers-apply-form space-y-5 rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent p-6 md:p-8">
+          <form onSubmit={onSubmit} className="careers-apply-form space-y-5">
             <div>
-              <h2 className="text-xl font-bold text-slate-50">Apply for this role</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="profile-panel-label">Application</p>
+              <h2 className="profile-panel-title">Apply for this role</h2>
+              <p className="profile-panel-desc">
                 Applying as <span className="text-slate-200">{user?.name}</span> ({user?.email})
               </p>
             </div>
 
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-slate-300">Cover letter *</span>
+            <label className="flex flex-col gap-2">
+              <span className="form-label-premium">Cover letter *</span>
               <textarea
                 required
                 minLength={20}
                 rows={6}
-                className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                className="premium-field-input min-h-[140px]"
                 value={form.coverLetter}
                 onChange={(e) => setForm((f) => ({ ...f, coverLetter: e.target.value }))}
                 placeholder="Tell us why you are a great fit (at least 20 characters)."
               />
             </label>
 
-            <div className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-3">
+            <div className="job-form-inset">
               <p className="text-sm font-semibold text-slate-200">Resume *</p>
               <p className="text-xs text-slate-500">Upload PDF or Word (max ~10MB), or paste a public https link.</p>
               <div className="flex flex-wrap items-center gap-3">
-                <label className="btn-secondary inline-flex cursor-pointer px-4 py-2 text-sm">
+                <label className="btn-secondary btn-sm cursor-pointer">
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -374,10 +359,10 @@ export default function JobDetailClient({ job }: Props) {
                   <span className="text-xs text-amber-200/80">Add a file or link before submitting.</span>
                 )}
               </div>
-              <label className="flex flex-col gap-1.5 text-sm">
-                <span className="text-slate-400">Or resume URL (https)</span>
+              <label className="flex flex-col gap-1.5">
+                <span className="form-label-premium">Or resume URL (https)</span>
                 <input
-                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  className="premium-field-input"
                   value={form.resumeUrl}
                   onChange={(e) => {
                     setResumeSourceLabel('');
@@ -389,11 +374,11 @@ export default function JobDetailClient({ job }: Props) {
               </label>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/15 p-4 space-y-3">
+            <div className="job-form-inset">
               <p className="text-sm font-semibold text-slate-200">Additional document (optional)</p>
               <p className="text-xs text-slate-500">Portfolio PDF, certificate, or other supporting file.</p>
               <div className="flex flex-wrap items-center gap-3">
-                <label className="btn-secondary inline-flex cursor-pointer px-4 py-2 text-sm">
+                <label className="btn-secondary btn-sm cursor-pointer">
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -415,7 +400,7 @@ export default function JobDetailClient({ job }: Props) {
                 {form.additionalDocumentUrl ? (
                   <button
                     type="button"
-                    className="text-xs text-rose-300 underline"
+                    className="text-xs font-medium text-rose-300 underline underline-offset-2"
                     onClick={() => setForm((f) => ({ ...f, additionalDocumentUrl: '', additionalDocumentName: '' }))}
                   >
                     Remove
@@ -425,20 +410,20 @@ export default function JobDetailClient({ job }: Props) {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-slate-300">LinkedIn URL (optional)</span>
+              <label className="flex flex-col gap-2">
+                <span className="form-label-premium">LinkedIn URL (optional)</span>
                 <input
-                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  className="premium-field-input"
                   value={form.linkedInUrl}
                   onChange={(e) => setForm((f) => ({ ...f, linkedInUrl: e.target.value }))}
                   placeholder="https://"
                   type="url"
                 />
               </label>
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-slate-300">Portfolio URL (optional)</span>
+              <label className="flex flex-col gap-2">
+                <span className="form-label-premium">Portfolio URL (optional)</span>
                 <input
-                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  className="premium-field-input"
                   value={form.portfolioUrl}
                   onChange={(e) => setForm((f) => ({ ...f, portfolioUrl: e.target.value }))}
                   placeholder="https://"
@@ -448,20 +433,20 @@ export default function JobDetailClient({ job }: Props) {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-slate-300">Phone (optional)</span>
+              <label className="flex flex-col gap-2">
+                <span className="form-label-premium">Phone (optional)</span>
                 <input
-                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  className="premium-field-input"
                   value={form.phone}
                   onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                   placeholder="+1 …"
                   autoComplete="tel"
                 />
               </label>
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-slate-300">Years of experience (optional)</span>
+              <label className="flex flex-col gap-2">
+                <span className="form-label-premium">Years of experience (optional)</span>
                 <input
-                  className="rounded-xl border border-white/15 bg-[var(--surface-strong)] px-4 py-3 text-slate-100 outline-none focus:border-[var(--primary)]"
+                  className="premium-field-input"
                   value={form.yearsExperience}
                   onChange={(e) => setForm((f) => ({ ...f, yearsExperience: e.target.value }))}
                   placeholder="e.g. 3 years in product design"
@@ -469,12 +454,12 @@ export default function JobDetailClient({ job }: Props) {
               </label>
             </div>
 
-            {error ? <p className="text-sm text-red-400">{error}</p> : null}
-            {status ? <p className="text-sm text-emerald-400">{status}</p> : null}
+            {error ? <p className="premium-alert premium-alert--error text-sm">{error}</p> : null}
+            {status ? <p className="premium-alert premium-alert--success text-sm">{status}</p> : null}
 
             <button
               type="submit"
-              className="btn inline-flex disabled:opacity-60"
+              className="btn btn-sm disabled:opacity-60"
               disabled={submitting || !form.resumeUrl.trim()}
             >
               {submitting ? 'Submitting…' : 'Submit application'}

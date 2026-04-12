@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
 import './globals.css';
@@ -24,6 +24,13 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   preload: true
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800']
 });
 
 export const viewport: Viewport = {
@@ -63,7 +70,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${plusJakarta.variable}`}>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="beforeInteractive"

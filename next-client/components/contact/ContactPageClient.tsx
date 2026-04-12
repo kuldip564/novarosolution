@@ -101,7 +101,7 @@ export default function ContactPageClient({
   return (
     <main className="app-page-shell">
       <section className="premium-page-hero space-y-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Contact</p>
+        <p className="premium-eyebrow">Contact</p>
         <h1 className="section-title text-3xl font-extrabold md:text-5xl">{title || 'Contact us'}</h1>
         <p className="max-w-2xl text-slate-300">
           {description || 'Tell us about your project goals and we will get back to you quickly.'}

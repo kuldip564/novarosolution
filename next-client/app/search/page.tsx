@@ -109,7 +109,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main className="app-page-shell">
       <section className="space-y-6">
         <article className="premium-page-hero space-y-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400/90">Discover</p>
+          <p className="premium-eyebrow">Discover</p>
           <h1 className="section-title text-3xl font-extrabold md:text-5xl">Search</h1>
           <p className="max-w-2xl text-slate-300">
             Find projects, blog posts, services, and key pages in one place.

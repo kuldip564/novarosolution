@@ -152,6 +152,11 @@ main p {
   line-height: 1.7;
 }
 
+main :where(h1, h2, h3, h4),
+.section-title {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+
 main :where(article, section, form, .card, .page-content-card, .page-hero-shell, .premium-page-hero) p {
   max-width: var(--reading-width);
 }
@@ -1371,7 +1376,10 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
 }
 
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   margin-top: 0;
   background: var(--btn-bg);
   color: var(--btn-text);
@@ -1380,8 +1388,13 @@ main :where(article, section, form, .card, .page-content-card, .page-hero-shell,
   border: 1px solid var(--btn-border);
   font-weight: 600;
   letter-spacing: 0.01em;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
   transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease, filter 0.24s ease, opacity 0.2s ease;
 }
 
@@ -1461,6 +1474,38 @@ a[class*='bg-linear-to-r']:hover,
   background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
   filter: none;
   box-shadow: 0 8px 20px rgba(2, 6, 23, 0.12);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 92%);
+  color: #fef2f2;
+  border-color: color-mix(in oklab, #f87171 45%, #991b1b);
+  box-shadow: 0 10px 26px rgba(220, 38, 38, 0.38);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 92%);
+  box-shadow: 0 14px 32px rgba(220, 38, 38, 0.45);
+  filter: saturate(1.05);
+}
+
+.btn-danger:disabled {
+  opacity: 0.65;
+  filter: none;
+}
+
+.btn-outline-light {
+  background: transparent;
+  color: var(--text);
+  border-color: color-mix(in oklab, var(--border) 78%, var(--primary) 22%);
+  box-shadow: none;
+}
+
+.btn-outline-light:hover {
+  background: color-mix(in oklab, var(--surface-strong) 88%, transparent);
+  border-color: color-mix(in oklab, var(--primary) 40%, var(--border));
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.14);
+  filter: none;
 }
 
 .service-contact-btn {
@@ -1908,12 +1953,19 @@ select:focus {
 .admin-toolbar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
 .admin-toolbar .btn {
   padding: 8px 12px;
   font-size: 0.78rem;
+}
+
+.admin-toolbar .btn-sm {
+  padding: 0.52rem 0.82rem;
+  font-size: 0.8rem;
+  border-radius: 10px;
 }
 
 .admin-btn {
@@ -2163,6 +2215,143 @@ select:focus {
   transform: translateY(-1px);
 }
 
+.profile-panel-label {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--muted) 88%, var(--accent) 12%);
+}
+
+.profile-panel-title {
+  margin: 0.35rem 0 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+
+.profile-panel-desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.profile-activity-preview {
+  margin-top: 1.25rem;
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, var(--accent) 30%);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--surface-strong) 86%, #0f172a 14%),
+      color-mix(in oklab, var(--surface) 92%, transparent)
+    );
+  padding: 1.15rem 1.25rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.profile-photo-editor {
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in oklab, var(--border) 68%, var(--accent-violet) 32%);
+  background: color-mix(in oklab, var(--surface-strong) 90%, #020617 10%);
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.18);
+}
+
+.profile-callout {
+  border-radius: 1.25rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface-strong) 92%, transparent);
+}
+
+.profile-callout--amber {
+  border-color: color-mix(in oklab, #fbbf24 42%, var(--border));
+  background: color-mix(in oklab, #fbbf24 10%, var(--surface-strong));
+  color: var(--text);
+}
+
+.profile-callout--cyan {
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--accent) 12%, var(--surface-strong)),
+      color-mix(in oklab, var(--surface) 94%, transparent)
+    );
+}
+
+.profile-callout--emerald {
+  border-color: color-mix(in oklab, #34d399 38%, var(--border));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, #10b981 10%, var(--surface-strong)),
+      color-mix(in oklab, var(--surface) 95%, transparent)
+    );
+}
+
+.profile-callout--indigo {
+  border-color: color-mix(in oklab, #818cf8 40%, var(--border));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, #6366f1 11%, var(--surface-strong)),
+      color-mix(in oklab, var(--surface) 95%, transparent)
+    );
+}
+
+.profile-callout--signout {
+  border-color: color-mix(in oklab, #f87171 35%, var(--border));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, #ef4444 9%, var(--surface-strong)),
+      color-mix(in oklab, var(--surface) 96%, transparent)
+    );
+}
+
+.profile-callout--rose {
+  border-color: color-mix(in oklab, #fb7185 38%, var(--border));
+  background: color-mix(in oklab, #f43f5e 8%, var(--surface-strong));
+}
+
+.job-form-inset {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 90%, #020617 10%);
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.profile-strength-bar {
+  margin-top: 0.5rem;
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--surface) 82%, #020617 18%);
+  border: 1px solid color-mix(in oklab, var(--border) 65%, transparent);
+  box-shadow: inset 0 1px 2px rgba(2, 6, 23, 0.12);
+}
+
+.profile-strength-bar__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--accent) 82%, #fff),
+    color-mix(in oklab, var(--primary) 78%, #fff),
+    color-mix(in oklab, var(--accent-violet) 72%, #fff)
+  );
+  box-shadow: 0 0 18px color-mix(in oklab, var(--primary) 35%, transparent);
+  transition: width 0.5s ease-out;
+}
+
 .profile-shell::before,
 .profile-shell::after {
   content: '';
@@ -2379,6 +2568,410 @@ select:focus {
     0 28px 56px rgba(2, 6, 23, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.09);
   padding: clamp(1.35rem, 2.5vw, 1.85rem);
+}
+
+/* Shared “premium” UI primitives (used across marketing + admin tools) */
+.premium-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--accent) 72%, var(--muted) 28%);
+}
+
+.premium-tab-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.premium-tab {
+  border-radius: 999px;
+  padding: 0.5rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  border: 1px solid color-mix(in oklab, var(--border) 78%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 86%, transparent);
+  color: var(--muted);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.premium-tab:hover {
+  color: var(--text);
+  border-color: color-mix(in oklab, var(--primary) 35%, var(--border));
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.12);
+  transform: translateY(-1px);
+}
+
+.premium-tab--active {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border-color: var(--btn-border);
+  box-shadow: 0 12px 24px var(--btn-shadow);
+}
+
+.premium-tab--active:hover {
+  color: var(--btn-text);
+  transform: translateY(-1px);
+}
+
+.premium-form-panel {
+  border-radius: 1.35rem;
+  border: 1px solid color-mix(in oklab, var(--border) 65%, var(--accent-violet) 35%);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--surface-strong) 88%, #0f172a 12%),
+      color-mix(in oklab, var(--surface) 94%, #020617 6%)
+    );
+  box-shadow:
+    0 22px 48px rgba(2, 6, 23, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.premium-form-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
+}
+
+.premium-form-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
+}
+
+.premium-form-section-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--muted) 92%, var(--accent) 8%);
+}
+
+.premium-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.premium-field-input {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in oklab, var(--border) 75%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 90%, #020617 10%);
+  padding: 0.62rem 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.premium-field-input::placeholder {
+  color: color-mix(in oklab, var(--muted) 78%, transparent);
+}
+
+.premium-field-input:focus {
+  border-color: color-mix(in oklab, var(--accent) 42%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 22%, transparent);
+}
+
+select.premium-field-input {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
+  width: auto;
+  min-width: 220px;
+}
+
+textarea.premium-field-input {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.premium-inset-option {
+  display: flex;
+  cursor: pointer;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+  padding: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.premium-inset-option:hover {
+  border-color: color-mix(in oklab, var(--primary) 28%, var(--border));
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.12);
+}
+
+.premium-inset-option input[type='checkbox'] {
+  margin-top: 0.2rem;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary);
+}
+
+.premium-empty-hint {
+  border-radius: 1.25rem;
+  border: 1px dashed color-mix(in oklab, var(--border) 65%, var(--accent) 35%);
+  background: color-mix(in oklab, var(--surface-strong) 88%, transparent);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.careers-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  border: 1px solid color-mix(in oklab, var(--border) 65%, var(--accent) 35%);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--surface-strong) 82%, #0f172a 18%),
+      color-mix(in oklab, var(--surface) 90%, #020617 10%)
+    );
+  padding: 1.5rem;
+  box-shadow:
+    0 28px 56px rgba(2, 6, 23, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.careers-card:hover {
+  border-color: color-mix(in oklab, var(--primary) 38%, var(--border));
+  box-shadow:
+    0 32px 60px rgba(2, 6, 23, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.careers-card.is-featured {
+  border-color: color-mix(in oklab, #fbbf24 45%, var(--border));
+  box-shadow:
+    0 28px 56px rgba(180, 83, 9, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Jobs listing & job detail */
+.job-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.72rem;
+  font-size: 0.6875rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 88%, transparent);
+  color: color-mix(in oklab, var(--muted) 92%, var(--text));
+}
+
+.job-meta-chip--featured {
+  border-color: color-mix(in oklab, #f59e0b 50%, var(--border));
+  background: color-mix(in oklab, #f59e0b 14%, var(--surface-strong));
+  color: #fffbeb;
+}
+
+.job-meta-chip--category {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--border));
+  background: color-mix(in oklab, var(--accent) 11%, var(--surface-strong));
+  color: color-mix(in oklab, var(--accent) 82%, var(--text));
+}
+
+.job-meta-chip--soft {
+  text-transform: none;
+  letter-spacing: 0.03em;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.job-meta-chip--indigo {
+  border-color: color-mix(in oklab, #818cf8 35%, var(--border));
+  background: color-mix(in oklab, #6366f1 12%, var(--surface-strong));
+  color: color-mix(in oklab, #c7d2fe 88%, var(--text));
+  text-transform: none;
+  letter-spacing: 0.03em;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.job-meta-chip--new {
+  border-color: color-mix(in oklab, #fb7185 42%, var(--border));
+  background: color-mix(in oklab, #f43f5e 14%, var(--surface-strong));
+  color: #ffe4e6;
+}
+
+.jobs-application-card {
+  border-radius: 1.3rem;
+  border: 1px solid color-mix(in oklab, var(--border) 68%, var(--primary) 32%);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--surface-strong) 86%, #0f172a 14%),
+      color-mix(in oklab, var(--surface) 94%, transparent)
+    );
+  box-shadow:
+    0 18px 40px rgba(2, 6, 23, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.jobs-application-card:hover {
+  border-color: color-mix(in oklab, var(--primary) 42%, var(--border));
+  box-shadow: 0 22px 44px rgba(2, 6, 23, 0.26);
+}
+
+.jobs-application-card__expand {
+  border-top: 1px solid color-mix(in oklab, var(--border) 75%, transparent);
+  background: color-mix(in oklab, var(--surface) 91%, #020617 9%);
+}
+
+.jobs-application-msg {
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
+  padding: 0.85rem 1rem;
+}
+
+.job-detail-nav {
+  padding: 0.65rem 1.1rem;
+}
+
+.job-detail-nav a {
+  color: color-mix(in oklab, var(--accent) 78%, var(--muted));
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.job-detail-nav a:hover {
+  color: var(--text);
+}
+
+.job-detail-section {
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, var(--accent) 30%);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--surface-strong) 88%, #0f172a 12%),
+      color-mix(in oklab, var(--surface) 94%, transparent)
+    );
+  padding: 1.35rem 1.5rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.job-detail-section h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 0.75rem;
+}
+
+.job-detail-section p {
+  margin: 0;
+  color: color-mix(in oklab, var(--muted) 88%, var(--text));
+  line-height: 1.65;
+}
+
+.job-detail-section .profile-panel-label {
+  margin-bottom: 0.35rem;
+  color: color-mix(in oklab, var(--muted) 88%, var(--accent) 12%);
+}
+
+.job-detail-section--benefits {
+  border-color: color-mix(in oklab, #34d399 38%, var(--border));
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in oklab, #10b981 10%, var(--surface-strong)),
+      color-mix(in oklab, var(--surface) 95%, transparent)
+    );
+}
+
+.job-detail-section--benefits h2 {
+  color: color-mix(in oklab, #6ee7b7 95%, var(--text));
+}
+
+.job-detail-section--benefits p {
+  color: color-mix(in oklab, #a7f3d0 88%, var(--text));
+}
+
+.careers-apply-form {
+  border-radius: 1.35rem;
+  border: 1px solid color-mix(in oklab, var(--border) 62%, var(--accent-violet) 38%);
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--surface-strong) 88%, #0f172a 12%),
+      color-mix(in oklab, var(--surface) 94%, #020617 6%)
+    );
+  padding: clamp(1.25rem, 2.5vw, 1.85rem);
+  box-shadow:
+    0 22px 48px rgba(2, 6, 23, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.careers-apply-form .form-label-premium {
+  margin-bottom: 0.35rem;
+}
+
+.jobs-loading-hint {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.premium-faq-item {
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
+  background: color-mix(in oklab, var(--surface-strong) 90%, transparent);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.premium-faq-item:hover {
+  border-color: color-mix(in oklab, var(--primary) 28%, var(--border));
+  background: color-mix(in oklab, var(--surface-elevated) 92%, transparent);
+}
+
+.premium-faq-item[open] {
+  border-color: color-mix(in oklab, var(--primary) 42%, var(--border));
+  background: color-mix(in oklab, var(--surface) 92%, #020617 8%);
 }
 
 .admin-chat-layout {
@@ -3086,18 +3679,26 @@ select:focus {
 }
 
 .search-result-card {
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 1rem 1.125rem;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in oklab, var(--border) 75%, var(--primary) 25%);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--surface-strong) 88%, transparent),
+      color-mix(in oklab, var(--surface) 94%, transparent)
+    );
+  padding: 1rem 1.15rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
 }
 
 .search-result-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+  box-shadow: 0 14px 28px rgba(2, 6, 23, 0.16);
+  transform: translateY(-1px);
 }
 
 .search-page-form input {

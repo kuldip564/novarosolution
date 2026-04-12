@@ -332,10 +332,8 @@ export default function ProfilePage() {
                 </div>
                 <div className="min-w-0 flex-1 space-y-5 text-center sm:text-left">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Account</p>
-                    <h1 className="section-title mt-1 bg-linear-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl">
-                      Your profile
-                    </h1>
+                    <p className="premium-eyebrow">Account</p>
+                    <h1 className="section-title mt-2 text-3xl font-extrabold md:text-4xl">Your profile</h1>
                     <p className="mt-2 max-w-lg text-sm leading-relaxed text-slate-400">
                       Manage how you appear across Novaro, keep your password secure, and open tools for your role.
                     </p>
@@ -350,11 +348,8 @@ export default function ProfilePage() {
                       <span>Profile strength</span>
                       <span className="text-cyan-300/90">{profileScore}%</span>
                     </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/5">
-                      <div
-                        className="h-full rounded-full bg-linear-to-r from-cyan-400/90 via-sky-500/90 to-indigo-500/90 transition-[width] duration-500 ease-out"
-                        style={{ width: `${profileScore}%` }}
-                      />
+                    <div className="profile-strength-bar">
+                      <div className="profile-strength-bar__fill" style={{ width: `${profileScore}%` }} />
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
@@ -380,8 +375,9 @@ export default function ProfilePage() {
           <motion.article className="page-content-card profile-card-premium" {...sectionMotion}>
             <div className="profile-section-head">
               <div className="min-w-0 flex-1">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Quick actions</h2>
-                <p className="mt-1 text-xs text-slate-500">Shortcuts for support and data export.</p>
+                <p className="profile-panel-label">Shortcuts</p>
+                <h2 className="profile-panel-title">Quick actions</h2>
+                <p className="profile-panel-desc">Support tools and data export.</p>
               </div>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
@@ -410,8 +406,9 @@ export default function ProfilePage() {
             <div className="profile-section-head">
               <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold tracking-tight text-slate-100">Activity</h2>
-                  <p className="text-sm text-slate-500">Project chat and account signals.</p>
+                  <p className="profile-panel-label">Overview</p>
+                  <h2 className="profile-panel-title">Activity</h2>
+                  <p className="profile-panel-desc">Project chat and account signals.</p>
                 </div>
                 <p className="text-xs text-slate-500 sm:text-right">
                   {activityLoading ? 'Syncing…' : `Updated ${lastSyncedAt || '—'}`}
@@ -442,12 +439,12 @@ export default function ProfilePage() {
                 <p className="relative z-[1] mt-1 text-2xl font-semibold tabular-nums text-slate-100">{profileScore}%</p>
               </div>
             </div>
-            <div className="mt-5 rounded-2xl border border-white/10 bg-linear-to-br from-white/12 to-transparent p-5 md:p-6">
+            <div className="profile-activity-preview">
               {activityLoading ? (
                 <p className="text-sm text-slate-500">Loading activity…</p>
               ) : lastMessage ? (
-                <div className="border-l-2 border-cyan-400/50 pl-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">Latest project message</p>
+                <div className="border-l-[3px] border-cyan-400/55 pl-4">
+                  <p className="profile-panel-label">Latest project message</p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-200">{lastMessage.message}</p>
                   <p className="mt-3 text-xs text-slate-500">
                     {lastMessage.senderRole} ·{' '}
@@ -459,7 +456,7 @@ export default function ProfilePage() {
               )}
             </div>
             <div className="mt-4">
-              <Link className="btn inline-flex text-sm" href="/project-chat">
+              <Link className="btn btn-sm" href="/project-chat">
                 Open project chat
               </Link>
             </div>
@@ -469,8 +466,9 @@ export default function ProfilePage() {
           <motion.form className="page-content-card profile-card-premium space-y-5" onSubmit={onProfileSubmit} {...sectionMotion}>
             <div className="profile-section-head">
               <div>
-                <h2 className="text-lg font-semibold text-slate-100">Profile details</h2>
-                <p className="mt-1 text-sm text-slate-500">Name, email, and photo apply across the product.</p>
+                <p className="profile-panel-label">Identity</p>
+                <h2 className="profile-panel-title">Profile details</h2>
+                <p className="profile-panel-desc">Name, email, and photo apply across the product.</p>
               </div>
             </div>
             <div>
@@ -500,9 +498,9 @@ export default function ProfilePage() {
               </label>
             </div>
             {photoEditorSource ? (
-              <div className="rounded-2xl border border-white/12 bg-white/[0.04] p-5 ring-1 ring-white/5">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">Photo fit</p>
-                <p className="mt-1 text-xs text-slate-500">Adjust zoom and position, then apply fit before saving.</p>
+              <div className="profile-photo-editor">
+                <p className="profile-panel-label">Photo fit</p>
+                <p className="profile-panel-desc">Adjust zoom and position, then apply fit before saving.</p>
                 <div className="mt-4 flex flex-wrap gap-6">
                   <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full border border-white/20 bg-black/40">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -554,10 +552,10 @@ export default function ProfilePage() {
                       />
                     </label>
                     <div className="admin-toolbar">
-                      <button className="btn text-sm" type="button" onClick={onApplyPhotoFit} disabled={isApplyingPhotoFit}>
+                      <button className="btn btn-sm" type="button" onClick={onApplyPhotoFit} disabled={isApplyingPhotoFit}>
                         {isApplyingPhotoFit ? 'Applying…' : 'Apply fit'}
                       </button>
-                      <button className="btn-secondary text-sm" type="button" onClick={onResetPhotoFit}>
+                      <button className="btn-secondary btn-sm" type="button" onClick={onResetPhotoFit}>
                         Reset
                       </button>
                     </div>
@@ -566,20 +564,21 @@ export default function ProfilePage() {
               </div>
             ) : null}
             <div className="admin-toolbar border-t border-white/10 pt-5">
-              <button className="btn" type="submit" disabled={saving}>
+              <button className="btn btn-sm" type="submit" disabled={saving}>
                 {saving ? 'Saving…' : 'Save profile'}
               </button>
-              <button className="btn-secondary" type="button" onClick={onAvatarOnlyUpdate} disabled={saving}>
+              <button className="btn-secondary btn-sm" type="button" onClick={onAvatarOnlyUpdate} disabled={saving}>
                 {saving ? 'Saving…' : 'Save photo only'}
               </button>
             </div>
           </motion.form>
 
-          <motion.form className="page-content-card profile-card-premium space-y-5 ring-1 ring-white/[0.04]" onSubmit={onPasswordSubmit} {...sectionMotion}>
+          <motion.form className="page-content-card profile-card-premium space-y-5" onSubmit={onPasswordSubmit} {...sectionMotion}>
             <div className="profile-section-head">
               <div>
-                <h2 className="text-lg font-semibold text-slate-100">Password</h2>
-                <p className="mt-1 text-sm text-slate-500">Use at least six characters for your new password.</p>
+                <p className="profile-panel-label">Security</p>
+                <h2 className="profile-panel-title">Password</h2>
+                <p className="profile-panel-desc">Use at least six characters for your new password.</p>
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
@@ -626,14 +625,14 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="admin-toolbar">
-              <button className="btn-secondary text-sm" type="button" onClick={() => setShowCurrentPassword((prev) => !prev)}>
+              <button className="btn-secondary btn-sm" type="button" onClick={() => setShowCurrentPassword((prev) => !prev)}>
                 {showCurrentPassword ? 'Hide current' : 'Show current'}
               </button>
-              <button className="btn-secondary text-sm" type="button" onClick={() => setShowNewPassword((prev) => !prev)}>
+              <button className="btn-secondary btn-sm" type="button" onClick={() => setShowNewPassword((prev) => !prev)}>
                 {showNewPassword ? 'Hide new' : 'Show new'}
               </button>
             </div>
-            <button className="btn" type="submit">
+            <button className="btn btn-sm" type="submit">
               Update password
             </button>
           </motion.form>
@@ -641,30 +640,32 @@ export default function ProfilePage() {
 
           {!isCreator ? (
             creatorRequestPending ? (
-              <div className="page-content-card border-amber-400/25 bg-amber-500/[0.07] text-sm text-amber-100">
+              <div className="page-content-card profile-callout profile-callout--amber text-sm leading-relaxed">
                 Creator request is pending admin approval. You will gain studio access once it is approved.
               </div>
             ) : (
-              <div className="page-content-card flex flex-col gap-4 border border-cyan-500/15 bg-linear-to-br from-cyan-500/[0.07] to-transparent sm:flex-row sm:items-center sm:justify-between">
+              <div className="page-content-card profile-callout profile-callout--cyan flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="profile-section-head min-w-0 flex-1">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-100">Creator program</h2>
-                    <p className="mt-1 text-sm text-slate-500">Publish content and manage posts in Creator Studio.</p>
+                    <p className="profile-panel-label">Program</p>
+                    <h2 className="profile-panel-title">Creator program</h2>
+                    <p className="profile-panel-desc">Publish content and manage posts in Creator Studio.</p>
                   </div>
                 </div>
-                <button className="btn shrink-0" type="button" onClick={onCreatorRequest}>
+                <button className="btn btn-sm shrink-0" type="button" onClick={onCreatorRequest}>
                   Request creator role
                 </button>
               </div>
             )
           ) : (
-            <div className="page-content-card border border-emerald-500/15 bg-linear-to-br from-emerald-500/[0.06] to-transparent">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-400/90">Creator</h2>
+            <div className="page-content-card profile-callout profile-callout--emerald">
+              <p className="profile-panel-label">Creator</p>
+              <p className="profile-panel-title mt-1">Studio access enabled</p>
               <div className="admin-toolbar mt-4">
-                <Link className="btn" href="/creator/studio">
+                <Link className="btn btn-sm" href="/creator/studio">
                   Creator Studio
                 </Link>
-                <Link className="btn-secondary" href="/creator-feed">
+                <Link className="btn-secondary btn-sm" href="/creator-feed">
                   Creator feed
                 </Link>
               </div>
@@ -672,16 +673,20 @@ export default function ProfilePage() {
           )}
 
           {(isAdmin || isEmployee) ? (
-            <div className="page-content-card space-y-4 border border-indigo-500/15 bg-linear-to-br from-indigo-500/[0.06] to-transparent">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-300/90">Workspace access</h2>
+            <div className="page-content-card profile-callout profile-callout--indigo space-y-4">
+              <div>
+                <p className="profile-panel-label">Workspace</p>
+                <h2 className="profile-panel-title">Role tools</h2>
+                <p className="profile-panel-desc">Jump into admin or employee workspaces.</p>
+              </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 {isAdmin ? (
-                  <Link className="btn inline-flex flex-1 justify-center sm:flex-none" href="/admin/dashboard">
+                  <Link className="btn btn-sm flex-1 justify-center sm:flex-none" href="/admin/dashboard">
                     Admin dashboard
                   </Link>
                 ) : null}
                 {isEmployee ? (
-                  <Link className="btn inline-flex flex-1 justify-center sm:flex-none" href="/employee/tasks">
+                  <Link className="btn btn-sm flex-1 justify-center sm:flex-none" href="/employee/tasks">
                     Employee tasks
                   </Link>
                 ) : null}
@@ -689,16 +694,12 @@ export default function ProfilePage() {
             </div>
           ) : null}
 
-          <div className="page-content-card flex flex-col gap-4 border border-red-500/25 bg-linear-to-br from-red-500/[0.08] to-transparent sm:flex-row sm:items-center sm:justify-between">
+          <div className="page-content-card profile-callout profile-callout--signout flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-200">Sign out on this device</p>
-              <p className="text-xs text-slate-500">You will need to sign in again to access your account.</p>
+              <p className="profile-panel-title">Sign out on this device</p>
+              <p className="profile-panel-desc">You will need to sign in again to access your account.</p>
             </div>
-            <button
-              className="btn shrink-0 border border-red-400/35 bg-red-500/15 text-red-100 hover:bg-red-500/25"
-              type="button"
-              onClick={logout}
-            >
+            <button className="btn btn-danger btn-sm shrink-0" type="button" onClick={logout}>
               Log out
             </button>
           </div>
