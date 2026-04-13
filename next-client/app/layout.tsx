@@ -37,7 +37,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f0f6ff' },
+    { media: '(prefers-color-scheme: light)', color: '#f5f8ff' },
     { media: '(prefers-color-scheme: dark)', color: '#020617' }
   ]
 };
@@ -69,8 +69,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <body className={`${inter.className} ${plusJakarta.variable}`}>
+        <Script id="novaro-theme-init" strategy="beforeInteractive">
+          {`(function(){try{var k='novaro_theme';var s=localStorage.getItem(k);var t=(s==='light'||s==='dark')?s:'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`}
+        </Script>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="beforeInteractive"

@@ -23,101 +23,125 @@ export default function SiteFooter({ chrome = DEFAULT_SITE_CHROME }: Props) {
   }
 
   return (
-    <footer className="site-footer">
-      <div className="container site-footer__inner">
-        <div className="site-footer__grid">
-          <div className="site-footer__brand">
-            <p className="site-footer__brand-name">{chrome.brandName}</p>
-            <p className="site-footer__brand-tag">{chrome.footerTagline}</p>
+    <footer className="site-footer" role="contentinfo">
+      <div className="container site-footer__container">
+        <div className="site-footer__primary">
+          <div className="site-footer__identity">
+            <span className="site-footer__brand">{chrome.brandName}</span>
+            {chrome.footerTagline ? <p className="site-footer__tagline">{chrome.footerTagline}</p> : null}
           </div>
 
-          <nav className="site-footer__menus" aria-label="Footer links">
-            <div className="site-footer__col">
-              <p className="site-footer__heading">{h.explore}</p>
-              <div className="site-footer__links site-footer__links--split">
+          <div className="site-footer__columns">
+            <div className="site-footer__column">
+              <p className="site-footer__label">{h.explore}</p>
+              <ul className="site-footer__list">
                 {exploreLinks.map((item) => (
-                  <Link key={item.href} href={item.href} className="site-footer__a">
-                    {item.label}
-                  </Link>
+                  <li key={item.href}>
+                    <Link href={item.href} className="site-footer__link">
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
             {!loading && isAuthenticated ? (
-              <div className="site-footer__col">
-                <p className="site-footer__heading">{h.workspace}</p>
-                <div className="site-footer__links site-footer__links--workspace">
-                  <Link href="/project-chat" className="site-footer__a">
-                    Project Chat
-                  </Link>
-                  <Link href="/creator-feed" className="site-footer__a">
-                    Feed
-                  </Link>
-                  {isCreator ? (
-                    <Link href="/creator/studio" className="site-footer__a">
-                      Creator Studio
+              <div className="site-footer__column">
+                <p className="site-footer__label">{h.workspace}</p>
+                <ul className="site-footer__list">
+                  <li>
+                    <Link href="/project-chat" className="site-footer__link">
+                      Project Chat
                     </Link>
+                  </li>
+                  <li>
+                    <Link href="/creator-feed" className="site-footer__link">
+                      Feed
+                    </Link>
+                  </li>
+                  {isCreator ? (
+                    <li>
+                      <Link href="/creator/studio" className="site-footer__link">
+                        Creator Studio
+                      </Link>
+                    </li>
                   ) : null}
                   {isEmployee ? (
-                    <Link href="/employee/tasks" className="site-footer__a">
-                      Employee Tasks
-                    </Link>
+                    <li>
+                      <Link href="/employee/tasks" className="site-footer__link">
+                        Employee Tasks
+                      </Link>
+                    </li>
                   ) : null}
                   {isAdmin ? (
-                    <Link href="/admin/dashboard" className="site-footer__a">
-                      Admin Dashboard
-                    </Link>
+                    <li>
+                      <Link href="/admin/dashboard" className="site-footer__link">
+                        Admin
+                      </Link>
+                    </li>
                   ) : null}
                   {isAdmin ? (
-                    <Link href="/admin/blog-manager" className="site-footer__a">
-                      Blog Manager
-                    </Link>
+                    <li>
+                      <Link href="/admin/blog-manager" className="site-footer__link">
+                        Blog
+                      </Link>
+                    </li>
                   ) : null}
                   {isAdmin ? (
-                    <Link href="/admin/project-chats" className="site-footer__a">
-                      Admin Chats
-                    </Link>
+                    <li>
+                      <Link href="/admin/project-chats" className="site-footer__link">
+                        Chats
+                      </Link>
+                    </li>
                   ) : null}
                   {isAdmin ? (
-                    <Link href="/admin/job-manager" className="site-footer__a">
-                      Job Manager
-                    </Link>
+                    <li>
+                      <Link href="/admin/job-manager" className="site-footer__link">
+                        Jobs
+                      </Link>
+                    </li>
                   ) : null}
-                </div>
+                </ul>
               </div>
             ) : null}
 
-            <div className="site-footer__col">
-              <p className="site-footer__heading">{h.legal}</p>
-              <div className="site-footer__links">
+            <div className="site-footer__column">
+              <p className="site-footer__label">{h.legal}</p>
+              <ul className="site-footer__list">
                 {legalLinks.map((item) => (
-                  <Link key={item.href} href={item.href} className="site-footer__a">
-                    {item.label}
-                  </Link>
+                  <li key={item.href}>
+                    <Link href={item.href} className="site-footer__link">
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
-                <button type="button" className="site-footer__cookie" onClick={openCookiePreferences}>
-                  Manage Cookies
-                </button>
-              </div>
+                <li>
+                  <button type="button" className="site-footer__link site-footer__link--button" onClick={openCookiePreferences}>
+                    Cookies
+                  </button>
+                </li>
+              </ul>
             </div>
 
-            <div className="site-footer__col">
-              <p className="site-footer__heading">{h.social}</p>
-              <div className="site-footer__links">
+            <div className="site-footer__column">
+              <p className="site-footer__label">{h.social}</p>
+              <ul className="site-footer__list">
                 {socialLinks.map((item) => (
-                  <a key={item.href} href={item.href} target="_blank" rel="noreferrer noopener" className="site-footer__a">
-                    {item.label}
-                  </a>
+                  <li key={item.href}>
+                    <a href={item.href} target="_blank" rel="noreferrer noopener" className="site-footer__link">
+                      {item.label}
+                    </a>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          </nav>
-
-          <div className="site-footer__meta">
-            <small>
-              © {new Date().getFullYear()} {chrome.copyrightName}
-            </small>
           </div>
+        </div>
+
+        <div className="site-footer__legal">
+          <small className="site-footer__copy">
+            © {new Date().getFullYear()} {chrome.copyrightName}
+          </small>
         </div>
       </div>
     </footer>

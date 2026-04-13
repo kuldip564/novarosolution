@@ -11,6 +11,7 @@ import {
 } from '@/lib/clientApi';
 import { formatApplicationStatus, formatInterviewRound } from '@/components/careers/interviewLabels';
 import SafeImage from '@/components/ui/SafeImage';
+import ApplicationDocumentLinks from '@/components/shared/ApplicationDocumentLinks';
 
 const STATUS_OPTIONS: JobApplicationRow['status'][] = [
   'pending',
@@ -31,18 +32,6 @@ const INTERVIEW_OPTIONS: string[] = [
   'final',
   'offer'
 ];
-
-function safeHttpUrl(raw: string) {
-  const t = String(raw || '').trim();
-  if (!t) return '';
-  try {
-    const u = new URL(t);
-    if (u.protocol === 'http:' || u.protocol === 'https:') return u.href;
-  } catch {
-    return '';
-  }
-  return '';
-}
 
 type Props = {
   token: string;
@@ -148,24 +137,23 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
   const job = detail?.job;
 
   return (
-    <div className="grid min-h-[560px] gap-6 lg:grid-cols-[minmax(280px,340px)_1fr]">
-      <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-[var(--surface)]/30 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
-        <div className="border-b border-white/10 pb-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400/80">Pipeline</p>
-          <p className="mt-1 text-sm text-slate-500">Search and filter applicants.</p>
+    <div className="applications-panel applications-panel--prime">
+      <div className="applications-panel__surface applications-panel__surface--sidebar">
+        <div className="applications-panel__head applications-panel__head--minimal">
+          <p className="applications-panel__eyebrow">Inbox</p>
         </div>
         <div>
-          <label className="flex flex-col gap-1 text-xs text-slate-400">
-            Search name or email
-            <div className="flex gap-2">
+          <label className="applications-panel__label">
+            Search
+            <div className="applications-panel__search-row">
               <input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') setSearchApplicants(searchInput);
                 }}
-                placeholder="Type and press Enter"
-                className="flex-1 rounded-lg border border-white/15 bg-black/25 px-3 py-2 text-sm text-slate-100"
+                placeholder="Name or email · Enter"
+                className="applications-panel__control"
               />
               <button
                 type="button"
@@ -177,10 +165,10 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
             </div>
           </label>
         </div>
-        <label className="flex flex-col gap-1 text-xs text-slate-400">
+        <label className="applications-panel__label">
           Job
           <select
-            className="rounded-lg border border-white/15 bg-black/25 px-3 py-2 text-sm"
+            className="applications-panel__control"
             value={filterJobId}
             onChange={(e) => setFilterJobId(e.target.value)}
           >
@@ -188,10 +176,10 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
             {jobOptions}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-xs text-slate-400">
+        <label className="applications-panel__label">
           Status
           <select
-            className="rounded-lg border border-white/15 bg-black/25 px-3 py-2 text-sm"
+            className="applications-panel__control"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -204,21 +192,21 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
           </select>
         </label>
 
-        <div className="max-h-[420px] flex-1 space-y-2 overflow-y-auto pr-1">
+        <div className="applications-panel__list">
           {applications.map((row) => (
             <button
               key={row.id}
               type="button"
               onClick={() => setSelectedId(row.id)}
-              className={`w-full rounded-xl border px-3 py-3 text-left transition ${
+              className={
                 selectedId === row.id
-                  ? 'border-cyan-500/50 bg-cyan-500/10'
-                  : 'border-white/10 bg-white/[0.03] hover:border-white/20'
-              }`}
+                  ? 'applications-panel__applicant applications-panel__applicant--selected'
+                  : 'applications-panel__applicant'
+              }
             >
               <div className="flex items-start gap-2">
                 {row.userAvatarUrl ? (
-                  <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/10">
+                  <span className="applications-panel__avatar applications-panel__avatar--photo relative">
                     <SafeImage
                       src={row.userAvatarUrl}
                       alt={row.userName || row.applicantName ? `Avatar of ${row.userName || row.applicantName}` : 'Applicant avatar'}
@@ -228,35 +216,31 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
                     />
                   </span>
                 ) : (
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-slate-200">
+                  <span className="applications-panel__avatar">
                     {(row.userName || row.applicantName || '?').slice(0, 1).toUpperCase()}
                   </span>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium text-slate-100">{row.userName || row.applicantName}</p>
-                  <p className="truncate text-xs text-slate-500">{row.userEmail || row.applicantEmail}</p>
-                  <p className="mt-1 truncate text-xs text-cyan-200/90">{row.jobTitle}</p>
+                  <p className="truncate font-medium admin-theme-text">{row.userName || row.applicantName}</p>
+                  <p className="truncate text-xs admin-theme-muted">{row.userEmail || row.applicantEmail}</p>
+                  <p className="applications-panel__job-line truncate">{row.jobTitle}</p>
                   <div className="mt-1 flex flex-wrap gap-1">
-                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-300">
-                      {formatApplicationStatus(row.status)}
-                    </span>
+                    <span className="applications-panel__pill">{formatApplicationStatus(row.status)}</span>
                     {row.interviewRound && row.interviewRound !== 'none' ? (
-                      <span className="rounded-full bg-indigo-500/20 px-2 py-0.5 text-[10px] text-indigo-200">
+                      <span className="applications-panel__pill applications-panel__pill--round">
                         {formatInterviewRound(row.interviewRound)}
                       </span>
                     ) : null}
-                    {row.unreadUpdates ? (
-                      <span className="rounded-full bg-rose-500/30 px-2 py-0.5 text-[10px] text-rose-100">Msg</span>
-                    ) : null}
+                    {row.unreadUpdates ? <span className="applications-panel__pill applications-panel__pill--msg">Msg</span> : null}
                   </div>
                 </div>
               </div>
             </button>
           ))}
-          {applications.length === 0 ? <p className="text-sm text-slate-500">No applications match.</p> : null}
+          {applications.length === 0 ? <p className="text-sm admin-theme-muted">No results.</p> : null}
         </div>
 
-        <div className="flex items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs">
+        <div className="applications-panel__footer">
           <button
             type="button"
             className="btn-secondary px-2 py-1"
@@ -265,7 +249,7 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
           >
             Prev
           </button>
-          <span className="text-slate-500">
+          <span className="admin-theme-muted">
             {appPage} / {appTotalPages}
           </span>
           <button
@@ -279,20 +263,19 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-transparent p-5 shadow-[0_24px_60px_rgba(0,0,0,0.28)] md:p-6">
+      <div className="applications-panel__surface applications-panel__surface--detail">
         {!selectedId ? (
-          <div className="flex h-full min-h-[320px] flex-col items-center justify-center text-center text-slate-500">
-            <p className="text-lg font-medium text-slate-400">Select an applicant</p>
-            <p className="mt-2 max-w-sm text-sm">View full profile, interview stage, and send updates the candidate will see in their account.</p>
+          <div className="applications-panel__detail-empty">
+            <p>Select a candidate</p>
           </div>
         ) : detailLoading ? (
-          <p className="text-slate-400">Loading applicant…</p>
+          <p className="admin-theme-muted">Loading applicant…</p>
         ) : app && user && job ? (
-          <div className="space-y-6">
-            <header className="flex flex-col gap-4 border-b border-white/10 pb-4 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-5">
+            <header className="applications-panel__detail-header">
               <div className="flex gap-4">
                 {user.avatarUrl ? (
-                  <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-white/10">
+                  <span className="applications-panel__avatar applications-panel__avatar--lg applications-panel__avatar--photo relative">
                     <SafeImage
                       src={user.avatarUrl}
                       alt={user.name ? `Profile photo of ${user.name}` : 'Applicant profile photo'}
@@ -302,34 +285,32 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
                     />
                   </span>
                 ) : (
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-2xl font-bold">
-                    {user.name.slice(0, 1).toUpperCase()}
-                  </span>
+                  <span className="applications-panel__avatar applications-panel__avatar--lg">{user.name.slice(0, 1).toUpperCase()}</span>
                 )}
                 <div>
-                  <h2 className="text-xl font-bold text-slate-50">{user.name}</h2>
-                  <p className="text-sm text-slate-400">{user.email}</p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <h2 className="text-xl font-bold admin-theme-text">{user.name}</h2>
+                  <p className="text-sm admin-theme-muted">{user.email}</p>
+                  <p className="mt-1 text-xs admin-theme-subtle">
                     Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '—'} · Role{' '}
-                    <span className="text-slate-300">{user.role}</span>
-                    {user.isActive === false ? <span className="ml-2 text-amber-400">(inactive)</span> : null}
+                    <span className="admin-theme-text">{user.role}</span>
+                    {user.isActive === false ? <span className="ml-2 admin-theme-warn">(inactive)</span> : null}
                   </p>
                 </div>
               </div>
-              <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm">
-                <p className="text-xs uppercase tracking-wide text-slate-500">Position</p>
-                <p className="font-semibold text-cyan-100">{job.title}</p>
-                <p className="text-xs text-slate-500">
+              <div className="applications-panel__position-box">
+                <p className="applications-panel__eyebrow">Role</p>
+                <p className="applications-panel__position-title">{job.title}</p>
+                <p className="mt-1 text-xs admin-theme-muted">
                   {job.category} · {job.location || 'Remote flexible'}
                 </p>
               </div>
             </header>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-slate-400">Pipeline status</span>
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="flex flex-col gap-1.5 text-sm">
+                <span className="admin-theme-muted">Status</span>
                 <select
-                  className="rounded-xl border border-white/15 bg-black/30 px-3 py-2.5"
+                  className="applications-panel__control py-2.5"
                   value={app.status}
                   disabled={saving}
                   onChange={(e) => onPatch({ status: e.target.value as JobApplicationRow['status'] })}
@@ -341,10 +322,10 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
                   ))}
                 </select>
               </label>
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-slate-400">Interview round</span>
+              <label className="flex flex-col gap-1.5 text-sm">
+                <span className="admin-theme-muted">Round</span>
                 <select
-                  className="rounded-xl border border-white/15 bg-black/30 px-3 py-2.5"
+                  className="applications-panel__control py-2.5"
                   value={app.interviewRound || 'none'}
                   disabled={saving}
                   onChange={(e) => onPatch({ interviewRound: e.target.value })}
@@ -358,61 +339,31 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
               </label>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Application</p>
-              <p className="mt-2 whitespace-pre-wrap text-sm text-slate-300">{app.coverLetter}</p>
-              <div className="mt-3 flex flex-wrap gap-3 text-xs">
-                {app.phone ? <span className="text-slate-400">Phone: {app.phone}</span> : null}
-                {app.yearsExperience ? <span className="text-slate-400">Exp: {app.yearsExperience}</span> : null}
+            <div className="applications-panel__block">
+              <p className="applications-panel__eyebrow">Application</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm admin-theme-text">{app.coverLetter}</p>
+              <div className="mt-3 flex flex-wrap gap-3 text-xs admin-theme-muted">
+                {app.phone ? <span>Phone: {app.phone}</span> : null}
+                {app.yearsExperience ? <span>Exp: {app.yearsExperience}</span> : null}
               </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {safeHttpUrl(app.linkedInUrl || '') ? (
-                  <a
-                    href={safeHttpUrl(app.linkedInUrl || '')}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-300 hover:bg-white/15"
-                  >
-                    LinkedIn
-                  </a>
-                ) : null}
-                {safeHttpUrl(app.portfolioUrl || '') ? (
-                  <a
-                    href={safeHttpUrl(app.portfolioUrl || '')}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-300 hover:bg-white/15"
-                  >
-                    Portfolio
-                  </a>
-                ) : null}
-                {safeHttpUrl(app.resumeUrl || '') ? (
-                  <a
-                    href={safeHttpUrl(app.resumeUrl || '')}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-300 hover:bg-white/15"
-                  >
-                    Resume
-                  </a>
-                ) : null}
-                {safeHttpUrl(app.additionalDocumentUrl || '') ? (
-                  <a
-                    href={safeHttpUrl(app.additionalDocumentUrl || '')}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-cyan-300 hover:bg-white/15"
-                  >
-                    {app.additionalDocumentName?.trim() || 'Extra document'}
-                  </a>
-                ) : null}
+              <div className="mt-4">
+                <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] admin-theme-muted">
+                  Resume & links
+                </p>
+                <ApplicationDocumentLinks
+                  resumeUrl={app.resumeUrl}
+                  additionalDocumentUrl={app.additionalDocumentUrl}
+                  additionalDocumentName={app.additionalDocumentName}
+                  linkedInUrl={app.linkedInUrl}
+                  portfolioUrl={app.portfolioUrl}
+                />
               </div>
             </div>
 
             <label className="block text-sm">
-              <span className="text-slate-400">Internal notes (not visible to candidate)</span>
+              <span className="admin-theme-muted">Internal notes</span>
               <textarea
-                className="mt-2 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                className="applications-panel__control mt-2 w-full resize-y"
                 rows={3}
                 defaultValue={app.adminNote || ''}
                 onBlur={(e) => {
@@ -423,28 +374,25 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
             </label>
 
             <div>
-              <p className="text-sm font-semibold text-slate-200">Messages to candidate</p>
-              <p className="text-xs text-slate-500">These appear on their Jobs page and job application view.</p>
-              <div className="mt-3 max-h-48 space-y-3 overflow-y-auto rounded-xl border border-white/10 bg-black/25 p-3">
+              <p className="text-sm font-semibold admin-theme-text">Candidate messages</p>
+              <div className="applications-panel__messages mt-2">
                 {(app.applicantMessages || []).length === 0 ? (
-                  <p className="text-sm text-slate-500">No messages yet.</p>
+                  <p className="text-sm admin-theme-muted">No messages yet.</p>
                 ) : (
                   (app.applicantMessages || []).map((m) => (
-                    <div key={m.id} className="rounded-lg border border-white/5 bg-white/[0.04] p-3 text-sm">
-                      <p className="whitespace-pre-wrap text-slate-200">{m.body}</p>
-                      <p className="mt-2 text-[10px] text-slate-500">
-                        {m.sentAt ? new Date(m.sentAt).toLocaleString() : ''}
-                      </p>
+                    <div key={m.id} className="applications-panel__message-item mb-3 last:mb-0">
+                      <p>{m.body}</p>
+                      <p>{m.sentAt ? new Date(m.sentAt).toLocaleString() : ''}</p>
                     </div>
                   ))
                 )}
               </div>
-              <form onSubmit={onSendMessage} className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <form onSubmit={onSendMessage} className="applications-panel__form-row">
                 <textarea
                   value={messageDraft}
                   onChange={(e) => setMessageDraft(e.target.value)}
-                  placeholder="e.g. You are invited to Round 2 on Tuesday 3pm IST (link in email)."
-                  className="min-h-[80px] flex-1 rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                  placeholder="Update for the candidate…"
+                  className="applications-panel__control applications-panel__control--textarea flex-1"
                 />
                 <button type="submit" className="admin-btn h-fit shrink-0 self-end px-4 py-2" disabled={saving || !messageDraft.trim()}>
                   Send update
@@ -453,7 +401,7 @@ export default function ApplicationsPanel({ token, jobs, saving, setSaving, setE
             </div>
           </div>
         ) : (
-          <p className="text-slate-500">Could not load this application.</p>
+          <p className="admin-theme-muted">Could not load this application.</p>
         )}
       </div>
     </div>

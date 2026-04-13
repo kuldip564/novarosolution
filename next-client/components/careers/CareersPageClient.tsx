@@ -70,36 +70,37 @@ export default function CareersPageClient({ initialJobs }: Props) {
   }, [token, isAuthenticated]);
 
   return (
-    <main className="app-page-shell">
-      <section className="premium-page-hero space-y-5">
-        <div className="relative z-[1] space-y-4">
-          <p className="premium-eyebrow">Careers</p>
-          <h1 className="section-title text-3xl font-extrabold md:text-5xl">Open roles</h1>
-          <p className="max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">
-            Explore roles across design, engineering, and operations. Sign in to apply and track applications in one
-            place.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-1">
+    <main className="app-page-shell jobs-page">
+      <section className="premium-page-hero jobs-page__hero premium-page-hero--prime">
+        <div className="relative z-1 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-2">
+            <p className="premium-eyebrow">Careers</p>
+            <h1 className="section-title text-2xl font-extrabold tracking-tight md:text-4xl">Open roles</h1>
+            <p className="jobs-text-muted max-w-xl text-sm leading-relaxed md:text-base">
+              Join the team — browse roles and apply in a few steps when you are signed in.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <Link href="/" className="btn-secondary btn-sm">
-              Back to home
+              Home
             </Link>
             {!isAuthenticated ? (
               <Link href="/login" className="btn btn-sm">
-                Sign in to apply
+                Sign in
               </Link>
             ) : null}
           </div>
         </div>
       </section>
 
-      <section className="page-content-card space-y-6">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="page-content-card space-y-5">
+        <div className="jobs-page__toolbar">
           <div>
             <p className="profile-panel-label">Directory</p>
-            <h2 className="profile-panel-title">All roles</h2>
-            <p className="profile-panel-desc">Featured listings first · filter by category.</p>
+            <h2 className="profile-panel-title">Roles</h2>
+            <p className="profile-panel-desc">Featured first · filter by category</p>
           </div>
-          <label className="flex min-w-0 flex-col gap-2 sm:max-w-xs">
+          <label className="jobs-page__filter flex min-w-0 flex-col gap-2">
             <span className="form-label-premium">Category</span>
             <select
               value={category}
@@ -117,50 +118,48 @@ export default function CareersPageClient({ initialJobs }: Props) {
           </label>
         </div>
 
-        {loading ? <p className="jobs-loading-hint">Refreshing listings…</p> : null}
+        {loading ? <p className="jobs-loading-hint">Updating…</p> : null}
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="jobs-card-grid">
           {jobs.map((job, index) => {
             const deadline = formatApplicationDeadline(job.applicationDeadline);
             const featured = job.featured === true;
             return (
               <motion.article
                 key={job.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.04 }}
-                className={`careers-card group relative overflow-hidden ${featured ? 'is-featured' : ''}`}
+                transition={{ delay: index * 0.035 }}
+                className={`careers-card careers-card--premium group relative overflow-hidden ${featured ? 'is-featured' : ''}`}
               >
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-indigo-500/10 opacity-0 transition-opacity group-hover:opacity-100" />
-                <div className="relative z-[1] flex flex-col gap-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {featured ? (
-                      <span className="job-meta-chip job-meta-chip--featured">Featured</span>
-                    ) : null}
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-cyan-500/7 via-transparent to-indigo-500/8 opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="relative z-1 flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {featured ? <span className="job-meta-chip job-meta-chip--featured">Featured</span> : null}
                     <span className="job-meta-chip job-meta-chip--category">{job.category}</span>
-                    {job.department ? (
-                      <span className="job-meta-chip job-meta-chip--soft">{job.department}</span>
-                    ) : null}
+                    {job.department ? <span className="job-meta-chip job-meta-chip--soft">{job.department}</span> : null}
                     <span className="job-meta-chip job-meta-chip--soft">{formatEmployment(job.employmentType)}</span>
                     <span className="job-meta-chip job-meta-chip--soft">{formatWorkMode(job.workMode)}</span>
-                    <span className="job-meta-chip job-meta-chip--indigo">
-                      {formatExperienceLevel(job.experienceLevel || 'any')}
-                    </span>
+                    <span className="job-meta-chip job-meta-chip--indigo">{formatExperienceLevel(job.experienceLevel || 'any')}</span>
                   </div>
-                  <h3 className="text-xl font-bold tracking-tight text-slate-100">{job.title}</h3>
-                  <p className="line-clamp-3 text-sm leading-relaxed text-slate-300">{jobCardTeaser(job)}</p>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
+                  <h3 className="jobs-text text-lg font-bold tracking-tight md:text-xl">{job.title}</h3>
+                  <p className="jobs-text-soft line-clamp-3 text-sm leading-relaxed">{jobCardTeaser(job)}</p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs jobs-text-muted">
                     {job.location ? <span>{job.location}</span> : null}
-                    {job.salaryHint ? <span className="font-medium text-slate-300">{job.salaryHint}</span> : null}
+                    {job.salaryHint ? <span className="font-medium jobs-text-soft">{job.salaryHint}</span> : null}
                     {deadline ? (
-                      <span className={deadline.past ? 'font-medium text-rose-300/90' : 'font-medium text-emerald-300/90'}>
+                      <span
+                        className={
+                          deadline.past ? 'font-medium text-rose-500 dark:text-rose-300/90' : 'font-medium text-emerald-600 dark:text-emerald-300/90'
+                        }
+                      >
                         {deadline.past ? 'Closed ' : 'Apply by '}
                         {deadline.label}
                       </span>
                     ) : null}
                   </div>
                   <Link href={`/jobs/${job.id}`} className="btn btn-sm mt-1 w-fit">
-                    View role & apply
+                    View & apply
                   </Link>
                 </div>
               </motion.article>
@@ -170,20 +169,20 @@ export default function CareersPageClient({ initialJobs }: Props) {
 
         {!loading && jobs.length === 0 ? (
           <p className="premium-empty-hint">
-            No published roles match this filter yet.{' '}
-            <span className="text-slate-300">Check back soon or contact us through the contact page.</span>
+            No roles match this filter.{' '}
+            <span className="jobs-text-soft">Try another category or check back soon.</span>
           </p>
         ) : null}
       </section>
 
       {isAuthenticated && mine.length > 0 ? (
-        <section className="page-content-card space-y-5">
+        <section className="page-content-card space-y-4">
           <div>
-            <p className="profile-panel-label">Pipeline</p>
-            <h2 className="profile-panel-title">Your applications</h2>
-            <p className="profile-panel-desc">Status, interview stage, and updates from the hiring team.</p>
+            <p className="profile-panel-label">Your pipeline</p>
+            <h2 className="profile-panel-title">Applications</h2>
+            <p className="profile-panel-desc">Status and updates from hiring</p>
           </div>
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {mine.map((row) => {
               const expanded = openAppId === row.id;
               const msgCount = (row.applicantMessages || []).length;
@@ -191,7 +190,7 @@ export default function CareersPageClient({ initialJobs }: Props) {
                 <motion.article key={row.id} layout className="jobs-application-card">
                   <button
                     type="button"
-                    className="flex w-full flex-col gap-3 p-5 text-left md:flex-row md:items-center md:justify-between"
+                    className="flex w-full flex-col gap-3 p-4 text-left md:flex-row md:items-center md:justify-between"
                     onClick={() => {
                       const next = expanded ? null : row.id;
                       setOpenAppId(next);
@@ -208,50 +207,48 @@ export default function CareersPageClient({ initialJobs }: Props) {
                       <div className="flex flex-wrap items-center gap-2">
                         <Link
                           href={`/jobs/${row.jobId}`}
-                          className="text-lg font-semibold text-slate-100 transition hover:text-cyan-200"
+                          className="jobs-app-link text-base font-semibold"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {row.jobTitle || 'Role'}
                         </Link>
                         {row.unreadUpdates ? <span className="job-meta-chip job-meta-chip--new">New</span> : null}
                       </div>
-                      {row.jobCategory ? <p className="mt-1 text-xs text-slate-500">{row.jobCategory}</p> : null}
+                      {row.jobCategory ? <p className="mt-1 text-xs jobs-text-muted">{row.jobCategory}</p> : null}
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="job-meta-chip job-meta-chip--soft">{formatApplicationStatus(row.status)}</span>
                       {row.interviewRound && row.interviewRound !== 'none' ? (
-                        <span className="job-meta-chip job-meta-chip--indigo">
-                          {formatInterviewRound(row.interviewRound)}
-                        </span>
+                        <span className="job-meta-chip job-meta-chip--indigo">{formatInterviewRound(row.interviewRound)}</span>
                       ) : null}
                       {msgCount > 0 ? (
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs jobs-text-muted">
                           {msgCount} update{msgCount === 1 ? '' : 's'}
                         </span>
                       ) : null}
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs jobs-text-muted">
                         {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : ''}
                       </span>
                     </div>
                   </button>
                   {expanded ? (
-                    <div className="jobs-application-card__expand px-5 py-4">
+                    <div className="jobs-application-card__expand px-4 py-3 md:px-5">
                       {(row.applicantMessages || []).length === 0 ? (
-                        <p className="text-sm text-slate-500">No messages from the team yet.</p>
+                        <p className="text-sm jobs-text-muted">No messages yet.</p>
                       ) : (
-                        <ul className="space-y-3">
+                        <ul className="space-y-2">
                           {(row.applicantMessages || []).map((m) => (
-                            <li key={m.id} className="jobs-application-msg text-sm text-slate-200">
+                            <li key={m.id} className="jobs-application-msg text-sm jobs-text-soft">
                               <p className="whitespace-pre-wrap">{m.body}</p>
-                              <p className="mt-2 text-[10px] text-slate-500">
+                              <p className="mt-1.5 text-[10px] jobs-text-muted">
                                 {m.sentAt ? new Date(m.sentAt).toLocaleString() : ''}
                               </p>
                             </li>
                           ))}
                         </ul>
                       )}
-                      <Link href={`/jobs/${row.jobId}`} className="btn-secondary btn-sm mt-4 inline-flex">
-                        Open role page
+                      <Link href={`/jobs/${row.jobId}`} className="btn-secondary btn-sm mt-3 inline-flex">
+                        Open role
                       </Link>
                     </div>
                   ) : null}

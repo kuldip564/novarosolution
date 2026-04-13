@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FaMoon, FaSearch, FaSun } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import type { SiteChrome } from '@/lib/siteChrome';
@@ -22,18 +22,17 @@ export default function SiteHeader({ chrome = DEFAULT_SITE_CHROME }: Props) {
   const { loading, isAuthenticated, isCreator, isAdmin, isEmployee, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [searchQuery, setSearchQuery] = useState('');
   const searchFieldRef = useRef<HTMLInputElement>(null);
 
   const navItems = chrome.navItems?.length ? chrome.navItems : DEFAULT_SITE_CHROME.navItems;
   const searchPlaceholder = chrome.searchPlaceholder || DEFAULT_SITE_CHROME.searchPlaceholder;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     const stored = window.localStorage.getItem('novaro_theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const next = stored === 'dark' || stored === 'light' ? stored : prefersDark ? 'dark' : 'light';
+    const next = stored === 'dark' || stored === 'light' ? stored : 'dark';
     root.setAttribute('data-theme', next);
     setTheme(next);
   }, []);

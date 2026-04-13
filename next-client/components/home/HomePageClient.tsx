@@ -197,7 +197,7 @@ function CountUpValue({ value }: { value: string | number }) {
   }, [inView, numeric]);
 
   return (
-    <p ref={ref} className="text-2xl font-bold mt-1">
+    <p ref={ref} className="home-stat-value">
       {display}
       {suffix}
     </p>
@@ -366,22 +366,20 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   }
 
   return (
-    <div className="home-premium w-full text-(--text)">
+    <div className="home-premium home-page-prime w-full text-(--text)">
       <Reveal>
         <section className="hero-mesh relative flex min-h-[82vh] w-full items-center justify-center px-4 py-28">
         <FuturisticThreeHero />
-        <div className="mx-auto max-w-6xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-5 py-1.5 text-xs uppercase tracking-[0.22em] text-slate-200 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
+        <div className="relative z-1 mx-auto max-w-6xl text-center">
+          <p className="home-hero-badge">
+            <span className="home-hero-badge-dot" aria-hidden />
             {hero.badge}
           </p>
           <h1 className="mt-8 text-4xl font-black tracking-tighter md:text-6xl lg:text-8xl">
-            <span className="block text-[var(--text)] drop-shadow-[0_2px_24px_rgba(15,23,42,0.45)]">{hero.titleMain}</span>
-            <span className="mt-3 block bg-linear-to-r from-cyan-200 via-violet-300 to-fuchsia-400 bg-clip-text text-transparent">
-              {hero.titleGradient}
-            </span>
+            <span className="home-hero-title-main block">{hero.titleMain}</span>
+            <span className="home-hero-gradient mt-3 block">{hero.titleGradient}</span>
           </h1>
-          <p className="mx-auto mt-7 max-w-3xl text-base leading-relaxed text-slate-300 md:text-lg">{hero.description}</p>
+          <p className="home-hero-lead">{hero.description}</p>
           <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href="/#contact-form" className="btn px-8 py-3">
               {hero.primaryCta}
@@ -409,11 +407,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
               whileHover={reduceMotion ? undefined : { y: -3 }}
               className="home-stat-card p-5 text-center"
             >
-              <div className="mx-auto inline-flex h-11 w-11 items-center justify-center rounded-xl border border-violet-400/25 bg-linear-to-br from-violet-500/25 to-cyan-500/15 text-lg text-cyan-100 shadow-inner shadow-black/20">
+              <div className="home-icon-chip h-11 w-11 text-lg">
                 <StatIcon />
               </div>
               <CountUpValue value={item.value} />
-              <p className="text-sm text-slate-400">{item.label}</p>
+              <p className="text-sm home-text-muted">{item.label}</p>
             </motion.article>
           );
           })}
@@ -424,11 +422,12 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
+          <p className="home-section-kicker">Services</p>
+          <h2 className="home-section-heading mb-4 text-center text-3xl md:text-5xl">
             {data?.services?.title ||
               'UI/UX design, web development, and mobile app development services'}
           </h2>
-          <p className="mx-auto mb-8 max-w-3xl text-center text-slate-300">
+          <p className="home-section-intro">
             {data?.services?.description ||
               'One team for design and development. We build simple, fast, and user-friendly digital products.'}
           </p>
@@ -455,17 +454,15 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                   onMouseEnter={(event) => handleServiceMouseEnter(event, service.title)}
                   className={`service-bento-card rounded-3xl p-6 ${bentoClass}`}
                 >
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-violet-400/30 bg-linear-to-br from-violet-600/30 to-cyan-500/20 text-cyan-100 shadow-lg shadow-black/20">
+                  <span className="home-icon-chip h-12 w-12 rounded-2xl text-xl">
                     <Icon />
                   </span>
                   <h3 className="mt-4 text-xl font-semibold">{service.title}</h3>
-                  <p className="mt-2 text-slate-300">{service.description}</p>
+                  <p className="mt-2 home-text-body">{service.description}</p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <span className="rounded-full border border-fuchsia-400/35 bg-fuchsia-500/15 px-3 py-1 text-xs text-fuchsia-100/95">
-                      {service.badge}
-                    </span>
-                    <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs">{service.deliveryTime}</span>
-                    <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs">{service.pricing}</span>
+                    <span className="home-pill home-pill--accent">{service.badge}</span>
+                    <span className="home-pill">{service.deliveryTime}</span>
+                    <span className="home-pill">{service.pricing}</span>
                   </div>
                   <div className="mt-5 flex flex-wrap items-center gap-2">
                     <button
@@ -498,14 +495,14 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 transition={{ duration: 0.25 }}
                 className="service-spotlight-card mt-5"
               >
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Service Spotlight</p>
+                <p className="text-xs uppercase tracking-[0.2em] home-text-muted">Service Spotlight</p>
                 <h3 className="mt-2 text-2xl font-semibold">{activeService.title}</h3>
-                <p className="mt-2 text-slate-300">{activeService.description}</p>
+                <p className="mt-2 home-text-body">{activeService.description}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(activeService.features || []).map((feature: string) => (
                     <span
                       key={`${activeService.title}-${feature}`}
-                      className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs"
+                      className="home-pill"
                     >
                       {feature}
                     </span>
@@ -531,17 +528,19 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
         >
-          <div className="page-content-card mx-auto max-w-3xl shadow-2xl shadow-black/40">
-            <div className="flex items-center justify-between">
+          <div className="home-service-modal mx-auto max-w-3xl">
+            <div className="home-service-modal__head">
               <h3 className="text-xl font-semibold">Contact Us for {selectedService}</h3>
-              <button type="button" onClick={() => setSelectedService('')} className="rounded-lg px-2 py-1 hover:bg-white/10">x</button>
+              <button type="button" onClick={() => setSelectedService('')} className="home-modal-close" aria-label="Close">
+                ×
+              </button>
             </div>
             <form onSubmit={onServiceSubmit} className="mt-5 grid gap-4">
-              <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" placeholder="Name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-              <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" placeholder="Email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" placeholder="Phone" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-              <input className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" type="date" required value={form.preferredDate} onChange={(e) => setForm({ ...form, preferredDate: e.target.value })} />
-              <textarea className="rounded-xl border border-white/12 bg-slate-900 px-4 py-3" rows={4} placeholder="Notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+              <input className="premium-field-input" placeholder="Name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <input className="premium-field-input" placeholder="Email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <input className="premium-field-input" placeholder="Phone" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              <input className="premium-field-input" type="date" required value={form.preferredDate} onChange={(e) => setForm({ ...form, preferredDate: e.target.value })} />
+              <textarea className="premium-field-input" rows={4} placeholder="Notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               {formError ? <p className="text-sm text-amber-300">{formError}</p> : null}
               <button disabled={isSubmittingService} className="btn px-5 py-2.5">
                 {isSubmittingService ? 'Submitting...' : 'Submit Request'}
@@ -555,6 +554,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
+          <p className="home-section-kicker">Why NovaRo</p>
           <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
           </h2>
@@ -572,11 +572,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 whileHover={reduceMotion ? undefined : { y: -4 }}
                 className="home-mini-card p-6"
               >
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/25 bg-linear-to-br from-cyan-500/20 to-violet-600/25 text-cyan-100">
+                <div className="home-icon-chip h-11 w-11 rounded-2xl">
                   <FeatureIcon />
                 </div>
                 <h3 className="mt-3 text-lg font-semibold">{feature.title}</h3>
-                <p className="mt-2 text-sm text-slate-300">{feature.description}</p>
+                <p className="mt-2 text-sm home-text-body">{feature.description}</p>
               </motion.article>
             );
             })}
@@ -588,6 +588,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
+          <p className="home-section-kicker">Testimonials</p>
           <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
             {data?.testimonials?.title || 'Teams that ship with confidence'}
           </h2>
@@ -603,7 +604,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 className="home-mini-card p-6"
               >
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-violet-400/30 bg-linear-to-br from-violet-600/35 to-slate-800/80 text-sm font-semibold text-slate-100">
+                  <div className="home-testimonial-avatar text-sm">
                     {String(t.name || 'N')
                       .split(' ')
                       .map((part: string) => part[0])
@@ -617,9 +618,9 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                     ))}
                   </div>
                 </div>
-                <p className="mt-4 text-slate-200">{t.content}</p>
+                <p className="home-quote">{t.content}</p>
                 <p className="mt-4 font-semibold">{t.name}</p>
-                <p className="text-xs text-slate-400">{t.role}</p>
+                <p className="text-xs home-text-muted">{t.role}</p>
               </motion.article>
             ))}
           </div>
@@ -630,10 +631,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 py-20 md:py-24">
         <div className="home-cta-strip mx-auto max-w-5xl p-8 text-center md:p-10">
-          <h2 className="text-3xl font-bold tracking-tight text-white md:text-5xl">
+          <h2 className="home-cta-title">
             {data?.cta?.title || 'Ready to ship your next product?'}
           </h2>
-          <p className="mt-4 text-slate-100/85">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
+          <p className="home-cta-subtitle">{data?.cta?.description || 'Partner with NovaRo Solution and build with confidence.'}</p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/#contact-form" className="btn px-8 py-3">
               {data?.cta?.primaryLabel || 'Start a project'}
@@ -652,14 +653,14 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
           <h2 className="home-section-heading text-center text-3xl md:text-5xl">
             {data?.contactForm?.title || "Let's talk about your roadmap"}
           </h2>
-          <p className="mt-3 text-center text-slate-400">
+          <p className="mt-3 text-center home-text-muted">
             {data?.contactForm?.description || 'Share your goals and timelines. We will follow up quickly.'}
           </p>
           <form onSubmit={onContactSubmit} className="mt-8 space-y-4">
-            <input className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" placeholder="Name" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} />
-            <input className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" placeholder="Email" type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} />
-            <input className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" placeholder="Subject" value={contactForm.subject} onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })} />
-            <textarea className="w-full rounded-xl border border-white/12 bg-slate-900/70 px-4 py-3" rows={5} placeholder="Message" value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} />
+            <input placeholder="Name" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} />
+            <input placeholder="Email" type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} />
+            <input placeholder="Subject" value={contactForm.subject} onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })} />
+            <textarea rows={5} placeholder="Message" value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} />
             {contactError ? <p className="text-sm text-amber-300">{contactError}</p> : null}
             {!isAuthenticated ? (
               <p className="text-sm text-amber-300">
@@ -697,11 +698,12 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       <Reveal>
         <section className="w-full px-4 pb-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="home-section-heading text-2xl md:text-3xl">Latest Creator Feed</h2>
-          <p className="mt-2 mb-4 text-sm text-slate-400">Client-cached updates powered by React Query.</p>
+          <p className="home-section-kicker home-section-kicker--start">Feed</p>
+          <h2 className="home-feed-section-title">Latest Creator Feed</h2>
+          <p className="mt-2 mb-4 text-sm home-text-muted">Client-cached updates powered by React Query.</p>
           <Suspense
             fallback={
-              <div className="page-content-card py-10 text-center text-sm text-slate-500">Loading latest feed…</div>
+              <div className="page-content-card py-10 text-center text-sm home-text-muted">Loading latest feed…</div>
             }
           >
             <CreatorFeedPreview />

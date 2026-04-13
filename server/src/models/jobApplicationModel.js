@@ -72,6 +72,13 @@ jobApplicationSchema.index({ createdAt: -1 });
 const JobApplication =
   mongoose.models.JobApplication || mongoose.model('JobApplication', jobApplicationSchema);
 
+/** Normalize populated Mongoose refs to id strings (avoid "[object Object]" in API payloads). */
+function refId(val) {
+  if (val == null) return '';
+  if (typeof val === 'object' && val._id != null) return String(val._id);
+  return String(val);
+}
+
 function mapMessages(msgs) {
   if (!Array.isArray(msgs)) return [];
   return msgs.map((m) => ({
@@ -97,8 +104,8 @@ function mapApp(doc, extras = {}) {
   const applicantMessages = mapMessages(row.applicantMessages);
   return {
     id: String(row._id),
-    jobId: String(row.jobId),
-    userId: String(row.userId),
+    jobId: refId(row.jobId),
+    userId: refId(row.userId),
     applicantName: row.applicantName,
     applicantEmail: row.applicantEmail,
     phone: row.phone || '',
