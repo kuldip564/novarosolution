@@ -106,6 +106,13 @@ export default function ContactPageClient({
         <p className="max-w-2xl text-slate-300">
           {description || 'Tell us about your project goals and we will get back to you quickly.'}
         </p>
+        <p className="max-w-2xl pt-2 text-sm text-slate-500">
+          Curious about delivery quality? Browse{' '}
+          <Link href="/projects#featured-work" className="font-medium text-cyan-300/90 underline-offset-2 hover:underline">
+            featured live launches
+          </Link>{' '}
+          we shipped—including hygiene services and international logistics—or ask for private references.
+        </p>
       </section>
 
       <section className="page-content-card space-y-5">

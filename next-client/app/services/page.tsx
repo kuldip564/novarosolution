@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { buildMetadata } from '@/lib/seo';
 import { fetchSiteContent } from '@/lib/api';
 import ServicesExplorer from '@/components/services/ServicesExplorer';
@@ -87,6 +88,16 @@ export default async function ServicesPage() {
         <p className="max-w-2xl text-slate-300">
           {servicesPage?.description ||
             'UI/UX, web, and mobile development in one team—from discovery to launch.'}
+        </p>
+        <p className="max-w-2xl text-sm text-slate-500">
+          Explore{' '}
+          <Link
+            href="/projects#featured-work"
+            className="font-medium text-cyan-300/90 underline-offset-2 hover:underline"
+          >
+            live sites we shipped
+          </Link>{' '}
+          in sectors like hygiene services and international logistics—proof before you commit.
         </p>
       </section>
       <ServicesExplorer services={services} />

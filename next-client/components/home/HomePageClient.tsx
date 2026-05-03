@@ -8,6 +8,7 @@ import {
   FaAward,
   FaBullhorn,
   FaChartLine,
+  FaChevronDown,
   FaCloud,
   FaCode,
   FaCogs,
@@ -26,6 +27,7 @@ import {
   submitContactForm
 } from '@/lib/api';
 import Reveal from '@/components/animations/Reveal';
+import ClientWorkShowcase from '@/components/shared/ClientWorkShowcase';
 import { useAuth } from '@/context/AuthContext';
 
 type AnyRecord = Record<string, any>;
@@ -368,32 +370,48 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
   return (
     <div className="home-premium home-page-prime w-full text-(--text)">
       <Reveal>
-        <section className="hero-mesh relative flex min-h-[82vh] w-full items-center justify-center px-4 py-28">
+        <section className="hero-mesh home-hero-shell relative flex min-h-[88vh] w-full items-center justify-center px-4 pb-24 pt-28 md:min-h-[90vh]">
         <FuturisticThreeHero />
-        <div className="relative z-1 mx-auto max-w-6xl text-center">
-          <p className="home-hero-badge">
-            <span className="home-hero-badge-dot" aria-hidden />
-            {hero.badge}
-          </p>
-          <h1 className="mt-8 text-4xl font-black tracking-tighter md:text-6xl lg:text-8xl">
-            <span className="home-hero-title-main block">{hero.titleMain}</span>
-            <span className="home-hero-gradient mt-3 block">{hero.titleGradient}</span>
-          </h1>
-          <p className="home-hero-lead">{hero.description}</p>
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/#contact-form" className="btn px-8 py-3">
-              {hero.primaryCta}
-            </Link>
-            <Link href="/services" className="btn-secondary px-8 py-3">
-              {hero.secondaryCta}
-            </Link>
+        <div className="relative z-1 mx-auto w-full max-w-5xl text-center">
+          <div className="home-hero-panel mx-auto px-5 py-10 sm:px-10 sm:py-12 md:px-12">
+            <p className="home-hero-badge">
+              <span className="home-hero-badge-dot" aria-hidden />
+              {hero.badge}
+            </p>
+            <h1 className="mt-7 text-4xl font-black tracking-tighter md:text-6xl lg:text-7xl xl:text-8xl">
+              <span className="home-hero-title-main block">{hero.titleMain}</span>
+              <span className="home-hero-gradient mt-3 block lg:mt-4">{hero.titleGradient}</span>
+            </h1>
+            <p className="home-hero-lead">{hero.description}</p>
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:mt-12 sm:flex-row sm:gap-5">
+              <Link href="/#contact-form" className="btn home-hero-primary-btn px-8 py-3.5 text-[0.95rem]">
+                {hero.primaryCta}
+              </Link>
+              <Link href="/services" className="btn-secondary home-hero-secondary-btn px-8 py-3.5 text-[0.95rem]">
+                {hero.secondaryCta}
+              </Link>
+            </div>
+            <ul
+              className="home-hero-highlights mt-10 flex flex-wrap items-center justify-center gap-2 sm:mt-12 sm:gap-3"
+              aria-label="Key strengths"
+            >
+              {(hero.highlights as string[]).map((line: string) => (
+                <li key={line} className="home-hero-highlight-pill">
+                  {line}
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+        <div className="home-scroll-hint" aria-hidden="true">
+          <span className="home-scroll-hint__label">Explore</span>
+          <FaChevronDown className="home-scroll-hint__icon" />
         </div>
         </section>
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-20 md:py-24">
+        <section className="home-section-band home-section-band--tint w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((item: AnyRecord, index: number) => {
             const StatIcon = STATS_ICON_BY_KEY[String(item.iconKey || '').toLowerCase()] || FaAward;
@@ -420,9 +438,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-20 md:py-24">
+        <section className="home-section-band w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <p className="home-section-kicker">Services</p>
+          <div className="home-section-head">
+            <p className="home-section-kicker">Services</p>
+          </div>
           <h2 className="home-section-heading mb-4 text-center text-3xl md:text-5xl">
             {data?.services?.title ||
               'UI/UX design, web development, and mobile app development services'}
@@ -552,9 +572,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </AnimatePresence>
 
       <Reveal>
-        <section className="w-full px-4 py-20 md:py-24">
+        <section className="home-section-band home-section-band--tint w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <p className="home-section-kicker">Why NovaRo</p>
+          <div className="home-section-head">
+            <p className="home-section-kicker">Why NovaRo</p>
+          </div>
           <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
             {data?.features?.title || 'Why businesses choose NovaRo Solution'}
           </h2>
@@ -586,9 +608,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-20 md:py-24">
+        <section className="home-section-band w-full px-4 py-20 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <p className="home-section-kicker">Testimonials</p>
+          <div className="home-section-head">
+            <p className="home-section-kicker">Testimonials</p>
+          </div>
           <h2 className="home-section-heading mb-10 text-center text-3xl md:text-5xl">
             {data?.testimonials?.title || 'Teams that ship with confidence'}
           </h2>
@@ -629,8 +653,12 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 py-20 md:py-24">
-        <div className="home-cta-strip mx-auto max-w-5xl p-8 text-center md:p-10">
+        <ClientWorkShowcase variant="home" id="client-work" />
+      </Reveal>
+
+      <Reveal>
+        <section className="home-section-band home-section-band--cta-wrap w-full px-4 py-16 md:py-20">
+        <div className="home-cta-strip mx-auto max-w-5xl p-8 text-center md:p-12">
           <h2 className="home-cta-title">
             {data?.cta?.title || 'Ready to ship your next product?'}
           </h2>
@@ -648,8 +676,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section id="contact-form" className="w-full px-4 py-20 md:py-24">
-        <div className="home-contact-shell mx-auto max-w-5xl p-6 md:p-10">
+        <section id="contact-form" className="home-section-band home-section-band--tint w-full px-4 py-20 md:py-24">
+        <div className="home-contact-shell mx-auto max-w-5xl p-6 md:p-12">
+          <div className="home-section-head">
+            <p className="home-section-kicker">Contact</p>
+          </div>
           <h2 className="home-section-heading text-center text-3xl md:text-5xl">
             {data?.contactForm?.title || "Let's talk about your roadmap"}
           </h2>
@@ -696,11 +727,17 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
       </Reveal>
 
       <Reveal>
-        <section className="w-full px-4 pb-20">
+        <section className="home-section-band w-full px-4 pb-24 pt-8 md:pb-28">
         <div className="mx-auto max-w-6xl">
-          <p className="home-section-kicker home-section-kicker--start">Feed</p>
-          <h2 className="home-feed-section-title">Latest Creator Feed</h2>
-          <p className="mt-2 mb-4 text-sm home-text-muted">Client-cached updates powered by React Query.</p>
+          <div className="home-feed-header flex flex-col gap-3 pb-8 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="home-section-kicker home-section-kicker--start mb-2">Feed</p>
+              <h2 className="home-feed-section-title">Latest Creator Feed</h2>
+            </div>
+            <p className="text-sm home-text-muted md:max-w-xs md:text-right">
+              Client-cached updates powered by React Query.
+            </p>
+          </div>
           <Suspense
             fallback={
               <div className="page-content-card py-10 text-center text-sm home-text-muted">Loading latest feed…</div>
