@@ -401,18 +401,36 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 </li>
               ))}
             </ul>
+            <nav className="home-hero-quicklinks" aria-label="Jump to section">
+              <Link href="#client-work" className="home-hero-quicklinks__item">
+                Live work
+              </Link>
+              <span className="home-hero-quicklinks__sep" aria-hidden />
+              <Link href="/services" className="home-hero-quicklinks__item">
+                Services
+              </Link>
+              <span className="home-hero-quicklinks__sep" aria-hidden />
+              <Link href="/projects" className="home-hero-quicklinks__item">
+                Case studies
+              </Link>
+              <span className="home-hero-quicklinks__sep" aria-hidden />
+              <Link href="#contact-form" className="home-hero-quicklinks__item">
+                Contact
+              </Link>
+            </nav>
           </div>
         </div>
-        <div className="home-scroll-hint" aria-hidden="true">
+        <a href="#client-work" className="home-scroll-hint">
           <span className="home-scroll-hint__label">Explore</span>
-          <FaChevronDown className="home-scroll-hint__icon" />
-        </div>
+          <FaChevronDown className="home-scroll-hint__icon" aria-hidden />
+        </a>
         </section>
       </Reveal>
 
       <Reveal>
         <section className="home-section-band home-section-band--tint w-full px-4 py-20 md:py-24">
-        <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="home-stats-shell mx-auto max-w-6xl">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {stats.map((item: AnyRecord, index: number) => {
             const StatIcon = STATS_ICON_BY_KEY[String(item.iconKey || '').toLowerCase()] || FaAward;
             return (
@@ -433,6 +451,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             </motion.article>
           );
           })}
+        </div>
         </div>
         </section>
       </Reveal>
@@ -528,6 +547,11 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                     </span>
                   ))}
                 </div>
+                <p className="mt-5 text-sm home-text-muted">
+                  <Link href="/projects" className="home-spotlight-link">
+                    Browse the project archive →
+                  </Link>
+                </p>
               </motion.article>
             ) : null}
           </AnimatePresence>
@@ -625,7 +649,7 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.35, delay: index * 0.07 }}
                 whileHover={reduceMotion ? undefined : { y: -3 }}
-                className="home-mini-card p-6"
+                className="home-mini-card home-testimonial-card p-6"
               >
                 <div className="flex items-center justify-between">
                   <div className="home-testimonial-avatar text-sm">
@@ -688,8 +712,10 @@ export default function HomePageClient({ data }: { data: AnyRecord }) {
             {data?.contactForm?.description || 'Share your goals and timelines. We will follow up quickly.'}
           </p>
           <form onSubmit={onContactSubmit} className="mt-8 space-y-4">
-            <input placeholder="Name" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} />
-            <input placeholder="Email" type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} />
+            <div className="home-contact-form-grid grid gap-4 md:grid-cols-2">
+              <input placeholder="Name" autoComplete="name" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} />
+              <input placeholder="Email" type="email" autoComplete="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} />
+            </div>
             <input placeholder="Subject" value={contactForm.subject} onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })} />
             <textarea rows={5} placeholder="Message" value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} />
             {contactError ? <p className="text-sm text-amber-300">{contactError}</p> : null}
