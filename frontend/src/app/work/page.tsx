@@ -1,53 +1,41 @@
 import type { Metadata } from "next";
-import { Reveal } from "@/components/anim/Reveal";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { PageHead } from "@/components/sections/PageHead";
 import { WorkExperience } from "@/components/sections/WorkExperience";
-import { getPublishedProjects } from "@/lib/content";
+import { getPublishedProjects, getSiteContent } from "@/lib/content";
 import { mapDbProjectsToWork } from "@/lib/content-mappers";
+import { createPageMetadata } from "@/lib/site-metadata";
+import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Work",
-};
+  description: "Selected case studies and client work from Novaro Solution.",
+  path: "/work",
+});
 
 export default async function WorkPage() {
-  const projects = await getPublishedProjects();
+  const [projects, cta] = await Promise.all([
+    getPublishedProjects(),
+    getSiteContent<CtaContent>("cta", defaultCta),
+  ]);
+
+  const workCta = pickCta(cta, "work");
 
   return (
     <main>
-      <section className="pagehead">
-        <div className="grid" />
-        <div className="glow g1" />
-        <div className="wrap inner">
-          <Reveal>
-            <span className="eyebrow">Selected work</span>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="bigword">
-              <span className="o">SELECTED</span>
-              <br />
-              <span className="g">WORK</span>
-            </div>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p style={{ marginTop: 22 }}>
-              Immersive case studies across fintech, healthcare, commerce, and
-              SaaS. Tap any project to go deeper — and drop your own screenshots
-              and demo videos into the marked spaces.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <PageHead
+        eyebrow="Selected work"
+        title="SELECTED"
+        titleAccent="WORK"
+        variant="bigword"
+        description="Immersive case studies across fintech, healthcare, commerce, and SaaS. Tap any project to go deeper."
+        className="blog-head"
+      />
       <WorkExperience projects={mapDbProjectsToWork(projects)} />
       <CtaBand
         eyebrow="Work with us"
-        title={
-          <>
-            Have a project in mind?
-            <br />
-            Let&apos;s talk it through.
-          </>
-        }
-        description="Share your goals and constraints — we'll respond with a clear path forward."
+        title={workCta.title}
+        description={workCta.description}
       />
     </main>
   );

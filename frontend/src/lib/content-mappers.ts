@@ -46,6 +46,7 @@ export type HomeProjectView = {
   title: string;
   description: string;
   cover: string;
+  imageAsset?: CloudinaryAsset | null;
 };
 
 export type ServiceGridView = {
@@ -101,6 +102,11 @@ export function mapDbProjectsToHomeGrid(projects: DbProject[]): HomeProjectView[
     title: project.title,
     description: project.hook,
     cover: project.coverClass ?? "c1",
+    imageAsset:
+      parseCloudinaryAsset(project.heroImage) ??
+      parseCloudinaryAsset(
+        Array.isArray(project.screens) ? project.screens[0] : null,
+      ),
   }));
 }
 

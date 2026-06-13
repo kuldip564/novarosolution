@@ -14,7 +14,7 @@ export const seedSite = {
 
 export const seedHero = {
   eyebrow: "Digital product studio",
-  headline: "Software, intelligence and growth, engineered as one.",
+  headline: "Software, intelligence and growth,",
   headlineAccent: "engineered as one.",
   lede:
     "Novaro Solution builds production-grade web apps, AI systems, and digital marketing engines for companies that want to move fast and look the part.",

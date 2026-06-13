@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 import { SiteShell } from "@/components/SiteShell";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { site } from "@/lib/site-data";
+import { rootMetadata } from "@/lib/site-metadata";
 import "@/styles/globals.css";
 
 const inter = Inter({
@@ -16,14 +16,7 @@ const sora = Sora({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: `${site.name} — ${site.tagline}`,
-    template: `%s — ${site.name}`,
-  },
-  description:
-    "Novaro Solution builds production-grade web apps, AI systems, and digital marketing engines for ambitious companies.",
-};
+export const metadata: Metadata = rootMetadata;
 
 export default function RootLayout({
   children,

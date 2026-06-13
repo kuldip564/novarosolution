@@ -6,17 +6,29 @@ import { TeamSection } from "@/components/sections/TeamSection";
 import { WhySection } from "@/components/sections/WhySection";
 import { getPublishedTeam, getSiteContent } from "@/lib/content";
 import { mapDbTeam } from "@/lib/content-mappers";
-import { aboutStats } from "@/lib/site-data";
+import { createPageMetadata } from "@/lib/site-metadata";
+import {
+  aboutStats,
+  defaultCta,
+  pickCta,
+  type CtaContent,
+} from "@/lib/site-data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "About",
-};
+  description:
+    "Meet the Novaro Solution team — a senior squad shipping web apps, AI systems, and growth programs.",
+  path: "/about",
+});
 
 export default async function AboutPage() {
-  const [team, stats] = await Promise.all([
+  const [team, stats, cta] = await Promise.all([
     getPublishedTeam(),
     getSiteContent("aboutStats", aboutStats),
+    getSiteContent<CtaContent>("cta", defaultCta),
   ]);
+
+  const aboutCta = pickCta(cta, "about");
 
   return (
     <main>
@@ -31,14 +43,8 @@ export default async function AboutPage() {
       <TeamSection members={mapDbTeam(team)} />
       <CtaBand
         eyebrow="Work with us"
-        title={
-          <>
-            Let&apos;s build something
-            <br />
-            worth showing off.
-          </>
-        }
-        description="Tell us what you're working on. We'll come back within one business day."
+        title={aboutCta.title}
+        description={aboutCta.description}
       />
     </main>
   );

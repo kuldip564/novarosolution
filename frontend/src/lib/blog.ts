@@ -87,6 +87,22 @@ export async function getBlogPost(slug: string): Promise<BlogPostResponse | null
   return data;
 }
 
+/** Fetches every published post (paginated API) for sitemap generation. */
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const all: BlogPost[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages) {
+    const response = await getBlogPosts({ page, limit: 24 });
+    all.push(...response.posts);
+    totalPages = response.pagination.totalPages;
+    page += 1;
+  }
+
+  return all;
+}
+
 export function formatBlogDate(iso: string): string {
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
@@ -95,9 +111,4 @@ export function formatBlogDate(iso: string): string {
   }).format(new Date(iso));
 }
 
-export function siteBaseUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "http://localhost:3000"
-  );
-}
+export { siteBaseUrl } from "./site-metadata";

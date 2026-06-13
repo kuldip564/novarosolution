@@ -1,0 +1,14 @@
+{
+  "name": "Novaro Solution",
+  "short_name": "Novaro",
+  "icons": [
+    {
+      "src": "/brand/novaro-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#05080f",
+  "background_color": "#05080f",
+  "display": "standalone"
+}

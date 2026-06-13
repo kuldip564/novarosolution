@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NMark } from "@/components/NMark";
+import { BrandLogo } from "@/components/BrandLogo";
 import { navLinks, site } from "@/lib/site-data";
 
 export function Footer() {
@@ -8,13 +8,7 @@ export function Footer() {
       <div className="wrap">
         <div className="foot-grid">
           <div className="foot-brand">
-            <Link href="/" className="brand">
-              <NMark size={36} />
-              <span className="txt">
-                <span className="nm">Novaro</span>
-                <span className="sl">SOLUTION</span>
-              </span>
-            </Link>
+          <BrandLogo iconSize={30} href="/" />
             <p>
               A digital product studio building web apps, AI systems, and growth
               engines for ambitious companies.

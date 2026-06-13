@@ -23,6 +23,7 @@ const sections = [
   {
     label: "Site",
     items: [
+      { href: "/admin/hero", label: "Home hero" },
       { href: "/admin/site-content", label: "Site content" },
       { href: "/admin/leads", label: "Leads inbox" },
     ],
@@ -69,7 +70,8 @@ const modules = [
   { href: "/admin/testimonials", label: "Testimonials", desc: "Quotes & avatars" },
   { href: "/admin/logos", label: "Logos", desc: "Client trust strip" },
   { href: "/admin/faq", label: "FAQ", desc: "Questions & answers" },
-  { href: "/admin/site-content", label: "Site content", desc: "Hero, contact & CTAs" },
+  { href: "/admin/hero", label: "Home hero", desc: "Headline, buttons & hero copy" },
+  { href: "/admin/site-content", label: "Site content", desc: "Contact, CTAs & JSON blocks" },
   { href: "/admin/leads", label: "Leads", desc: "Inbox & CSV export" },
 ];
 

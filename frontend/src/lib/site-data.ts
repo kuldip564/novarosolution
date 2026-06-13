@@ -1,6 +1,7 @@
 export const site = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
+  brandIcon: "/brand/novaro-icon.png",
   email: "hello@novarosolution.com",
   phone: "+91 00000 00000",
   location: "Gandhinagar, Gujarat, India",
@@ -330,3 +331,98 @@ export const budgetRanges = [
 
 export const apiBase =
   process.env.NEXT_PUBLIC_API_URL ?? "";
+
+export const defaultHero = {
+  eyebrow: "Digital product studio",
+  headline: "Software, intelligence and growth,",
+  headlineAccent: "engineered as one.",
+  lede:
+    "Novaro Solution builds production-grade web apps, AI systems, and digital marketing engines for companies that want to move fast and look the part.",
+  ctaPrimary: "See our work",
+  ctaSecondary: "Book a call",
+  metaStat: "50+",
+  metaLabel: "products shipped",
+} as const;
+
+export type HeroContent = {
+  eyebrow: string;
+  headline: string;
+  headlineAccent: string;
+  lede: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  metaStat: string;
+  metaLabel: string;
+};
+
+export const defaultCta = {
+  homeTitle: "Let's build something worth showing off.",
+  homeDescription:
+    "Tell us what you're working on. We'll come back within one business day with a way forward.",
+  servicesTitle: "Not sure where to start?",
+  servicesDescription:
+    "Tell us the problem and we'll tell you the shortest path to a result.",
+  workTitle: "Have a project in mind?",
+  workDescription:
+    "Share a brief — we'll reply with a clear plan, timeline, and team fit.",
+  aboutTitle: "Ready to work with us?",
+  aboutDescription:
+    "Tell us what you're building. We'll show you how we'd approach it.",
+  contactTitle: "Let's talk about your project.",
+  contactDescription:
+    "Fill in the form and we'll get back within one business day.",
+} as const;
+
+export type CtaContent = typeof defaultCta;
+
+export type CtaPageKey = "home" | "services" | "work" | "about" | "contact";
+
+export function pickCta(cta: CtaContent, page: CtaPageKey) {
+  const titleKey = `${page}Title` as keyof CtaContent;
+  const descKey = `${page}Description` as keyof CtaContent;
+  return {
+    title: cta[titleKey],
+    description: cta[descKey],
+  };
+}
+
+export const fallbackTestimonials = [
+  {
+    id: "1",
+    quote:
+      "Novaro shipped a production-ready platform in weeks, not months — and the quality held up as we scaled.",
+    name: "Product Lead",
+    role: "Fintech SaaS",
+    rating: 5,
+    avatar: null,
+  },
+  {
+    id: "2",
+    quote:
+      "They integrated AI into our workflow without the usual hype — measurable time saved from week one.",
+    name: "Operations Director",
+    role: "Healthcare",
+    rating: 5,
+    avatar: null,
+  },
+] as const;
+
+export const fallbackFaqs = [
+  {
+    id: "1",
+    question: "What types of projects do you take on?",
+    answer:
+      "Web and mobile products, AI features, marketing sites, and full-stack platforms — from MVP to scale-up.",
+  },
+  {
+    id: "2",
+    question: "How do engagements usually start?",
+    answer:
+      "A short discovery call, then a scoped proposal with timeline, team, and clear deliverables.",
+  },
+  {
+    id: "3",
+    question: "Do you work with startups and enterprises?",
+    answer: "Yes — we adapt squad size and process to your stage and constraints.",
+  },
+] as const;

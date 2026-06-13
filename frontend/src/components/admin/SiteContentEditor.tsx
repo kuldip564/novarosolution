@@ -1,21 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "@/lib/api";
+import { normalizeHeroContent } from "@/lib/hero-content";
+import { defaultHero, type HeroContent } from "@/lib/site-data";
 import { useAdminToast } from "./AdminToast";
 
 type SiteRow = { key: string; value: unknown };
-
-type HeroContent = {
-  eyebrow: string;
-  headline: string;
-  headlineAccent: string;
-  lede: string;
-  ctaPrimary: string;
-  ctaSecondary: string;
-  metaStat: string;
-  metaLabel: string;
-};
 
 type SiteInfo = {
   name: string;
@@ -32,6 +24,10 @@ type CtaContent = {
   servicesDescription: string;
   workTitle: string;
   workDescription: string;
+  aboutTitle: string;
+  aboutDescription: string;
+  contactTitle: string;
+  contactDescription: string;
 };
 
 const tabs = [
@@ -58,16 +54,7 @@ export function SiteContentEditor() {
   const [rows, setRows] = useState<SiteRow[]>([]);
   const [tab, setTab] = useState<TabId>("hero");
   const [loading, setLoading] = useState(true);
-  const [hero, setHero] = useState<HeroContent>({
-    eyebrow: "",
-    headline: "",
-    headlineAccent: "",
-    lede: "",
-    ctaPrimary: "",
-    ctaSecondary: "",
-    metaStat: "",
-    metaLabel: "",
-  });
+  const [hero, setHero] = useState<HeroContent>({ ...defaultHero });
   const [site, setSite] = useState<SiteInfo>({
     name: "",
     tagline: "",
@@ -82,6 +69,10 @@ export function SiteContentEditor() {
     servicesDescription: "",
     workTitle: "",
     workDescription: "",
+    aboutTitle: "",
+    aboutDescription: "",
+    contactTitle: "",
+    contactDescription: "",
   });
   const [advancedKey, setAdvancedKey] = useState("navLinks");
   const [advancedDraft, setAdvancedDraft] = useState<string | null>(null);
@@ -96,7 +87,7 @@ export function SiteContentEditor() {
         const heroRow = data.find((r) => r.key === "hero")?.value as HeroContent | undefined;
         const siteRow = data.find((r) => r.key === "site")?.value as SiteInfo | undefined;
         const ctaRow = data.find((r) => r.key === "cta")?.value as CtaContent | undefined;
-        if (heroRow) setHero(heroRow);
+        if (heroRow) setHero(normalizeHeroContent(heroRow));
         if (siteRow) setSite(siteRow);
         if (ctaRow) setCta(ctaRow);
       } catch {
@@ -126,7 +117,7 @@ export function SiteContentEditor() {
 
   async function saveCurrent() {
     try {
-      if (tab === "hero") await saveKey("hero", hero);
+      if (tab === "hero") await saveKey("hero", normalizeHeroContent(hero));
       else if (tab === "site") await saveKey("site", site);
       else if (tab === "cta") await saveKey("cta", cta);
       else {
@@ -172,6 +163,10 @@ export function SiteContentEditor() {
 
       {tab === "hero" && (
         <div className="admin-form admin-form-panel">
+          <p className="admin-muted-inline">
+            Prefer a live preview?{" "}
+            <Link href="/admin/hero">Open the dedicated hero editor</Link>.
+          </p>
           <label className="admin-field"><span>Eyebrow</span><input value={hero.eyebrow} onChange={(e) => setHero({ ...hero, eyebrow: e.target.value })} /></label>
           <label className="admin-field"><span>Headline</span><input value={hero.headline} onChange={(e) => setHero({ ...hero, headline: e.target.value })} /></label>
           <label className="admin-field"><span>Accent phrase</span><input value={hero.headlineAccent} onChange={(e) => setHero({ ...hero, headlineAccent: e.target.value })} /></label>
@@ -211,6 +206,16 @@ export function SiteContentEditor() {
             <legend>Work CTA</legend>
             <label className="admin-field"><span>Title</span><input value={cta.workTitle} onChange={(e) => setCta({ ...cta, workTitle: e.target.value })} /></label>
             <label className="admin-field"><span>Description</span><textarea rows={2} value={cta.workDescription} onChange={(e) => setCta({ ...cta, workDescription: e.target.value })} /></label>
+          </fieldset>
+          <fieldset className="admin-form-section">
+            <legend>About CTA</legend>
+            <label className="admin-field"><span>Title</span><input value={cta.aboutTitle} onChange={(e) => setCta({ ...cta, aboutTitle: e.target.value })} /></label>
+            <label className="admin-field"><span>Description</span><textarea rows={2} value={cta.aboutDescription} onChange={(e) => setCta({ ...cta, aboutDescription: e.target.value })} /></label>
+          </fieldset>
+          <fieldset className="admin-form-section">
+            <legend>Contact CTA</legend>
+            <label className="admin-field"><span>Title</span><input value={cta.contactTitle} onChange={(e) => setCta({ ...cta, contactTitle: e.target.value })} /></label>
+            <label className="admin-field"><span>Description</span><textarea rows={2} value={cta.contactDescription} onChange={(e) => setCta({ ...cta, contactDescription: e.target.value })} /></label>
           </fieldset>
         </div>
       )}

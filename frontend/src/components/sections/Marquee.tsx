@@ -1,12 +1,16 @@
-import { marqueeItems } from "@/lib/site-data";
+type MarqueeProps = {
+  items?: readonly string[];
+};
 
-export function Marquee() {
-  const items = [...marqueeItems, ...marqueeItems];
+export function Marquee({ items = [] }: MarqueeProps) {
+  if (!items.length) return null;
+
+  const track = [...items, ...items];
 
   return (
     <div className="marquee" aria-hidden="true">
       <div className="track">
-        {items.map((item, index) => (
+        {track.map((item, index) => (
           <div key={`${item}-${index}`} className="item">
             {item}
           </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { apiFetch } from "@/lib/api";
 import { AdminNav } from "./AdminNav";
 import { AdminToastProvider } from "./AdminToast";
@@ -42,7 +42,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <AdminToastProvider>
       <div className="admin-shell">
         <aside className="admin-sidebar">
-          <p className="admin-brand">Novaro Admin</p>
+          <BrandLogo
+            href="/admin"
+            iconSize={32}
+            name="Novaro"
+            tagline="ADMIN"
+            label="Novaro Admin dashboard"
+            className="admin-brand-lockup"
+          />
           <AdminNav />
         </aside>
         <div className="admin-main-wrap">

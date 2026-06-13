@@ -3,15 +3,17 @@ import { Suspense } from "react";
 import { BlogFilters } from "@/components/blog/BlogFilters";
 import { BlogPagination } from "@/components/blog/BlogPagination";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
-import { Reveal } from "@/components/anim/Reveal";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { PageHead } from "@/components/sections/PageHead";
 import { getBlogPosts } from "@/lib/blog";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Blog",
   description:
     "Insights on product delivery, AI in production, and growth — from the Novaro Solution team.",
-};
+  path: "/blog",
+});
 
 type BlogPageProps = {
   searchParams: Promise<{ page?: string; category?: string }>;
@@ -29,28 +31,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <main>
-      <section className="pagehead blog-head">
-        <div className="grid" />
-        <div className="glow g1" />
-        <div className="wrap inner">
-          <Reveal>
-            <span className="eyebrow">Insights</span>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="bigword">
-              <span className="o">NOVARO</span>
-              <br />
-              <span className="g">BLOG</span>
-            </div>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p style={{ marginTop: 22, maxWidth: 620 }}>
-              Product craft, AI in production, and growth — written by the team
-              shipping it every day.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <PageHead
+        eyebrow="Insights"
+        title="NOVARO"
+        titleAccent="BLOG"
+        variant="bigword"
+        description="Product craft, AI in production, and growth — written by the team shipping it every day."
+        className="blog-head"
+      />
 
       <section className="sec blog-listing">
         <div className="wrap">

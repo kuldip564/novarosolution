@@ -69,6 +69,33 @@ export type DbTeamMember = {
   published: boolean;
 };
 
+export type DbTestimonial = {
+  id: string;
+  quote: string;
+  name: string;
+  role: string;
+  avatar: CloudinaryAsset | null;
+  rating: number;
+  order: number;
+  published: boolean;
+};
+
+export type DbClientLogo = {
+  id: string;
+  name: string;
+  image: CloudinaryAsset | null;
+  order: number;
+  published: boolean;
+};
+
+export type DbFaq = {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  published: boolean;
+};
+
 export async function getPublishedProjects(fallback: DbProject[] = []) {
   return fetchContent<DbProject[]>("/api/content/projects", fallback);
 }
@@ -79,6 +106,18 @@ export async function getPublishedServices(fallback: DbService[] = []) {
 
 export async function getPublishedTeam(fallback: DbTeamMember[] = []) {
   return fetchContent<DbTeamMember[]>("/api/content/team", fallback);
+}
+
+export async function getPublishedTestimonials(fallback: DbTestimonial[] = []) {
+  return fetchContent<DbTestimonial[]>("/api/content/testimonials", fallback);
+}
+
+export async function getPublishedLogos(fallback: DbClientLogo[] = []) {
+  return fetchContent<DbClientLogo[]>("/api/content/logos", fallback);
+}
+
+export async function getPublishedFaqs(fallback: DbFaq[] = []) {
+  return fetchContent<DbFaq[]>("/api/content/faq", fallback);
 }
 
 export async function getSiteContent<T>(key: string, fallback: T): Promise<T> {

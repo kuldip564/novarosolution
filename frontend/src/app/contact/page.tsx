@@ -1,12 +1,27 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/sections/ContactForm";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { FaqSection, mapDbFaqs } from "@/components/sections/FaqSection";
 import { PageHead } from "@/components/sections/PageHead";
+import { ContactForm } from "@/components/sections/ContactForm";
+import { getPublishedFaqs, getSiteContent } from "@/lib/content";
+import { createPageMetadata } from "@/lib/site-metadata";
+import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Contact",
-};
+  description:
+    "Start a project with Novaro Solution — web apps, AI systems, and digital marketing.",
+  path: "/contact",
+});
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const [faqs, cta] = await Promise.all([
+    getPublishedFaqs(),
+    getSiteContent<CtaContent>("cta", defaultCta),
+  ]);
+
+  const contactCta = pickCta(cta, "contact");
+
   return (
     <main>
       <PageHead
@@ -16,6 +31,8 @@ export default function ContactPage() {
         splitTitle
       />
       <ContactForm />
+      <FaqSection items={mapDbFaqs(faqs)} />
+      <CtaBand title={contactCta.title} description={contactCta.description} />
     </main>
   );
 }

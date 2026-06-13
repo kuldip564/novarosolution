@@ -9,11 +9,11 @@ import { Reveal } from "@/components/anim/Reveal";
 import {
   formatBlogDate,
   getBlogPost,
-  siteBaseUrl,
   type BlogPost,
 } from "@/lib/blog";
 import { cloudinaryTransformUrl } from "@/lib/media";
 import { site } from "@/lib/site-data";
+import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -39,6 +39,10 @@ function articleJsonLd(post: BlogPost) {
     publisher: {
       "@type": "Organization",
       name: site.name,
+      logo: {
+        "@type": "ImageObject",
+        url: brandIconAbsoluteUrl(),
+      },
     },
     mainEntityOfPage: url,
   };
@@ -59,6 +63,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   return {
     title,
     description,
+    icons: siteIcons,
     openGraph: {
       title,
       description,
@@ -71,7 +76,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       card: "summary_large_image",
       title,
       description,
-      images: ogImage ? [ogImage] : undefined,
+      images: ogImage ? [ogImage] : [site.brandIcon],
     },
   };
 }

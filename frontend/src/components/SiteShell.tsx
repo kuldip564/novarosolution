@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { SvgDefs } from "@/components/SvgDefs";
+import { OrganizationJsonLd } from "@/components/OrganizationJsonLd";
 import { MotionProvider } from "@/lib/motion-provider";
 
 const Bgfx = dynamic(() => import("@/components/bgfx"), {
@@ -32,7 +32,7 @@ export function SiteShell({ children }: SiteShellProps) {
 
   return (
     <MotionProvider>
-      <SvgDefs />
+      <OrganizationJsonLd />
       <Bgfx />
       <Cursor />
       <Header />

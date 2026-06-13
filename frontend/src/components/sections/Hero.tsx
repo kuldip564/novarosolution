@@ -3,8 +3,17 @@ import { Parallax } from "@/components/anim/Parallax";
 import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
 import { NMark } from "@/components/NMark";
+import type { HeroContent } from "@/lib/site-data";
+import { defaultHero } from "@/lib/site-data";
+import { normalizeHeroContent } from "@/lib/hero-content";
 
-export function Hero() {
+type HeroProps = {
+  content?: HeroContent;
+};
+
+export function Hero({ content = defaultHero }: HeroProps) {
+  const copy = normalizeHeroContent(content);
+
   return (
     <section className="hero">
       <div className="hero-bg">
@@ -20,30 +29,26 @@ export function Hero() {
       <div className="wrap hero-inner">
         <div className="hero-copy">
           <Reveal>
-            <span className="eyebrow">Digital product studio</span>
+            <span className="eyebrow">{copy.eyebrow}</span>
           </Reveal>
           <Reveal delay={0.1}>
             <h1>
-              Software, intelligence
+              {copy.headline}
               <br />
-              and growth, <span className="accent">engineered as one.</span>
+              <span className="accent">{copy.headlineAccent}</span>
             </h1>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="lede">
-              Novaro Solution builds production-grade web apps, AI systems, and
-              digital marketing engines for companies that want to move fast and
-              look the part.
-            </p>
+            <p className="lede">{copy.lede}</p>
           </Reveal>
           <Reveal delay={0.3}>
             <div className="hero-cta">
-              <Button href="/work">See our work</Button>
+              <Button href="/work">{copy.ctaPrimary}</Button>
               <Button href="/contact" variant="ghost">
-                Book a call
+                {copy.ctaSecondary}
               </Button>
               <span className="meta">
-                <b>50+</b> products shipped
+                <b>{copy.metaStat}</b> {copy.metaLabel}
               </span>
             </div>
           </Reveal>
@@ -52,7 +57,7 @@ export function Hero() {
         <Reveal delay={0.2} className="hero-visual">
           <div className="orbit" />
           <div className="orbit o2" />
-          <NMark className="hero-n" size={340} />
+          <NMark className="hero-n" size={280} />
         </Reveal>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { apiFetch } from "@/lib/api";
 
 export default function AdminLoginPage() {
@@ -50,8 +51,13 @@ export default function AdminLoginPage() {
   return (
     <div className="admin-auth">
       <div className="admin-auth-card">
-        <p className="admin-eyebrow">Novaro Admin</p>
-        <h1>Sign in</h1>
+        <div className="admin-auth-brand">
+          <BrandLogo href="/" iconSize={56} showText={false} label="Novaro Solution" />
+          <div>
+            <p className="admin-eyebrow">Novaro Admin</p>
+            <h1>Sign in</h1>
+          </div>
+        </div>
         <p className="admin-lede">
           Manage content and leads. Credentials are set in{" "}
           <code>backend/.env</code> (<code>ADMIN_EMAIL</code> /{" "}
