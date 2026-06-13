@@ -1,18 +1,13 @@
 {
-  "name": "express-vercel",
+  "name": "novaro-solution",
   "private": true,
-  "type": "module",
-  "engines": {
-    "node": "24.x"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  },
   "scripts": {
-    "dev": "npm run dev:client",
-    "vercel-build": "npm --prefix server run vercel-build",
-    "build": "npm --prefix next-client run build",
-    "dev:server": "npm --prefix server run dev",
-    "dev:client": "npm --prefix next-client run dev"
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend && npm run build --prefix backend",
+    "start": "concurrently -k -n frontend,backend -c cyan,magenta \"npm run start --prefix frontend\" \"npm run start --prefix backend\"",
+    "clean": "npm run clean --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

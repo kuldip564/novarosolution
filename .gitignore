@@ -1,25 +1,7 @@
-# OS
+node_modules/
+.next/
+dist/
+.env
+.env.local
 .DS_Store
-
-# Dependencies
-**/node_modules/
-
-# Build outputs
-**/*.tsbuildinfo
-**/dist/
-**/build/
-**/.next/
-**/.next-dev/
-**/.vercel/
-**/*.db
-
-# Env files
-**/.env
-**/.env.local
-**/.env.development.local
-**/.env.test.local
-**/.env.production.local
-
-# Keep example env files
-!**/.env.example
-!**/.env.production.example
+*.log

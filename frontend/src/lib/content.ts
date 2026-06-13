@@ -1,0 +1,99 @@
+const API_ORIGIN =
+  process.env.API_PROXY_TARGET ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://127.0.0.1:5001";
+
+const FETCH_TIMEOUT_MS = 1500;
+
+async function fetchContent<T>(path: string, fallback: T): Promise<T> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+    const res = await fetch(`${API_ORIGIN}${path}`, {
+      next: { revalidate: 30 },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timer);
+
+    if (!res.ok) return fallback;
+    const json = (await res.json()) as { ok?: boolean; data?: T };
+    return json.ok && json.data !== undefined ? json.data : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+import type { CloudinaryAsset } from "./media";
+
+export type DbProject = {
+  id: string;
+  slug: string;
+  order: number;
+  title: string;
+  category: string;
+  hook: string;
+  body: string;
+  heroTitle: string | null;
+  heroImage: CloudinaryAsset | null;
+  coverClass: string | null;
+  screens: CloudinaryAsset[];
+  results: unknown[];
+  tags: string[];
+  published: boolean;
+};
+
+export type DbService = {
+  id: string;
+  slug: string;
+  order: number;
+  name: string;
+  title: string;
+  description: string;
+  shortDescription: string | null;
+  bullets: string[];
+  tags: string[];
+  icon: string | null;
+  image: CloudinaryAsset | null;
+  imageAlt: string | null;
+  published: boolean;
+};
+
+export type DbTeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  photo: CloudinaryAsset | null;
+  order: number;
+  published: boolean;
+};
+
+export async function getPublishedProjects(fallback: DbProject[] = []) {
+  return fetchContent<DbProject[]>("/api/content/projects", fallback);
+}
+
+export async function getPublishedServices(fallback: DbService[] = []) {
+  return fetchContent<DbService[]>("/api/content/services", fallback);
+}
+
+export async function getPublishedTeam(fallback: DbTeamMember[] = []) {
+  return fetchContent<DbTeamMember[]>("/api/content/team", fallback);
+}
+
+export async function getSiteContent<T>(key: string, fallback: T): Promise<T> {
+  return fetchContent<T>(`/api/content/site/${key}`, fallback);
+}
+
+export async function getAllSiteContent(
+  fallback: Record<string, unknown> = {},
+): Promise<Record<string, unknown>> {
+  return fetchContent<Record<string, unknown>>("/api/content/site", fallback);
+}
+
+export function mediaUrl(path: string | null | undefined): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith("http") || path.startsWith("/images/")) return path;
+  if (path.startsWith("/uploads/")) return path;
+  return path;
+}

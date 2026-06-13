@@ -1,0 +1,53 @@
+import type { Metadata } from "next";
+import { Inter, Sora } from "next/font/google";
+import { SiteShell } from "@/components/SiteShell";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { site } from "@/lib/site-data";
+import "@/styles/globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: `${site.name} — ${site.tagline}`,
+    template: `%s — ${site.name}`,
+  },
+  description:
+    "Novaro Solution builds production-grade web apps, AI systems, and digital marketing engines for ambitious companies.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${inter.variable} ${sora.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement,k='theme',s=localStorage.getItem(k);if(s==='light'||s==='dark'){d.setAttribute('data-theme',s);return;}if(s==='system'||!s){var m=window.matchMedia('(prefers-color-scheme: dark)').matches;d.setAttribute('data-theme',m?'dark':'light');return;}d.setAttribute('data-theme','dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+          }}
+        />
+      </head>
+      <body>
+        <ThemeProvider>
+          <SiteShell>{children}</SiteShell>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
