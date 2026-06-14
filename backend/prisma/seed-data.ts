@@ -39,9 +39,9 @@ export const seedCta = {
   workTitle: "Have a project in mind?",
   workDescription:
     "Share a brief — we'll reply with a clear plan, timeline, and team fit.",
-  aboutTitle: "Ready to work with us?",
+  aboutTitle: "Let's build something worth shipping.",
   aboutDescription:
-    "Tell us what you're building. We'll show you how we'd approach it.",
+    "Share what you're working on — we'll reply within one business day with a clear path forward.",
   contactTitle: "Let's talk about your project.",
   contactDescription:
     "Fill in the form and we'll get back within one business day.",
@@ -79,25 +79,25 @@ export const seedProcessSteps = [
     num: "01",
     title: "Discover",
     description:
-      "We map your goals, users, and constraints to define what success actually looks like.",
+      "We map goals, users, and constraints — then define success in metrics you can track, not buzzwords.",
   },
   {
     num: "02",
     title: "Design",
     description:
-      "Architecture, UX, and a clickable direction you can react to before we write a line of code.",
+      "Architecture, UX, and a clickable direction you can react to before we commit to the build.",
   },
   {
     num: "03",
     title: "Build",
     description:
-      "Tight delivery sprints with working software in your hands every week, not just at the end.",
+      "Tight delivery sprints with working software in your hands every week — typed, tested, and reviewable.",
   },
   {
     num: "04",
     title: "Launch & Scale",
     description:
-      "We ship, measure, and keep optimizing performance, infrastructure, and growth.",
+      "We ship, measure, and keep optimizing performance, infrastructure, and growth loops.",
   },
 ];
 
@@ -126,7 +126,7 @@ export const seedWhyItems = [
     key: "02",
     title: "Built to scale, not to demo",
     description:
-      "We write production code from day one, with architecture to grow when you do.",
+      "Production code from day one, with architecture that grows when you do — not a prototype dressed up for pitch day.",
   },
   {
     key: "03",
@@ -134,7 +134,110 @@ export const seedWhyItems = [
     description:
       "We measure ourselves on the metrics that matter to your business, then move them.",
   },
+  {
+    key: "04",
+    title: "Transparent delivery",
+    description:
+      "Weekly working software, clear milestones, and honest updates — you always know where things stand.",
+  },
 ];
+
+export const seedAboutPage = {
+  introLine: "We build digital products that earn trust — and keep earning it.",
+  whoWeAre: {
+    eyebrow: "Who we are",
+    title: "A senior studio that ships\nwith you, not around you.",
+    body:
+      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. We're builders first — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
+  },
+  missionVision: {
+    eyebrow: "Mission & vision",
+    missionLabel: "Mission",
+    mission:
+      "Ship software, intelligence, and growth programs that move real business metrics — with craftsmanship you can see in the details.",
+    visionLabel: "Vision",
+    vision:
+      "To be the team founders call when the stakes are high and the roadmap has to ship — known for depth across engineering, AI, and growth under one roof.",
+  },
+  timeline: {
+    eyebrow: "Our story",
+    title: "From a small studio\nto a trusted partner.",
+    milestones: [
+      {
+        year: "2019",
+        title: "Founded",
+        text:
+          "Novaro started as a tight-knit studio tired of work bouncing between agencies and dev shops — one team, one standard.",
+      },
+      {
+        year: "2021",
+        title: "AI in production",
+        text:
+          "We shipped our first ML features to production for healthcare and fintech clients — evaluation, pipelines, and humans in the loop.",
+      },
+      {
+        year: "2023",
+        title: "Full-stack growth",
+        text:
+          "We added a dedicated marketing practice so code and campaigns share the same strategy, data, and accountability.",
+      },
+      {
+        year: "Today",
+        title: "Scaling with intent",
+        text:
+          "Fifty-plus products shipped, a senior squad, and long-term partnerships across India and beyond — still small by choice.",
+      },
+    ],
+  },
+  values: {
+    eyebrow: "Core values",
+    title: "What we won't compromise on.",
+    items: [
+      {
+        icon: "spark",
+        title: "Craft over hype",
+        description:
+          "We polish the details users feel — performance, accessibility, and code you can extend without fear.",
+      },
+      {
+        icon: "shield",
+        title: "Ownership end-to-end",
+        description:
+          "One accountable team from architecture to analytics. No mystery vendors, no blame ping-pong.",
+      },
+      {
+        icon: "compass",
+        title: "Clarity in complexity",
+        description:
+          "We translate hard technical choices into plain language so you can decide with confidence.",
+      },
+      {
+        icon: "chart",
+        title: "Measure what matters",
+        description:
+          "We tie our work to outcomes — retention, conversion, latency, revenue — not slide decks.",
+      },
+    ],
+  },
+  stats: {
+    eyebrow: "By the numbers",
+    title: "Proof in the work.",
+  },
+  team: {
+    eyebrow: "The team",
+    title: "The people behind the work.",
+    description:
+      "Senior practitioners across engineering, AI, design, and growth — aligned on shipping, not theatre.",
+  },
+  whyUs: {
+    eyebrow: "Why Novaro",
+    title: "What sets us apart.",
+  },
+  cta: {
+    eyebrow: "Let's build something",
+    buttonLabel: "Start a project",
+  },
+};
 
 export const seedServicesGrid = [
   {
@@ -164,6 +267,15 @@ export const seedServicesGrid = [
     tags: ["SEO", "Paid ads", "Analytics", "Brand"],
     icon: "chart",
   },
+  {
+    id: "04",
+    slug: "cloud-devops",
+    title: "Cloud, DevOps & Design",
+    shortDescription:
+      "Cloud architecture, CI/CD, observability, and design systems that keep products reliable, secure, and beautiful at scale.",
+    tags: ["AWS", "GCP", "CI/CD", "Design systems"],
+    icon: "cloud",
+  },
 ];
 
 export const seedServiceDetails = [
@@ -172,65 +284,137 @@ export const seedServiceDetails = [
     slug: "web-app-eng",
     title: "Web & App Engineering",
     description:
-      "We design and build production web and mobile apps on a modern Next.js + Node/Express stack — typed, tested, and ready for real traffic.",
+      "We design and ship production web and mobile products on a modern Next.js and Node stack — typed, tested, accessible, and ready for real traffic from day one.",
     bullets: [
-      "Web apps & dashboards",
-      "Cross-platform mobile",
-      "API & backend systems",
-      "Performance & accessibility",
+      "SaaS platforms and customer dashboards",
+      "Cross-platform mobile and responsive web",
+      "API, backend, and integration layers",
+      "Performance, security, and accessibility audits",
     ],
     image: "/images/webapp-dashboard.webp",
     imageAlt:
-      "Web and app engineering — laptop with glassmorphic dashboard panels on a dark navy background",
+      "Web and app engineering services — glassmorphic dashboard on a laptop with navy and cyan UI",
   },
   {
     no: "02",
     slug: "ai-machine-ml",
     title: "AI & Machine Learning",
     description:
-      "From a first prototype to a model in production, we build intelligent features that hold up: data pipelines, evaluation, and humans in the loop.",
+      "From first prototype to production model, we build intelligent features with proper evaluation, data pipelines, monitoring, and humans firmly in the loop.",
     bullets: [
-      "LLM apps & assistants",
-      "Computer vision",
-      "Recommendation & forecasting",
-      "MLOps & pipelines",
+      "LLM apps, assistants, and retrieval workflows",
+      "Computer vision and document intelligence",
+      "Forecasting, recommendations, and ranking",
+      "MLOps, evaluation, and model monitoring",
     ],
     image: "/images/ai-ml-dashboard.webp",
     imageAlt:
-      "AI and machine learning — neural network visualization with glassmorphic panels on a dark navy background",
+      "AI and machine learning services — neural network visualization with glassmorphic panels",
   },
   {
     no: "03",
     slug: "digital-marketing",
     title: "Digital Marketing",
     description:
-      "We turn a great product into a growing one — technical SEO, performance campaigns, and analytics that tie spend to results.",
+      "We connect product and pipeline — technical SEO, performance campaigns, and analytics that tie every rupee of spend to qualified leads and revenue.",
     bullets: [
-      "Technical & content SEO",
-      "Paid search & social",
-      "Conversion optimization",
-      "Brand & creative",
+      "Technical SEO and content systems",
+      "Paid search, social, and lifecycle campaigns",
+      "Landing pages and conversion optimization",
+      "Brand, creative, and analytics setup",
     ],
     image: "/images/digital-marketing-dashboard.webp",
     imageAlt:
-      "Digital marketing — analytics dashboard with glassmorphic panels on a dark navy background",
+      "Digital marketing services — analytics dashboard with campaign performance panels",
   },
   {
     no: "04",
     slug: "cloud-devops",
     title: "Cloud, DevOps & Design",
     description:
-      "The supporting cast that makes the rest reliable and beautiful: cloud architecture, CI/CD, and a design system your team can build on.",
+      "The foundation that keeps everything reliable and polished — cloud architecture, CI/CD, observability, design systems, and UX your team can ship with.",
     bullets: [
-      "Cloud architecture (AWS/GCP)",
-      "CI/CD & observability",
-      "Design systems & UI/UX",
-      "Security & compliance",
+      "Cloud architecture on AWS and GCP",
+      "CI/CD, observability, and incident response",
+      "Design systems and product UI/UX",
+      "Security reviews and compliance readiness",
     ],
     image: null,
-    imageAlt: null,
+    imageAlt:
+      "Cloud, DevOps, and design services — infrastructure and design system preview",
   },
 ];
+
+export const seedServicesPage = {
+  introLine: "Engineering, intelligence, and growth — built to ship.",
+  introSubline:
+    "Four practices. One accountable team. Production software, AI that holds up, and marketing that moves the numbers.",
+  introStats: [
+    { value: 4, suffix: "", label: "Core practices" },
+    { value: 50, suffix: "+", label: "Products shipped" },
+    { value: 6, suffix: " yrs", label: "Building products" },
+  ],
+  capabilities: {
+    eyebrow: "Capabilities",
+    title: "Everything that supports a product at scale.",
+  },
+  process: {
+    eyebrow: "How we work",
+    title: "A clear path from idea to impact.",
+    lede:
+      "No black boxes. Every engagement runs through the same four stages so you always know what's happening and why.",
+  },
+  cta: {
+    eyebrow: "Let's talk",
+    buttonLabel: "Book a call",
+  },
+  serviceExtras: {
+    "web-app-eng": {
+      outcomes: [
+        "Ship faster with production-ready architecture from sprint one",
+        "Core Web Vitals and accessibility baked in before launch",
+        "A codebase your team can extend without rewriting",
+      ],
+      relatedLinks: [
+        { label: "FinFlow fintech case study", href: "/work" },
+        { label: "How we ship with Next.js", href: "/blog/ship-fast-stack" },
+      ],
+    },
+    "ai-machine-ml": {
+      outcomes: [
+        "Models evaluated against real metrics, not demo accuracy",
+        "Pipelines that survive scale, drift, and compliance reviews",
+        "Human-in-the-loop workflows clinicians and ops teams trust",
+      ],
+      relatedLinks: [
+        { label: "MediSense healthcare AI project", href: "/work" },
+        { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
+      ],
+    },
+    "digital-marketing": {
+      outcomes: [
+        "Qualified traffic that converts — not vanity clicks",
+        "Spend tied to revenue with clean attribution",
+        "Brand and performance working from the same playbook",
+      ],
+      relatedLinks: [
+        { label: "Aurora Commerce growth story", href: "/work" },
+        { label: "Technical SEO that ranks", href: "/blog/tech-seo-tips" },
+      ],
+    },
+    "cloud-devops": {
+      outcomes: [
+        "Infrastructure that scales without fire drills",
+        "Design systems that keep UX consistent as you ship",
+        "Security and observability built in, not bolted on",
+      ],
+      relatedLinks: [
+        { label: "Helio CRM platform build", href: "/work" },
+        { label: "Talk to us about your stack", href: "/contact" },
+      ],
+    },
+  },
+};
 
 export const seedWorkProjects = [
   {
@@ -336,5 +520,5 @@ export const seedWhySection = {
 
 export const seedTeamSection = {
   description:
-    "Drop in real headshots and names when you're ready — the structure is here.",
+    "Senior practitioners across engineering, AI, design, and growth — aligned on shipping, not theatre.",
 };

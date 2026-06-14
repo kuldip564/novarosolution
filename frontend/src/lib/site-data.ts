@@ -72,25 +72,25 @@ export const processSteps = [
     num: "01",
     title: "Discover",
     description:
-      "We map your goals, users, and constraints to define what success actually looks like.",
+      "We map goals, users, and constraints — then define success in metrics you can track, not buzzwords.",
   },
   {
     num: "02",
     title: "Design",
     description:
-      "Architecture, UX, and a clickable direction you can react to before we write a line of code.",
+      "Architecture, UX, and a clickable direction you can react to before we commit to the build.",
   },
   {
     num: "03",
     title: "Build",
     description:
-      "Tight delivery sprints with working software in your hands every week, not just at the end.",
+      "Tight delivery sprints with working software in your hands every week — typed, tested, and reviewable.",
   },
   {
     num: "04",
     title: "Launch & Scale",
     description:
-      "We ship, measure, and keep optimizing performance, infrastructure, and growth.",
+      "We ship, measure, and keep optimizing performance, infrastructure, and growth loops.",
   },
 ] as const;
 
@@ -162,6 +162,12 @@ export const whyItems = [
     description:
       "We measure ourselves on the metrics that matter to your business, then move them.",
   },
+  {
+    key: "04",
+    title: "Transparent delivery",
+    description:
+      "Weekly working software, clear milestones, and honest updates — you always know where things stand.",
+  },
 ] as const;
 
 export const team = [
@@ -176,18 +182,18 @@ export const serviceDetails = [
     no: "01",
     title: "Web & App Engineering",
     description:
-      "We design and build production web and mobile apps on a modern Next.js + Node/Express stack — typed, tested, and ready for real traffic.",
+      "We design and ship production web and mobile products on a modern Next.js and Node stack — typed, tested, accessible, and ready for real traffic from day one.",
     bullets: [
-      "Web apps & dashboards",
-      "Cross-platform mobile",
-      "API & backend systems",
-      "Performance & accessibility",
+      "SaaS platforms and customer dashboards",
+      "Cross-platform mobile and responsive web",
+      "API, backend, and integration layers",
+      "Performance, security, and accessibility audits",
     ],
     mediaTitle: "Web & App work",
     mediaHint: "Add image / video · 4:3",
     media: {
       src: "/images/webapp-dashboard.webp",
-      alt: "Web and app engineering — laptop with glassmorphic dashboard panels on a dark navy background",
+      alt: "Web and app engineering services — glassmorphic dashboard on a laptop with navy and cyan UI",
       width: 2048,
       height: 1529,
     },
@@ -196,18 +202,18 @@ export const serviceDetails = [
     no: "02",
     title: "AI & Machine Learning",
     description:
-      "From a first prototype to a model in production, we build intelligent features that hold up: data pipelines, evaluation, and humans in the loop.",
+      "From first prototype to production model, we build intelligent features with proper evaluation, data pipelines, monitoring, and humans firmly in the loop.",
     bullets: [
-      "LLM apps & assistants",
-      "Computer vision",
-      "Recommendation & forecasting",
-      "MLOps & pipelines",
+      "LLM apps, assistants, and retrieval workflows",
+      "Computer vision and document intelligence",
+      "Forecasting, recommendations, and ranking",
+      "MLOps, evaluation, and model monitoring",
     ],
     mediaTitle: "AI / ML work",
     mediaHint: "Add image / video · 4:3",
     media: {
       src: "/images/ai-ml-dashboard.webp",
-      alt: "AI and machine learning — neural network visualization with glassmorphic panels on a dark navy background",
+      alt: "AI and machine learning services — neural network visualization with glassmorphic panels",
       width: 2048,
       height: 1529,
     },
@@ -216,18 +222,18 @@ export const serviceDetails = [
     no: "03",
     title: "Digital Marketing",
     description:
-      "We turn a great product into a growing one — technical SEO, performance campaigns, and analytics that tie spend to results.",
+      "We connect product and pipeline — technical SEO, performance campaigns, and analytics that tie every rupee of spend to qualified leads and revenue.",
     bullets: [
-      "Technical & content SEO",
-      "Paid search & social",
-      "Conversion optimization",
-      "Brand & creative",
+      "Technical SEO and content systems",
+      "Paid search, social, and lifecycle campaigns",
+      "Landing pages and conversion optimization",
+      "Brand, creative, and analytics setup",
     ],
     mediaTitle: "Marketing work",
     mediaHint: "Add image / video · 4:3",
     media: {
       src: "/images/digital-marketing-dashboard.webp",
-      alt: "Digital marketing — analytics dashboard with glassmorphic panels on a dark navy background",
+      alt: "Digital marketing services — analytics dashboard with campaign performance panels",
       width: 2048,
       height: 1529,
     },
@@ -236,12 +242,12 @@ export const serviceDetails = [
     no: "04",
     title: "Cloud, DevOps & Design",
     description:
-      "The supporting cast that makes the rest reliable and beautiful: cloud architecture, CI/CD, and a design system your team can build on.",
+      "The foundation that keeps everything reliable and polished — cloud architecture, CI/CD, observability, design systems, and UX your team can ship with.",
     bullets: [
-      "Cloud architecture (AWS/GCP)",
-      "CI/CD & observability",
-      "Design systems & UI/UX",
-      "Security & compliance",
+      "Cloud architecture on AWS and GCP",
+      "CI/CD, observability, and incident response",
+      "Design systems and product UI/UX",
+      "Security reviews and compliance readiness",
     ],
     mediaTitle: "Cloud & Design work",
     mediaHint: "Add image / video · 4:3",
@@ -362,13 +368,13 @@ export const defaultCta = {
     "Tell us what you're working on. We'll come back within one business day with a way forward.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
-    "Tell us the problem and we'll tell you the shortest path to a result.",
+    "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",
   workTitle: "Have a project in mind?",
   workDescription:
     "Share a brief — we'll reply with a clear plan, timeline, and team fit.",
-  aboutTitle: "Ready to work with us?",
+  aboutTitle: "Let's build something worth shipping.",
   aboutDescription:
-    "Tell us what you're building. We'll show you how we'd approach it.",
+    "Share what you're working on — we'll reply within one business day with a clear path forward.",
   contactTitle: "Let's talk about your project.",
   contactDescription:
     "Fill in the form and we'll get back within one business day.",

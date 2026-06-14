@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { toCloudinaryAsset } from "../src/types/media.js";
 import {
+  seedAboutPage,
   seedAboutStats,
   seedCapabilities,
   seedContactOptions,
@@ -13,6 +14,7 @@ import {
   seedProcessSteps,
   seedServiceDetails,
   seedServicesGrid,
+  seedServicesPage,
   seedServicesSection,
   seedSite,
   seedTeam,
@@ -164,9 +166,11 @@ async function main() {
     { key: "processSteps", value: seedProcessSteps },
     { key: "homeStats", value: seedHomeStats },
     { key: "aboutStats", value: seedAboutStats },
+    { key: "aboutPage", value: seedAboutPage },
     { key: "whyItems", value: seedWhyItems },
     { key: "contactOptions", value: seedContactOptions },
     { key: "servicesSection", value: seedServicesSection },
+    { key: "servicesPage", value: seedServicesPage },
     { key: "whySection", value: seedWhySection },
     { key: "teamSection", value: seedTeamSection },
   ];

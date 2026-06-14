@@ -4,8 +4,9 @@ import { useTheme } from "next-themes";
 import { memo, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { createParticleGeometries } from "@/lib/particle-geometries";
+import { isMobileViewport } from "@/lib/device";
 import { useMotionSettings } from "@/lib/motion-provider";
-import { getParticleCounts } from "@/lib/performance";
+import { getParticleCounts, getWebGLPixelRatio } from "@/lib/performance";
 import { scrollStore } from "@/lib/scroll-store";
 
 function BgfxCanvasInner() {
@@ -20,6 +21,7 @@ function BgfxCanvasInner() {
     const counts = getParticleCounts(performanceTier);
     if (counts.particleCount === 0) return;
     const isLight = resolvedTheme === "light";
+    const mobile = isMobileViewport();
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(
@@ -37,10 +39,10 @@ function BgfxCanvasInner() {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: !mobile,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(getWebGLPixelRatio());
     renderer.setSize(window.innerWidth, window.innerHeight);
     Object.assign(renderer.domElement.style, {
       position: "fixed",
@@ -90,6 +92,13 @@ function BgfxCanvasInner() {
       scrollStore.my = event.clientY / window.innerHeight - 0.5;
     };
 
+    const onTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      scrollStore.mx = touch.clientX / window.innerWidth - 0.5;
+      scrollStore.my = touch.clientY / window.innerHeight - 0.5;
+    };
+
     const onVisibility = () => {
       tabVisible = document.visibilityState === "visible";
       if (tabVisible) animate();
@@ -105,7 +114,7 @@ function BgfxCanvasInner() {
       frameId = requestAnimationFrame(animate);
       if (!tabVisible) return;
 
-      time += 0.0016;
+      time += mobile ? 0.0012 : 0.0016;
       const sy = scrollStore.y;
 
       points.rotation.y = time + sy * 0.0009;
@@ -122,6 +131,7 @@ function BgfxCanvasInner() {
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("resize", onResize);
     animate();
@@ -129,6 +139,7 @@ function BgfxCanvasInner() {
     return () => {
       cancelAnimationFrame(frameId);
       window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", onResize);
       pointsGeometry.dispose();

@@ -11,14 +11,18 @@ export default function Bgfx() {
   useEffect(() => {
     if (!ready || !effectsEnabled) return;
 
+    const delayMs = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+      ? 120
+      : 600;
+
     if (typeof window.requestIdleCallback === "function") {
       const id = window.requestIdleCallback(() => setDeferred(true), {
-        timeout: 600,
+        timeout: delayMs,
       });
       return () => window.cancelIdleCallback(id);
     }
 
-    const timer = setTimeout(() => setDeferred(true), 300);
+    const timer = setTimeout(() => setDeferred(true), delayMs > 300 ? 300 : delayMs);
     return () => clearTimeout(timer);
   }, [ready, effectsEnabled]);
 

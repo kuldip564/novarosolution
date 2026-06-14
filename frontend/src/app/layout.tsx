@@ -4,6 +4,7 @@ import { SiteShell } from "@/components/SiteShell";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { rootMetadata } from "@/lib/site-metadata";
 import "@/styles/globals.css";
+import "@/styles/mobile.css";
 
 const inter = Inter({
   variable: "--font-inter",

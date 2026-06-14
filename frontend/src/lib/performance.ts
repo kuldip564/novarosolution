@@ -1,4 +1,4 @@
-import { isCoarsePointer, isLowEndDevice, isMobileViewport, prefersReducedMotion } from "./device";
+import { isLowEndDevice, isMobileViewport, prefersReducedMotion } from "./device";
 
 export type PerformanceTier = "high" | "medium" | "low";
 
@@ -10,10 +10,10 @@ export type ParticleCounts = {
 export function getPerformanceTier(): PerformanceTier {
   if (typeof window === "undefined") return "high";
   if (prefersReducedMotion()) return "low";
-  if (isLowEndDevice() || isCoarsePointer()) return "low";
+  if (isLowEndDevice()) return "low";
 
   const cores = navigator.hardwareConcurrency ?? 8;
-  if (cores <= 4 || isMobileViewport()) return "medium";
+  if (isMobileViewport() || cores <= 4) return "medium";
   return "high";
 }
 
@@ -26,7 +26,7 @@ export function getParticleCounts(tier: PerformanceTier): ParticleCounts {
 
   if (tier === "medium") {
     return mobile
-      ? { particleCount: 280, starCount: 100 }
+      ? { particleCount: 320, starCount: 120 }
       : { particleCount: 700, starCount: 280 };
   }
 
@@ -35,7 +35,13 @@ export function getParticleCounts(tier: PerformanceTier): ParticleCounts {
     : { particleCount: 1400, starCount: 600 };
 }
 
+/** WebGL runs on mobile with a reduced particle budget; off only for reduced motion / low-end. */
 export function shouldEnableWebGL(tier: PerformanceTier): boolean {
-  if (isMobileViewport() || isCoarsePointer()) return false;
   return tier !== "low";
+}
+
+export function getWebGLPixelRatio(): number {
+  if (typeof window === "undefined") return 1.5;
+  const cap = isMobileViewport() ? 1.25 : 1.5;
+  return Math.min(window.devicePixelRatio || 1, cap);
 }

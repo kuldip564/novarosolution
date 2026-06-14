@@ -167,8 +167,8 @@ export default function AdminServicesPage() {
                 </select>
               </label>
               <StringListEditor
-                label="Tags"
-                hint="Small pills on the home services grid."
+                label="Tags (Tools & stack on Services page)"
+                hint="Shown as tool pills on the cinematic Services page and on home cards."
                 value={tags}
                 onChange={(items) => form.setValue("tags", items)}
                 placeholder="Next.js"

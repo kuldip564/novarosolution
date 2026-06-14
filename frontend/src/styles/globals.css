@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "./tokens.css";
-@import "./mobile.css";
 
 :root {
   --ink-900: #05080f;
@@ -2509,7 +2508,6 @@ footer {
 @media (max-width: 980px) {
   .nav-links,
   .nav-actions,
-  .hero-cta .meta,
   .nav-cta {
     display: none !important;
   }
@@ -2524,32 +2522,7 @@ footer {
 
   .hero-inner {
     grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .hero {
-    align-items: flex-start;
-    padding: 92px 0 72px;
-    min-height: auto;
-  }
-
-  .hero-visual {
-    order: -1;
-    display: flex;
-    max-width: 220px;
-    margin: 0 auto;
-    padding: 28px 0 32px;
-  }
-
-  .hero-copy {
-    order: 0;
-  }
-
-  .hero-n {
-    width: auto !important;
-    height: min(180px, 42vw) !important;
-    max-width: 160px !important;
-    max-height: 180px;
+    gap: 20px;
   }
 
   .svc-grid,

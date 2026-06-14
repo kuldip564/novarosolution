@@ -1,52 +1,56 @@
-import type { Metadata } from "next";
-import { CtaBand } from "@/components/sections/CtaBand";
-import { PageHead } from "@/components/sections/PageHead";
-import { Process } from "@/components/sections/Process";
-import { ServiceRows } from "@/components/sections/ServiceRows";
+import { ServicesExperience } from "@/components/services/ServicesExperience";
 import { getPublishedServices, getSiteContent } from "@/lib/content";
-import { mapDbServicesToRows } from "@/lib/content-mappers";
-import { createPageMetadata } from "@/lib/site-metadata";
 import {
+  buildServiceDetails,
+  defaultServicesPage,
+  normalizeProcessSteps,
+  normalizeServicesPage,
+} from "@/lib/services-content";
+import {
+  servicesPageJsonLd,
+  servicesPageMetadata,
+} from "@/lib/services-seo";
+import {
+  capabilities,
   defaultCta,
   pickCta,
   processSteps,
   type CtaContent,
 } from "@/lib/site-data";
+import "@/styles/services.css";
 
 export const revalidate = 30;
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Services",
-  description:
-    "Web and app development, AI and ML systems, digital marketing, and cloud engineering from Novaro Solution.",
-  path: "/services",
-});
+export const metadata = servicesPageMetadata();
 
 export default async function ServicesPage() {
-  const [services, cta, steps] = await Promise.all([
+  const [services, pageContent, caps, steps, cta] = await Promise.all([
     getPublishedServices(),
-    getSiteContent<CtaContent>("cta", defaultCta),
+    getSiteContent("servicesPage", defaultServicesPage),
+    getSiteContent("capabilities", capabilities),
     getSiteContent("processSteps", processSteps),
+    getSiteContent<CtaContent>("cta", defaultCta),
   ]);
 
+  const content = normalizeServicesPage(pageContent);
+  const serviceDetails = buildServiceDetails(services, content);
   const servicesCta = pickCta(cta, "services");
+  const jsonLd = servicesPageJsonLd(serviceDetails);
 
   return (
-    <main>
-      <PageHead
-        eyebrow="What we do"
-        title={"Services built to ship\nand to scale."}
-        description="Engineering, intelligence, design, and growth under one roof — so your product gets built right and gets found."
-        splitTitle
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ServiceRows services={mapDbServicesToRows(services)} />
-      <Process centered steps={steps} />
-      <CtaBand
-        title={servicesCta.title}
-        description={servicesCta.description}
-        buttonLabel="Book a call"
+      <ServicesExperience
+        content={content}
+        services={serviceDetails}
+        capabilities={Array.isArray(caps) ? (caps as string[]) : [...capabilities]}
+        processSteps={normalizeProcessSteps(steps)}
+        ctaTitle={servicesCta.title}
+        ctaDescription={servicesCta.description}
       />
-    </main>
+    </>
   );
 }

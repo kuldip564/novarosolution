@@ -12,6 +12,70 @@
   padding-top: max(10px, env(safe-area-inset-top, 0px));
 }
 
+@media (max-width: 980px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: min(100dvh, 920px);
+    padding:
+      calc(88px + env(safe-area-inset-top, 0px))
+      0
+      max(28px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .hero-inner {
+    flex: 1;
+    width: 100%;
+  }
+
+  .hero-visual {
+    order: -1;
+    max-width: min(140px, 36vw);
+    margin: 0 auto;
+    padding: 8px 0 12px;
+  }
+
+  .hero-n {
+    max-width: min(130px, 34vw) !important;
+    height: min(140px, 32vw) !important;
+    filter: drop-shadow(0 20px 40px rgba(47, 123, 255, 0.28));
+  }
+
+  .orbit {
+    inset: -4%;
+  }
+
+  .scroll-hint {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: clamp(20px, 5vw, 28px) auto 0;
+    padding-bottom: 4px;
+    opacity: 0.72;
+  }
+
+  .scroll-hint .mouse {
+    width: 20px;
+    height: 32px;
+    border-radius: 12px;
+  }
+
+  .hero-cta .meta {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    margin: 4px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-d);
+    font-size: 0.82rem;
+    text-align: center;
+  }
+}
+
 @media (max-width: 768px) {
   :root {
     --space-section: var(--space-section-mobile);
@@ -39,62 +103,80 @@
     height: var(--touch-min);
   }
 
+  .btn {
+    padding: 14px 22px;
+    font-size: 0.95rem;
+    gap: 10px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-ghost {
+    background: color-mix(in srgb, var(--surface-ghost) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-color: color-mix(in srgb, var(--cyan) 22%, var(--line-d));
+  }
+
+  .btn-ghost:active {
+    transform: scale(0.98);
+    background: color-mix(in srgb, var(--cyan) 10%, transparent);
+  }
+
+  .sec {
+    padding: var(--space-section-mobile) 0;
+  }
+
   .sec-head {
     margin-bottom: clamp(32px, 8vw, 44px);
   }
 
   .sec-head h2 {
     font-size: clamp(1.55rem, 6.2vw, 2.15rem);
+    line-height: 1.12;
   }
 
   .sec-head p,
   .pagehead-lede,
   .pagehead p {
     font-size: clamp(0.98rem, 3.8vw, 1.08rem);
-  }
-
-  .hero {
-    padding:
-      calc(84px + env(safe-area-inset-top, 0px))
-      0
-      clamp(56px, 12vw, 72px);
+    line-height: 1.65;
   }
 
   .hero-copy h1,
   .hero-title {
     font-size: clamp(1.85rem, 8.2vw, 2.65rem);
-    margin: 18px 0 16px;
+    margin: 16px 0 14px;
+    line-height: 1.08;
   }
 
   .hero-copy p.lede {
     font-size: clamp(0.98rem, 3.6vw, 1.08rem);
-    margin-bottom: 24px;
+    margin-bottom: 22px;
+    line-height: 1.65;
   }
 
   .hero-cta {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 12px;
+    max-width: 100%;
   }
 
   .hero-cta .btn {
     width: 100%;
-    min-height: var(--touch-min);
+    min-height: 48px;
     justify-content: center;
-  }
-
-  .hero-visual {
-    max-width: min(200px, 48vw);
-    padding: 16px 0 20px;
-  }
-
-  .hero-n {
-    max-width: min(150px, 40vw) !important;
-    height: min(160px, 38vw) !important;
-  }
-
-  .scroll-hint {
-    bottom: max(16px, env(safe-area-inset-bottom, 0px));
   }
 
   .pagehead {
@@ -115,10 +197,48 @@
 
   .marquee {
     overflow: hidden;
+    padding: 18px 0;
   }
 
   .marquee .item {
     font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+  }
+
+  .svc-card,
+  .stat,
+  .proj,
+  .blog-card,
+  .info-card,
+  .member,
+  .testimonial-card {
+    min-width: 0;
+  }
+
+  .svc-card {
+    padding: 22px 18px;
+  }
+
+  .stat {
+    padding: 22px 18px;
+  }
+
+  .stat .v {
+    font-size: clamp(1.8rem, 7vw, 2.4rem);
+  }
+
+  .cta-band {
+    padding: clamp(36px, 8vw, 52px) clamp(20px, 5vw, 28px);
+    border-radius: 22px;
+  }
+
+  .cta-band h2 {
+    font-size: clamp(1.55rem, 6vw, 2.2rem);
+    line-height: 1.15;
+  }
+
+  .cta-band p {
+    font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+    margin-bottom: 24px;
   }
 
   .blog-grid,
@@ -154,6 +274,7 @@
 
   .article-body {
     font-size: 1rem;
+    line-height: 1.75;
     overflow-wrap: anywhere;
   }
 
@@ -214,15 +335,13 @@
     max-width: 100%;
   }
 
-  .proj,
-  .blog-card,
-  .svc-card {
-    min-width: 0;
-  }
-
   .cover-img,
   .cover-photo img {
     max-width: 100%;
+  }
+
+  .proj .meta h3 {
+    font-size: clamp(1.05rem, 4vw, 1.2rem);
   }
 
   .cta-band .btn {
@@ -233,6 +352,18 @@
 
   .cta-band .inner {
     text-align: center;
+  }
+
+  footer {
+    padding: 48px 0 32px;
+  }
+
+  .foot-grid {
+    gap: 28px;
+  }
+
+  .foot-col h5 {
+    margin-bottom: 12px;
   }
 
   .toast-stack {
@@ -303,6 +434,10 @@
     min-height: var(--touch-min);
     padding: 14px 16px;
   }
+
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 414px) {
@@ -319,6 +454,11 @@
 
   .eyebrow::before {
     width: 18px;
+  }
+
+  .hero-cta .btn {
+    min-height: 46px;
+    font-size: 0.92rem;
   }
 }
 
@@ -339,12 +479,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mobile-menu-nav a:active {
-    transform: none;
-  }
-
+  .mobile-menu-nav a:active,
   .burger:active,
-  .chip:active {
+  .chip:active,
+  .btn-primary:active,
+  .btn-ghost:active {
     transform: none;
   }
 }
