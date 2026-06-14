@@ -64,10 +64,10 @@ function MilestoneScene({
   const opacity = useTransform(
     progress,
     [start, mid, Math.max(mid, end - segment * 0.12), end],
-    [0, 1, 1, 0],
+    [index === 0 ? 1 : 0, 1, 1, 0],
   );
-  const y = useTransform(progress, [start, mid], [56, 0]);
-  const scale = useTransform(progress, [start, mid], [0.94, 1]);
+  const y = useTransform(progress, [start, mid], [index === 0 ? 0 : 56, 0]);
+  const scale = useTransform(progress, [start, mid], [index === 0 ? 1 : 0.94, 1]);
 
   return (
     <motion.article
@@ -188,11 +188,11 @@ function AboutIntro({ line, cinematic }: { line: string; cinematic: boolean }) {
     offset: ["start start", "end start"],
   });
 
-  const lineOpacity = useTransform(scrollYProgress, [0, 0.32, 0.72], [0.15, 1, 0.25]);
-  const lineY = useTransform(scrollYProgress, [0, 0.45], cinematic ? [72, 0] : [0, 0]);
-  const markOpacity = useTransform(scrollYProgress, [0.15, 0.42, 0.78], [0, 1, 0.35]);
-  const markScale = useTransform(scrollYProgress, [0.1, 0.5], [0.88, 1]);
-  const glowOpacity = useTransform(scrollYProgress, [0, 0.5], [0.35, 0.8]);
+  const lineOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);
+  const lineY = useTransform(scrollYProgress, [0, 0.88], cinematic ? [0, -40] : [0, 0]);
+  const markOpacity = useTransform(scrollYProgress, [0, 0.55, 0.88], [1, 1, 0.3]);
+  const markScale = useTransform(scrollYProgress, [0, 0.88], [1, 0.92]);
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.55], [0.5, 0.85]);
 
   return (
     <section ref={ref} className="about-scene about-intro" aria-label="About Novaro Solution">

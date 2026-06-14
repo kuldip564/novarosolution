@@ -79,6 +79,7 @@ export function SplitText({ text, as: Tag = "h1", className = "" }: SplitTextPro
       ref,
       className: `split-text ${skipMotion ? "in" : ""} ${className}`.trim(),
       "data-split": true,
+      suppressHydrationWarning: true,
     },
     lines.map((line, lineIndex) =>
       createElement(

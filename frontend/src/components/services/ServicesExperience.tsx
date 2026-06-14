@@ -52,9 +52,9 @@ function ProcessScene({
   const opacity = useTransform(
     progress,
     [start, mid, Math.max(mid, end - segment * 0.12), end],
-    [0, 1, 1, 0],
+    [index === 0 ? 1 : 0, 1, 1, 0],
   );
-  const y = useTransform(progress, [start, mid], [48, 0]);
+  const y = useTransform(progress, [start, mid], [index === 0 ? 0 : 48, 0]);
 
   return (
     <motion.article
@@ -176,8 +176,8 @@ function ServiceDetailSection({
     offset: ["start end", "center center"],
   });
 
-  const copyY = useTransform(scrollYProgress, [0, 0.55], cinematic && !reduced ? [36, 0] : [0, 0]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.45], cinematic && !reduced ? [0.4, 1] : [1, 1]);
+  const copyY = useTransform(scrollYProgress, [0, 0.55], cinematic && !reduced ? [28, 0] : [0, 0]);
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.35], cinematic && !reduced ? [0.65, 1] : [1, 1]);
 
   const media = (
     <ClipReveal className="services-detail__media-clip">
@@ -371,9 +371,9 @@ function ServicesIntro({
     offset: ["start start", "end start"],
   });
 
-  const lineOpacity = useTransform(scrollYProgress, [0, 0.32, 0.72], [0.15, 1, 0.3]);
-  const lineY = useTransform(scrollYProgress, [0, 0.45], cinematic ? [64, 0] : [0, 0]);
-  const glowOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0.75]);
+  const lineOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);
+  const lineY = useTransform(scrollYProgress, [0, 0.88], cinematic ? [0, -36] : [0, 0]);
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.55], [0.45, 0.8]);
 
   return (
     <section ref={ref} className="services-scene services-intro" aria-label="Services overview">

@@ -54,6 +54,7 @@
   --text-soft: #c7d2e4;
   --text-media: #d6deec;
   --surface-panel: rgba(7, 12, 24, 0.6);
+  --panel: var(--surface-panel);
   --surface-interactive: rgba(255, 255, 255, 0.05);
   --exp-overlay: linear-gradient(
     90deg,
@@ -125,6 +126,7 @@
   --text-soft: var(--slate);
   --text-media: var(--slate);
   --surface-panel: var(--ink-850);
+  --panel: var(--surface-panel);
   --surface-interactive: rgba(10, 23, 48, 0.04);
   --exp-overlay: linear-gradient(
     90deg,
