@@ -13,13 +13,23 @@ export type ServiceExtra = {
   relatedLinks: ServiceLink[];
 };
 
+export type CapabilityItem = {
+  icon: string;
+  title: string;
+  description: string;
+};
+
 export type ServicesPageContent = {
+  introTitle: string;
+  introAccent: string;
   introLine: string;
   introSubline: string;
   introStats: Array<{ value: number; suffix: string; label: string }>;
   capabilities: {
     eyebrow: string;
     title: string;
+    lede: string;
+    items: CapabilityItem[];
   };
   process: {
     eyebrow: string;
@@ -106,17 +116,71 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
 };
 
 export const defaultServicesPage: ServicesPageContent = {
+  introTitle: "NOVARO",
+  introAccent: "SERVICES",
   introLine: "Engineering, intelligence, and growth — built to ship.",
   introSubline:
     "Four practices. One accountable team. Production software, AI that holds up, and marketing that moves the numbers.",
   introStats: [
     { value: 4, suffix: "", label: "Core practices" },
-    { value: 50, suffix: "+", label: "Products shipped" },
-    { value: 6, suffix: " yrs", label: "Building products" },
+    { value: 2, suffix: " yrs", label: "Years of experience" },
+    { value: 32, suffix: "+", label: "Happy clients" },
   ],
   capabilities: {
     eyebrow: "Capabilities",
     title: "Everything that supports a product at scale.",
+    lede:
+      "Beyond our four core practices, we bring the surrounding craft — infrastructure, design systems, data, and growth instrumentation — so your product holds up after launch.",
+    items: [
+      {
+        icon: "cloud",
+        title: "Cloud & DevOps",
+        description:
+          "CI/CD, infra as code, and observability stacks that survive launch-day traffic spikes.",
+      },
+      {
+        icon: "palette",
+        title: "UI / UX Design",
+        description:
+          "Design systems, prototypes, and interfaces that feel fast before they are fast.",
+      },
+      {
+        icon: "database",
+        title: "Data Engineering",
+        description:
+          "Pipelines, warehouses, and analytics layers your product team can trust.",
+      },
+      {
+        icon: "plug",
+        title: "API & Integrations",
+        description:
+          "REST, GraphQL, webhooks, and third-party connections built for change.",
+      },
+      {
+        icon: "shield",
+        title: "Security & Compliance",
+        description:
+          "Auth, encryption, audit trails, and policies aligned to your industry.",
+      },
+      {
+        icon: "gauge",
+        title: "Performance & SEO",
+        description:
+          "Core Web Vitals, caching, and technical SEO baked into every release.",
+      },
+      {
+        icon: "chart",
+        title: "Analytics & Growth",
+        description:
+          "Event tracking, funnels, and dashboards tied to revenue — not vanity metrics.",
+      },
+      {
+        icon: "smartphone",
+        title: "Mobile Engineering",
+        description:
+          "Responsive and cross-platform builds that ship on schedule and feel native.",
+      },
+    ],
   },
   process: {
     eyebrow: "How we work",
@@ -174,6 +238,27 @@ function normalizeServiceExtras(value: unknown): Record<string, ServiceExtra> {
   return merged;
 }
 
+function normalizeCapabilityItems(value: unknown): CapabilityItem[] {
+  if (!Array.isArray(value) || value.length === 0) {
+    return defaultServicesPage.capabilities.items.map((item) => ({ ...item }));
+  }
+
+  return value.map((entry, index) => {
+    const raw = entry as Record<string, unknown>;
+    const fb =
+      defaultServicesPage.capabilities.items[index] ??
+      defaultServicesPage.capabilities.items[
+        index % defaultServicesPage.capabilities.items.length
+      ];
+
+    return {
+      icon: pickString(raw.icon, fb.icon),
+      title: pickString(raw.title, fb.title),
+      description: pickString(raw.description, fb.description),
+    };
+  });
+}
+
 export function normalizeServicesPage(value: unknown): ServicesPageContent {
   if (!value || typeof value !== "object") {
     return { ...defaultServicesPage, serviceExtras: { ...defaultServiceExtras } };
@@ -196,12 +281,16 @@ export function normalizeServicesPage(value: unknown): ServicesPageContent {
   });
 
   return {
+    introTitle: pickString(raw.introTitle, defaultServicesPage.introTitle),
+    introAccent: pickString(raw.introAccent, defaultServicesPage.introAccent),
     introLine: pickString(raw.introLine, defaultServicesPage.introLine),
     introSubline: pickString(raw.introSubline, defaultServicesPage.introSubline),
     introStats,
     capabilities: {
       eyebrow: pickString(capabilities.eyebrow, defaultServicesPage.capabilities.eyebrow),
       title: pickString(capabilities.title, defaultServicesPage.capabilities.title),
+      lede: pickString(capabilities.lede, defaultServicesPage.capabilities.lede),
+      items: normalizeCapabilityItems(capabilities.items),
     },
     process: {
       eyebrow: pickString(process.eyebrow, defaultServicesPage.process.eyebrow),

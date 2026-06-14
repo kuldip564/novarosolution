@@ -17,6 +17,7 @@ import { SplitText } from "@/components/anim/SplitText";
 import { Tilt } from "@/components/anim/Tilt";
 import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Button } from "@/components/Button";
+import { CinemaBigword } from "@/components/sections/CinemaBigword";
 import { NMark } from "@/components/NMark";
 import { MediaPlaceholder } from "@/components/sections/MediaPlaceholder";
 import type {
@@ -28,6 +29,11 @@ import type {
 } from "@/lib/about-content";
 import type { TeamMemberView } from "@/lib/content-mappers";
 import { useMotionSettings } from "@/lib/motion-provider";
+import {
+  usePinnedSceneOpacity,
+  usePinnedSceneVisibility,
+  usePinnedSceneZIndex,
+} from "@/lib/pinned-scene-motion";
 
 const valueIcons: Record<string, LucideIcon> = {
   spark: Sparkles,
@@ -56,23 +62,16 @@ function MilestoneScene({
   total: number;
   progress: MotionValue<number>;
 }) {
-  const segment = 1 / total;
-  const start = index * segment;
-  const mid = start + segment * 0.38;
-  const end = start + segment;
-
-  const opacity = useTransform(
-    progress,
-    [start, mid, Math.max(mid, end - segment * 0.12), end],
-    [index === 0 ? 1 : 0, 1, 1, 0],
-  );
-  const y = useTransform(progress, [start, mid], [index === 0 ? 0 : 56, 0]);
-  const scale = useTransform(progress, [start, mid], [index === 0 ? 1 : 0.94, 1]);
+  const opacity = usePinnedSceneOpacity(progress, index, total);
+  const visibility = usePinnedSceneVisibility(opacity);
+  const zIndex = usePinnedSceneZIndex(progress, index, total);
+  const y = useTransform(opacity, [0, 1], [40, 0]);
+  const scale = useTransform(opacity, [0, 1], [0.96, 1]);
 
   return (
     <motion.article
       className="about-timeline__scene"
-      style={{ opacity, y, scale, willChange: "transform, opacity" }}
+      style={{ opacity, visibility, zIndex, y, scale, willChange: "transform, opacity" }}
       aria-label={`${milestone.year}: ${milestone.title}`}
     >
       <span className="about-timeline__year">{milestone.year}</span>
@@ -179,7 +178,17 @@ function AboutTimeline({
   );
 }
 
-function AboutIntro({ line, cinematic }: { line: string; cinematic: boolean }) {
+function AboutIntro({
+  title,
+  accent,
+  tagline,
+  cinematic,
+}: {
+  title: string;
+  accent: string;
+  tagline: string;
+  cinematic: boolean;
+}) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
 
@@ -188,11 +197,16 @@ function AboutIntro({ line, cinematic }: { line: string; cinematic: boolean }) {
     offset: ["start start", "end start"],
   });
 
-  const lineOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);
-  const lineY = useTransform(scrollYProgress, [0, 0.88], cinematic ? [0, -40] : [0, 0]);
-  const markOpacity = useTransform(scrollYProgress, [0, 0.55, 0.88], [1, 1, 0.3]);
-  const markScale = useTransform(scrollYProgress, [0, 0.88], [1, 0.92]);
+  const headOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);
+  const headY = useTransform(scrollYProgress, [0, 0.88], cinematic ? [0, -40] : [0, 0]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.55], [0.5, 0.85]);
+
+  const headline = (
+    <>
+      <CinemaBigword title={title} accent={accent} className="about-intro__bigword" />
+      <p className="about-intro__tagline">{tagline}</p>
+    </>
+  );
 
   return (
     <section ref={ref} className="about-scene about-intro" aria-label="About Novaro Solution">
@@ -207,26 +221,14 @@ function AboutIntro({ line, cinematic }: { line: string; cinematic: boolean }) {
 
       <div className="wrap about-intro__content">
         {cinematic && !reduced ? (
-          <motion.div style={{ opacity: markOpacity, scale: markScale, willChange: "transform, opacity" }}>
-            <NMark className="about-intro__mark" size={120} />
-          </motion.div>
-        ) : (
-          <Reveal>
-            <NMark className="about-intro__mark" size={120} />
-          </Reveal>
-        )}
-
-        {cinematic && !reduced ? (
           <motion.div
-            className="about-intro__line-wrap"
-            style={{ opacity: lineOpacity, y: lineY, willChange: "transform, opacity" }}
+            className="about-intro__head"
+            style={{ opacity: headOpacity, y: headY, willChange: "transform, opacity" }}
           >
-            <SplitText text={line} as="h1" className="about-intro__line" />
+            {headline}
           </motion.div>
         ) : (
-          <Reveal delay={0.08}>
-            <SplitText text={line} as="h1" className="about-intro__line" />
-          </Reveal>
+          <Reveal className="about-intro__head">{headline}</Reveal>
         )}
 
         <p className="about-intro__scroll-hint" aria-hidden>
@@ -265,7 +267,12 @@ export function AboutExperience({
 
   return (
     <main className="about-cinema">
-      <AboutIntro line={content.introLine} cinematic={cinematic} />
+      <AboutIntro
+        title={content.introTitle}
+        accent={content.introAccent}
+        tagline={content.introLine}
+        cinematic={cinematic}
+      />
 
       <section className="about-scene about-who" aria-labelledby="about-who-title">
         <div className="wrap about-who__grid">

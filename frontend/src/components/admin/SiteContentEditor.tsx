@@ -206,9 +206,26 @@ export function SiteContentEditor() {
         <div className="admin-form admin-form-panel">
           <fieldset className="admin-form-section">
             <legend>Intro</legend>
+            <div className="admin-inline-fields">
+              <label className="admin-field">
+                <span>Headline (outline)</span>
+                <input
+                  value={about.introTitle}
+                  onChange={(e) => setAbout({ ...about, introTitle: e.target.value })}
+                />
+              </label>
+              <label className="admin-field">
+                <span>Headline (accent)</span>
+                <input
+                  value={about.introAccent}
+                  onChange={(e) => setAbout({ ...about, introAccent: e.target.value })}
+                />
+              </label>
+            </div>
             <label className="admin-field">
-              <span>Cinematic intro line</span>
-              <input
+              <span>Intro tagline</span>
+              <textarea
+                rows={2}
                 value={about.introLine}
                 onChange={(e) => setAbout({ ...about, introLine: e.target.value })}
               />
@@ -552,8 +569,28 @@ export function SiteContentEditor() {
 
           <fieldset className="admin-form-section">
             <legend>Intro</legend>
+            <div className="admin-inline-fields">
+              <label className="admin-field">
+                <span>Headline (outline)</span>
+                <input
+                  value={servicesPage.introTitle}
+                  onChange={(e) =>
+                    setServicesPage({ ...servicesPage, introTitle: e.target.value })
+                  }
+                />
+              </label>
+              <label className="admin-field">
+                <span>Headline (accent)</span>
+                <input
+                  value={servicesPage.introAccent}
+                  onChange={(e) =>
+                    setServicesPage({ ...servicesPage, introAccent: e.target.value })
+                  }
+                />
+              </label>
+            </div>
             <label className="admin-field">
-              <span>Cinematic intro line (H1)</span>
+              <span>Intro tagline</span>
               <input
                 value={servicesPage.introLine}
                 onChange={(e) => setServicesPage({ ...servicesPage, introLine: e.target.value })}
@@ -595,9 +632,76 @@ export function SiteContentEditor() {
                 }
               />
             </label>
-            <p className="admin-muted-inline">
-              Capability pills come from Advanced → <code>capabilities</code>.
-            </p>
+            <label className="admin-field">
+              <span>Capabilities description</span>
+              <textarea
+                rows={3}
+                value={servicesPage.capabilities.lede}
+                onChange={(e) =>
+                  setServicesPage({
+                    ...servicesPage,
+                    capabilities: { ...servicesPage.capabilities, lede: e.target.value },
+                  })
+                }
+              />
+            </label>
+          </fieldset>
+
+          <fieldset className="admin-form-section">
+            <legend>Capability cards</legend>
+            {servicesPage.capabilities.items.map((item, index) => (
+              <div key={`cap-${index}`} className="admin-form-subpanel">
+                <p className="admin-form-subpanel-title">{item.title || `Capability ${index + 1}`}</p>
+                <label className="admin-field">
+                  <span>Icon key</span>
+                  <input
+                    value={item.icon}
+                    onChange={(e) => {
+                      const items = [...servicesPage.capabilities.items];
+                      items[index] = { ...items[index], icon: e.target.value };
+                      setServicesPage({
+                        ...servicesPage,
+                        capabilities: { ...servicesPage.capabilities, items },
+                      });
+                    }}
+                    placeholder="cloud, palette, database, plug, shield, gauge, chart, smartphone"
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Title</span>
+                  <input
+                    value={item.title}
+                    onChange={(e) => {
+                      const items = [...servicesPage.capabilities.items];
+                      items[index] = { ...items[index], title: e.target.value };
+                      setServicesPage({
+                        ...servicesPage,
+                        capabilities: { ...servicesPage.capabilities, items },
+                      });
+                    }}
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Description</span>
+                  <textarea
+                    rows={2}
+                    value={item.description}
+                    onChange={(e) => {
+                      const items = [...servicesPage.capabilities.items];
+                      items[index] = { ...items[index], description: e.target.value };
+                      setServicesPage({
+                        ...servicesPage,
+                        capabilities: { ...servicesPage.capabilities, items },
+                      });
+                    }}
+                  />
+                </label>
+              </div>
+            ))}
+          </fieldset>
+
+          <fieldset className="admin-form-section">
+            <legend>Process labels</legend>
             <label className="admin-field">
               <span>Process eyebrow</span>
               <input

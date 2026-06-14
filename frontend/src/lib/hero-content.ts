@@ -69,7 +69,7 @@ export function heroContentFields(): Array<{
     },
     { key: "ctaPrimary", label: "Primary button", hint: "Main call-to-action" },
     { key: "ctaSecondary", label: "Secondary button", hint: "Ghost button next to primary" },
-    { key: "metaStat", label: "Stat value", hint: "e.g. 50+" },
-    { key: "metaLabel", label: "Stat label", hint: "e.g. products shipped" },
+    { key: "metaStat", label: "Stat value", hint: "e.g. 2" },
+    { key: "metaLabel", label: "Stat label", hint: "e.g. Years of experience" },
   ];
 }

@@ -11,7 +11,6 @@ import {
   servicesPageMetadata,
 } from "@/lib/services-seo";
 import {
-  capabilities,
   defaultCta,
   pickCta,
   processSteps,
@@ -24,10 +23,9 @@ export const revalidate = 30;
 export const metadata = servicesPageMetadata();
 
 export default async function ServicesPage() {
-  const [services, pageContent, caps, steps, cta] = await Promise.all([
+  const [services, pageContent, steps, cta] = await Promise.all([
     getPublishedServices(),
     getSiteContent("servicesPage", defaultServicesPage),
-    getSiteContent("capabilities", capabilities),
     getSiteContent("processSteps", processSteps),
     getSiteContent<CtaContent>("cta", defaultCta),
   ]);
@@ -46,7 +44,6 @@ export default async function ServicesPage() {
       <ServicesExperience
         content={content}
         services={serviceDetails}
-        capabilities={Array.isArray(caps) ? (caps as string[]) : [...capabilities]}
         processSteps={normalizeProcessSteps(steps)}
         ctaTitle={servicesCta.title}
         ctaDescription={servicesCta.description}

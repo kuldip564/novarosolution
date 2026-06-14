@@ -42,9 +42,11 @@ export default async function ContactPage() {
     <main>
       <PageHead
         eyebrow="Contact"
-        title={"Let's start a\nconversation."}
+        title="NOVARO"
+        titleAccent="CONTACT"
+        variant="bigword"
         description="Tell us about your project. The more detail you share, the sharper our first response will be."
-        splitTitle
+        className="blog-head"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
       />
       <ContactForm />

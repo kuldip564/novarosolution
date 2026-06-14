@@ -27,6 +27,7 @@ type SiteShellProps = {
 export function SiteShell({ children }: SiteShellProps) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isHome = pathname === "/";
 
   if (isAdmin) {
     return <>{children}</>;
@@ -37,7 +38,7 @@ export function SiteShell({ children }: SiteShellProps) {
       <ToastProvider>
         <OrganizationJsonLd />
         <ScrollProgressBar />
-        <Bgfx />
+        {!isHome ? <Bgfx /> : null}
         <Cursor />
         <Header />
         <div className="page">{children}</div>

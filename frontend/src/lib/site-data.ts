@@ -130,17 +130,17 @@ export const homeProjects = [
 ] as const;
 
 export const homeStats = [
-  { value: 50, suffix: "+", label: "Products shipped" },
+  { value: 2, suffix: " yrs", label: "Years of experience" },
   { value: 32, suffix: "+", label: "Happy clients" },
-  { value: 6, suffix: " yrs", label: "Building products" },
+  { value: 4, suffix: "", label: "Core practices" },
   { value: 98, suffix: "%", label: "Client retention" },
 ] as const;
 
 export const aboutStats = [
-  { value: 50, suffix: "+", label: "Products shipped" },
+  { value: 2, suffix: " yrs", label: "Years of experience" },
   { value: 32, suffix: "+", label: "Happy clients" },
   { value: 14, suffix: "", label: "People on the team" },
-  { value: 6, suffix: " yrs", label: "Building products" },
+  { value: 98, suffix: "%", label: "Client retention" },
 ] as const;
 
 export const whyItems = [
@@ -340,15 +340,15 @@ export const apiBase =
   process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const defaultHero = {
-  eyebrow: "Digital product studio",
-  headline: "Software, intelligence and growth,",
-  headlineAccent: "engineered as one.",
+  eyebrow: "Digital product studio · Gandhinagar",
+  headline: "We engineer products",
+  headlineAccent: "that earn trust.",
   lede:
-    "Novaro Solution builds production-grade web apps, AI systems, and digital marketing engines for companies that want to move fast and look the part.",
+    "Web and app platforms, AI that survives production, and marketing that moves revenue — one accountable team from roadmap to launch.",
   ctaPrimary: "See our work",
   ctaSecondary: "Book a call",
-  metaStat: "50+",
-  metaLabel: "products shipped",
+  metaStat: "2",
+  metaLabel: "Years of experience",
 } as const;
 
 export type HeroContent = {
@@ -363,9 +363,9 @@ export type HeroContent = {
 };
 
 export const defaultCta = {
-  homeTitle: "Let's build something worth showing off.",
+  homeTitle: "Ready to ship something worth showing off?",
   homeDescription:
-    "Tell us what you're working on. We'll come back within one business day with a way forward.",
+    "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
     "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",

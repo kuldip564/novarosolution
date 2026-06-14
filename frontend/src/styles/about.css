@@ -8,6 +8,21 @@
   overflow: clip;
 }
 
+/* About is cinematic-dark throughout — lock tokens off the global theme toggle */
+.about-cinema .about-scene {
+  --text-heading: #ffffff;
+  --text-body: #e8edf6;
+  --text-muted: #94a2bc;
+  --text-strong: #ffffff;
+  --slate-light: #94a2bc;
+  --line-d: rgba(255, 255, 255, 0.08);
+  --panel: rgba(7, 12, 24, 0.6);
+  --surface-panel: rgba(7, 12, 24, 0.6);
+  --about-line: color-mix(in srgb, var(--cyan) 18%, rgba(255, 255, 255, 0.08));
+  --bigword-stroke: rgba(255, 255, 255, 0.28);
+  color: var(--text-body);
+}
+
 .about-scene {
   position: relative;
   padding: clamp(4.5rem, 12vw, 8rem) 0;
@@ -96,26 +111,28 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: clamp(1.5rem, 4vw, 2.5rem);
+  gap: clamp(1rem, 3vw, 1.75rem);
 }
 
-.about-intro__mark {
-  filter: drop-shadow(0 0 28px color-mix(in srgb, var(--cyan) 35%, transparent));
+.about-intro__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.85rem, 2.5vw, 1.35rem);
+  width: 100%;
 }
 
-.about-intro__line-wrap {
-  max-width: 14ch;
-}
-
-.about-intro__line {
+.about-intro__bigword {
   margin: 0;
-  font-family: var(--font-sora), system-ui, sans-serif;
-  font-size: clamp(2.1rem, 6.5vw, 4.25rem);
-  font-weight: 800;
-  line-height: 1.06;
-  letter-spacing: -0.04em;
+}
+
+.about-intro__tagline {
+  margin: 0;
+  max-width: 42rem;
+  font-size: clamp(1rem, 1.65vw, 1.15rem);
+  line-height: 1.7;
   text-wrap: balance;
-  color: var(--text-heading);
+  color: var(--text-muted);
 }
 
 .about-intro__scroll-hint {
@@ -296,6 +313,8 @@
 .about-timeline__stage {
   position: relative;
   min-height: clamp(220px, 32vh, 320px);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .about-timeline__line {
@@ -306,6 +325,7 @@
   width: 1px;
   background: linear-gradient(to bottom, var(--cyan), color-mix(in srgb, var(--cyan) 20%, transparent));
   transform-origin: top center;
+  z-index: 0;
 }
 
 .about-timeline__scene {
@@ -315,6 +335,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  pointer-events: none;
 }
 
 .about-timeline__scene .about-timeline__year {
@@ -596,10 +617,6 @@
 }
 
 @media (max-width: 767px) {
-  .about-intro__line {
-    max-width: 16ch;
-  }
-
   .about-timeline__item {
     grid-template-columns: 4.5rem 1fr;
     gap: 0.75rem 1rem;

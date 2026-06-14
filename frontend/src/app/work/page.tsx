@@ -34,7 +34,7 @@ export default async function WorkPage() {
     <main>
       <PageHead
         eyebrow="Selected work"
-        title="SELECTED"
+        title="NOVARO"
         titleAccent="WORK"
         variant="bigword"
         description="Immersive case studies across fintech, healthcare, commerce, and SaaS. Tap any project to go deeper."

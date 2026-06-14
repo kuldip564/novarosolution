@@ -15,7 +15,9 @@ import { Parallax } from "@/components/anim/Parallax";
 import { Reveal } from "@/components/anim/Reveal";
 import { SplitText } from "@/components/anim/SplitText";
 import { Button } from "@/components/Button";
+import { CinemaBigword } from "@/components/sections/CinemaBigword";
 import { ServiceMediaImage } from "@/components/sections/ServiceMediaImage";
+import { ServicesCapabilities } from "@/components/services/ServicesCapabilities";
 import { MediaPlaceholder } from "@/components/sections/MediaPlaceholder";
 import type {
   ProcessStepView,
@@ -23,11 +25,15 @@ import type {
   ServicesPageContent,
 } from "@/lib/services-content";
 import { useMotionSettings } from "@/lib/motion-provider";
+import {
+  usePinnedSceneOpacity,
+  usePinnedSceneVisibility,
+  usePinnedSceneZIndex,
+} from "@/lib/pinned-scene-motion";
 
 type ServicesExperienceProps = {
   content: ServicesPageContent;
   services: ServiceDetailView[];
-  capabilities: readonly string[] | string[];
   processSteps: ProcessStepView[];
   ctaTitle: string;
   ctaDescription: string;
@@ -44,22 +50,15 @@ function ProcessScene({
   total: number;
   progress: MotionValue<number>;
 }) {
-  const segment = 1 / total;
-  const start = index * segment;
-  const mid = start + segment * 0.38;
-  const end = start + segment;
-
-  const opacity = useTransform(
-    progress,
-    [start, mid, Math.max(mid, end - segment * 0.12), end],
-    [index === 0 ? 1 : 0, 1, 1, 0],
-  );
-  const y = useTransform(progress, [start, mid], [index === 0 ? 0 : 48, 0]);
+  const opacity = usePinnedSceneOpacity(progress, index, total);
+  const visibility = usePinnedSceneVisibility(opacity);
+  const zIndex = usePinnedSceneZIndex(progress, index, total);
+  const y = useTransform(opacity, [0, 1], [36, 0]);
 
   return (
     <motion.article
       className="services-process__scene"
-      style={{ opacity, y, willChange: "transform, opacity" }}
+      style={{ opacity, visibility, zIndex, y, willChange: "transform, opacity" }}
       aria-label={`${step.num} ${step.title}`}
     >
       <span className="services-process__num">{step.num}</span>
@@ -371,9 +370,20 @@ function ServicesIntro({
     offset: ["start start", "end start"],
   });
 
-  const lineOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);
-  const lineY = useTransform(scrollYProgress, [0, 0.88], cinematic ? [0, -36] : [0, 0]);
+  const headOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);
+  const headY = useTransform(scrollYProgress, [0, 0.88], cinematic ? [0, -36] : [0, 0]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.55], [0.45, 0.8]);
+
+  const headline = (
+    <>
+      <CinemaBigword
+        title={content.introTitle}
+        accent={content.introAccent}
+        className="services-intro__bigword"
+      />
+      <p className="services-intro__tagline">{content.introLine}</p>
+    </>
+  );
 
   return (
     <section ref={ref} className="services-scene services-intro" aria-label="Services overview">
@@ -390,15 +400,13 @@ function ServicesIntro({
       <div className="wrap services-intro__content">
         {cinematic && !reduced ? (
           <motion.div
-            className="services-intro__line-wrap"
-            style={{ opacity: lineOpacity, y: lineY, willChange: "transform, opacity" }}
+            className="services-intro__head"
+            style={{ opacity: headOpacity, y: headY, willChange: "transform, opacity" }}
           >
-            <SplitText text={content.introLine} as="h1" className="services-intro__line" />
+            {headline}
           </motion.div>
         ) : (
-          <Reveal>
-            <SplitText text={content.introLine} as="h1" className="services-intro__line" />
-          </Reveal>
+          <Reveal className="services-intro__head">{headline}</Reveal>
         )}
 
         <Reveal delay={0.08}>
@@ -425,7 +433,6 @@ function ServicesIntro({
 export function ServicesExperience({
   content,
   services,
-  capabilities,
   processSteps,
   ctaTitle,
   ctaDescription,
@@ -446,34 +453,7 @@ export function ServicesExperience({
         />
       ))}
 
-      <section
-        className="services-scene services-capabilities light"
-        aria-label={content.capabilities.title}
-      >
-        <div className="wrap">
-          <header className="services-scene__head services-scene__head--center">
-            <span className="eyebrow center">{content.capabilities.eyebrow}</span>
-            <SplitText
-              text={content.capabilities.title}
-              as="h2"
-              className="services-scene__title"
-            />
-          </header>
-        </div>
-        <div className="services-capabilities__strip" role="list" aria-label="Additional capabilities">
-          <div className={`services-capabilities__track ${cinematic ? "" : "services-capabilities__track--static"}`}>
-            {[...capabilities, ...capabilities].map((cap, index) => (
-              <span
-                key={`${cap}-${index}`}
-                className="services-capabilities__pill"
-                role="listitem"
-              >
-                {cap}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ServicesCapabilities content={content} cinematic={cinematic} />
 
       <ServicesProcess content={content} steps={processSteps} cinematic={cinematic} />
 

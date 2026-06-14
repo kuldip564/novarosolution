@@ -23,6 +23,8 @@ export type AboutStat = {
 };
 
 export type AboutPageContent = {
+  introTitle: string;
+  introAccent: string;
   introLine: string;
   whoWeAre: {
     eyebrow: string;
@@ -66,12 +68,14 @@ export type AboutPageContent = {
 };
 
 export const defaultAboutPage: AboutPageContent = {
+  introTitle: "NOVARO",
+  introAccent: "ABOUT",
   introLine: "We build digital products that earn trust — and keep earning it.",
   whoWeAre: {
     eyebrow: "Who we are",
     title: "A senior studio that ships\nwith you, not around you.",
     body:
-      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. We're builders first — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
+      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. In two years we've grown into a team that ships with you — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -87,28 +91,22 @@ export const defaultAboutPage: AboutPageContent = {
     title: "From a small studio\nto a trusted partner.",
     milestones: [
       {
-        year: "2019",
+        year: "2024",
         title: "Founded",
         text:
-          "Novaro started as a tight-knit studio tired of work bouncing between agencies and dev shops — one team, one standard.",
+          "Novaro started in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
       },
       {
-        year: "2021",
+        year: "2025",
         title: "AI in production",
         text:
-          "We shipped our first ML features to production for healthcare and fintech clients — evaluation, pipelines, and humans in the loop.",
-      },
-      {
-        year: "2023",
-        title: "Full-stack growth",
-        text:
-          "We added a dedicated marketing practice so code and campaigns share the same strategy, data, and accountability.",
+          "We brought AI/ML and digital marketing in-house so intelligent features and growth campaigns share the same strategy and codebase.",
       },
       {
         year: "Today",
-        title: "Scaling with intent",
+        title: "Two years in",
         text:
-          "Fifty-plus products shipped, a senior squad, and long-term partnerships across India and beyond — still small by choice.",
+          "Two years of shipping production software for clients across fintech, healthcare, and D2C — still small by choice, still hands-on.",
       },
     ],
   },
@@ -243,6 +241,8 @@ export function normalizeAboutPage(value: unknown): AboutPageContent {
   const cta = (raw.cta ?? {}) as Record<string, unknown>;
 
   return {
+    introTitle: pickString(raw.introTitle, defaultAboutPage.introTitle),
+    introAccent: pickString(raw.introAccent, defaultAboutPage.introAccent),
     introLine: pickString(raw.introLine, defaultAboutPage.introLine),
     whoWeAre: {
       eyebrow: pickString(who.eyebrow, defaultAboutPage.whoWeAre.eyebrow),
@@ -304,10 +304,10 @@ export function normalizeAboutWhyItems(value: unknown): AboutWhyItem[] {
 
 export function normalizeAboutStats(value: unknown): AboutStat[] {
   const fallback = [
-    { value: 50, suffix: "+", label: "Products shipped" },
+    { value: 2, suffix: " yrs", label: "Years of experience" },
     { value: 32, suffix: "+", label: "Happy clients" },
     { value: 14, suffix: "", label: "People on the team" },
-    { value: 6, suffix: " yrs", label: "Building products" },
+    { value: 98, suffix: "%", label: "Client retention" },
   ];
 
   if (!Array.isArray(value) || value.length === 0) {

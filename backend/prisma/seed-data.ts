@@ -18,21 +18,21 @@ export const seedSite = {
 };
 
 export const seedHero = {
-  eyebrow: "Digital product studio",
-  headline: "Software, intelligence and growth,",
-  headlineAccent: "engineered as one.",
+  eyebrow: "Digital product studio · Gandhinagar",
+  headline: "We engineer products",
+  headlineAccent: "that earn trust.",
   lede:
-    "Novaro Solution builds production-grade web apps, AI systems, and digital marketing engines for companies that want to move fast and look the part.",
+    "Web and app platforms, AI that survives production, and marketing that moves revenue — one accountable team from roadmap to launch.",
   ctaPrimary: "See our work",
   ctaSecondary: "Book a call",
-  metaStat: "50+",
-  metaLabel: "products shipped",
+  metaStat: "2",
+  metaLabel: "Years of experience",
 };
 
 export const seedCta = {
-  homeTitle: "Let's build something worth showing off.",
+  homeTitle: "Ready to ship something worth showing off?",
   homeDescription:
-    "Tell us what you're working on. We'll come back within one business day with a way forward.",
+    "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
     "Tell us the problem and we'll tell you the shortest path to a result.",
@@ -102,17 +102,17 @@ export const seedProcessSteps = [
 ];
 
 export const seedHomeStats = [
-  { value: 50, suffix: "+", label: "Products shipped" },
+  { value: 2, suffix: " yrs", label: "Years of experience" },
   { value: 32, suffix: "+", label: "Happy clients" },
-  { value: 6, suffix: " yrs", label: "Building products" },
+  { value: 4, suffix: "", label: "Core practices" },
   { value: 98, suffix: "%", label: "Client retention" },
 ];
 
 export const seedAboutStats = [
-  { value: 50, suffix: "+", label: "Products shipped" },
+  { value: 2, suffix: " yrs", label: "Years of experience" },
   { value: 32, suffix: "+", label: "Happy clients" },
   { value: 14, suffix: "", label: "People on the team" },
-  { value: 6, suffix: " yrs", label: "Building products" },
+  { value: 98, suffix: "%", label: "Client retention" },
 ];
 
 export const seedWhyItems = [
@@ -143,12 +143,14 @@ export const seedWhyItems = [
 ];
 
 export const seedAboutPage = {
+  introTitle: "NOVARO",
+  introAccent: "ABOUT",
   introLine: "We build digital products that earn trust — and keep earning it.",
   whoWeAre: {
     eyebrow: "Who we are",
     title: "A senior studio that ships\nwith you, not around you.",
     body:
-      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. We're builders first — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
+      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. In two years we've grown into a team that ships with you — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -164,28 +166,22 @@ export const seedAboutPage = {
     title: "From a small studio\nto a trusted partner.",
     milestones: [
       {
-        year: "2019",
+        year: "2024",
         title: "Founded",
         text:
-          "Novaro started as a tight-knit studio tired of work bouncing between agencies and dev shops — one team, one standard.",
+          "Novaro started in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
       },
       {
-        year: "2021",
+        year: "2025",
         title: "AI in production",
         text:
-          "We shipped our first ML features to production for healthcare and fintech clients — evaluation, pipelines, and humans in the loop.",
-      },
-      {
-        year: "2023",
-        title: "Full-stack growth",
-        text:
-          "We added a dedicated marketing practice so code and campaigns share the same strategy, data, and accountability.",
+          "We brought AI/ML and digital marketing in-house so intelligent features and growth campaigns share the same strategy and codebase.",
       },
       {
         year: "Today",
-        title: "Scaling with intent",
+        title: "Two years in",
         text:
-          "Fifty-plus products shipped, a senior squad, and long-term partnerships across India and beyond — still small by choice.",
+          "Two years of shipping production software for clients across fintech, healthcare, and D2C — still small by choice, still hands-on.",
       },
     ],
   },
@@ -346,17 +342,71 @@ export const seedServiceDetails = [
 ];
 
 export const seedServicesPage = {
+  introTitle: "NOVARO",
+  introAccent: "SERVICES",
   introLine: "Engineering, intelligence, and growth — built to ship.",
   introSubline:
     "Four practices. One accountable team. Production software, AI that holds up, and marketing that moves the numbers.",
   introStats: [
     { value: 4, suffix: "", label: "Core practices" },
-    { value: 50, suffix: "+", label: "Products shipped" },
-    { value: 6, suffix: " yrs", label: "Building products" },
+    { value: 2, suffix: " yrs", label: "Years of experience" },
+    { value: 32, suffix: "+", label: "Happy clients" },
   ],
   capabilities: {
     eyebrow: "Capabilities",
     title: "Everything that supports a product at scale.",
+    lede:
+      "Beyond our four core practices, we bring the surrounding craft — infrastructure, design systems, data, and growth instrumentation — so your product holds up after launch.",
+    items: [
+      {
+        icon: "cloud",
+        title: "Cloud & DevOps",
+        description:
+          "CI/CD, infra as code, and observability stacks that survive launch-day traffic spikes.",
+      },
+      {
+        icon: "palette",
+        title: "UI / UX Design",
+        description:
+          "Design systems, prototypes, and interfaces that feel fast before they are fast.",
+      },
+      {
+        icon: "database",
+        title: "Data Engineering",
+        description:
+          "Pipelines, warehouses, and analytics layers your product team can trust.",
+      },
+      {
+        icon: "plug",
+        title: "API & Integrations",
+        description:
+          "REST, GraphQL, webhooks, and third-party connections built for change.",
+      },
+      {
+        icon: "shield",
+        title: "Security & Compliance",
+        description:
+          "Auth, encryption, audit trails, and policies aligned to your industry.",
+      },
+      {
+        icon: "gauge",
+        title: "Performance & SEO",
+        description:
+          "Core Web Vitals, caching, and technical SEO baked into every release.",
+      },
+      {
+        icon: "chart",
+        title: "Analytics & Growth",
+        description:
+          "Event tracking, funnels, and dashboards tied to revenue — not vanity metrics.",
+      },
+      {
+        icon: "smartphone",
+        title: "Mobile Engineering",
+        description:
+          "Responsive and cross-platform builds that ship on schedule and feel native.",
+      },
+    ],
   },
   process: {
     eyebrow: "How we work",

@@ -30,10 +30,10 @@ export default async function AboutPage() {
     getPublishedTeam(),
     getSiteContent("aboutPage", defaultAboutPage),
     getSiteContent("aboutStats", [
-      { value: 50, suffix: "+", label: "Products shipped" },
+      { value: 2, suffix: " yrs", label: "Years of experience" },
       { value: 32, suffix: "+", label: "Happy clients" },
       { value: 14, suffix: "", label: "People on the team" },
-      { value: 6, suffix: " yrs", label: "Building products" },
+      { value: 98, suffix: "%", label: "Client retention" },
     ]),
     getSiteContent("whyItems", []),
     getSiteContent<CtaContent>("cta", defaultCta),

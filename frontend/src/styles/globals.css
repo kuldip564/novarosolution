@@ -871,6 +871,12 @@ img {
   color: transparent;
 }
 
+.cinema-bigword {
+  font-size: clamp(2.75rem, 11vw, 7.5rem);
+  text-align: center;
+  text-wrap: balance;
+}
+
 .hero {
   position: relative;
   min-height: 100vh;
