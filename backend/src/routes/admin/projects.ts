@@ -9,6 +9,7 @@ import {
   toPrismaJsonAsset,
   toPrismaJsonAssetArray,
 } from "../../types/media.js";
+import { SEO_MAX_SLUG_LENGTH, slugifyText } from "../../utils/slug.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -21,7 +22,7 @@ const resultMetricSchema = z.object({
 });
 
 const projectSchema = z.object({
-  slug: z.string().trim().min(1).max(120),
+  slug: z.string().trim().min(1).max(SEO_MAX_SLUG_LENGTH),
   title: z.string().trim().min(1).max(200),
   category: z.string().trim().min(1).max(200),
   hook: z.string().trim().min(1),
@@ -61,6 +62,7 @@ router.post("/", async (req, res, next) => {
     const data = await prisma.project.create({
       data: {
         ...rest,
+        slug: slugifyText(rest.slug),
         heroImage: toPrismaJsonAsset(heroImage),
         screens: toPrismaJsonAssetArray(screens),
         order,
@@ -98,6 +100,7 @@ router.put("/:id", async (req, res, next) => {
       where: { id: req.params.id },
       data: {
         ...rest,
+        slug: slugifyText(rest.slug),
         heroImage: toPrismaJsonAsset(heroImage),
         screens: toPrismaJsonAssetArray(screens),
       },

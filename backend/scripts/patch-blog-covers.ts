@@ -8,9 +8,9 @@ import { toCloudinaryAsset } from "../src/types/media.js";
 const prisma = new PrismaClient();
 
 const coversBySlug: Record<string, string> = {
-  "shipping-faster-full-stack-team": "/images/webapp-dashboard.webp",
-  "practical-ai-in-production-apps": "/images/ai-ml-dashboard.webp",
-  "technical-seo-that-moves-the-needle": "/images/digital-marketing-dashboard.webp",
+  "ship-fast-stack": "/images/webapp-dashboard.webp",
+  "ai-prod-apps": "/images/ai-ml-dashboard.webp",
+  "tech-seo-tips": "/images/digital-marketing-dashboard.webp",
 };
 
 async function main() {

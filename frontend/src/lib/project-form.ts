@@ -5,12 +5,10 @@ export type ProjectResultMetric = {
   label: string;
 };
 
+import { slugifyText } from "./slug";
+
 export function slugifyTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  return slugifyText(title);
 }
 
 export function normalizeProjectResults(raw: unknown): ProjectResultMetric[] {

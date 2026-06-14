@@ -1,6 +1,7 @@
 import type { DbFaq } from "@/lib/content";
 import { fallbackFaqs } from "@/lib/site-data";
 import { Reveal } from "@/components/anim/Reveal";
+import { FaqAccordion } from "@/components/sections/FaqAccordion";
 
 export type FaqItem = {
   id: string;
@@ -43,16 +44,7 @@ export function FaqSection({
           </Reveal>
         </div>
 
-        <div className="faq-list">
-          {items.map((item, index) => (
-            <Reveal key={item.id} delay={(index + 1) * 0.08}>
-              <details className="faq-item">
-                <summary>{item.question}</summary>
-                <p>{item.answer}</p>
-              </details>
-            </Reveal>
-          ))}
-        </div>
+        <FaqAccordion items={items} />
       </div>
     </section>
   );

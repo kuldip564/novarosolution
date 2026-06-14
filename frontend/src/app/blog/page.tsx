@@ -3,10 +3,13 @@ import { Suspense } from "react";
 import { BlogFilters } from "@/components/blog/BlogFilters";
 import { BlogPagination } from "@/components/blog/BlogPagination";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { PageHead } from "@/components/sections/PageHead";
 import { getBlogPosts } from "@/lib/blog";
 import { createPageMetadata } from "@/lib/site-metadata";
+
+export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
   title: "Blog",
@@ -38,6 +41,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         variant="bigword"
         description="Product craft, AI in production, and growth — written by the team shipping it every day."
         className="blog-head"
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Blog" }]}
       />
 
       <section className="sec blog-listing">
@@ -59,7 +63,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               ))}
             </div>
           ) : (
-            !featured && <div className="blog-empty">No posts in this category yet.</div>
+            !featured && (
+              <EmptyState
+                title="No posts yet"
+                description="There are no articles in this category right now. Try another filter or check back soon."
+                actionHref="/blog"
+                actionLabel="View all posts"
+              />
+            )
           )}
 
           <BlogPagination

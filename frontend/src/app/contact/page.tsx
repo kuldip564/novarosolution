@@ -1,11 +1,27 @@
+import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { FaqSection, mapDbFaqs } from "@/components/sections/FaqSection";
 import { PageHead } from "@/components/sections/PageHead";
-import { ContactForm } from "@/components/sections/ContactForm";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { getPublishedFaqs, getSiteContent } from "@/lib/content";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
+
+const ContactForm = dynamic(
+  () => import("@/components/sections/ContactForm").then((m) => m.ContactForm),
+  {
+    loading: () => (
+      <div className="contact-form-skeleton">
+        <Skeleton className="skeleton-field" />
+        <Skeleton className="skeleton-field" />
+        <Skeleton className="skeleton-field skeleton-field-lg" />
+      </div>
+    ),
+  },
+);
+
+export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
   title: "Contact",
@@ -29,6 +45,7 @@ export default async function ContactPage() {
         title={"Let's start a\nconversation."}
         description="Tell us about your project. The more detail you share, the sharper our first response will be."
         splitTitle
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
       />
       <ContactForm />
       <FaqSection items={mapDbFaqs(faqs)} />

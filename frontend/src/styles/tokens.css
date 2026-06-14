@@ -1,0 +1,50 @@
+/**
+ * Novaro design tokens — extend :root in globals.css.
+ * Typography, spacing, radii, shadows, breakpoints (reference).
+ */
+
+:root {
+  /* Typography scale */
+  --text-xs: 0.72rem;
+  --text-sm: 0.86rem;
+  --text-base: 1rem;
+  --text-md: 1.05rem;
+  --text-lg: 1.22rem;
+  --text-xl: clamp(1.5rem, 3vw, 2rem);
+  --text-2xl: clamp(2rem, 4.2vw, 3.3rem);
+  --text-3xl: clamp(2.5rem, 5.6vw, 4.6rem);
+  --text-display: clamp(2.6rem, 7vw, 5.4rem);
+
+  /* Spacing rhythm */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-section: clamp(80px, 11vw, 140px);
+  --space-section-mobile: clamp(52px, 12vw, 80px);
+
+  /* Radii (alias --r) */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: var(--r);
+  --radius-full: 999px;
+
+  /* Missing semantic aliases */
+  --bg: var(--ink-900);
+  --text-muted: var(--slate-light);
+  --shadow-glow: 0 24px 60px -20px rgba(69, 200, 245, 0.22);
+
+  /* Touch / a11y */
+  --touch-min: 44px;
+
+  /* Breakpoints (for reference in JS: design-tokens.ts) */
+  --bp-sm: 600px;
+  --bp-md: 768px;
+  --bp-lg: 980px;
+  --bp-xl: 1440px;
+}

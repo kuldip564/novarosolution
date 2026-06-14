@@ -4,21 +4,21 @@ import { useTheme } from "next-themes";
 import { memo, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { createParticleGeometries } from "@/lib/particle-geometries";
-import { isMobileViewport } from "@/lib/device";
+import { useMotionSettings } from "@/lib/motion-provider";
+import { getParticleCounts } from "@/lib/performance";
 import { scrollStore } from "@/lib/scroll-store";
-
-const DESKTOP_COUNTS = { particleCount: 1400, starCount: 600 };
-const MOBILE_COUNTS = { particleCount: 500, starCount: 200 };
 
 function BgfxCanvasInner() {
   const mountRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
+  const { performanceTier } = useMotionSettings();
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const counts = isMobileViewport() ? MOBILE_COUNTS : DESKTOP_COUNTS;
+    const counts = getParticleCounts(performanceTier);
+    if (counts.particleCount === 0) return;
     const isLight = resolvedTheme === "light";
 
     const scene = new THREE.Scene();
@@ -140,7 +140,7 @@ function BgfxCanvasInner() {
         mount.removeChild(renderer.domElement);
       }
     };
-  }, [resolvedTheme]);
+  }, [resolvedTheme, performanceTier]);
 
   return <div id="bgfx" ref={mountRef} aria-hidden="true" />;
 }

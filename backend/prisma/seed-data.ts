@@ -9,7 +9,12 @@ export const seedSite = {
   email: "hello@novarosolution.com",
   phone: "+91 00000 00000",
   location: "Gandhinagar, Gujarat, India",
-  social: { linkedin: "#", x: "#", github: "#" },
+  social: {
+    linkedin: "https://www.linkedin.com/company/novaro-solution",
+    x: "#",
+    github: "#",
+    instagram: "https://www.instagram.com/novarosolution/",
+  },
 };
 
 export const seedHero = {
@@ -134,7 +139,7 @@ export const seedWhyItems = [
 export const seedServicesGrid = [
   {
     id: "01",
-    slug: "web-app-engineering",
+    slug: "web-app-eng",
     title: "Web & App Engineering",
     shortDescription:
       "Production-grade web and mobile apps built on Next.js and Node — fast, scalable, and made to ship and last.",
@@ -143,7 +148,7 @@ export const seedServicesGrid = [
   },
   {
     id: "02",
-    slug: "ai-machine-learning",
+    slug: "ai-machine-ml",
     title: "AI & Machine Learning",
     shortDescription:
       "Models, pipelines, and intelligent features that turn your data into decisions, automation, and real product value.",
@@ -164,7 +169,7 @@ export const seedServicesGrid = [
 export const seedServiceDetails = [
   {
     no: "01",
-    slug: "web-app-engineering",
+    slug: "web-app-eng",
     title: "Web & App Engineering",
     description:
       "We design and build production web and mobile apps on a modern Next.js + Node/Express stack — typed, tested, and ready for real traffic.",
@@ -180,7 +185,7 @@ export const seedServiceDetails = [
   },
   {
     no: "02",
-    slug: "ai-machine-learning",
+    slug: "ai-machine-ml",
     title: "AI & Machine Learning",
     description:
       "From a first prototype to a model in production, we build intelligent features that hold up: data pipelines, evaluation, and humans in the loop.",
@@ -212,7 +217,7 @@ export const seedServiceDetails = [
   },
   {
     no: "04",
-    slug: "cloud-devops-design",
+    slug: "cloud-devops",
     title: "Cloud, DevOps & Design",
     description:
       "The supporting cast that makes the rest reliable and beautiful: cloud architecture, CI/CD, and a design system your team can build on.",

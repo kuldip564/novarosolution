@@ -11,15 +11,20 @@ import {
 } from "react";
 import {
   isCoarsePointer,
-  isLowEndDevice,
   prefersReducedMotion,
 } from "@/lib/device";
+import {
+  getPerformanceTier,
+  shouldEnableWebGL,
+  type PerformanceTier,
+} from "@/lib/performance";
 import { setScrollY } from "@/lib/scroll-store";
 
 type MotionSettings = {
   smoothScroll: boolean;
   effectsEnabled: boolean;
   reducedMotion: boolean;
+  performanceTier: PerformanceTier;
   ready: boolean;
 };
 
@@ -27,6 +32,7 @@ const defaultSettings: MotionSettings = {
   smoothScroll: false,
   effectsEnabled: false,
   reducedMotion: false,
+  performanceTier: "high",
   ready: false,
 };
 
@@ -43,12 +49,13 @@ function getClientSettings(): MotionSettings {
 
   const reducedMotion = prefersReducedMotion();
   const coarse = isCoarsePointer();
-  const lowEnd = isLowEndDevice();
+  const performanceTier = getPerformanceTier();
 
   clientSettings = {
     reducedMotion,
     smoothScroll: !reducedMotion && !coarse,
-    effectsEnabled: !reducedMotion && !lowEnd,
+    effectsEnabled: shouldEnableWebGL(performanceTier),
+    performanceTier,
     ready: true,
   };
 

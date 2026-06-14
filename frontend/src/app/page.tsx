@@ -1,15 +1,6 @@
-import { CtaBand } from "@/components/sections/CtaBand";
+import dynamic from "next/dynamic";
 import { Hero } from "@/components/sections/Hero";
-import { LogoStrip, mapDbLogos } from "@/components/sections/LogoStrip";
-import { Marquee } from "@/components/sections/Marquee";
-import { Process } from "@/components/sections/Process";
-import { ServicesGrid } from "@/components/sections/ServicesGrid";
-import { Stats } from "@/components/sections/Stats";
-import {
-  TestimonialsSection,
-  mapDbTestimonials,
-} from "@/components/sections/TestimonialsSection";
-import { WorkGrid } from "@/components/sections/WorkGrid";
+import { PageSkeleton } from "@/components/ui/Skeleton";
 import {
   getPublishedLogos,
   getPublishedProjects,
@@ -17,10 +8,6 @@ import {
   getPublishedTestimonials,
   getSiteContent,
 } from "@/lib/content";
-import {
-  mapDbProjectsToHomeGrid,
-  mapDbServicesToGrid,
-} from "@/lib/content-mappers";
 import {
   defaultCta,
   defaultHero,
@@ -31,6 +18,18 @@ import {
   type CtaContent,
 } from "@/lib/site-data";
 import { normalizeHeroContent } from "@/lib/hero-content";
+
+export const revalidate = 30;
+
+const HomeBelowFold = dynamic(
+  () =>
+    import("@/components/home/HomeBelowFold").then((mod) => ({
+      default: mod.HomeBelowFold,
+    })),
+  {
+    loading: () => <PageSkeleton />,
+  },
+);
 
 export default async function HomePage() {
   const [
@@ -61,14 +60,16 @@ export default async function HomePage() {
   return (
     <main id="top">
       <Hero content={heroCopy} />
-      <Marquee items={marquee} />
-      <LogoStrip items={mapDbLogos(logos)} />
-      <ServicesGrid services={mapDbServicesToGrid(services)} />
-      <WorkGrid projects={mapDbProjectsToHomeGrid(projects)} />
-      <Stats items={stats as typeof homeStats} />
-      <TestimonialsSection items={mapDbTestimonials(testimonials)} />
-      <Process steps={steps} />
-      <CtaBand title={homeCta.title} description={homeCta.description} />
+      <HomeBelowFold
+        projects={projects}
+        services={services}
+        stats={stats as typeof homeStats}
+        cta={homeCta}
+        marquee={marquee}
+        steps={steps}
+        testimonials={testimonials}
+        logos={logos}
+      />
     </main>
   );
 }

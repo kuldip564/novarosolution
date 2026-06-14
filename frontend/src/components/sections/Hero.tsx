@@ -1,11 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useLenis } from "lenis/react";
 import { Parallax } from "@/components/anim/Parallax";
 import { Reveal } from "@/components/anim/Reveal";
+import { SplitText } from "@/components/anim/SplitText";
 import { Button } from "@/components/Button";
 import { NMark } from "@/components/NMark";
 import type { HeroContent } from "@/lib/site-data";
 import { defaultHero } from "@/lib/site-data";
 import { normalizeHeroContent } from "@/lib/hero-content";
+import { scrollToTarget } from "@/lib/scroll-to";
 
 type HeroProps = {
   content?: HeroContent;
@@ -13,6 +18,7 @@ type HeroProps = {
 
 export function Hero({ content = defaultHero }: HeroProps) {
   const copy = normalizeHeroContent(content);
+  const lenis = useLenis();
 
   return (
     <section className="hero">
@@ -31,13 +37,11 @@ export function Hero({ content = defaultHero }: HeroProps) {
           <Reveal>
             <span className="eyebrow">{copy.eyebrow}</span>
           </Reveal>
-          <Reveal delay={0.1}>
-            <h1>
-              {copy.headline}
-              <br />
-              <span className="accent">{copy.headlineAccent}</span>
-            </h1>
-          </Reveal>
+          <SplitText
+            text={`${copy.headline}\n${copy.headlineAccent}`}
+            as="h1"
+            className="hero-title"
+          />
           <Reveal delay={0.2}>
             <p className="lede">{copy.lede}</p>
           </Reveal>
@@ -61,7 +65,15 @@ export function Hero({ content = defaultHero }: HeroProps) {
         </Reveal>
       </div>
 
-      <Link href="#services" className="scroll-hint" aria-label="Scroll down">
+      <Link
+        href="#services"
+        className="scroll-hint"
+        aria-label="Scroll to services"
+        onClick={(event) => {
+          event.preventDefault();
+          scrollToTarget("#services", lenis ?? undefined);
+        }}
+      >
         <span className="mouse" />
         <span>Scroll</span>
       </Link>

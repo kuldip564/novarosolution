@@ -22,6 +22,7 @@ export function NMark({ className = "", size = 34 }: NMarkProps) {
       aria-hidden
       decoding="async"
       draggable={false}
+      fetchPriority={size >= 200 ? "high" : "auto"}
     />
   );
 }

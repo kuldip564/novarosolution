@@ -1,28 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useMotionSettings } from "@/lib/motion-provider";
+import { subscribeScroll } from "@/lib/scroll-store";
 
 export function ArticleReadingProgress() {
-  const [progress, setProgress] = useState(0);
+  const { reducedMotion } = useMotionSettings();
+  const fillRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function onScroll() {
+    function update(scrollY: number) {
+      const fill = fillRef.current;
+      if (!fill) return;
+
       const article = document.querySelector<HTMLElement>(".article-body");
       if (!article) return;
+
       const total = article.scrollHeight - window.innerHeight;
-      const scrolled = window.scrollY - (article.offsetTop - 96);
+      const scrolled = scrollY - (article.offsetTop - 96);
       const pct = total > 0 ? Math.min(100, Math.max(0, (scrolled / total) * 100)) : 0;
-      setProgress(pct);
+      fill.style.transform = `scaleX(${pct / 100})`;
     }
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return subscribeScroll(update);
   }, []);
 
   return (
     <div className="article-progress" aria-hidden="true">
-      <div style={{ width: `${progress}%` }} />
+      <div
+        ref={fillRef}
+        style={{
+          transform: "scaleX(0)",
+          opacity: reducedMotion ? 0.85 : 1,
+        }}
+      />
     </div>
   );
 }

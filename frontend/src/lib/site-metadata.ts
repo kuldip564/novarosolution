@@ -80,6 +80,10 @@ export function createPageMetadata(input: {
 }
 
 export function organizationJsonLd() {
+  const socialProfiles = Object.values(site.social).filter(
+    (url) => url.startsWith("http"),
+  );
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -88,5 +92,6 @@ export function organizationJsonLd() {
     logo: brandIconAbsoluteUrl(),
     email: site.email,
     telephone: site.phone,
+    ...(socialProfiles.length > 0 ? { sameAs: socialProfiles } : {}),
   };
 }

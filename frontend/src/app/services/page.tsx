@@ -13,6 +13,8 @@ import {
   type CtaContent,
 } from "@/lib/site-data";
 
+export const revalidate = 30;
+
 export const metadata: Metadata = createPageMetadata({
   title: "Services",
   description:
@@ -36,6 +38,7 @@ export default async function ServicesPage() {
         title={"Services built to ship\nand to scale."}
         description="Engineering, intelligence, design, and growth under one roof — so your product gets built right and gets found."
         splitTitle
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
       />
       <ServiceRows services={mapDbServicesToRows(services)} />
       <Process centered steps={steps} />

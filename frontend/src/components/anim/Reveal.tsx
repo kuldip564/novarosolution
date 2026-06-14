@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { prefersReducedMotion } from "@/lib/device";
+import { useMotionSettings } from "@/lib/motion-provider";
 
 type RevealProps = {
   children: ReactNode;
@@ -25,13 +27,14 @@ export function Reveal({
   as: Tag = "div",
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
+  const { reducedMotion } = useMotionSettings();
+  const skipMotion = reducedMotion || prefersReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
+    if (skipMotion) {
       revealElement(el);
       return;
     }
@@ -58,13 +61,13 @@ export function Reveal({
     requestAnimationFrame(() => requestAnimationFrame(checkVisible));
 
     return () => io.disconnect();
-  }, []);
+  }, [skipMotion]);
 
   const style = delay ? ({ ["--reveal-delay" as string]: `${delay}s` } as React.CSSProperties) : undefined;
 
   return (
     // @ts-expect-error dynamic tag ref
-    <Tag ref={ref} className={`reveal ${className}`} style={style} data-reveal>
+    <Tag ref={ref} className={`reveal ${skipMotion ? "in" : ""} ${className}`.trim()} style={style} data-reveal>
       {children}
     </Tag>
   );

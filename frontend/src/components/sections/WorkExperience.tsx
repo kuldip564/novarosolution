@@ -71,6 +71,8 @@ function WorkExperienceInner({
                   <button
                     type="button"
                     className="exp-toggle"
+                    aria-expanded={open}
+                    aria-controls={`work-drawer-${index}`}
                     onClick={() => setOpenIndex(open ? null : index)}
                   >
                     <span className="pl">
@@ -81,9 +83,10 @@ function WorkExperienceInner({
                     View case study
                   </button>
 
-                  <div className="drawer">
-                    <p>{project.story}</p>
-                    <div className="drawer-grid">
+                  <div id={`work-drawer-${index}`} className="drawer" aria-hidden={!open}>
+                    <div className="drawer-inner">
+                      <p>{project.story}</p>
+                      <div className="drawer-grid">
                       {screens
                         ? screens.map((screen, screenIndex) => (
                             <CloudinaryImage
@@ -125,6 +128,7 @@ function WorkExperienceInner({
                       {project.tags.map((tag) => (
                         <span key={tag}>{tag}</span>
                       ))}
+                    </div>
                     </div>
                   </div>
                 </div>

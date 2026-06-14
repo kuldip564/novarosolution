@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 export type CloudinaryAsset = {
@@ -48,17 +47,15 @@ export function resolveAssetUrl(value: unknown): string | undefined {
   return asset?.secureUrl;
 }
 
-/** Prisma Json fields reject plain `null` — use JsonNull to clear optional assets. */
+/** Pass-through for optional Cloudinary composite fields (MongoDB accepts plain null). */
 export function toPrismaJsonAsset(
   asset: CloudinaryAsset | null | undefined,
-): Prisma.InputJsonValue | typeof Prisma.JsonNull | undefined {
-  if (asset === undefined) return undefined;
-  if (asset === null) return Prisma.JsonNull;
+): CloudinaryAsset | null | undefined {
   return asset;
 }
 
 export function toPrismaJsonAssetArray(
   assets: CloudinaryAsset[],
-): Prisma.InputJsonValue {
+): CloudinaryAsset[] {
   return assets;
 }

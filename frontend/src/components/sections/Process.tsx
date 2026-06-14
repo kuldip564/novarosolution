@@ -17,8 +17,8 @@ export function Process({
   steps = defaultSteps,
 }: ProcessProps) {
   return (
-    <section className="sec light">
-      <div className="wrap">
+    <section className="sec light process-sec">
+      <div className="wrap process-wrap">
         <div className={`sec-head ${centered ? "center" : ""}`}>
           <Reveal>
             <span className={`eyebrow ${centered ? "center" : ""}`}>How we work</span>

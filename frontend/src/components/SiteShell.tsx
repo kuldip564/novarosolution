@@ -3,9 +3,11 @@
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { ScrollProgressBar } from "@/components/anim/ScrollProgressBar";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { OrganizationJsonLd } from "@/components/OrganizationJsonLd";
+import { ToastProvider } from "@/components/ui/Toast";
 import { MotionProvider } from "@/lib/motion-provider";
 
 const Bgfx = dynamic(() => import("@/components/bgfx"), {
@@ -32,12 +34,15 @@ export function SiteShell({ children }: SiteShellProps) {
 
   return (
     <MotionProvider>
-      <OrganizationJsonLd />
-      <Bgfx />
-      <Cursor />
-      <Header />
-      <div className="page">{children}</div>
-      <Footer />
+      <ToastProvider>
+        <OrganizationJsonLd />
+        <ScrollProgressBar />
+        <Bgfx />
+        <Cursor />
+        <Header />
+        <div className="page">{children}</div>
+        <Footer />
+      </ToastProvider>
     </MotionProvider>
   );
 }

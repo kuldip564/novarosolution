@@ -1,10 +1,19 @@
 "use client";
 
-import { FormEvent, memo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { memo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
 import { MediaPlaceholder } from "@/components/sections/MediaPlaceholder";
+import { Badge } from "@/components/ui/Badge";
+import { Field, Input, Select, TextArea } from "@/components/ui/Field";
+import { useToast } from "@/components/ui/Toast";
 import { apiFetch } from "@/lib/api";
+import {
+  contactFormSchema,
+  type ContactFormValues,
+} from "@/lib/contact-form-schema";
 import {
   budgetRanges,
   contactServices,
@@ -12,36 +21,45 @@ import {
 } from "@/lib/site-data";
 
 export function ContactFormInner() {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [status, setStatus] = useState("We reply within one business day.");
-  const [loading, setLoading] = useState(false);
+  const { push } = useToast();
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      services: [],
+      budget: "",
+      message: "",
+    },
+    mode: "onBlur",
+  });
+
+  const selectedServices = watch("services") ?? [];
 
   function toggleService(service: string) {
-    setSelected((current) =>
-      current.includes(service)
-        ? current.filter((item) => item !== service)
-        : [...current, service],
-    );
+    const next = selectedServices.includes(service)
+      ? selectedServices.filter((item) => item !== service)
+      : [...selectedServices, service];
+    setValue("services", next, { shouldValidate: true });
   }
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-
-    setLoading(true);
-    setStatus("Sending…");
+  async function onSubmit(values: ContactFormValues) {
+    setServerError(null);
 
     try {
       const response = await apiFetch("/api/contact", {
         method: "POST",
-        body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          services: selected,
-          budget: data.get("budget"),
-          message: data.get("message"),
-        }),
+        body: JSON.stringify(values),
       });
 
       let result: {
@@ -62,23 +80,25 @@ export function ContactFormInner() {
       }
 
       if (!response.ok || !result.ok) {
-        const fieldMsg = result.fields
-          ? Object.values(result.fields)[0]
-          : undefined;
-        throw new Error(fieldMsg || result.error || "Something went wrong.");
+        if (result.fields) {
+          for (const [key, message] of Object.entries(result.fields)) {
+            if (key in contactFormSchema.shape) {
+              setError(key as keyof ContactFormValues, { message });
+            }
+          }
+        }
+        throw new Error(result.error || "Something went wrong.");
       }
 
-      setStatus(result.message || "Thanks — we'll be in touch soon.");
-      form.reset();
-      setSelected([]);
+      push(result.message || "Message sent. We'll reply within one business day.", "success");
+      reset();
     } catch (error) {
-      setStatus(
+      const message =
         error instanceof Error
           ? error.message
-          : "Could not send your message. Please try again.",
-      );
-    } finally {
-      setLoading(false);
+          : "Could not send your message. Please try again.";
+      setServerError(message);
+      push(message, "error");
     }
   }
 
@@ -87,66 +107,100 @@ export function ContactFormInner() {
       <div className="wrap">
         <div className="contact-grid">
           <Reveal>
-            <form className="form" onSubmit={onSubmit}>
-              <div className="field">
-                <label htmlFor="name">Name</label>
-                <input id="name" name="name" type="text" placeholder="Your name" required />
-              </div>
-              <div className="field">
-                <label htmlFor="email">Email</label>
-                <input
+            <form className="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Field id="name" label="Name" error={errors.name?.message}>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  autoComplete="name"
+                  error={Boolean(errors.name)}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                  {...register("name")}
+                />
+              </Field>
+
+              <Field id="email" label="Email" error={errors.email?.message}>
+                <Input
                   id="email"
-                  name="email"
                   type="email"
                   placeholder="you@company.com"
-                  required
+                  autoComplete="email"
+                  error={Boolean(errors.email)}
+                  {...register("email")}
                 />
-              </div>
-              <div className="field">
-                <label>What do you need?</label>
-                <div className="chips">
-                  {contactServices.map((service) => (
-                    <button
-                      key={service}
-                      type="button"
-                      className={`chip ${selected.includes(service) ? "on" : ""}`}
-                      onClick={() => toggleService(service)}
-                    >
-                      {service}
-                    </button>
-                  ))}
+              </Field>
+
+              <Field
+                id="services"
+                label="What do you need?"
+                hint="Select all that apply."
+                error={errors.services?.message}
+              >
+                <div className="chips" role="group" aria-label="Services needed">
+                  {contactServices.map((service) => {
+                    const active = selectedServices.includes(service);
+                    return (
+                      <button
+                        key={service}
+                        type="button"
+                        className={`chip ${active ? "on" : ""}`}
+                        aria-pressed={active}
+                        onClick={() => toggleService(service)}
+                      >
+                        {service}
+                      </button>
+                    );
+                  })}
                 </div>
-              </div>
-              <div className="field">
-                <label htmlFor="budget">Budget range</label>
-                <select id="budget" name="budget" defaultValue="">
+              </Field>
+
+              <Field id="budget" label="Budget range">
+                <Select id="budget" {...register("budget")}>
                   <option value="">Select a range</option>
                   {budgetRanges.map((range) => (
                     <option key={range} value={range}>
                       {range}
                     </option>
                   ))}
-                </select>
-              </div>
-              <div className="field">
-                <label htmlFor="message">Project details</label>
-                <textarea
+                </Select>
+              </Field>
+
+              <Field
+                id="message"
+                label="Project details"
+                hint="Share goals, timeline, and what success looks like."
+                error={errors.message?.message}
+              >
+                <TextArea
                   id="message"
-                  name="message"
+                  rows={5}
                   placeholder="What are you building, and what does success look like?"
-                  required
+                  error={Boolean(errors.message)}
+                  {...register("message")}
                 />
-              </div>
-              <Button type="submit" disabled={loading}>
-                {loading ? "Sending…" : "Send message"}
+              </Field>
+
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Sending…" : "Send message"}
               </Button>
-              <p className="formnote">{status}</p>
+
+              {serverError ? (
+                <p className="formnote formnote-error" role="alert">
+                  {serverError}
+                </p>
+              ) : (
+                <p className="formnote">We reply within one business day.</p>
+              )}
             </form>
           </Reveal>
 
           <Reveal delay={0.1} className="contact-info">
+            <Badge variant="accent" className="contact-badge">
+              Gandhinagar · Gujarat · India
+            </Badge>
             <div className="info-card">
-              <div className="ic">
+              <div className="ic" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                   <rect x="3" y="5" width="18" height="14" rx="2" />
                   <path d="M3 7l9 6 9-6" />
@@ -158,7 +212,7 @@ export function ContactFormInner() {
               </div>
             </div>
             <div className="info-card">
-              <div className="ic">
+              <div className="ic" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                   <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z" />
                 </svg>
@@ -169,7 +223,7 @@ export function ContactFormInner() {
               </div>
             </div>
             <div className="info-card">
-              <div className="ic">
+              <div className="ic" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                   <path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" />
                   <circle cx="12" cy="10" r="2.5" />

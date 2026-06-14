@@ -3,6 +3,9 @@
 import { useEffect } from "react";
 import { isCoarsePointer, prefersReducedMotion } from "@/lib/device";
 
+const INTERACTIVE_SELECTOR =
+  "a, button, .chip, .exp-toggle, .tilt, .btn, .faq-trigger, summary";
+
 export function Cursor() {
   useEffect(() => {
     if (prefersReducedMotion() || isCoarsePointer()) return;
@@ -30,28 +33,30 @@ export function Cursor() {
       frame = requestAnimationFrame(animate);
     };
 
-    const onEnter = () => ring.classList.add("hover");
-    const onLeave = () => ring.classList.remove("hover");
+    const onEnter = (event: Event) => {
+      if ((event.target as Element).closest(INTERACTIVE_SELECTOR)) {
+        ring.classList.add("hover");
+      }
+    };
 
-    const interactive = document.querySelectorAll(
-      "a, button, .chip, .exp-toggle, .tilt",
-    );
+    const onLeave = (event: Event) => {
+      const related = (event as MouseEvent).relatedTarget as Element | null;
+      if (!related?.closest(INTERACTIVE_SELECTOR)) {
+        ring.classList.remove("hover");
+      }
+    };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    interactive.forEach((el) => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-    });
+    document.addEventListener("mousemove", onMove, { passive: true });
+    document.addEventListener("mouseover", onEnter);
+    document.addEventListener("mouseout", onLeave);
 
     frame = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("mousemove", onMove);
-      interactive.forEach((el) => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-      });
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseover", onEnter);
+      document.removeEventListener("mouseout", onLeave);
     };
   }, []);
 

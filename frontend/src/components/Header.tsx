@@ -1,18 +1,52 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/Button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useMotionSettings } from "@/lib/motion-provider";
 import { navLinks } from "@/lib/site-data";
 import { subscribeScroll } from "@/lib/scroll-store";
 
+const menuEase = [0.16, 0.84, 0.36, 1] as const;
+
+const navContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.045, delayChildren: 0.06 },
+  },
+  exit: {
+    transition: { staggerChildren: 0.028, staggerDirection: -1 },
+  },
+};
+
+const navLinkVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: menuEase },
+  },
+  exit: {
+    opacity: 0,
+    y: 8,
+    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] as const },
+  },
+};
+
 export function Header() {
   const pathname = usePathname();
+  const lenis = useLenis();
+  const { reducedMotion } = useMotionSettings();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
+  const scrollLockY = useRef(0);
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>(".site-header");
@@ -34,11 +68,66 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+
+    scrollLockY.current = window.scrollY;
+    const { style } = document.body;
+    style.overflow = "hidden";
+    style.position = "fixed";
+    style.top = `-${scrollLockY.current}px`;
+    style.left = "0";
+    style.right = "0";
+    style.width = "100%";
+
     return () => {
-      document.body.style.overflow = "";
+      style.overflow = "";
+      style.position = "";
+      style.top = "";
+      style.left = "";
+      style.right = "";
+      style.width = "";
+      window.scrollTo(0, scrollLockY.current);
     };
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (!lenis) return;
+    if (menuOpen) lenis.stop();
+    else lenis.start();
+  }, [lenis, menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen || !menuRef.current) return;
+
+    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    focusable[0]?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        burgerRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab" || focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
@@ -50,7 +139,7 @@ export function Header() {
             href="/"
             iconSize={30}
             className="brand-header"
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
           />
 
           <nav className="nav-links" aria-label="Primary">
@@ -58,9 +147,9 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={pathname === link.href ? "active" : undefined}
+                className={`animated-link ${pathname === link.href ? "active" : ""}`.trim()}
               >
-                {link.label}
+                <span className="animated-link-text">{link.label}</span>
               </Link>
             ))}
           </nav>
@@ -75,66 +164,94 @@ export function Header() {
           <div className="nav-mobile-actions">
             <ThemeToggle />
             <button
+              ref={burgerRef}
               type="button"
               className={`burger ${menuOpen ? "open" : ""}`}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
+              aria-controls="mobile-menu-panel"
               onClick={() => setMenuOpen((open) => !open)}
             >
-              <span />
-              <span />
-              <span />
+              <span className="burger-line" aria-hidden="true" />
+              <span className="burger-line" aria-hidden="true" />
+              <span className="burger-line" aria-hidden="true" />
             </button>
           </div>
         </div>
       </header>
 
-      <button
-        type="button"
-        className={`mobile-menu-backdrop ${menuOpen ? "open" : ""}`}
-        aria-label="Close menu"
-        onClick={() => setMenuOpen(false)}
-      />
-
-      <div
-        className={`mobile-menu ${menuOpen ? "open" : ""}`}
-        aria-hidden={!menuOpen}
-      >
-        <div className="mobile-menu-inner">
-          <div className="mobile-menu-head">
-            <BrandLogo
-              href="/"
-              iconSize={34}
-              className="brand-header"
-              onClick={() => setMenuOpen(false)}
+      <AnimatePresence mode="wait">
+        {menuOpen ? (
+          <div key="mobile-menu-layer" className="mobile-menu-layer">
+            <motion.button
+              type="button"
+              className="mobile-menu-backdrop"
+              aria-label="Close menu"
+              onClick={closeMenu}
+              initial={reducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reducedMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.28, ease: menuEase }}
             />
-            <p>Software · Intelligence · Growth</p>
-          </div>
 
-          <nav className="mobile-menu-nav" aria-label="Mobile">
-            {navLinks.map((link, index) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={pathname === link.href ? "active" : undefined}
-                style={{ animationDelay: `${index * 45}ms` }}
-                onClick={() => setMenuOpen(false)}
-              >
-                <span className="mobile-menu-index">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+            <motion.div
+              id="mobile-menu-panel"
+              ref={menuRef}
+              className="mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation"
+              initial={reducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reducedMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.24, ease: menuEase }}
+            >
+              <div className="mobile-menu-inner">
+                <motion.nav
+                  className="mobile-menu-nav"
+                  aria-label="Mobile"
+                  variants={reducedMotion ? undefined : navContainerVariants}
+                  initial={reducedMotion ? false : "hidden"}
+                  animate={reducedMotion ? undefined : "visible"}
+                  exit={reducedMotion ? undefined : "exit"}
+                >
+                  {navLinks.map((link, index) => (
+                    <motion.div
+                      key={link.href}
+                      custom={index}
+                      variants={reducedMotion ? undefined : navLinkVariants}
+                    >
+                      <Link
+                        href={link.href}
+                        className={pathname === link.href ? "active" : undefined}
+                        onClick={closeMenu}
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </motion.nav>
 
-          <div className="mobile-menu-foot">
-            <Button href="/contact" onClick={() => setMenuOpen(false)}>
-              Start a project
-            </Button>
+                <motion.div
+                  className="mobile-menu-foot"
+                  initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reducedMotion ? undefined : { opacity: 0, y: 8 }}
+                  transition={{
+                    delay: reducedMotion ? 0 : 0.28,
+                    duration: 0.26,
+                    ease: menuEase,
+                  }}
+                >
+                  <Button href="/contact" onClick={closeMenu}>
+                    Start a project
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      </div>
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }

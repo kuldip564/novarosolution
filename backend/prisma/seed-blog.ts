@@ -1,7 +1,7 @@
 export const seedBlogPosts = [
   {
     title: "Shipping faster with a single full-stack team",
-    slug: "shipping-faster-full-stack-team",
+    slug: "ship-fast-stack",
     excerpt:
       "Why keeping engineering, design, and growth under one roof cuts delivery risk — and how we structure sprints so clients see working software every week.",
     category: "Product",
@@ -25,7 +25,7 @@ export const seedBlogPosts = [
   },
   {
     title: "Practical AI features that belong in production apps",
-    slug: "practical-ai-in-production-apps",
+    slug: "ai-prod-apps",
     excerpt:
       "Not every product needs a chatbot. Here are the AI patterns we ship most often — and the guardrails that keep them reliable in the wild.",
     category: "AI / ML",
@@ -51,7 +51,7 @@ if (!result.ok) return fallbackWorkflow(input);</code></pre>
   },
   {
     title: "Technical SEO that actually moves the needle",
-    slug: "technical-seo-that-moves-the-needle",
+    slug: "tech-seo-tips",
     excerpt:
       "Core Web Vitals, structured data, and content architecture — a checklist we use before spending a rupee on paid acquisition.",
     category: "Growth",

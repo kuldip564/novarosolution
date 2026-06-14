@@ -14,6 +14,8 @@ import {
   type CtaContent,
 } from "@/lib/site-data";
 
+export const revalidate = 30;
+
 export const metadata: Metadata = createPageMetadata({
   title: "About",
   description:
@@ -37,8 +39,8 @@ export default async function AboutPage() {
         title={"A small senior team\nthat ships big things."}
         description="We started Novaro Solution to do work we'd be proud to sign — software, AI, and growth handled by people who actually build, not hand off."
         splitTitle
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
       />
-      <WhySection />
       <Stats items={stats as typeof aboutStats} />
       <TeamSection members={mapDbTeam(team)} />
       <CtaBand

@@ -8,6 +8,7 @@ import { ImageUploadGallery } from "@/components/admin/ImageUploadGallery";
 import { ResultMetricsEditor } from "@/components/admin/ResultMetricsEditor";
 import type { CloudinaryAsset } from "@/lib/media";
 import { cloudinaryAssetFormSchema, cloudinaryAssetDefault } from "@/lib/media-schemas";
+import { SEO_MAX_SLUG_LENGTH } from "@/lib/slug";
 import {
   lines,
   normalizeProjectResults,
@@ -22,7 +23,7 @@ const resultSchema = z.object({
 });
 
 const schema = z.object({
-  slug: z.string().min(1),
+  slug: z.string().trim().min(1).max(SEO_MAX_SLUG_LENGTH),
   title: z.string().min(1),
   category: z.string().min(1),
   hook: z.string().min(1),
@@ -115,7 +116,7 @@ export default function AdminWorkPage() {
               </label>
               <label className="admin-field">
                 <span>Slug</span>
-                <input {...form.register("slug")} placeholder="finflow" />
+                <input {...form.register("slug")} maxLength={SEO_MAX_SLUG_LENGTH} placeholder="finflow" />
               </label>
               <label className="admin-field">
                 <span>Category</span>

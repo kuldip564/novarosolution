@@ -12,6 +12,7 @@ import {
   sanitizeRichText,
   slugifyPostTitle,
 } from "../../utils/blog.js";
+import { SEO_MAX_SLUG_LENGTH } from "../../utils/slug.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -25,7 +26,7 @@ const authorSchema = z.object({
 
 const postInputSchema = z.object({
   title: z.string().trim().min(1).max(200),
-  slug: z.string().trim().min(1).max(160),
+  slug: z.string().trim().min(1).max(SEO_MAX_SLUG_LENGTH),
   excerpt: z.string().trim().min(1).max(500),
   coverImage: cloudinaryAssetSchema,
   content: z.string().min(1),

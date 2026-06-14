@@ -100,6 +100,60 @@ async function main() {
     });
   }
 
+  const seedTestimonials = [
+    {
+      quote:
+        "Novaro shipped a production-ready platform in weeks, not months — and the quality held up as we scaled.",
+      name: "Product Lead",
+      role: "Fintech SaaS",
+      rating: 5,
+    },
+    {
+      quote:
+        "They integrated AI into our workflow without the usual hype — measurable time saved from week one.",
+      name: "Operations Director",
+      role: "Healthcare",
+      rating: 5,
+    },
+  ] as const;
+
+  for (const [index, testimonial] of seedTestimonials.entries()) {
+    await prisma.testimonial.create({
+      data: {
+        ...testimonial,
+        order: index,
+        published: true,
+      },
+    });
+  }
+
+  const seedFaqs = [
+    {
+      question: "What types of projects do you take on?",
+      answer:
+        "Web and mobile products, AI features, marketing sites, and full-stack platforms — from MVP to scale-up.",
+    },
+    {
+      question: "How do engagements usually start?",
+      answer:
+        "A short discovery call, then a scoped proposal with timeline, team, and clear deliverables.",
+    },
+    {
+      question: "Do you work with startups and enterprises?",
+      answer: "Yes — we adapt squad size and process to your stage and constraints.",
+    },
+  ] as const;
+
+  for (const [index, faq] of seedFaqs.entries()) {
+    await prisma.faq.create({
+      data: {
+        ...faq,
+        order: index,
+        published: true,
+      },
+    });
+  }
+
   const siteContentEntries: Array<{ key: string; value: unknown }> = [
     { key: "site", value: seedSite },
     { key: "hero", value: seedHero },

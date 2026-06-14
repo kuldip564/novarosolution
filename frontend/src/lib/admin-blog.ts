@@ -59,12 +59,10 @@ export const defaultBlogPostInput = (): AdminBlogPostInput => ({
   ogImage: null,
 });
 
+import { slugifyText } from "./slug";
+
 export function slugifyBlogTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  return slugifyText(title);
 }
 
 export function toDatetimeLocalValue(iso: string | null | undefined): string {

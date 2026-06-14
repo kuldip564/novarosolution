@@ -7,6 +7,7 @@ import { ImageUpload } from "@/components/admin/ImageUpload";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import type { CloudinaryAsset } from "@/lib/media";
 import { cloudinaryAssetFormSchema, cloudinaryAssetDefault } from "@/lib/media-schemas";
+import { SEO_MAX_SLUG_LENGTH } from "@/lib/slug";
 import {
   normalizeServiceImage,
   normalizeStringList,
@@ -20,7 +21,7 @@ const trimmedList = z
   .transform((items) => items.map((item) => item.trim()).filter(Boolean));
 
 const schema = z.object({
-  slug: z.string().min(1),
+  slug: z.string().trim().min(1).max(SEO_MAX_SLUG_LENGTH),
   name: z.string().min(1),
   title: z.string().min(1),
   description: z.string().min(1),
@@ -109,7 +110,7 @@ export default function AdminServicesPage() {
               </label>
               <label className="admin-field">
                 <span>Slug</span>
-                <input {...form.register("slug")} placeholder="web-app-development" />
+                <input {...form.register("slug")} maxLength={SEO_MAX_SLUG_LENGTH} placeholder="web-app-eng" />
               </label>
               <label className="admin-field">
                 <span>Short description (home cards)</span>

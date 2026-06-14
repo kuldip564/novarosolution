@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Parallax } from "@/components/anim/Parallax";
 import { Reveal } from "@/components/anim/Reveal";
 import { SplitText } from "@/components/anim/SplitText";
+import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/Breadcrumbs";
 
 type PageHeadProps = {
   eyebrow: string;
@@ -11,6 +12,7 @@ type PageHeadProps = {
   splitTitle?: boolean;
   variant?: "default" | "bigword";
   className?: string;
+  breadcrumbs?: BreadcrumbItem[];
   children?: ReactNode;
 };
 
@@ -22,6 +24,7 @@ export function PageHead({
   splitTitle = false,
   variant = "default",
   className = "",
+  breadcrumbs,
   children,
 }: PageHeadProps) {
   return (
@@ -31,7 +34,12 @@ export function PageHead({
         <div className="glow g1" />
       </Parallax>
       <div className="wrap inner">
-        <Reveal>
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <Reveal>
+            <Breadcrumbs items={breadcrumbs} className="pagehead-crumbs" />
+          </Reveal>
+        )}
+        <Reveal delay={breadcrumbs?.length ? 0.05 : 0}>
           <span className="eyebrow">{eyebrow}</span>
         </Reveal>
 
@@ -57,7 +65,7 @@ export function PageHead({
 
         {description && (
           <Reveal delay={0.2}>
-            <p>{description}</p>
+            <p className="pagehead-lede">{description}</p>
           </Reveal>
         )}
         {children}

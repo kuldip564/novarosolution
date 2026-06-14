@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleReadingProgress } from "@/components/blog/ArticleReadingProgress";
 import { ArticleShareBar } from "@/components/blog/ArticleShareBar";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
-import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Reveal } from "@/components/anim/Reveal";
 import {
   formatBlogDate,
+  getAllBlogPosts,
   getBlogPost,
   type BlogPost,
 } from "@/lib/blog";
@@ -46,6 +47,17 @@ function articleJsonLd(post: BlogPost) {
     },
     mainEntityOfPage: url,
   };
+}
+
+export const revalidate = 30;
+
+export async function generateStaticParams() {
+  try {
+    const posts = await getAllBlogPosts();
+    return posts.map((post) => ({ slug: post.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
@@ -97,7 +109,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
           <div className="article-hero-bg">
             <CloudinaryImage
               asset={post.coverImage}
-              alt=""
+              alt={post.title}
               width={1920}
               height={900}
               transformWidth={1600}
@@ -113,9 +125,14 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
 
         <div className="wrap article-hero-inner">
           <Reveal>
-            <Link href="/blog" className="article-back">
-              ← Back to blog
-            </Link>
+            <Breadcrumbs
+              className="article-crumbs"
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Blog", href: "/blog" },
+                { label: post.title },
+              ]}
+            />
             <span className="blog-pill">{post.category}</span>
             <h1>{post.title}</h1>
             <div className="article-meta">

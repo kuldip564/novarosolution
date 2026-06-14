@@ -1,6 +1,6 @@
-import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import type { BlogAuthor } from "@/lib/blog";
-import { cloudinaryTransformUrl, parseCloudinaryAsset } from "@/lib/media";
+import { parseCloudinaryAsset } from "@/lib/media";
 
 type BlogAuthorMetaProps = {
   author: BlogAuthor;
@@ -9,15 +9,18 @@ type BlogAuthorMetaProps = {
 
 export function BlogAuthorMeta({ author, className = "" }: BlogAuthorMetaProps) {
   const avatar = parseCloudinaryAsset(author.avatar);
-  const avatarUrl = avatar
-    ? cloudinaryTransformUrl(avatar, { width: 64, crop: "fill" }) ?? avatar.secureUrl
-    : null;
-
   return (
     <span className={`blog-author-meta ${className}`.trim()}>
-      {avatarUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={avatarUrl} alt="" className="blog-author-avatar" />
+      {avatar ? (
+        <CloudinaryImage
+          asset={avatar}
+          alt=""
+          width={64}
+          height={64}
+          transformWidth={128}
+          sizes="64px"
+          className="blog-author-avatar"
+        />
       ) : (
         <span className="blog-author-avatar-fallback">{author.name.charAt(0)}</span>
       )}

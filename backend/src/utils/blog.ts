@@ -48,12 +48,10 @@ export function computeReadingTime(html: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+import { slugifyText } from "./slug.js";
+
 export function slugifyPostTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  return slugifyText(title);
 }
 
 export function publishedPostWhere(now = new Date()) {

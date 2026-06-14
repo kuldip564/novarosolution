@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 import { applyReorder, nextOrder } from "../../utils/reorder.js";
 import { cloudinaryAssetSchema, toPrismaJsonAsset } from "../../types/media.js";
+import { SEO_MAX_SLUG_LENGTH, slugifyText } from "../../utils/slug.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -11,7 +12,7 @@ router.use(requireAuth);
 const jsonArray = z.array(z.string());
 
 const serviceSchema = z.object({
-  slug: z.string().trim().min(1).max(120),
+  slug: z.string().trim().min(1).max(SEO_MAX_SLUG_LENGTH),
   name: z.string().trim().min(1).max(200),
   title: z.string().trim().min(1).max(200),
   description: z.string().trim().min(1),
@@ -47,7 +48,12 @@ router.post("/", async (req, res, next) => {
     const order = await nextOrder("service");
     const { image, ...rest } = parsed.data;
     const data = await prisma.service.create({
-      data: { ...rest, image: toPrismaJsonAsset(image), order },
+      data: {
+        ...rest,
+        slug: slugifyText(rest.slug),
+        image: toPrismaJsonAsset(image),
+        order,
+      },
     });
     res.status(201).json({ ok: true, data });
   } catch (error) {
@@ -79,7 +85,11 @@ router.put("/:id", async (req, res, next) => {
     const { image, ...rest } = parsed.data;
     const data = await prisma.service.update({
       where: { id: req.params.id },
-      data: { ...rest, image: toPrismaJsonAsset(image) },
+      data: {
+        ...rest,
+        slug: slugifyText(rest.slug),
+        image: toPrismaJsonAsset(image),
+      },
     });
     res.json({ ok: true, data });
   } catch (error) {

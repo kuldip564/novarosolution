@@ -25,9 +25,9 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env.local
 # Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME (same as backend cloud name)
 
-# Database
+# Database (MongoDB — Atlas or local replica set; see backend/.env.example)
 cd backend
-npm run db:migrate
+npm run db:push
 npm run db:seed
 
 # Run both apps (from repo root)
@@ -72,7 +72,7 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
 
 1. Admin selects image → `POST /api/admin/upload` (auth required)
 2. Backend uploads to Cloudinary folder `novaro/` (or local `/uploads` if Cloudinary unset)
-3. API returns `{ secureUrl, publicId }` stored in Prisma JSON fields
+3. API returns `{ secureUrl, publicId }` stored in Prisma composite fields
 4. Public pages use `cloudinaryTransformUrl()` + `next/image`
 
 ### Signed uploads
@@ -81,13 +81,18 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
 
 ## Database
 
-Local dev uses SQLite (`backend/prisma/dev.db`). For production, set:
+MongoDB via Prisma. Set `DATABASE_URL` in `backend/.env` (see `backend/.env.example`).
 
-```
-DATABASE_URL="postgresql://user:pass@host:5432/novaro?schema=public"
+**Replica set required:** Prisma + MongoDB needs a replica set for transactions. [MongoDB Atlas](https://www.mongodb.com/atlas) clusters qualify out of the box. For local dev, run MongoDB with `--replSet` and run `rs.initiate()` once.
+
+```bash
+cd backend
+npm run db:push    # sync schema (no SQL migrations)
+npm run db:seed    # seed content + admin user
+npm run db:studio  # optional Prisma Studio
 ```
 
-Then run `npm run db:migrate` and `npm run db:seed` in `backend/`.
+The `backend/prisma/migrations/` folder is legacy (SQLite) and is not used with MongoDB.
 
 ## Scripts
 
@@ -95,17 +100,17 @@ Then run `npm run db:migrate` and `npm run db:seed` in `backend/`.
 |---------|-------|-------------|
 | `npm run dev` | root | Frontend + backend |
 | `npm run build` | root | Production build both |
-| `npm run db:migrate` | backend | Prisma migrate |
+| `npm run db:push` | backend | Prisma db push (sync schema) |
 | `npm run db:seed` | backend | Seed content + admin user |
 | `npm run db:studio` | backend | Prisma Studio |
 
 ## Deploy notes
 
 - Set strong `JWT_SECRET`, `ADMIN_PASSWORD`, and Cloudinary credentials
-- Use PostgreSQL in production
+- Use MongoDB Atlas (or another replica-set deployment) in production
 - Point `CORS_ORIGIN` to your production frontend URL
 - Ensure `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` matches your Cloudinary account
-- Run migrations before first deploy
+- Run `npm run db:push` before first deploy
 
 ## Blog (Part 4 — public pages ✅ · Part 5 — admin TipTap editor ✅)
 

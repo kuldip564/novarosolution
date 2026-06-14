@@ -1,3 +1,6 @@
+import { cache } from "react";
+import type { CloudinaryAsset } from "./media";
+
 const API_ORIGIN =
   process.env.API_PROXY_TARGET ||
   process.env.NEXT_PUBLIC_API_URL ||
@@ -5,7 +8,7 @@ const API_ORIGIN =
 
 const FETCH_TIMEOUT_MS = 1500;
 
-async function fetchContent<T>(path: string, fallback: T): Promise<T> {
+const fetchContentRaw = cache(async <T,>(path: string, fallback: T): Promise<T> => {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -23,9 +26,7 @@ async function fetchContent<T>(path: string, fallback: T): Promise<T> {
   } catch {
     return fallback;
   }
-}
-
-import type { CloudinaryAsset } from "./media";
+});
 
 export type DbProject = {
   id: string;
@@ -97,37 +98,37 @@ export type DbFaq = {
 };
 
 export async function getPublishedProjects(fallback: DbProject[] = []) {
-  return fetchContent<DbProject[]>("/api/content/projects", fallback);
+  return fetchContentRaw<DbProject[]>("/api/content/projects", fallback);
 }
 
 export async function getPublishedServices(fallback: DbService[] = []) {
-  return fetchContent<DbService[]>("/api/content/services", fallback);
+  return fetchContentRaw<DbService[]>("/api/content/services", fallback);
 }
 
 export async function getPublishedTeam(fallback: DbTeamMember[] = []) {
-  return fetchContent<DbTeamMember[]>("/api/content/team", fallback);
+  return fetchContentRaw<DbTeamMember[]>("/api/content/team", fallback);
 }
 
 export async function getPublishedTestimonials(fallback: DbTestimonial[] = []) {
-  return fetchContent<DbTestimonial[]>("/api/content/testimonials", fallback);
+  return fetchContentRaw<DbTestimonial[]>("/api/content/testimonials", fallback);
 }
 
 export async function getPublishedLogos(fallback: DbClientLogo[] = []) {
-  return fetchContent<DbClientLogo[]>("/api/content/logos", fallback);
+  return fetchContentRaw<DbClientLogo[]>("/api/content/logos", fallback);
 }
 
 export async function getPublishedFaqs(fallback: DbFaq[] = []) {
-  return fetchContent<DbFaq[]>("/api/content/faq", fallback);
+  return fetchContentRaw<DbFaq[]>("/api/content/faq", fallback);
 }
 
 export async function getSiteContent<T>(key: string, fallback: T): Promise<T> {
-  return fetchContent<T>(`/api/content/site/${key}`, fallback);
+  return fetchContentRaw<T>(`/api/content/site/${key}`, fallback);
 }
 
 export async function getAllSiteContent(
   fallback: Record<string, unknown> = {},
 ): Promise<Record<string, unknown>> {
-  return fetchContent<Record<string, unknown>>("/api/content/site", fallback);
+  return fetchContentRaw<Record<string, unknown>>("/api/content/site", fallback);
 }
 
 export function mediaUrl(path: string | null | undefined): string | undefined {

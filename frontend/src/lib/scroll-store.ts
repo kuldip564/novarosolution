@@ -1,11 +1,23 @@
 type ScrollListener = (scrollY: number) => void;
 
 let scrollY = 0;
+let mouseX = 0;
+let mouseY = 0;
 const listeners = new Set<ScrollListener>();
 
 export const scrollStore = {
-  mx: 0,
-  my: 0,
+  get mx() {
+    return mouseX;
+  },
+  set mx(value: number) {
+    mouseX = value;
+  },
+  get my() {
+    return mouseY;
+  },
+  set my(value: number) {
+    mouseY = value;
+  },
   get y() {
     return scrollY;
   },

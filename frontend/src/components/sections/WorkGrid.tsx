@@ -11,7 +11,7 @@ type WorkGridProps = {
 
 export function WorkGrid({ projects = [...fallbackProjects] }: WorkGridProps) {
   return (
-    <section className="sec work-preview" id="services">
+    <section className="sec work-preview" id="work-preview">
       <div className="wrap">
         <div className="sec-head">
           <Reveal>
@@ -41,6 +41,8 @@ export function WorkGrid({ projects = [...fallbackProjects] }: WorkGridProps) {
                       height={560}
                       transformWidth={640}
                       className="cover-img"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                      priority={index === 0}
                     />
                   </div>
                 ) : (

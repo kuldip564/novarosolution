@@ -1,11 +1,9 @@
 import { parseCloudinaryAsset, type CloudinaryAsset } from "./media";
 
+import { slugifyText } from "./slug";
+
 export function slugifyTitle(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  return slugifyText(title);
 }
 
 export function normalizeStringList(raw: unknown): string[] {

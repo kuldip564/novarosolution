@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { createElement, useLayoutEffect, useRef } from "react";
+import { prefersReducedMotion } from "@/lib/device";
+import { useMotionSettings } from "@/lib/motion-provider";
 
 type SplitTextProps = {
   text: string;
@@ -8,35 +10,45 @@ type SplitTextProps = {
   className?: string;
 };
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function isInViewport(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
   return rect.top < window.innerHeight * 0.96 && rect.bottom > 0;
 }
 
+/** SSR-visible headline text; upgraded to word spans before first paint for animation. */
 export function SplitText({ text, as: Tag = "h1", className = "" }: SplitTextProps) {
   const ref = useRef<HTMLElement>(null);
+  const { reducedMotion } = useMotionSettings();
+  const skipMotion = reducedMotion || prefersReducedMotion();
+  const lines = text.split("\n");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const lines = text.split("\n");
 
     el.innerHTML = lines
       .map(
         (line, lineIndex) =>
           `<span class="split-line" style="--line-i:${lineIndex}">${line
             .split(" ")
+            .filter(Boolean)
             .map(
               (word, wordIndex) =>
-                `<span class="word-i" style="--word-i:${wordIndex}">${word}</span>`,
+                `<span class="word-i" style="--word-i:${wordIndex}">${escapeHtml(word)}</span>`,
             )
             .join(" ")}</span>`,
       )
       .join("<br/>");
 
-    if (reduced) {
+    if (skipMotion) {
       el.classList.add("in");
       return;
     }
@@ -57,15 +69,24 @@ export function SplitText({ text, as: Tag = "h1", className = "" }: SplitTextPro
 
     io.observe(el);
     if (isInViewport(el)) reveal();
-    requestAnimationFrame(() => {
-      if (isInViewport(el)) reveal();
-    });
 
     return () => io.disconnect();
-  }, [text]);
+  }, [lines, skipMotion, text]);
 
-  return (
-    // @ts-expect-error dynamic tag ref
-    <Tag ref={ref} className={`split-text ${className}`} data-split />
+  return createElement(
+    Tag,
+    {
+      ref,
+      className: `split-text ${skipMotion ? "in" : ""} ${className}`.trim(),
+      "data-split": true,
+    },
+    lines.map((line, lineIndex) =>
+      createElement(
+        "span",
+        { key: `${lineIndex}-${line}`, className: "split-line" },
+        line,
+        lineIndex < lines.length - 1 ? createElement("br") : null,
+      ),
+    ),
   );
 }

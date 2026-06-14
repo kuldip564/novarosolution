@@ -6,9 +6,10 @@ export const site = {
   phone: "+91 00000 00000",
   location: "Gandhinagar, Gujarat, India",
   social: {
-    linkedin: "#",
+    linkedin: "https://www.linkedin.com/company/novaro-solution",
     x: "#",
     github: "#",
+    instagram: "https://www.instagram.com/novarosolution/",
   },
 } as const;
 

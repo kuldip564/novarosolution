@@ -20,6 +20,7 @@ import {
   type PostStatus,
 } from "@/lib/admin-blog";
 import { adminFetch } from "@/lib/admin-api";
+import { SEO_MAX_SLUG_LENGTH } from "@/lib/slug";
 
 const STATUS_OPTIONS: Array<{ value: PostStatus; label: string }> = [
   { value: "DRAFT", label: "Draft" },
@@ -179,6 +180,7 @@ export function BlogPostEditorPage({ postId }: BlogPostEditorPageProps) {
               <span>Slug</span>
               <input
                 value={form.slug}
+                maxLength={SEO_MAX_SLUG_LENGTH}
                 onChange={(e) => patch("slug", slugifyBlogTitle(e.target.value))}
               />
             </label>
