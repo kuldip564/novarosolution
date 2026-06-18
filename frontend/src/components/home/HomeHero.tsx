@@ -5,14 +5,11 @@ import {
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
-  useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { useLenis } from "lenis/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Reveal } from "@/components/anim/Reveal";
 import { SplitText } from "@/components/anim/SplitText";
 import { Button } from "@/components/Button";
@@ -22,7 +19,7 @@ import { defaultHero } from "@/lib/site-data";
 import { normalizeHeroContent } from "@/lib/hero-content";
 import { useMotionSettings } from "@/lib/motion-provider";
 import { scrollStore } from "@/lib/scroll-store";
-import { scrollToTarget } from "@/lib/scroll-to";
+import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
 
 const HomeHero3D = dynamic(
   () => import("./HomeHero3D").then((mod) => mod.HomeHero3D),
@@ -35,15 +32,23 @@ type HomeHeroProps = {
 
 export function HomeHero({ content = defaultHero }: HomeHeroProps) {
   const copy = normalizeHeroContent(content);
-  const ref = useRef<HTMLElement>(null);
-  const lenis = useLenis();
   const reduced = useReducedMotion();
   const { performanceTier, effectsEnabled } = useMotionSettings();
   const cinematic = !reduced && performanceTier === "high";
+  const [isMobile, setIsMobile] = useState(false);
+  const heroParallax = cinematic && effectsEnabled && !isMobile;
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const { ref, scrollYProgress } = useHydratedScroll({
     offset: ["start start", "end start"],
+    enabled: cinematic,
   });
 
   const copyOpacity = useTransform(scrollYProgress, [0, 0.55, 0.92], [1, 1, 0.12]);
@@ -51,7 +56,6 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
   const visualOpacity = useTransform(scrollYProgress, [0, 0.5, 0.9], [1, 1, 0.2]);
   const visualScale = useTransform(scrollYProgress, [0, 0.92], [1, 0.88]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.45], [0.55, 0.9]);
-  const hintOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -60,7 +64,7 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
   const visualTransform = useMotionTemplate`translate3d(${springX}px, ${springY}px, 0)`;
 
   useEffect(() => {
-    if (!cinematic || !effectsEnabled) return;
+    if (!heroParallax) return;
 
     const onMove = () => {
       mouseX.set(scrollStore.mx * 28);
@@ -70,7 +74,7 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
     onMove();
     const id = window.setInterval(onMove, 32);
     return () => window.clearInterval(id);
-  }, [cinematic, effectsEnabled, mouseX, mouseY]);
+  }, [heroParallax, mouseX, mouseY]);
 
   const headline = `${copy.headline}\n${copy.headlineAccent}`;
 
@@ -137,8 +141,8 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
             <motion.div
               className={`home-hero__visual-float${effectsEnabled ? " home-hero__visual-float--3d" : ""}`}
               style={{
-                transform: effectsEnabled ? visualTransform : undefined,
-                willChange: effectsEnabled ? "transform" : undefined,
+                transform: heroParallax ? visualTransform : undefined,
+                willChange: heroParallax ? "transform" : undefined,
               }}
             >
               {effectsEnabled ? <HomeHero3D /> : null}
@@ -160,36 +164,6 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
           </Reveal>
         )}
       </div>
-
-      {cinematic ? (
-        <motion.div className="home-hero__scroll-hint-wrap" style={{ opacity: hintOpacity }}>
-          <Link
-            href="#social-proof"
-            className="home-hero__scroll-hint"
-            aria-label="Scroll to client logos"
-            onClick={(event) => {
-              event.preventDefault();
-              scrollToTarget("#social-proof", lenis ?? undefined);
-            }}
-          >
-            <span className="home-hero__scroll-mouse" />
-            <span>Scroll</span>
-          </Link>
-        </motion.div>
-      ) : (
-        <Link
-          href="#social-proof"
-          className="home-hero__scroll-hint"
-          aria-label="Scroll to client logos"
-          onClick={(event) => {
-            event.preventDefault();
-            scrollToTarget("#social-proof", lenis ?? undefined);
-          }}
-        >
-          <span className="home-hero__scroll-mouse" />
-          <span>Scroll</span>
-        </Link>
-      )}
     </section>
   );
 }

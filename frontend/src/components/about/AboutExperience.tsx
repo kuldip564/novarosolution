@@ -3,12 +3,10 @@
 import {
   motion,
   useReducedMotion,
-  useScroll,
   useTransform,
   type MotionValue,
 } from "framer-motion";
 import { BarChart3, Compass, Shield, Sparkles, type LucideIcon } from "lucide-react";
-import { useRef } from "react";
 import { ClipReveal } from "@/components/anim/ClipReveal";
 import { Counter } from "@/components/anim/Counter";
 import { Parallax } from "@/components/anim/Parallax";
@@ -34,6 +32,7 @@ import {
   usePinnedSceneVisibility,
   usePinnedSceneZIndex,
 } from "@/lib/pinned-scene-motion";
+import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
 
 const valueIcons: Record<string, LucideIcon> = {
   spark: Sparkles,
@@ -92,16 +91,15 @@ function AboutTimeline({
   milestones: AboutMilestone[];
   cinematic: boolean;
 }) {
-  const containerRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const usePin = cinematic && !reduced;
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
+  const { ref: containerRef, scrollYProgress } = useHydratedScroll({
     offset: ["start start", "end end"],
+    enabled: usePin,
   });
 
   const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const usePin = cinematic && !reduced;
 
   if (!usePin) {
     return (
@@ -189,12 +187,12 @@ function AboutIntro({
   tagline: string;
   cinematic: boolean;
 }) {
-  const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const scrollEnabled = cinematic && !reduced;
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
+  const { ref, scrollYProgress } = useHydratedScroll({
     offset: ["start start", "end start"],
+    enabled: scrollEnabled,
   });
 
   const headOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);

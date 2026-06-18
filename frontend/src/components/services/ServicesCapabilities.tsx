@@ -12,11 +12,11 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
-import { useRef } from "react";
+import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 import { Reveal } from "@/components/anim/Reveal";
 import { SplitText } from "@/components/anim/SplitText";
 import type { CapabilityItem, ServicesPageContent } from "@/lib/services-content";
+import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
 
 const capabilityIcons: Record<string, LucideIcon> = {
   cloud: Cloud,
@@ -81,7 +81,6 @@ export function ServicesCapabilities({
   content: ServicesPageContent;
   cinematic: boolean;
 }) {
-  const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const items = content.capabilities.items;
   const animated = cinematic && !reduced;
@@ -89,9 +88,9 @@ export function ServicesCapabilities({
   const rowA = items.slice(0, midpoint);
   const rowB = items.slice(midpoint);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
+  const { ref, scrollYProgress } = useHydratedScroll({
     offset: ["start end", "end start"],
+    enabled: animated,
   });
 
   const rowParallaxA = useTransform(scrollYProgress, [0, 1], animated ? ["3%", "-8%"] : ["0%", "0%"]);

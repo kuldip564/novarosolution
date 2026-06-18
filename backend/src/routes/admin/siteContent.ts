@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { updateOrCreate } from "../../lib/mongo-write.js";
 import { prisma } from "../../lib/prisma.js";
 import { requireAuth } from "../../middleware/requireAuth.js";
 
@@ -30,11 +31,16 @@ router.get("/:key", async (req, res, next) => {
 
 router.put("/:key", async (req, res, next) => {
   try {
-    const value = z.unknown().parse(req.body.value);
-    const data = await prisma.siteContent.upsert({
-      where: { key: req.params.key },
-      update: { value: value as object },
-      create: { key: req.params.key, value: value as object },
+    const key = req.params.key;
+    const value = z.unknown().parse(req.body.value) as object;
+    const data = await updateOrCreate({
+      find: () => prisma.siteContent.findUnique({ where: { key } }),
+      update: () =>
+        prisma.siteContent.update({
+          where: { key },
+          data: { value },
+        }),
+      create: () => prisma.siteContent.create({ data: { key, value } }),
     });
     res.json({ ok: true, data });
   } catch (error) {

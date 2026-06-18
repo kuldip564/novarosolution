@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 import * as THREE from "three";
 import { isMobileViewport } from "@/lib/device";
 import { buildHomeBgScene } from "@/lib/home-bg-scene";
@@ -8,19 +9,19 @@ import { useMotionSettings } from "@/lib/motion-provider";
 import { getWebGLPixelRatio } from "@/lib/performance";
 import { scrollStore } from "@/lib/scroll-store";
 
-function HomeBackground3DInner() {
+function SiteBackground3DInner() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
   const { effectsEnabled, performanceTier, ready } = useMotionSettings();
   const [webglReady, setWebglReady] = useState(false);
 
   useEffect(() => {
     if (!ready || !effectsEnabled) return;
 
-    const cinema = mountRef.current?.closest(".home-cinema");
-    cinema?.classList.add("home-cinema--bg-3d");
+    document.documentElement.classList.add("site--bg-3d");
 
     return () => {
-      cinema?.classList.remove("home-cinema--bg-3d");
+      document.documentElement.classList.remove("site--bg-3d");
     };
   }, [ready, effectsEnabled]);
 
@@ -34,7 +35,10 @@ function HomeBackground3DInner() {
     const start = () => {
       if (cancelled) return;
 
-      const sceneBundle = buildHomeBgScene(performanceTier);
+      const sceneBundle = buildHomeBgScene(
+        performanceTier,
+        resolvedTheme === "light" ? "light" : "dark",
+      );
       if (!sceneBundle) return;
 
       const mobile = isMobileViewport();
@@ -50,7 +54,7 @@ function HomeBackground3DInner() {
       renderer.setClearColor(0x000000, 0);
 
       const canvas = renderer.domElement;
-      canvas.className = "home-bg-3d__canvas";
+      canvas.className = "site-bg-3d__canvas";
       mount.appendChild(canvas);
       setWebglReady(true);
 
@@ -157,19 +161,19 @@ function HomeBackground3DInner() {
       window.clearTimeout(timer);
       cleanup?.();
     };
-  }, [ready, effectsEnabled, performanceTier]);
+  }, [ready, effectsEnabled, performanceTier, resolvedTheme]);
 
   if (!ready || !effectsEnabled) return null;
 
   return (
     <div
-      className={`home-bg-3d${webglReady ? " home-bg-3d--active" : ""}`}
+      className={`site-bg-3d${webglReady ? " site-bg-3d--active" : ""}`}
       ref={mountRef}
       aria-hidden="true"
     >
-      <div className="home-bg-3d__ink" />
+      <div className="site-bg-3d__ink" />
     </div>
   );
 }
 
-export const HomeBackground3D = memo(HomeBackground3DInner);
+export const SiteBackground3D = memo(SiteBackground3DInner);

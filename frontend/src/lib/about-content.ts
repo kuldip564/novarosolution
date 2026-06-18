@@ -94,7 +94,7 @@ export const defaultAboutPage: AboutPageContent = {
         year: "2024",
         title: "Founded",
         text:
-          "Novaro started in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
+          "Kuldip and Mehul Chaudhary founded Novaro in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
       },
       {
         year: "2025",
@@ -145,10 +145,10 @@ export const defaultAboutPage: AboutPageContent = {
     title: "Proof in the work.",
   },
   team: {
-    eyebrow: "The team",
-    title: "The people behind the work.",
+    eyebrow: "Leadership",
+    title: "Founders & leadership.",
     description:
-      "Senior practitioners across engineering, AI, design, and growth — aligned on shipping, not theatre.",
+      "Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to ship products with real accountability. Piyush Chaudhary manages operations and client delivery day to day.",
   },
   whyUs: {
     eyebrow: "Why Novaro",

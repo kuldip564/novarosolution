@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { HomeBackground } from "@/components/home/HomeBackground";
 import { HomeHero } from "@/components/home/HomeHero";
 import { PageSkeleton } from "@/components/ui/Skeleton";
 import {
@@ -73,7 +72,6 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main id="top" className="home-cinema">
-        <HomeBackground />
         <HomeHero content={heroCopy} />
         <HomeBelowFold
           projects={projects}

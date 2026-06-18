@@ -6,8 +6,8 @@
 export const seedSite = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
-  email: "hello@novarosolution.com",
-  phone: "+91 00000 00000",
+  email: "novaro@novarosolution.com",
+  phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
   social: {
     linkedin: "https://www.linkedin.com/company/novaro-solution",
@@ -169,7 +169,7 @@ export const seedAboutPage = {
         year: "2024",
         title: "Founded",
         text:
-          "Novaro started in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
+          "Kuldip and Mehul Chaudhary founded Novaro in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
       },
       {
         year: "2025",
@@ -220,10 +220,10 @@ export const seedAboutPage = {
     title: "Proof in the work.",
   },
   team: {
-    eyebrow: "The team",
-    title: "The people behind the work.",
+    eyebrow: "Leadership",
+    title: "Founders & leadership.",
     description:
-      "Senior practitioners across engineering, AI, design, and growth — aligned on shipping, not theatre.",
+      "Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to ship products with real accountability. Piyush Chaudhary manages operations and client delivery day to day.",
   },
   whyUs: {
     eyebrow: "Why Novaro",
@@ -426,8 +426,8 @@ export const seedServicesPage = {
         "A codebase your team can extend without rewriting",
       ],
       relatedLinks: [
-        { label: "FinFlow fintech case study", href: "/work" },
-        { label: "How we ship with Next.js", href: "/blog/ship-fast-stack" },
+        { label: "Quadrato Cargo logistics platform", href: "https://www.quadratocargo.com/" },
+        { label: "Mr Antidot service platform", href: "https://www.mrantidot.com/" },
       ],
     },
     "ai-machine-ml": {
@@ -437,7 +437,7 @@ export const seedServicesPage = {
         "Human-in-the-loop workflows clinicians and ops teams trust",
       ],
       relatedLinks: [
-        { label: "MediSense healthcare AI project", href: "/work" },
+        { label: "Mr Antidot operations platform", href: "https://www.mrantidot.com/" },
         { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
       ],
     },
@@ -448,8 +448,8 @@ export const seedServicesPage = {
         "Brand and performance working from the same playbook",
       ],
       relatedLinks: [
-        { label: "Aurora Commerce growth story", href: "/work" },
-        { label: "Technical SEO that ranks", href: "/blog/tech-seo-tips" },
+        { label: "Zeevan premium D2C storefront", href: "https://www.zeevan.shop/" },
+        { label: "KankreG brand commerce site", href: "https://www.kankreg.com/" },
       ],
     },
     "cloud-devops": {
@@ -459,7 +459,7 @@ export const seedServicesPage = {
         "Security and observability built in, not bolted on",
       ],
       relatedLinks: [
-        { label: "Helio CRM platform build", href: "/work" },
+        { label: "Quadrato Cargo platform build", href: "https://www.quadratocargo.com/" },
         { label: "Talk to us about your stack", href: "/contact" },
       ],
     },
@@ -469,87 +469,94 @@ export const seedServicesPage = {
 export const seedWorkProjects = [
   {
     idx: "01",
-    slug: "finflow",
-    category: "Web App · Fintech",
-    title: "FinFlow",
+    slug: "zeevan",
+    externalUrl: "https://www.zeevan.shop/",
+    category: "E-commerce · D2C",
+    title: "Zeevan",
     hook:
-      "A real-time payments dashboard handling 2M+ monthly transactions with sub-second insights.",
-    heroTitle: "Project hero — FinFlow",
+      "Premium A2 ghee brand storefront with product storytelling and a conversion-focused shopping experience.",
+    heroTitle: "Project hero — Zeevan",
     story:
-      "We rebuilt FinFlow from a slow legacy stack into a Next.js + Express platform with a streaming data layer. Treasury teams now see balances, flows, and anomalies update live, with role-based controls and an audit trail baked in.",
+      "We designed and built Zeevan's digital storefront to communicate premium quality from the first scroll — clear product hierarchy, trust-led visuals, and a fast path from discovery to purchase for A2 ghee buyers.",
     coverClass: "c1",
-    screens: ["Screen 1", "Screen 2", "Screen 3"],
+    heroImage: "/images/work/zeevan.jpg",
+    screens: ["/images/work/zeevan.jpg"],
     results: [
-      { value: "-72%", label: "load time" },
-      { value: "2M+", label: "txns / month" },
-      { value: "99.98%", label: "uptime" },
+      { value: "A2", label: "ghee positioning" },
+      { value: "D2C", label: "commerce flow" },
+      { value: "Fast", label: "mobile UX" },
     ],
-    tags: ["Next.js", "Express", "PostgreSQL", "WebSockets", "AWS"],
+    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
   },
   {
     idx: "02",
-    slug: "medisense",
-    category: "AI / ML · Healthcare",
-    title: "MediSense",
+    slug: "kankreg",
+    externalUrl: "https://www.kankreg.com/",
+    category: "E-commerce · D2C",
+    title: "KankreG",
     hook:
-      "A diagnostic assistant that reads scans and flags anomalies for clinicians in seconds.",
-    heroTitle: "Project hero — MediSense",
+      "A2 ghee D2C site with premium product presentation and a streamlined checkout journey.",
+    heroTitle: "Project hero — KankreG",
     story:
-      "MediSense pairs a computer-vision model with a clean review workflow. Radiologists get ranked findings with confidence scores and heat-maps, cutting first-read time while keeping a human firmly in the loop.",
+      "KankreG needed a brand-forward commerce experience that feels as premium as the product. We shipped a responsive storefront with strong product pages, clear value messaging, and performance tuned for mobile shoppers.",
     coverClass: "c2",
-    screens: ["Screen 1", "Screen 2", "Screen 3"],
+    heroImage: "/images/work/kankreg.jpg",
+    screens: ["/images/work/kankreg.jpg"],
     results: [
-      { value: "8s", label: "avg read" },
-      { value: "+34%", label: "throughput" },
-      { value: "HIPAA", label: "compliant" },
+      { value: "Premium", label: "brand feel" },
+      { value: "Mobile", label: "first UX" },
+      { value: "SEO", label: "ready structure" },
     ],
-    tags: ["PyTorch", "Computer vision", "FastAPI", "Next.js"],
+    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
   },
   {
     idx: "03",
-    slug: "aurora-commerce",
-    category: "Marketing · D2C",
-    title: "Aurora Commerce",
+    slug: "mr-antidot",
+    externalUrl: "https://www.mrantidot.com/",
+    category: "Web App · Services",
+    title: "Mr Antidot",
     hook:
-      "A growth engine that lifted qualified traffic 240% and tripled return on ad spend.",
-    heroTitle: "Project hero — Aurora Commerce",
+      "Hygiene and pest-control platform with service booking, pricing tiers, and sector coverage for homes and businesses.",
+    heroTitle: "Project hero — Mr Antidot",
     story:
-      "We rebuilt the Aurora funnel end to end — technical SEO, a new content system, and a performance-ad program wired to clean analytics — so spend follows what actually converts.",
+      "Mr Antidot goes beyond a brochure site — we built a full service platform with treatment catalogues, transparent pricing, sector pages for hospitals and hospitality, team profiles, and lead capture wired for their operations team.",
     coverClass: "c3",
-    screens: ["Screen 1", "Screen 2", "Screen 3"],
+    heroImage: "/images/work/mr-antidot.jpg",
+    screens: ["/images/work/mr-antidot.jpg"],
     results: [
-      { value: "+240%", label: "organic traffic" },
-      { value: "3.1x", label: "ROAS" },
-      { value: "-38%", label: "CAC" },
+      { value: "8+", label: "years in market" },
+      { value: "24/7", label: "support positioning" },
+      { value: "10+", label: "service lines" },
     ],
-    tags: ["SEO", "Paid social", "GA4", "CRO"],
+    tags: ["Next.js", "Service booking", "CMS", "SEO"],
   },
   {
     idx: "04",
-    slug: "helio-crm",
-    category: "Web App · SaaS",
-    title: "Helio CRM",
+    slug: "quadrato-cargo",
+    externalUrl: "https://www.quadratocargo.com/",
+    category: "Web App · Logistics",
+    title: "Quadrato Cargo",
     hook:
-      "A multi-tenant CRM platform built to scale from first customer to enterprise rollout.",
-    heroTitle: "Project hero — Helio CRM",
+      "International courier platform with booking, live tracking, and dispatch flows across 180 countries.",
+    heroTitle: "Project hero — Quadrato Cargo",
     story:
-      "Helio needed to go from prototype to product. We designed the multi-tenant architecture, billing, and a component system that lets their team ship features without breaking the experience.",
+      "Quadrato Cargo is a full logistics product — instant and scheduled pickup booking, live shipment tracking, quote requests, and customer-facing flows designed for speed. We built the technology stack behind their Fast Forward, Rapid Reach promise.",
     coverClass: "c4",
-    screens: ["Screen 1", "Screen 2", "Screen 3"],
+    heroImage: "/images/work/quadrato-cargo.jpg",
+    screens: ["/images/work/quadrato-cargo.jpg"],
     results: [
-      { value: "10x", label: "faster onboarding" },
-      { value: "500+", label: "tenants" },
-      { value: "SOC 2", label: "ready" },
+      { value: "180", label: "countries" },
+      { value: "10K+", label: "deliveries" },
+      { value: "~10 min", label: "pickup target" },
     ],
-    tags: ["Next.js", "Stripe", "PostgreSQL", "Design system"],
+    tags: ["Next.js", "Booking", "Tracking", "Logistics"],
   },
 ];
 
 export const seedTeam = [
-  { name: "Founder / CEO", role: "Strategy & Product" },
-  { name: "Engineering Lead", role: "Web & Cloud" },
-  { name: "AI Lead", role: "ML & Data" },
-  { name: "Growth Lead", role: "Marketing & SEO" },
+  { name: "Kuldip Chaudhary", role: "Co-Founder" },
+  { name: "Mehul Chaudhary", role: "Co-Founder" },
+  { name: "Piyush Chaudhary", role: "Manager" },
 ];
 
 export const seedContactOptions = {
@@ -570,5 +577,5 @@ export const seedWhySection = {
 
 export const seedTeamSection = {
   description:
-    "Senior practitioners across engineering, AI, design, and growth — aligned on shipping, not theatre.",
+    "Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to ship products with real accountability. Piyush Chaudhary manages operations and client delivery day to day.",
 };

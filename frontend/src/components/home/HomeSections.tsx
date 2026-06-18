@@ -17,6 +17,7 @@ import {
   type HomeProjectView,
   type ServiceGridView,
 } from "@/lib/content-mappers";
+import { isExternalProjectHref } from "@/lib/project-link";
 import { useMotionSettings } from "@/lib/motion-provider";
 import { capabilities, homeStats, processSteps } from "@/lib/site-data";
 import type { FaqItem } from "@/components/sections/FaqSection";
@@ -242,8 +243,8 @@ export function HomeSections({
             />
             <Reveal delay={0.08}>
               <p className="home-section-head__lede">
-                Recent launches across fintech, healthcare, commerce, and SaaS — built to
-                perform long after go-live.
+                Live client launches across logistics, services, and premium D2C —
+                built to perform long after go-live.
               </p>
             </Reveal>
           </header>
@@ -251,36 +252,74 @@ export function HomeSections({
           <div className="home-work-grid">
             {projectItems.map((project: HomeProjectView, index) => (
               <Reveal key={project.title} delay={0.08 + index * 0.07}>
-                <Link href={project.href} className="home-work-card">
-                  {project.imageAsset?.secureUrl ? (
-                    <div className="home-work-card__cover home-work-card__cover--photo">
-                      <CloudinaryImage
-                        asset={project.imageAsset}
-                        alt={project.title}
-                        width={800}
-                        height={560}
-                        transformWidth={640}
-                        className="home-work-card__img"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                        priority={index === 0}
-                      />
+                {isExternalProjectHref(project.href) ? (
+                  <a
+                    href={project.href}
+                    className="home-work-card"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.imageAsset?.secureUrl ? (
+                      <div className="home-work-card__cover home-work-card__cover--photo">
+                        <CloudinaryImage
+                          asset={project.imageAsset}
+                          alt={project.title}
+                          width={800}
+                          height={560}
+                          transformWidth={640}
+                          className="home-work-card__img"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                          priority={index === 0}
+                        />
+                      </div>
+                    ) : (
+                      <div className={`home-work-card__cover ${project.cover}`}>
+                        <div className="home-work-card__mesh" />
+                      </div>
+                    )}
+                    <div className="home-work-card__arrow" aria-hidden>
+                      <svg viewBox="0 0 24 24">
+                        <path d="M7 17L17 7M9 7h8v8" />
+                      </svg>
                     </div>
-                  ) : (
-                    <div className={`home-work-card__cover ${project.cover}`}>
-                      <div className="home-work-card__mesh" />
+                    <div className="home-work-card__meta">
+                      <span className="home-work-card__cat">{project.category}</span>
+                      <h3>{project.title}</h3>
+                      <p>{project.description}</p>
                     </div>
-                  )}
-                  <div className="home-work-card__arrow" aria-hidden>
-                    <svg viewBox="0 0 24 24">
-                      <path d="M7 17L17 7M9 7h8v8" />
-                    </svg>
-                  </div>
-                  <div className="home-work-card__meta">
-                    <span className="home-work-card__cat">{project.category}</span>
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                  </div>
-                </Link>
+                  </a>
+                ) : (
+                  <Link href={project.href} className="home-work-card">
+                    {project.imageAsset?.secureUrl ? (
+                      <div className="home-work-card__cover home-work-card__cover--photo">
+                        <CloudinaryImage
+                          asset={project.imageAsset}
+                          alt={project.title}
+                          width={800}
+                          height={560}
+                          transformWidth={640}
+                          className="home-work-card__img"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                          priority={index === 0}
+                        />
+                      </div>
+                    ) : (
+                      <div className={`home-work-card__cover ${project.cover}`}>
+                        <div className="home-work-card__mesh" />
+                      </div>
+                    )}
+                    <div className="home-work-card__arrow" aria-hidden>
+                      <svg viewBox="0 0 24 24">
+                        <path d="M7 17L17 7M9 7h8v8" />
+                      </svg>
+                    </div>
+                    <div className="home-work-card__meta">
+                      <span className="home-work-card__cat">{project.category}</span>
+                      <h3>{project.title}</h3>
+                      <p>{project.description}</p>
+                    </div>
+                  </Link>
+                )}
               </Reveal>
             ))}
           </div>

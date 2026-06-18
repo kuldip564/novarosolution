@@ -3,12 +3,10 @@
 import {
   motion,
   useReducedMotion,
-  useScroll,
   useTransform,
   type MotionValue,
 } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
 import { ClipReveal } from "@/components/anim/ClipReveal";
 import { Counter } from "@/components/anim/Counter";
 import { Parallax } from "@/components/anim/Parallax";
@@ -30,6 +28,7 @@ import {
   usePinnedSceneVisibility,
   usePinnedSceneZIndex,
 } from "@/lib/pinned-scene-motion";
+import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
 
 type ServicesExperienceProps = {
   content: ServicesPageContent;
@@ -77,15 +76,13 @@ function ServicesProcess({
   steps: ProcessStepView[];
   cinematic: boolean;
 }) {
-  const containerRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
   const usePin = cinematic && !reduced;
+
+  const { ref: containerRef, scrollYProgress } = useHydratedScroll({
+    offset: ["start start", "end end"],
+    enabled: usePin,
+  });
 
   if (!usePin) {
     return (
@@ -165,14 +162,14 @@ function ServiceDetailSection({
   index: number;
   cinematic: boolean;
 }) {
-  const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const reverse = index % 2 === 1;
   const parallax = cinematic;
+  const scrollEnabled = cinematic && !reduced;
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
+  const { ref, scrollYProgress } = useHydratedScroll({
     offset: ["start end", "center center"],
+    enabled: scrollEnabled,
   });
 
   const copyY = useTransform(scrollYProgress, [0, 0.55], cinematic && !reduced ? [28, 0] : [0, 0]);
@@ -362,12 +359,12 @@ function ServicesIntro({
   content: ServicesPageContent;
   cinematic: boolean;
 }) {
-  const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const scrollEnabled = cinematic && !reduced;
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
+  const { ref, scrollYProgress } = useHydratedScroll({
     offset: ["start start", "end start"],
+    enabled: scrollEnabled,
   });
 
   const headOpacity = useTransform(scrollYProgress, [0, 0.5, 0.88], [1, 1, 0.15]);

@@ -6,10 +6,22 @@
   --about-line: color-mix(in srgb, var(--cyan) 18%, var(--line-d));
   position: relative;
   overflow: clip;
+  z-index: 1;
+}
+
+html.site--bg-3d .about-cinema {
+  background: transparent;
+}
+
+html.site--bg-3d .about-cinema .about-scene {
+  background: transparent;
 }
 
 /* About is cinematic-dark throughout — lock tokens off the global theme toggle */
 .about-cinema .about-scene {
+  --ink-900: #05080f;
+  --ink-850: #070c18;
+  --ink-800: #0a1428;
   --text-heading: #ffffff;
   --text-body: #e8edf6;
   --text-muted: #94a2bc;
@@ -26,6 +38,21 @@
 .about-scene {
   position: relative;
   padding: clamp(4.5rem, 12vw, 8rem) 0;
+}
+
+.about-scene.about-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 100%;
+  min-height: max(100vh, var(--hero-min-height));
+  min-height: max(100dvh, var(--hero-min-height));
+  padding: var(--hero-pad-top) 0 var(--hero-pad-bottom);
+  scroll-margin-top: var(--site-header-h);
+  box-sizing: border-box;
+  overflow-x: clip;
 }
 
 .about-scene__head {
@@ -65,15 +92,7 @@
   color: var(--text-muted);
 }
 
-/* ── Intro ── */
-
-.about-intro {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  padding: clamp(6rem, 16vh, 9rem) 0 clamp(3rem, 8vh, 5rem);
-}
+/* ── Intro layout (about-intro__*) ── */
 
 .about-intro__backdrop {
   position: absolute;
@@ -452,7 +471,7 @@
 
 @media (min-width: 768px) {
   .about-team__grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
   }
 }
@@ -621,5 +640,58 @@
     grid-template-columns: 4.5rem 1fr;
     gap: 0.75rem 1rem;
     padding-left: 1rem;
+  }
+}
+
+/* ── Light theme ── */
+
+[data-theme="light"] .about-cinema {
+  --about-glow: color-mix(in srgb, var(--blue) 14%, transparent);
+  --about-line: rgba(10, 23, 48, 0.1);
+  background: var(--paper);
+}
+
+[data-theme="light"] .about-cinema .about-scene {
+  --ink-900: #f6f8fc;
+  --ink-850: #eef2f9;
+  --ink-800: #ffffff;
+  --text-heading: var(--navy);
+  --text-body: #1b2740;
+  --text-muted: #5c6b85;
+  --text-strong: var(--navy);
+  --slate-light: #46556f;
+  --line-d: rgba(10, 23, 48, 0.1);
+  --panel: #ffffff;
+  --surface-panel: #ffffff;
+  --about-line: rgba(10, 23, 48, 0.1);
+  --bigword-stroke: rgba(10, 23, 48, 0.12);
+  color: var(--text-body);
+}
+
+[data-theme="light"] .about-intro__backdrop {
+  opacity: 0.35;
+}
+
+[data-theme="light"] .about-who__glass,
+[data-theme="light"] .about-value,
+[data-theme="light"] .about-team__member {
+  background: #ffffff;
+  border-color: rgba(10, 23, 48, 0.1);
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 768px) {
+  .about-scene.about-intro {
+    min-height: max(88dvh, var(--hero-min-height));
+    padding-top: var(--hero-pad-top);
+    padding-bottom: var(--hero-pad-bottom);
+  }
+
+  .about-scene__title {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .about-team__grid {
+    grid-template-columns: 1fr;
   }
 }

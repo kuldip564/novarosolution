@@ -16,10 +16,12 @@ export function TeamSection({ members = [...fallbackTeam] }: TeamSectionProps) {
       <div className="wrap">
         <div className="sec-head">
           <Reveal>
-            <span className="eyebrow">The team</span>
-            <h2>The people behind the work.</h2>
+            <span className="eyebrow">Leadership</span>
+            <h2>Founders &amp; leadership.</h2>
             <p>
-              Drop in real headshots and names — these cards are ready for them.
+              Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to
+              ship products with real accountability. Piyush Chaudhary manages
+              operations and client delivery day to day.
             </p>
           </Reveal>
         </div>

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { toCloudinaryAsset } from "../src/types/media.js";
+import { toCloudinaryAsset, toPrismaJsonAssetArray } from "../src/types/media.js";
 import {
   seedAboutPage,
   seedAboutStats,
@@ -62,10 +62,16 @@ async function main() {
         hook: project.hook,
         body: project.story,
         heroTitle: project.heroTitle,
+        heroImage: toCloudinaryAsset(project.heroImage),
         coverClass: project.coverClass,
-        screens: [],
+        screens: toPrismaJsonAssetArray(
+          project.screens
+            .map((screen) => toCloudinaryAsset(screen))
+            .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset)),
+        ),
         results: project.results,
         tags: project.tags,
+        externalUrl: project.externalUrl,
         published: true,
       },
     });

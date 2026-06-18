@@ -33,6 +33,10 @@ const projectSchema = z.object({
   screens: cloudinaryAssetArraySchema.default([]),
   results: z.array(resultMetricSchema).default([]),
   tags: jsonArray.default([]),
+  externalUrl: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? null : val),
+    z.string().url().nullable().optional(),
+  ),
   published: z.boolean().default(true),
 });
 

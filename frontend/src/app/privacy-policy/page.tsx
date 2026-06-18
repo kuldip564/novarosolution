@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LegalDocument } from "@/components/legal/LegalDocument";
 import { createPageMetadata } from "@/lib/site-metadata";
+import { site } from "@/lib/site-data";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy Policy",
@@ -38,7 +39,7 @@ export default function PrivacyPolicyPage() {
       <h2>Contact</h2>
       <p>
         Questions about this policy? Email{" "}
-        <a href="mailto:hello@novarosolution.com">hello@novarosolution.com</a>.
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
       <p className="legal-note">
         Full GDPR/CCPA disclosures and third-party advertising details will be expanded in

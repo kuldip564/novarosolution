@@ -10,10 +10,13 @@ import { OrganizationJsonLd } from "@/components/OrganizationJsonLd";
 import { ToastProvider } from "@/components/ui/Toast";
 import { MotionProvider } from "@/lib/motion-provider";
 
-const Bgfx = dynamic(() => import("@/components/bgfx"), {
-  ssr: false,
-  loading: () => null,
-});
+const SiteBackground = dynamic(
+  () =>
+    import("@/components/site/SiteBackground3D").then((mod) => ({
+      default: mod.SiteBackground3D,
+    })),
+  { ssr: false, loading: () => null },
+);
 
 const Cursor = dynamic(
   () => import("@/components/Cursor").then((mod) => mod.Cursor),
@@ -27,7 +30,6 @@ type SiteShellProps = {
 export function SiteShell({ children }: SiteShellProps) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
-  const isHome = pathname === "/";
 
   if (isAdmin) {
     return <>{children}</>;
@@ -38,7 +40,7 @@ export function SiteShell({ children }: SiteShellProps) {
       <ToastProvider>
         <OrganizationJsonLd />
         <ScrollProgressBar />
-        {!isHome ? <Bgfx /> : null}
+        <SiteBackground />
         <Cursor />
         <Header />
         <div className="page">{children}</div>

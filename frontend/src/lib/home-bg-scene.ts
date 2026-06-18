@@ -43,13 +43,17 @@ function addWireMesh(
   return mesh;
 }
 
-export function buildHomeBgScene(tier: PerformanceTier): HomeBgScene | null {
+export function buildHomeBgScene(
+  tier: PerformanceTier,
+  theme: "light" | "dark" = "dark",
+): HomeBgScene | null {
   const counts = getParticleCounts(tier);
   if (counts.particleCount === 0) return null;
 
+  const isLight = theme === "light";
   const rich = tier === "high" && !isMobileViewport();
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(INK, 8, 42);
+  scene.fog = new THREE.Fog(isLight ? 0xf6f8fc : INK, 8, 42);
 
   const disposables: Array<() => void> = [];
   const shapes: THREE.Object3D[] = [];
@@ -57,7 +61,7 @@ export function buildHomeBgScene(tier: PerformanceTier): HomeBgScene | null {
   const [pointsGeometry, starsGeometry] = createParticleGeometries(
     counts.particleCount,
     counts.starCount,
-    "dark",
+    isLight ? "light" : "dark",
   );
 
   const points = new THREE.Points(
@@ -94,7 +98,7 @@ export function buildHomeBgScene(tier: PerformanceTier): HomeBgScene | null {
   });
 
   if (rich) {
-    const grid = new THREE.GridHelper(48, 48, BLUE, 0x1a3a6e);
+    const grid = new THREE.GridHelper(48, 48, BLUE, isLight ? 0xc5d4ef : 0x1a3a6e);
     const gridMat = grid.material as THREE.LineBasicMaterial;
     gridMat.transparent = true;
     gridMat.opacity = 0.2;

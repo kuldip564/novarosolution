@@ -48,8 +48,7 @@ export function CloudinaryImage({
       priority={priority}
       fetchPriority={fetchPriority}
       sizes={sizes}
-      unoptimized={isCloudinary}
-      {...(isLocal ? {} : {})}
+      unoptimized={isCloudinary || isLocal}
     />
   );
 }

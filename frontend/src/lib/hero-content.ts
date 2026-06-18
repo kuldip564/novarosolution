@@ -14,7 +14,7 @@ export function normalizeHeroContent(value: unknown): HeroContent {
   };
 
   let headline = pick("headline");
-  let headlineAccent = pick("headlineAccent");
+  const headlineAccent = pick("headlineAccent");
 
   // Legacy seed stored the full sentence in headline — split cleanly for display.
   if (

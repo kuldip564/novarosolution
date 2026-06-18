@@ -3,6 +3,7 @@ import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
 import type { HomeProjectView } from "@/lib/content-mappers";
+import { isExternalProjectHref } from "@/lib/project-link";
 import { homeProjects as fallbackProjects } from "@/lib/site-data";
 
 type WorkGridProps = {
@@ -22,8 +23,8 @@ export function WorkGrid({ projects = [...fallbackProjects] }: WorkGridProps) {
               to put our name on.
             </h2>
             <p>
-              A look at recent products and campaigns across fintech, healthcare,
-              commerce, and SaaS.
+              Live client work across logistics, hygiene services, and premium
+              e-commerce.
             </p>
           </Reveal>
         </div>
@@ -31,36 +32,74 @@ export function WorkGrid({ projects = [...fallbackProjects] }: WorkGridProps) {
         <div className="work-grid">
           {projects.map((project, index) => (
             <Reveal key={project.title} delay={((index % 2) + 1) * 0.1}>
-              <Link href={project.href} className="proj">
-                {project.imageAsset?.secureUrl ? (
-                  <div className="cover cover-photo">
-                    <CloudinaryImage
-                      asset={project.imageAsset}
-                      alt={project.title}
-                      width={800}
-                      height={560}
-                      transformWidth={640}
-                      className="cover-img"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                      priority={index === 0}
-                    />
+              {isExternalProjectHref(project.href) ? (
+                <a
+                  href={project.href}
+                  className="proj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {project.imageAsset?.secureUrl ? (
+                    <div className="cover cover-photo">
+                      <CloudinaryImage
+                        asset={project.imageAsset}
+                        alt={project.title}
+                        width={800}
+                        height={560}
+                        transformWidth={640}
+                        className="cover-img"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                        priority={index === 0}
+                      />
+                    </div>
+                  ) : (
+                    <div className={`cover ${project.cover}`}>
+                      <div className="mesh" />
+                    </div>
+                  )}
+                  <div className="arrow">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M7 17L17 7M9 7h8v8" />
+                    </svg>
                   </div>
-                ) : (
-                  <div className={`cover ${project.cover}`}>
-                    <div className="mesh" />
+                  <div className="meta">
+                    <span className="cat">{project.category}</span>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
                   </div>
-                )}
-                <div className="arrow">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M7 17L17 7M9 7h8v8" />
-                  </svg>
-                </div>
-                <div className="meta">
-                  <span className="cat">{project.category}</span>
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                </div>
-              </Link>
+                </a>
+              ) : (
+                <Link href={project.href} className="proj">
+                  {project.imageAsset?.secureUrl ? (
+                    <div className="cover cover-photo">
+                      <CloudinaryImage
+                        asset={project.imageAsset}
+                        alt={project.title}
+                        width={800}
+                        height={560}
+                        transformWidth={640}
+                        className="cover-img"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                        priority={index === 0}
+                      />
+                    </div>
+                  ) : (
+                    <div className={`cover ${project.cover}`}>
+                      <div className="mesh" />
+                    </div>
+                  )}
+                  <div className="arrow">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M7 17L17 7M9 7h8v8" />
+                    </svg>
+                  </div>
+                  <div className="meta">
+                    <span className="cat">{project.category}</span>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                  </div>
+                </Link>
+              )}
             </Reveal>
           ))}
         </div>

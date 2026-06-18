@@ -31,6 +31,12 @@ export default function AdminLoginPage() {
       }
 
       if (!res.ok || !data.ok) {
+        if (res.status === 503) {
+          throw new Error(
+            data.error ||
+              "Database is unavailable. Start MongoDB and verify DATABASE_URL in backend/.env.",
+          );
+        }
         if (res.status === 0 || res.status >= 500) {
           throw new Error(
             "Cannot reach the API. Run `npm run dev` from the repo root so the backend starts on port 5001.",

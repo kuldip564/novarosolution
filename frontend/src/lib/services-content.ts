@@ -75,41 +75,41 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
       "Core Web Vitals and accessibility baked in before launch",
       "A codebase your team can extend without rewriting",
     ],
-    relatedLinks: [
-      { label: "FinFlow fintech case study", href: "/work" },
-      { label: "How we ship with Next.js", href: "/blog/ship-fast-stack" },
-    ],
-  },
-  "ai-machine-ml": {
-    outcomes: [
-      "Models evaluated against real metrics, not demo accuracy",
-      "Pipelines that survive scale, drift, and compliance reviews",
-      "Human-in-the-loop workflows clinicians and ops teams trust",
-    ],
-    relatedLinks: [
-      { label: "MediSense healthcare AI project", href: "/work" },
-      { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
-    ],
-  },
-  "digital-marketing": {
-    outcomes: [
-      "Qualified traffic that converts — not vanity clicks",
-      "Spend tied to revenue with clean attribution",
-      "Brand and performance working from the same playbook",
-    ],
-    relatedLinks: [
-      { label: "Aurora Commerce growth story", href: "/work" },
-      { label: "Technical SEO that ranks", href: "/blog/tech-seo-tips" },
-    ],
-  },
-  "cloud-devops": {
-    outcomes: [
-      "Infrastructure that scales without fire drills",
-      "Design systems that keep UX consistent as you ship",
-      "Security and observability built in, not bolted on",
-    ],
-    relatedLinks: [
-      { label: "Helio CRM platform build", href: "/work" },
+      relatedLinks: [
+        { label: "Quadrato Cargo logistics platform", href: "https://www.quadratocargo.com/" },
+        { label: "Mr Antidot service platform", href: "https://www.mrantidot.com/" },
+      ],
+    },
+    "ai-machine-ml": {
+      outcomes: [
+        "Models evaluated against real metrics, not demo accuracy",
+        "Pipelines that survive scale, drift, and compliance reviews",
+        "Human-in-the-loop workflows clinicians and ops teams trust",
+      ],
+      relatedLinks: [
+        { label: "Mr Antidot operations platform", href: "https://www.mrantidot.com/" },
+        { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
+      ],
+    },
+    "digital-marketing": {
+      outcomes: [
+        "Qualified traffic that converts — not vanity clicks",
+        "Spend tied to revenue with clean attribution",
+        "Brand and performance working from the same playbook",
+      ],
+      relatedLinks: [
+        { label: "Zeevan premium D2C storefront", href: "https://www.zeevan.shop/" },
+        { label: "KankreG brand commerce site", href: "https://www.kankreg.com/" },
+      ],
+    },
+    "cloud-devops": {
+      outcomes: [
+        "Infrastructure that scales without fire drills",
+        "Design systems that keep UX consistent as you ship",
+        "Security and observability built in, not bolted on",
+      ],
+      relatedLinks: [
+        { label: "Quadrato Cargo platform build", href: "https://www.quadratocargo.com/" },
       { label: "Talk to us about your stack", href: "/contact" },
     ],
   },

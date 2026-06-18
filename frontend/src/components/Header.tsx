@@ -243,6 +243,7 @@ export function Header() {
                     ease: menuEase,
                   }}
                 >
+                  <ThemeToggle variant="menu" />
                   <Button href="/contact" onClick={closeMenu}>
                     Start a project
                   </Button>

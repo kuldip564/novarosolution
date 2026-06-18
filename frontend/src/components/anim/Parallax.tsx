@@ -3,11 +3,11 @@
 import {
   motion,
   useReducedMotion,
-  useScroll,
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { memo, useRef, type ReactNode } from "react";
+import { memo, type ReactNode } from "react";
+import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
 
 type ParallaxProps = {
   children?: ReactNode;
@@ -20,12 +20,11 @@ function ParallaxComponent({
   speed = 0.15,
   className = "",
 }: ParallaxProps) {
-  const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
+  const { ref, scrollYProgress } = useHydratedScroll({
     offset: ["start end", "end start"],
+    enabled: !reduced,
   });
 
   const range = speed * 160;

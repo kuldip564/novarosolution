@@ -34,6 +34,10 @@ const schema = z.object({
   screens: z.array(z.object({ secureUrl: z.string(), publicId: z.string().nullable() })).default([]),
   results: z.array(resultSchema).default([]),
   tags: z.array(z.string()).default([]),
+  externalUrl: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() === "" ? null : val),
+    z.string().url().nullable().optional(),
+  ),
   published: z.boolean().default(true),
 });
 
@@ -49,6 +53,7 @@ const defaults = {
   screens: [] as CloudinaryAsset[],
   results: [] as ProjectResultMetric[],
   tags: [] as string[],
+  externalUrl: "",
   published: true,
 };
 
@@ -72,6 +77,7 @@ function mapRowToForm(row: Record<string, unknown>) {
     screens: normalizeProjectScreens(row.screens),
     results: normalizeProjectResults(row.results),
     tags: Array.isArray(row.tags) ? row.tags.map(String) : [],
+    externalUrl: (row.externalUrl as string | null) ?? "",
     published: Boolean(row.published ?? true),
   };
 }
@@ -135,6 +141,13 @@ export default function AdminWorkPage() {
                     </option>
                   ))}
                 </select>
+              </label>
+              <label className="admin-field">
+                <span>Live site URL</span>
+                <input
+                  {...form.register("externalUrl")}
+                  placeholder="https://www.example.com/"
+                />
               </label>
               <label className="admin-field admin-checkbox">
                 <input type="checkbox" {...form.register("published")} />

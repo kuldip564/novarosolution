@@ -7,6 +7,7 @@ import { getPublishedProjects, getSiteContent } from "@/lib/content";
 import { mapDbProjectsToWork } from "@/lib/content-mappers";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
+import "@/styles/work.css";
 
 const WorkExperience = dynamic(
   () =>
@@ -18,7 +19,8 @@ export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
   title: "Work",
-  description: "Selected case studies and client work from Novaro Solution.",
+  description:
+    "Novaro Solution client work — Zeevan, KankreG, Mr Antidot, and Quadrato Cargo.",
   path: "/work",
 });
 
@@ -31,13 +33,13 @@ export default async function WorkPage() {
   const workCta = pickCta(cta, "work");
 
   return (
-    <main>
+    <main className="work-cinema">
       <PageHead
         eyebrow="Selected work"
         title="NOVARO"
         titleAccent="WORK"
         variant="bigword"
-        description="Immersive case studies across fintech, healthcare, commerce, and SaaS. Tap any project to go deeper."
+        description="Zeevan, KankreG, Mr Antidot, and Quadrato Cargo — live products we designed and built. Open any project for details or visit the site directly."
         className="blog-head"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Work" }]}
       />

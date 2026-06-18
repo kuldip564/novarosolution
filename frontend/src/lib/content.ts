@@ -1,5 +1,7 @@
 import { cache } from "react";
 import type { CloudinaryAsset } from "./media";
+import { defaultProjects, resolvePublishedProjects } from "./project-defaults";
+import { resolvePublishedTeam, teamAsDbMembers } from "./team-defaults";
 
 const API_ORIGIN =
   process.env.API_PROXY_TARGET ||
@@ -42,6 +44,7 @@ export type DbProject = {
   screens: CloudinaryAsset[];
   results: unknown[];
   tags: string[];
+  externalUrl?: string | null;
   published: boolean;
 };
 
@@ -97,16 +100,18 @@ export type DbFaq = {
   published: boolean;
 };
 
-export async function getPublishedProjects(fallback: DbProject[] = []) {
-  return fetchContentRaw<DbProject[]>("/api/content/projects", fallback);
+export async function getPublishedProjects(fallback: DbProject[] = defaultProjects) {
+  const projects = await fetchContentRaw<DbProject[]>("/api/content/projects", fallback);
+  return resolvePublishedProjects(projects, fallback);
 }
 
 export async function getPublishedServices(fallback: DbService[] = []) {
   return fetchContentRaw<DbService[]>("/api/content/services", fallback);
 }
 
-export async function getPublishedTeam(fallback: DbTeamMember[] = []) {
-  return fetchContentRaw<DbTeamMember[]>("/api/content/team", fallback);
+export async function getPublishedTeam(fallback: DbTeamMember[] = teamAsDbMembers()) {
+  const members = await fetchContentRaw<DbTeamMember[]>("/api/content/team", fallback);
+  return resolvePublishedTeam(members);
 }
 
 export async function getPublishedTestimonials(fallback: DbTestimonial[] = []) {

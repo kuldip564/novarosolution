@@ -79,6 +79,10 @@
 @media (max-width: 768px) {
   :root {
     --space-section: var(--space-section-mobile);
+    --site-header-h: 5.25rem;
+    --hero-pad-top: calc(
+      var(--site-header-h) + env(safe-area-inset-top, 0px) + clamp(2.25rem, 7vh, 4.5rem)
+    );
   }
 
   html {
@@ -179,20 +183,41 @@
     justify-content: center;
   }
 
+  .cinema-bigword,
+  .services-intro__bigword,
+  .about-intro__bigword {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 0.08em;
+    overflow-wrap: anywhere;
+  }
+
+  .services-intro__content,
+  .about-intro__content {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .pagehead {
+    min-height: min(78vh, 880px);
     padding:
-      calc(120px + env(safe-area-inset-top, 0px))
+      var(--hero-pad-top)
       0
-      clamp(48px, 10vw, 72px);
+      clamp(2.5rem, 8vw, 4rem);
   }
 
   .pagehead h1,
   .page-title {
-    font-size: clamp(1.75rem, 7.5vw, 2.65rem);
+    font-size: clamp(2rem, 8.5vw, 3.25rem);
   }
 
   .bigword {
-    font-size: clamp(2rem, 12vw, 3.2rem);
+    font-size: clamp(2.85rem, 15vw, 4.75rem);
+    line-height: 0.9;
+  }
+
+  .cinema-bigword {
+    font-size: clamp(2.75rem, 14vw, 4.5rem);
   }
 
   .marquee {
@@ -485,5 +510,59 @@
   .btn-primary:active,
   .btn-ghost:active {
     transform: none;
+  }
+}
+
+/* Cinema pages — phone polish */
+@media (max-width: 768px) {
+  .home-cinema,
+  .services-cinema,
+  .about-cinema {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .page {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  .home-hero {
+    min-height: max(88dvh, var(--hero-min-height));
+    padding-top: var(--hero-pad-top);
+    padding-bottom: var(--hero-pad-bottom);
+    overflow-x: clip;
+  }
+
+  .services-scene.services-intro,
+  .about-scene.about-intro {
+    min-height: max(88dvh, var(--hero-min-height));
+    padding-top: var(--hero-pad-top);
+    padding-bottom: var(--hero-pad-bottom);
+  }
+
+  .home-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .home-hero__actions .btn {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  .home-scene {
+    padding: clamp(3.5rem, 10vw, 5rem) 0;
+  }
+
+  .home-section-head__title {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .home-work-grid {
+    gap: 1rem;
   }
 }

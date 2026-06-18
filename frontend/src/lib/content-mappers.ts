@@ -8,14 +8,18 @@ import {
   team as fallbackTeam,
   workProjects as fallbackWorkProjects,
 } from "./site-data";
+import { getWorkProjectImages, mergeWorkProjectImages } from "./work-project-images";
+import { LEGACY_TEAM_NAMES } from "./team-defaults";
 
 export type WorkProjectView = {
   idx: string;
+  slug: string;
   category: string;
   title: string;
   hook: string;
   heroTitle: string;
   story: string;
+  externalUrl?: string | null;
   heroImage?: CloudinaryAsset | null;
   screens: CloudinaryAsset[];
   coverClass: string;
@@ -67,47 +71,71 @@ export type TeamMemberView = {
 
 export function mapDbProjectsToWork(projects: DbProject[]): WorkProjectView[] {
   if (!projects.length) {
-    return fallbackWorkProjects.map((project, index) => ({
-      ...project,
-      idx: String(index + 1).padStart(2, "0"),
-      heroImage: null,
-      screens: [],
-      coverClass: `c${(index % 4) + 1}`,
-    }));
+    return fallbackWorkProjects.map((project, index) => {
+      const images = getWorkProjectImages(project.slug);
+      return {
+        ...project,
+        idx: String(index + 1).padStart(2, "0"),
+        slug: project.slug,
+        externalUrl: project.externalUrl,
+        heroImage: images?.hero ?? null,
+        screens: images?.screens ?? [],
+        coverClass: `c${(index % 4) + 1}`,
+      };
+    });
   }
-  return projects.map((project, index) => ({
-    idx: String(index + 1).padStart(2, "0"),
-    category: project.category,
-    title: project.title,
-    hook: project.hook,
-    heroTitle: project.heroTitle ?? `Project hero — ${project.title}`,
-    story: project.body,
-    heroImage: parseCloudinaryAsset(project.heroImage),
-    screens: Array.isArray(project.screens)
+  return projects.map((project, index) => {
+    const screens = Array.isArray(project.screens)
       ? project.screens
           .map((item) => parseCloudinaryAsset(item))
           .filter((asset): asset is CloudinaryAsset => Boolean(asset?.secureUrl))
-      : [],
-    coverClass: project.coverClass ?? "c1",
-    results: (project.results as WorkProjectView["results"]) ?? [],
-    tags: project.tags ?? [],
-  }));
+      : [];
+    const merged = mergeWorkProjectImages(
+      project.slug,
+      parseCloudinaryAsset(project.heroImage),
+      screens,
+    );
+
+    return {
+      idx: String(index + 1).padStart(2, "0"),
+      slug: project.slug,
+      category: project.category,
+      title: project.title,
+      hook: project.hook,
+      heroTitle: project.heroTitle ?? `Project hero — ${project.title}`,
+      story: project.body,
+      externalUrl: project.externalUrl,
+      heroImage: merged.heroImage,
+      screens: merged.screens,
+      coverClass: project.coverClass ?? "c1",
+      results: (project.results as WorkProjectView["results"]) ?? [],
+      tags: project.tags ?? [],
+    };
+  });
 }
 
 export function mapDbProjectsToHomeGrid(projects: DbProject[]): HomeProjectView[] {
   if (!projects.length) return [...fallbackHomeProjects];
-  return projects.slice(0, 4).map((project) => ({
-    href: "/work",
-    category: project.category,
-    title: project.title,
-    description: project.hook,
-    cover: project.coverClass ?? "c1",
-    imageAsset:
-      parseCloudinaryAsset(project.heroImage) ??
-      parseCloudinaryAsset(
-        Array.isArray(project.screens) ? project.screens[0] : null,
-      ),
-  }));
+  return projects.slice(0, 4).map((project) => {
+    const merged = mergeWorkProjectImages(
+      project.slug,
+      parseCloudinaryAsset(project.heroImage),
+      Array.isArray(project.screens)
+        ? project.screens
+            .map((item) => parseCloudinaryAsset(item))
+            .filter((asset): asset is CloudinaryAsset => Boolean(asset?.secureUrl))
+        : [],
+    );
+
+    return {
+      href: project.externalUrl ?? "/work",
+      category: project.category,
+      title: project.title,
+      description: project.hook,
+      cover: project.coverClass ?? "c1",
+      imageAsset: merged.heroImage ?? merged.screens[0] ?? null,
+    };
+  });
 }
 
 export function mapDbServicesToRows(services: DbService[]): ServiceRowView[] {
@@ -163,6 +191,9 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
 
 export function mapDbTeam(members: DbTeamMember[]): TeamMemberView[] {
   if (!members.length) return [...fallbackTeam];
+  if (members.some((member) => LEGACY_TEAM_NAMES.has(member.name))) {
+    return [...fallbackTeam];
+  }
   return members.map((member) => {
     const photoAsset = parseCloudinaryAsset(member.photo);
     return {

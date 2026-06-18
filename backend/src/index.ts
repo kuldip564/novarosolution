@@ -9,7 +9,12 @@ async function start() {
     await syncAdminFromEnv();
   } catch (error) {
     console.error("Failed to sync admin user from env:", error);
-    process.exit(1);
+    if (config.NODE_ENV === "production") {
+      process.exit(1);
+    }
+    console.warn(
+      "Continuing in development — fix DATABASE_URL / MongoDB, then restart. Admin login may fail until sync succeeds.",
+    );
   }
 
   console.log(
