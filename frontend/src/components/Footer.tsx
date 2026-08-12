@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import { googleMapsUrl } from "@/lib/geo-seo";
 import { navLinks, site } from "@/lib/site-data";
 
 const legalLinks = [
@@ -13,13 +14,48 @@ export function Footer() {
   return (
     <footer>
       <div className="wrap">
+        <div className="foot-geo-bar" aria-label="Service areas">
+          <div className="foot-geo-bar__main">
+            <span className="foot-geo-bar__label">Serving</span>
+            <div className="foot-geo-bar__pills">
+              {site.serviceAreas.map((area) => (
+                <span key={area} className="foot-geo-bar__pill">
+                  {area}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="foot-geo-bar__actions">
+            <a
+              href={googleMapsUrl()}
+              className="foot-geo-bar__directions"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              Directions
+            </a>
+          </div>
+        </div>
+
         <div className="foot-grid">
           <div className="foot-brand">
             <BrandLogo iconSize={30} href="/" />
             <p>
-              A digital product studio building web apps, AI systems, and growth
-              engines for ambitious companies.
+              {site.description} Based in Gandhinagar, we serve clients across India
+              and internationally — from D2C brands to logistics platforms and healthcare
+              services.
             </p>
+            <address className="foot-address" itemScope itemType="https://schema.org/PostalAddress">
+              <span itemProp="streetAddress">{site.geo.streetAddress}</span>,{" "}
+              <span itemProp="addressLocality">{site.geo.addressLocality}</span>,{" "}
+              <span itemProp="addressRegion">{site.geo.addressRegion}</span>{" "}
+              <span itemProp="postalCode">{site.geo.postalCode}</span>,{" "}
+              <span itemProp="addressCountry">India</span>
+            </address>
             <div className="socials">
               <a
                 href={site.social.linkedin}
@@ -60,9 +96,9 @@ export function Footer() {
 
           <div className="foot-col">
             <h5>Services</h5>
-            <Link href="/services">Web &amp; App</Link>
-            <Link href="/services">AI &amp; ML</Link>
-            <Link href="/services">Digital Marketing</Link>
+            <Link href="/services">Web &amp; App Development</Link>
+            <Link href="/services">AI &amp; Machine Learning</Link>
+            <Link href="/services">Digital Marketing &amp; SEO</Link>
             <Link href="/services">Cloud &amp; DevOps</Link>
           </div>
 
@@ -80,11 +116,13 @@ export function Footer() {
             <a href={`mailto:${site.email}`}>{site.email}</a>
             <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
             <span>{site.location}</span>
+            <span>{site.businessHours}</span>
+            <span>{site.responseTime}</span>
           </div>
         </div>
 
         <div className="foot-bot">
-          <p>© 2026 Novaro Solution. All rights reserved.</p>
+          <p>© 2026 Novaro Solution · Gandhinagar, Gujarat, India. All rights reserved.</p>
           <nav className="foot-legal" aria-label="Legal">
             {legalLinks.map((link) => (
               <Link key={link.href} href={link.href}>

@@ -123,6 +123,20 @@ html.site--bg-3d .about-cinema .about-scene {
   filter: blur(8px);
 }
 
+.about-intro__glow--secondary {
+  top: auto;
+  bottom: -10%;
+  width: min(900px, 100vw);
+  height: min(360px, 42vh);
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--cyan-soft, var(--cyan)) 16%, transparent),
+    transparent 70%
+  );
+  filter: blur(10px);
+  opacity: 0.55;
+}
+
 .about-intro__content {
   position: relative;
   z-index: 1;
@@ -141,6 +155,32 @@ html.site--bg-3d .about-cinema .about-scene {
   width: 100%;
 }
 
+.about-intro__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+  padding: 0.4rem 0.9rem 0.4rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--cyan) 20%, var(--line-d));
+  background: color-mix(in srgb, var(--panel) 80%, transparent);
+  backdrop-filter: blur(10px);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.about-intro__badge svg {
+  flex-shrink: 0;
+  color: var(--cyan);
+}
+
+.about-intro__badge strong {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
 .about-intro__bigword {
   margin: 0;
 }
@@ -152,6 +192,72 @@ html.site--bg-3d .about-cinema .about-scene {
   line-height: 1.7;
   text-wrap: balance;
   color: var(--text-muted);
+}
+
+.about-intro__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+  padding: 0.4rem clamp(0.75rem, 3vw, 1.75rem);
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--cyan) 18%, var(--line-d));
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 6%, transparent);
+}
+
+.about-intro__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.85rem clamp(0.9rem, 2.6vw, 1.6rem);
+  border-right: 1px solid color-mix(in srgb, var(--cyan) 14%, var(--line-d));
+}
+
+.about-intro__stat:last-child {
+  border-right: 0;
+}
+
+.about-intro__stat-value {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text-heading);
+}
+
+.about-intro__stat-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-muted);
+  max-width: 8rem;
+}
+
+@media (max-width: 640px) {
+  .about-intro__stats {
+    gap: 0.25rem 0;
+  }
+
+  .about-intro__stat {
+    width: 50%;
+    padding: 0.75rem 0.5rem;
+    border-right: 0;
+  }
+
+  .about-intro__stat:nth-child(odd) {
+    border-right: 1px solid color-mix(in srgb, var(--cyan) 14%, var(--line-d));
+  }
+
+  .about-intro__stat:nth-child(-n + 2) {
+    border-bottom: 1px solid color-mix(in srgb, var(--cyan) 14%, var(--line-d));
+  }
 }
 
 .about-intro__scroll-hint {
@@ -463,6 +569,102 @@ html.site--bg-3d .about-cinema .about-scene {
 
 /* ── Team ── */
 
+.about-team__panel {
+  position: relative;
+  padding: clamp(1.35rem, 3vw, 2.25rem);
+  border-radius: 24px;
+  border: 1px solid var(--about-line);
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+  box-shadow:
+    0 32px 80px -40px color-mix(in srgb, var(--cyan) 18%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.about-team__panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 0%,
+    color-mix(in srgb, var(--cyan) 10%, transparent),
+    transparent 65%
+  );
+  opacity: 0.85;
+}
+
+.about-team__stats {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .about-team__stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+}
+
+.about-team__stat {
+  padding: 1rem 0.85rem;
+  border-radius: 16px;
+  border: 1px solid var(--line-d);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+  transition:
+    border-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.about-team__stat:hover {
+  border-color: color-mix(in srgb, var(--cyan) 28%, var(--line-d));
+  transform: translateY(-2px);
+}
+
+.about-team__stat-value {
+  display: block;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text-heading);
+}
+
+.about-team__stat-value--text {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  letter-spacing: -0.02em;
+}
+
+.about-team__stat-label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.about-team__hint {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 1.35rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 14px;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  text-align: center;
+  border: 1px dashed color-mix(in srgb, var(--cyan) 30%, var(--line-d));
+  background: color-mix(in srgb, var(--cyan) 7%, transparent);
+}
+
 .about-team__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -674,10 +876,26 @@ html.site--bg-3d .about-cinema .about-scene {
 
 [data-theme="light"] .about-who__glass,
 [data-theme="light"] .about-value,
-[data-theme="light"] .about-team__member {
+[data-theme="light"] .about-team__member,
+[data-theme="light"] .about-team__panel {
   background: #ffffff;
   border-color: rgba(10, 23, 48, 0.1);
   box-shadow: var(--shadow-card);
+}
+
+[data-theme="light"] .about-team__stat {
+  background: #f6f8fc;
+  border-color: rgba(10, 23, 48, 0.08);
+}
+
+[data-theme="light"] .about-team__stat:hover {
+  border-color: rgba(37, 99, 235, 0.22);
+}
+
+[data-theme="light"] .about-team__hint {
+  background: rgba(37, 99, 235, 0.05);
+  border-color: rgba(37, 99, 235, 0.18);
+  color: var(--slate);
 }
 
 @media (max-width: 768px) {

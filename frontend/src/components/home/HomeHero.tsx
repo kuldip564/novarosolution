@@ -97,6 +97,15 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
             className="home-hero__copy"
             style={{ opacity: copyOpacity, y: copyY, willChange: "transform, opacity" }}
           >
+            <div className="home-hero__loc">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              <span>
+                <strong>Gandhinagar, Gujarat</strong> · Serving Ahmedabad &amp; India
+              </span>
+            </div>
             <span className="eyebrow">{copy.eyebrow}</span>
             <SplitText text={headline} as="h1" className="home-hero__title" />
             <p className="home-hero__lede">{copy.lede}</p>
@@ -113,6 +122,15 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
           </motion.div>
         ) : (
           <Reveal className="home-hero__copy">
+            <div className="home-hero__loc">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              <span>
+                <strong>Gandhinagar, Gujarat</strong> · Serving Ahmedabad &amp; India
+              </span>
+            </div>
             <span className="eyebrow">{copy.eyebrow}</span>
             <SplitText text={headline} as="h1" className="home-hero__title" />
             <p className="home-hero__lede">{copy.lede}</p>

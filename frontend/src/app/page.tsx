@@ -9,6 +9,7 @@ import {
   getPublishedTestimonials,
   getSiteContent,
 } from "@/lib/content";
+import { mapDbFaqs } from "@/components/sections/FaqSection";
 import { normalizeHeroContent } from "@/lib/hero-content";
 import { homePageJsonLd, homePageMetadata } from "@/lib/home-seo";
 import {
@@ -20,6 +21,7 @@ import {
   processSteps,
   type CtaContent,
 } from "@/lib/site-data";
+import { homeSectionsDefaults } from "@/lib/page-content-defaults";
 import "@/styles/home.css";
 
 export const revalidate = 30;
@@ -48,6 +50,7 @@ export default async function HomePage() {
     testimonials,
     logos,
     faqs,
+    homeSections,
   ] = await Promise.all([
     getPublishedProjects(),
     getPublishedServices(),
@@ -59,17 +62,21 @@ export default async function HomePage() {
     getPublishedTestimonials(),
     getPublishedLogos(),
     getPublishedFaqs(),
+    getSiteContent("homeSections", homeSectionsDefaults),
   ]);
 
   const homeCta = pickCta(cta, "home");
   const heroCopy = normalizeHeroContent(hero);
-  const jsonLd = homePageJsonLd();
+  const faqItems = mapDbFaqs(faqs);
+  const jsonLd = homePageJsonLd(faqItems);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
+        }}
       />
       <main id="top" className="home-cinema">
         <HomeHero content={heroCopy} />
@@ -83,6 +90,7 @@ export default async function HomePage() {
           testimonials={testimonials}
           logos={logos}
           faqs={faqs}
+          sections={homeSections}
         />
       </main>
     </>

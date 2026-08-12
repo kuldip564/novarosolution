@@ -1,10 +1,27 @@
 import { Router } from "express";
 import { z } from "zod";
+import { isDatabaseAvailable, markDatabaseUnavailable } from "../../lib/dbHealth.js";
 import { prisma } from "../../lib/prisma.js";
 import { parseCloudinaryAsset } from "../../types/media.js";
 import { computeReadingTime, publishedPostWhere, sanitizeRichText } from "../../utils/blog.js";
 
 const router = Router();
+
+router.use(async (_req, res, next) => {
+  if (await isDatabaseAvailable()) {
+    next();
+    return;
+  }
+  res.status(503).json({
+    ok: false,
+    error: "Database unavailable — using site fallbacks.",
+  });
+});
+
+function onDbError(error: unknown, next: (error: unknown) => void) {
+  markDatabaseUnavailable();
+  next(error);
+}
 
 function mapPublicPost(post: {
   id: string;
@@ -92,7 +109,7 @@ router.get("/", async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    onDbError(error, next);
   }
 });
 
@@ -128,7 +145,7 @@ router.get("/:slug", async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
+    onDbError(error, next);
   }
 });
 

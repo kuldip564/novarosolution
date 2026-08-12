@@ -5,7 +5,6 @@ import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
-import { MediaPlaceholder } from "@/components/sections/MediaPlaceholder";
 import { Badge } from "@/components/ui/Badge";
 import { Field, Input, Select, TextArea } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
@@ -234,11 +233,39 @@ export function ContactFormInner() {
                 <p>{site.location}</p>
               </div>
             </div>
-            <div className="contact-map">
-              <MediaPlaceholder
-                title="Map / studio photo"
-                hint="Embed a map or drop an image"
-              />
+            <div className="info-card">
+              <div className="ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 2" />
+                </svg>
+              </div>
+              <div>
+                <h4>Business hours</h4>
+                <p>{site.businessHours}</p>
+              </div>
+            </div>
+            <div className="contact-service-areas">
+              <span className="contact-service-areas__label">We serve</span>
+              <div className="contact-service-areas__pills">
+                {site.serviceAreas.slice(0, 6).map((area) => (
+                  <span key={area} className="contact-service-areas__pill">
+                    {area}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="contact-expect">
+              <h4>What happens next</h4>
+              <ol>
+                <li>We review your brief within one business day.</li>
+                <li>A 30-minute discovery call to understand goals and constraints.</li>
+                <li>A scoped proposal with timeline, team, and budget options.</li>
+              </ol>
+              <p className="contact-industries">
+                <strong>Industries we work with:</strong>{" "}
+                {site.industries.join(" · ")}
+              </p>
             </div>
           </Reveal>
         </div>

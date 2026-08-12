@@ -1,12 +1,22 @@
 import { createApp } from "./app.js";
 import { config, isCloudinaryConfigured } from "./config/env.js";
+import { probeDatabaseOnStartup } from "./lib/dbHealth.js";
 import { syncAdminFromEnv } from "./lib/syncAdmin.js";
 
 const app = createApp();
 
+const STARTUP_DB_MS = 3_000;
+
 async function start() {
+  await probeDatabaseOnStartup();
+
   try {
-    await syncAdminFromEnv();
+    await Promise.race([
+      syncAdminFromEnv(),
+      new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error("Admin sync timeout")), STARTUP_DB_MS);
+      }),
+    ]);
   } catch (error) {
     console.error("Failed to sync admin user from env:", error);
     if (config.NODE_ENV === "production") {

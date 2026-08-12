@@ -8,6 +8,7 @@ import { SplitText } from "@/components/anim/SplitText";
 import { Tilt } from "@/components/anim/Tilt";
 import { Button } from "@/components/Button";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
+import { LocalPresence } from "@/components/sections/LocalPresence";
 import { mapDbLogos, type LogoView } from "@/components/sections/LogoStrip";
 import { mapDbTestimonials, type TestimonialView } from "@/components/sections/TestimonialsSection";
 import type { DbClientLogo, DbProject, DbService, DbTestimonial } from "@/lib/content";
@@ -20,6 +21,7 @@ import {
 import { isExternalProjectHref } from "@/lib/project-link";
 import { useMotionSettings } from "@/lib/motion-provider";
 import { capabilities, homeStats, processSteps } from "@/lib/site-data";
+import type { HomeSectionsContent } from "@/lib/page-content-defaults";
 import type { FaqItem } from "@/components/sections/FaqSection";
 
 type HomeSectionsProps = {
@@ -32,6 +34,7 @@ type HomeSectionsProps = {
   testimonials: DbTestimonial[];
   logos: DbClientLogo[];
   faqs: FaqItem[];
+  sections: HomeSectionsContent;
 };
 
 function ServiceIcon({ type }: { type: string }) {
@@ -125,6 +128,7 @@ export function HomeSections({
   testimonials,
   logos,
   faqs,
+  sections,
 }: HomeSectionsProps) {
   const { reducedMotion, performanceTier } = useMotionSettings();
   const cinematic = !reducedMotion && performanceTier === "high";
@@ -137,9 +141,9 @@ export function HomeSections({
   const marqueeTrack = marquee.length ? [...marquee, ...marquee] : [];
   const practiceLabel =
     serviceItems.length === 1
-      ? "One core practice."
-      : `${serviceItems.length} core practices.`;
-  const servicesTitle = `${practiceLabel}\nOne accountable team.`;
+      ? sections.services.practiceSingular
+      : sections.services.practicePlural.replace("{count}", String(serviceItems.length));
+  const servicesTitle = `${practiceLabel}\n${sections.services.titleSuffix}`;
 
   return (
     <>
@@ -163,7 +167,7 @@ export function HomeSections({
         >
           <div className="wrap">
             <Reveal>
-              <p className="home-logos__label">Trusted by teams building what&apos;s next</p>
+              <p className="home-logos__label">{sections.logos.label}</p>
             </Reveal>
             <div className="home-logos__strip">
               {logoItems.map((item: LogoView, index) => (
@@ -191,7 +195,7 @@ export function HomeSections({
         <div className="wrap">
           <header className="home-section-head">
             <Reveal>
-              <span className="eyebrow">What we do</span>
+              <span className="eyebrow">{sections.services.eyebrow}</span>
             </Reveal>
             <SplitText
               text={servicesTitle}
@@ -199,10 +203,7 @@ export function HomeSections({
               className="home-section-head__title"
             />
             <Reveal delay={0.08}>
-              <p className="home-section-head__lede">
-                Web and app engineering, AI/ML, and digital marketing under one roof — so
-                nothing falls through the gaps between build and growth.
-              </p>
+              <p className="home-section-head__lede">{sections.services.description}</p>
             </Reveal>
           </header>
 
@@ -234,18 +235,15 @@ export function HomeSections({
         <div className="wrap">
           <header className="home-section-head">
             <Reveal>
-              <span className="eyebrow">Selected work</span>
+              <span className="eyebrow">{sections.work.eyebrow}</span>
             </Reveal>
             <SplitText
-              text={"Products we're proud\nto put our name on."}
+              text={sections.work.title}
               as="h2"
               className="home-section-head__title"
             />
             <Reveal delay={0.08}>
-              <p className="home-section-head__lede">
-                Live client launches across logistics, services, and premium D2C —
-                built to perform long after go-live.
-              </p>
+              <p className="home-section-head__lede">{sections.work.description}</p>
             </Reveal>
           </header>
 
@@ -351,17 +349,15 @@ export function HomeSections({
         <div className="wrap">
           <header className="home-section-head home-section-head--center">
             <Reveal>
-              <span className="eyebrow center">Client voices</span>
+              <span className="eyebrow center">{sections.testimonials.eyebrow}</span>
             </Reveal>
             <SplitText
-              text="Trusted by teams who ship."
+              text={sections.testimonials.title}
               as="h2"
               className="home-section-head__title"
             />
             <Reveal delay={0.08}>
-              <p className="home-section-head__lede">
-                Honest feedback from product leaders we&apos;ve built with — not filler quotes.
-              </p>
+              <p className="home-section-head__lede">{sections.testimonials.description}</p>
             </Reveal>
           </header>
 
@@ -402,17 +398,15 @@ export function HomeSections({
         <div className="wrap">
           <header className="home-section-head home-section-head--center">
             <Reveal>
-              <span className="eyebrow center">How we work</span>
+              <span className="eyebrow center">{sections.process.eyebrow}</span>
             </Reveal>
             <SplitText
-              text="A clear path from idea to impact."
+              text={sections.process.title}
               as="h2"
               className="home-section-head__title"
             />
             <Reveal delay={0.08}>
-              <p className="home-section-head__lede">
-                Four stages, zero black boxes — you always know what&apos;s shipping and why.
-              </p>
+              <p className="home-section-head__lede">{sections.process.description}</p>
             </Reveal>
           </header>
 
@@ -430,22 +424,22 @@ export function HomeSections({
         </div>
       </section>
 
+      <LocalPresence variant="home" />
+
       {faqs.length > 0 && (
         <section className="home-scene home-faq" aria-labelledby="home-faq-title">
           <div className="wrap">
             <header className="home-section-head home-section-head--center">
               <Reveal>
-                <span className="eyebrow center">FAQ</span>
+                <span className="eyebrow center">{sections.faq.eyebrow}</span>
               </Reveal>
               <SplitText
-                text="Questions, answered."
+                text={sections.faq.title}
                 as="h2"
                 className="home-section-head__title"
               />
               <Reveal delay={0.08}>
-                <p className="home-section-head__lede">
-                  What founders and product teams ask before we start building together.
-                </p>
+                <p className="home-section-head__lede">{sections.faq.description}</p>
               </Reveal>
             </header>
             <FaqAccordion items={faqs} />
@@ -460,10 +454,10 @@ export function HomeSections({
               <div className="home-cta__mesh" aria-hidden />
               <div className="home-cta__grid" aria-hidden />
               <div className="home-cta__inner">
-                <span className="eyebrow center">Let&apos;s talk</span>
+                <span className="eyebrow center">{sections.cta.eyebrow}</span>
                 <SplitText text={cta.title} as="h2" className="home-cta__title" />
                 <p>{cta.description}</p>
-                <Button href="/contact">Book a call</Button>
+                <Button href="/contact">{sections.cta.buttonLabel}</Button>
               </div>
             </div>
           </Reveal>

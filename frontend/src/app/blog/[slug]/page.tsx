@@ -101,7 +101,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
   const { post, related } = data;
 
   return (
-    <main className="article-page">
+    <main className="article-page page-cinema blog-cinema">
       <ArticleReadingProgress />
 
       <section className="article-hero">

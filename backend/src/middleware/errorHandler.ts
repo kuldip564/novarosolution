@@ -1,6 +1,7 @@
 import type { ErrorRequestHandler } from "express";
 import { Prisma } from "@prisma/client";
 import { config } from "../config/env.js";
+import { markDatabaseUnavailable } from "../lib/dbHealth.js";
 
 function isDatabaseUnavailable(error: unknown): boolean {
   if (!(error instanceof Error)) return false;
@@ -17,6 +18,7 @@ function isDatabaseUnavailable(error: unknown): boolean {
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (isDatabaseUnavailable(err)) {
+    markDatabaseUnavailable();
     res.status(503).json({
       ok: false,
       error:

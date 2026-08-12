@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AboutExperience } from "@/components/about/AboutExperience";
+import { AboutTeamPhotoPreload } from "@/components/about/AboutTeamPhotoPreload";
 import {
   defaultAboutPage,
   normalizeAboutPage,
@@ -9,9 +10,12 @@ import {
 import { getPublishedTeam, getSiteContent } from "@/lib/content";
 import { mapDbTeam } from "@/lib/content-mappers";
 import { createPageMetadata } from "@/lib/site-metadata";
+import { aboutKeywords } from "@/lib/geo-seo";
 import {
+  aboutStats,
   defaultCta,
   pickCta,
+  whyItems as defaultWhyItems,
   type CtaContent,
 } from "@/lib/site-data";
 import "@/styles/about.css";
@@ -19,23 +23,19 @@ import "@/styles/about.css";
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "About",
+  title: "About Us — IT Studio Gandhinagar, Gujarat",
   description:
-    "Meet Novaro Solution — a senior IT studio shipping web apps, AI systems, and growth programs from Gandhinagar.",
+    "Meet Novaro Solution — Gandhinagar & Ahmedabad IT studio. 8-person team shipping web apps, AI/ML & digital marketing for 32+ clients across Gujarat & India since 2024.",
   path: "/about",
+  keywords: aboutKeywords,
 });
 
 export default async function AboutPage() {
   const [team, aboutPage, stats, whyItems, cta] = await Promise.all([
     getPublishedTeam(),
     getSiteContent("aboutPage", defaultAboutPage),
-    getSiteContent("aboutStats", [
-      { value: 2, suffix: " yrs", label: "Years of experience" },
-      { value: 32, suffix: "+", label: "Happy clients" },
-      { value: 14, suffix: "", label: "People on the team" },
-      { value: 98, suffix: "%", label: "Client retention" },
-    ]),
-    getSiteContent("whyItems", []),
+    getSiteContent("aboutStats", aboutStats),
+    getSiteContent("whyItems", defaultWhyItems),
     getSiteContent<CtaContent>("cta", defaultCta),
   ]);
 
@@ -43,13 +43,16 @@ export default async function AboutPage() {
   const aboutCta = pickCta(cta, "about");
 
   return (
-    <AboutExperience
+    <>
+      <AboutTeamPhotoPreload />
+      <AboutExperience
       content={content}
       stats={normalizeAboutStats(stats)}
       whyItems={normalizeAboutWhyItems(whyItems)}
       team={mapDbTeam(team)}
       ctaTitle={aboutCta.title}
       ctaDescription={aboutCta.description}
-    />
+      />
+    </>
   );
 }

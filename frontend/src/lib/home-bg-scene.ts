@@ -70,7 +70,7 @@ export function buildHomeBgScene(
       size: 0.1,
       vertexColors: true,
       transparent: true,
-      opacity: 0.92,
+      opacity: isLight ? 0.32 : 0.92,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     }),
@@ -85,9 +85,9 @@ export function buildHomeBgScene(
     starsGeometry,
     new THREE.PointsMaterial({
       size: 0.05,
-      color: 0x9fd8ff,
+      color: isLight ? 0x2f7bff : 0x9fd8ff,
       transparent: true,
-      opacity: 0.45,
+      opacity: isLight ? 0.16 : 0.45,
       blending: THREE.AdditiveBlending,
     }),
   );
@@ -97,8 +97,8 @@ export function buildHomeBgScene(
     (stars.material as THREE.Material).dispose();
   });
 
-  if (rich) {
-    const grid = new THREE.GridHelper(48, 48, BLUE, isLight ? 0xc5d4ef : 0x1a3a6e);
+  if (rich && !isLight) {
+    const grid = new THREE.GridHelper(48, 48, BLUE, 0x1a3a6e);
     const gridMat = grid.material as THREE.LineBasicMaterial;
     gridMat.transparent = true;
     gridMat.opacity = 0.2;
@@ -165,8 +165,10 @@ export function buildHomeBgScene(
         },
       ];
 
+  const shapeOpacityScale = isLight ? 0.45 : 1;
+
   shapeDefs.forEach(({ geo, position, scale, color, opacity }) => {
-    const mesh = addWireMesh(scene, geo, color, opacity, disposables);
+    const mesh = addWireMesh(scene, geo, color, opacity * shapeOpacityScale, disposables);
     mesh.position.copy(position);
     mesh.scale.setScalar(scale);
     mesh.userData.baseY = position.y;

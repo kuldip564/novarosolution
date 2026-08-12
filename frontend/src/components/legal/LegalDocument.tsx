@@ -18,7 +18,7 @@ export function LegalDocument({
   children,
 }: LegalDocumentProps) {
   return (
-    <main>
+    <main className="page-cinema legal-cinema">
       <PageHead
         eyebrow="Legal"
         title={title}

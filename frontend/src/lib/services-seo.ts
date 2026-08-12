@@ -1,25 +1,17 @@
 import type { Metadata } from "next";
+import { servicesKeywords } from "./geo-seo";
 import { site } from "./site-data";
 import type { ServiceDetailView } from "./services-content";
+import { ORGANIZATION_ID } from "./structured-data";
 import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const servicesPagePath = "/services";
 
 export const servicesSeoTitle =
-  "Web App, AI/ML & Digital Marketing Services | IT Studio India";
+  "Web App, AI/ML & SEO Services | IT Company Gandhinagar, Gujarat";
 
 export const servicesSeoDescription =
-  "Novaro Solution delivers web and app engineering, AI/ML systems, digital marketing, and cloud DevOps from Gandhinagar, India — production-grade work that ships and scales.";
-
-export const servicesKeywords = [
-  "web app development services",
-  "AI machine learning company India",
-  "digital marketing agency Gujarat",
-  "Next.js development studio",
-  "cloud DevOps services",
-  "software development Gandhinagar",
-  "Novaro Solution services",
-];
+  "Novaro Solution — web & app development, AI/ML, digital marketing & SEO in Gandhinagar, Gujarat. Serving Ahmedabad & India. Production-grade software that ships and scales.";
 
 export const servicesOgImage = "/images/webapp-dashboard.webp";
 
@@ -38,6 +30,7 @@ export function servicesPageMetadata(): Metadata {
     icons: siteIcons,
     openGraph: {
       type: "website",
+      locale: "en_IN",
       url,
       title: ogTitle,
       description: servicesSeoDescription,
@@ -102,7 +95,7 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
 
   const provider = {
     "@type": "Organization",
-    "@id": `${base}#organization`,
+    "@id": ORGANIZATION_ID,
     name: site.name,
     url: base,
     logo: brandIconAbsoluteUrl(),
@@ -123,11 +116,13 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
     description: service.description,
     serviceType: service.title,
     url: `${pageUrl}#service-${service.slug}`,
-    provider: { "@id": `${base}#organization` },
-    areaServed: {
-      "@type": "Country",
-      name: "India",
-    },
+    provider: { "@id": ORGANIZATION_ID },
+    areaServed: [
+      { "@type": "City", name: "Gandhinagar" },
+      { "@type": "City", name: "Ahmedabad" },
+      { "@type": "AdministrativeArea", name: "Gujarat" },
+      { "@type": "Country", name: "India" },
+    ],
     ...(service.tools.length > 0
       ? {
           category: service.tools.join(", "),

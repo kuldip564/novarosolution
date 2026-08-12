@@ -1,41 +1,42 @@
 import type { Metadata } from "next";
+import { geoMetaTags, homeKeywords } from "./geo-seo";
 import { site } from "./site-data";
+import {
+  LOCAL_BUSINESS_ID,
+  ORGANIZATION_ID,
+  WEBSITE_ID,
+  faqPageJsonLd,
+} from "./structured-data";
 import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const homePagePath = "/";
 
 export const homeSeoTitle =
-  "Web App, AI/ML & Digital Marketing Studio | Novaro Solution India";
+  "Web App Development Company Gandhinagar | AI/ML & Digital Marketing — Novaro Solution";
 
 export const homeSeoDescription =
-  "Novaro Solution is a Gandhinagar IT studio shipping production web apps, AI/ML systems, and digital marketing — one team from architecture to launch.";
-
-export const homeKeywords = [
-  "web app development company India",
-  "AI machine learning studio Gujarat",
-  "digital marketing agency Gandhinagar",
-  "Next.js development studio",
-  "software product studio",
-  "Novaro Solution",
-];
+  "Novaro Solution — IT studio in Gandhinagar, Gujarat. Web & mobile apps, AI/ML, SEO & digital marketing for 32+ clients across Ahmedabad, GIFT City, Vadodara, Surat & India. Next.js experts.";
 
 export const homeOgImage = "/images/webapp-dashboard.webp";
 
 export function homePageMetadata(): Metadata {
   const url = `${siteBaseUrl()}${homePagePath}`;
-  const ogTitle = `${site.name} — Software · Intelligence · Growth`;
+  const ogTitle = `${site.name} — Gandhinagar, Gujarat IT Studio`;
   const ogImageUrl = `${siteBaseUrl()}${homeOgImage}`;
 
   return {
     title: homeSeoTitle,
     description: homeSeoDescription,
     keywords: homeKeywords,
+    other: geoMetaTags(),
     alternates: {
       canonical: homePagePath,
+      languages: { "en-IN": homePagePath },
     },
     icons: siteIcons,
     openGraph: {
       type: "website",
+      locale: "en_IN",
       url,
       title: ogTitle,
       description: homeSeoDescription,
@@ -45,7 +46,7 @@ export function homePageMetadata(): Metadata {
           url: homeOgImage,
           width: 2048,
           height: 1529,
-          alt: "Novaro Solution web and app engineering studio preview",
+          alt: "Novaro Solution — web app development company in Gandhinagar, Gujarat",
         },
       ],
     },
@@ -58,24 +59,11 @@ export function homePageMetadata(): Metadata {
   };
 }
 
-export function homePageJsonLd() {
+export function homePageJsonLd(faqs?: Array<{ question: string; answer: string }>) {
   const base = siteBaseUrl();
+  const faqSchema = faqs?.length ? faqPageJsonLd(faqs) : null;
 
-  return [
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: site.name,
-      url: base,
-      description: homeSeoDescription,
-      inLanguage: "en-IN",
-      publisher: {
-        "@type": "Organization",
-        name: site.name,
-        url: base,
-        logo: brandIconAbsoluteUrl(),
-      },
-    },
+  const schemas = [
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -83,11 +71,13 @@ export function homePageJsonLd() {
       url: `${base}${homePagePath}`,
       name: homeSeoTitle,
       description: homeSeoDescription,
-      isPartOf: { "@id": base },
-      about: {
-        "@type": "Organization",
-        name: site.name,
-      },
+      inLanguage: "en-IN",
+      isPartOf: { "@id": WEBSITE_ID },
+      about: { "@id": LOCAL_BUSINESS_ID },
+      publisher: { "@id": ORGANIZATION_ID },
     },
+    ...(faqSchema ? [faqSchema] : []),
   ];
+
+  return schemas;
 }

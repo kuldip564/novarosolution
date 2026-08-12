@@ -5,6 +5,10 @@
   --home-line: color-mix(in srgb, var(--cyan) 16%, rgba(255, 255, 255, 0.08));
   --home-ink: #05080f;
   --home-card: linear-gradient(180deg, #0c1730 0%, #0a1226 100%);
+  --home-glow-primary: rgba(30, 84, 214, 0.55);
+  --home-glow-secondary: rgba(69, 200, 245, 0.35);
+  --home-aurora-1: rgba(69, 200, 245, 0.12);
+  --home-aurora-2: rgba(47, 123, 255, 0.14);
   position: relative;
   overflow: clip;
   background: var(--home-ink);
@@ -118,24 +122,6 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   color: var(--navy);
 }
 
-[data-theme="light"] .home-faq .faq-item {
-  background: rgba(10, 23, 48, 0.03);
-  border-color: rgba(10, 23, 48, 0.1);
-}
-
-[data-theme="light"] .home-faq .faq-item.open {
-  background: color-mix(in srgb, var(--blue) 6%, #ffffff);
-  border-color: color-mix(in srgb, var(--blue) 22%, transparent);
-}
-
-[data-theme="light"] .home-svc-card__media {
-  background: var(--ink-850);
-}
-
-[data-theme="light"] .home-work-card {
-  box-shadow: var(--shadow-card);
-}
-
 /* ── Hero ── */
 
 .home-hero {
@@ -194,7 +180,7 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   right: -4%;
   width: min(560px, 70vw);
   height: min(560px, 70vw);
-  background: radial-gradient(circle, rgba(30, 84, 214, 0.55), transparent 68%);
+  background: radial-gradient(circle, var(--home-glow-primary), transparent 68%);
 }
 
 .home-hero__glow--secondary {
@@ -202,7 +188,7 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   left: -12%;
   width: min(480px, 62vw);
   height: min(480px, 62vw);
-  background: radial-gradient(circle, rgba(69, 200, 245, 0.35), transparent 70%);
+  background: radial-gradient(circle, var(--home-glow-secondary), transparent 70%);
   opacity: 0.75;
 }
 
@@ -210,8 +196,8 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 50% 42% at 18% 78%, rgba(69, 200, 245, 0.12), transparent 70%),
-    radial-gradient(ellipse 44% 36% at 88% 18%, rgba(47, 123, 255, 0.14), transparent 72%);
+    radial-gradient(ellipse 50% 42% at 18% 78%, var(--home-aurora-1), transparent 70%),
+    radial-gradient(ellipse 44% 36% at 88% 18%, var(--home-aurora-2), transparent 72%);
   opacity: 0.85;
 }
 
@@ -858,7 +844,7 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   border-radius: 999px;
   font-size: 0.72rem;
   border: 1px solid color-mix(in srgb, var(--cyan) 18%, var(--line-d));
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-chip);
   color: var(--text-heading);
 }
 
@@ -876,7 +862,7 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   font-size: 0.78rem;
   font-weight: 600;
   border: 1px solid var(--line-d);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-chip);
   color: var(--text-heading);
 }
 

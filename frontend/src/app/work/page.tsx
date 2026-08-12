@@ -6,6 +6,7 @@ import { PageSkeleton } from "@/components/ui/Skeleton";
 import { getPublishedProjects, getSiteContent } from "@/lib/content";
 import { mapDbProjectsToWork } from "@/lib/content-mappers";
 import { createPageMetadata } from "@/lib/site-metadata";
+import { workKeywords } from "@/lib/geo-seo";
 import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 import "@/styles/work.css";
 
@@ -18,10 +19,11 @@ const WorkExperience = dynamic(
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Work",
+  title: "Portfolio — Web & App Projects | Gujarat, India",
   description:
-    "Novaro Solution client work — Zeevan, KankreG, Mr Antidot, and Quadrato Cargo.",
+    "Novaro Solution client work — Zeevan, KankreG, Mr Antidot & Quadrato Cargo. E-commerce, logistics & service platforms built in Gandhinagar, Gujarat for clients across India.",
   path: "/work",
+  keywords: workKeywords,
 });
 
 export default async function WorkPage() {

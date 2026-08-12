@@ -1,6 +1,14 @@
 import { cache } from "react";
+import { siteContentRegistryRecord } from "./site-content-registry";
+import {
+  defaultFaqs,
+  defaultTestimonials,
+  resolvePublishedFaqs,
+  resolvePublishedTestimonials,
+} from "./content-fallbacks";
 import type { CloudinaryAsset } from "./media";
 import { defaultProjects, resolvePublishedProjects } from "./project-defaults";
+import { defaultServices, resolvePublishedServices } from "./service-defaults";
 import { resolvePublishedTeam, teamAsDbMembers } from "./team-defaults";
 
 const API_ORIGIN =
@@ -8,7 +16,7 @@ const API_ORIGIN =
   process.env.NEXT_PUBLIC_API_URL ||
   "http://127.0.0.1:5001";
 
-const FETCH_TIMEOUT_MS = 1500;
+const FETCH_TIMEOUT_MS = 800;
 
 const fetchContentRaw = cache(async <T,>(path: string, fallback: T): Promise<T> => {
   try {
@@ -105,8 +113,9 @@ export async function getPublishedProjects(fallback: DbProject[] = defaultProjec
   return resolvePublishedProjects(projects, fallback);
 }
 
-export async function getPublishedServices(fallback: DbService[] = []) {
-  return fetchContentRaw<DbService[]>("/api/content/services", fallback);
+export async function getPublishedServices(fallback: DbService[] = defaultServices) {
+  const services = await fetchContentRaw<DbService[]>("/api/content/services", fallback);
+  return resolvePublishedServices(services);
 }
 
 export async function getPublishedTeam(fallback: DbTeamMember[] = teamAsDbMembers()) {
@@ -114,16 +123,23 @@ export async function getPublishedTeam(fallback: DbTeamMember[] = teamAsDbMember
   return resolvePublishedTeam(members);
 }
 
-export async function getPublishedTestimonials(fallback: DbTestimonial[] = []) {
-  return fetchContentRaw<DbTestimonial[]>("/api/content/testimonials", fallback);
+export async function getPublishedTestimonials(
+  fallback: DbTestimonial[] = defaultTestimonials,
+) {
+  const testimonials = await fetchContentRaw<DbTestimonial[]>(
+    "/api/content/testimonials",
+    fallback,
+  );
+  return resolvePublishedTestimonials(testimonials);
 }
 
 export async function getPublishedLogos(fallback: DbClientLogo[] = []) {
   return fetchContentRaw<DbClientLogo[]>("/api/content/logos", fallback);
 }
 
-export async function getPublishedFaqs(fallback: DbFaq[] = []) {
-  return fetchContentRaw<DbFaq[]>("/api/content/faq", fallback);
+export async function getPublishedFaqs(fallback: DbFaq[] = defaultFaqs) {
+  const faqs = await fetchContentRaw<DbFaq[]>("/api/content/faq", fallback);
+  return resolvePublishedFaqs(faqs);
 }
 
 export async function getSiteContent<T>(key: string, fallback: T): Promise<T> {
@@ -131,7 +147,7 @@ export async function getSiteContent<T>(key: string, fallback: T): Promise<T> {
 }
 
 export async function getAllSiteContent(
-  fallback: Record<string, unknown> = {},
+  fallback: Record<string, unknown> = siteContentRegistryRecord(),
 ): Promise<Record<string, unknown>> {
   return fetchContentRaw<Record<string, unknown>>("/api/content/site", fallback);
 }

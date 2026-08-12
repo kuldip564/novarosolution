@@ -6,9 +6,44 @@
 export const seedSite = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
+  description:
+    "A Gandhinagar-based digital product studio — we design, build, and grow web apps, AI systems, and marketing engines for startups and established brands across India.",
   email: "novaro@novarosolution.com",
   phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
+  businessHours: "Mon–Sat · 10:00 AM – 7:00 PM IST",
+  responseTime: "We reply within one business day",
+  founded: 2024,
+  geo: {
+    latitude: 23.2156,
+    longitude: 72.6369,
+    region: "IN-GJ",
+    placename: "Gandhinagar, Gujarat, India",
+    postalCode: "382010",
+    streetAddress: "Gandhinagar, Gujarat",
+    addressLocality: "Gandhinagar",
+    addressRegion: "Gujarat",
+    addressCountry: "IN",
+    timezone: "Asia/Kolkata",
+  },
+  serviceAreas: [
+    "Gandhinagar",
+    "Ahmedabad",
+    "GIFT City",
+    "Vadodara",
+    "Surat",
+    "Rajkot",
+    "Gujarat",
+    "India",
+    "Worldwide (Remote)",
+  ],
+  industries: [
+    "D2C & E-commerce",
+    "Logistics & Supply Chain",
+    "Healthcare & Services",
+    "Fintech & SaaS",
+    "Education & EdTech",
+  ],
   social: {
     linkedin: "https://www.linkedin.com/company/novaro-solution",
     x: "#",
@@ -18,15 +53,15 @@ export const seedSite = {
 };
 
 export const seedHero = {
-  eyebrow: "Digital product studio · Gandhinagar",
+  eyebrow: "Digital product studio · Gandhinagar, Gujarat",
   headline: "We engineer products",
   headlineAccent: "that earn trust.",
   lede:
-    "Web and app platforms, AI that survives production, and marketing that moves revenue — one accountable team from roadmap to launch.",
+    "Novaro builds production-grade web and mobile apps, AI systems that survive real users, and digital marketing that moves revenue — one senior team from discovery to launch and beyond.",
   ctaPrimary: "See our work",
   ctaSecondary: "Book a call",
-  metaStat: "2",
-  metaLabel: "Years of experience",
+  metaStat: "32",
+  metaLabel: "Clients served",
 };
 
 export const seedCta = {
@@ -35,7 +70,7 @@ export const seedCta = {
     "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
-    "Tell us the problem and we'll tell you the shortest path to a result.",
+    "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",
   workTitle: "Have a project in mind?",
   workDescription:
     "Share a brief — we'll reply with a clear plan, timeline, and team fit.",
@@ -102,17 +137,17 @@ export const seedProcessSteps = [
 ];
 
 export const seedHomeStats = [
-  { value: 2, suffix: " yrs", label: "Years of experience" },
-  { value: 32, suffix: "+", label: "Happy clients" },
-  { value: 4, suffix: "", label: "Core practices" },
-  { value: 98, suffix: "%", label: "Client retention" },
+  { value: 2, suffix: " yrs", label: "Shipping production software" },
+  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 50, suffix: "+", label: "Products & platforms delivered" },
+  { value: 98, suffix: "%", label: "Clients who return for phase two" },
 ];
 
 export const seedAboutStats = [
-  { value: 2, suffix: " yrs", label: "Years of experience" },
-  { value: 32, suffix: "+", label: "Happy clients" },
-  { value: 14, suffix: "", label: "People on the team" },
-  { value: 98, suffix: "%", label: "Client retention" },
+  { value: 2, suffix: " yrs", label: "Shipping production software" },
+  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 8, suffix: "", label: "People on the team" },
+  { value: 98, suffix: "%", label: "Clients who return for phase two" },
 ];
 
 export const seedWhyItems = [
@@ -145,12 +180,12 @@ export const seedWhyItems = [
 export const seedAboutPage = {
   introTitle: "NOVARO",
   introAccent: "ABOUT",
-  introLine: "We build digital products that earn trust — and keep earning it.",
+  introLine: "We build digital products that earn trust — and keep earning it after launch.",
   whoWeAre: {
     eyebrow: "Who we are",
     title: "A senior studio that ships\nwith you, not around you.",
     body:
-      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. In two years we've grown into a team that ships with you — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
+      "Novaro Solution is an IT studio headquartered in Gandhinagar, Gujarat. We specialise in web and app engineering, AI/ML, and digital marketing — helping founders and brands ship products that perform in production, not just in pitch decks. In two years we've delivered 50+ platforms for clients in D2C, logistics, healthcare, and services — with one accountable team from first wireframe to post-launch growth.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -169,7 +204,7 @@ export const seedAboutPage = {
         year: "2024",
         title: "Founded",
         text:
-          "Kuldip and Mehul Chaudhary founded Novaro in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
+          "Kuldip Chaudhary, Mehul Chaudhary, and Ronak Prajapati founded Novaro in Gandhinagar — one focused studio shipping web, app, and AI products without the agency hand-off cycle.",
       },
       {
         year: "2025",
@@ -220,10 +255,10 @@ export const seedAboutPage = {
     title: "Proof in the work.",
   },
   team: {
-    eyebrow: "Leadership",
-    title: "Founders & leadership.",
+    eyebrow: "Our people",
+    title: "Founders, leaders & the team.",
     description:
-      "Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to ship products with real accountability. Piyush Chaudhary manages operations and client delivery day to day.",
+      "Co-founders Kuldip Chaudhary, Mehul Chaudhary, and Ronak Prajapati built Novaro to ship products with real accountability. Alpesh Prajapati manages operations and delivery. Maulik, Krina, Sonal, and Abhi are the engineers, designers, and marketers who bring every roadmap to life.",
   },
   whyUs: {
     eyebrow: "Why Novaro",
@@ -554,9 +589,14 @@ export const seedWorkProjects = [
 ];
 
 export const seedTeam = [
-  { name: "Kuldip Chaudhary", role: "Co-Founder" },
-  { name: "Mehul Chaudhary", role: "Co-Founder" },
-  { name: "Piyush Chaudhary", role: "Manager" },
+  { name: "Kuldip Chaudhary", role: "Co-Founder · Engineering" },
+  { name: "Mehul Chaudhary", role: "Co-Founder · Food Safety & Quality Assurance" },
+  { name: "Ronak Prajapati", role: "Co-Founder · Technology" },
+  { name: "Alpesh Prajapati", role: "Manager · Operations & Delivery" },
+  { name: "Maulik Chaudhary", role: "Software Developer" },
+  { name: "Krina Patel", role: "Python Developer" },
+  { name: "Sonal Chaudhary", role: "Digital Marketing Specialist" },
+  { name: "Abhi Joshi", role: "Finance & Business Automation" },
 ];
 
 export const seedContactOptions = {
@@ -566,9 +606,9 @@ export const seedContactOptions = {
 
 export const seedServicesSection = {
   eyebrow: "What we do",
-  title: "Three core practices, one accountable team.",
+  title: "Four core practices.\nOne accountable team.",
   description:
-    "From first line of code to the campaign that brings users in, we own the whole stack so nothing falls through the gaps.",
+    "Web and app engineering, AI/ML, and digital marketing under one roof — so nothing falls through the gaps between build and growth.",
 };
 
 export const seedWhySection = {
@@ -577,5 +617,5 @@ export const seedWhySection = {
 
 export const seedTeamSection = {
   description:
-    "Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to ship products with real accountability. Piyush Chaudhary manages operations and client delivery day to day.",
+    "Co-founders Kuldip Chaudhary, Mehul Chaudhary, and Ronak Prajapati built Novaro to ship products with real accountability. Alpesh Prajapati manages operations and delivery. Maulik, Krina, Sonal, and Abhi are the engineers, designers, and marketers who bring every roadmap to life.",
 };

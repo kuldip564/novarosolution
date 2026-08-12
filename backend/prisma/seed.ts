@@ -111,16 +111,23 @@ async function main() {
   const seedTestimonials = [
     {
       quote:
-        "Novaro shipped a production-ready platform in weeks, not months — and the quality held up as we scaled.",
+        "Novaro shipped our logistics platform in weeks, not months. Booking, tracking, and admin flows went live together — and the codebase held up as we scaled past 10K deliveries.",
       name: "Product Lead",
-      role: "Fintech SaaS",
+      role: "Logistics · Gujarat",
       rating: 5,
     },
     {
       quote:
-        "They integrated AI into our workflow without the usual hype — measurable time saved from week one.",
+        "They rebuilt our D2C storefront with Next.js and tied Meta ads to real conversions. Page speed improved, checkout friction dropped, and we finally had attribution we could trust.",
+      name: "Brand Founder",
+      role: "Premium D2C · India",
+      rating: 5,
+    },
+    {
+      quote:
+        "What stood out was ownership — one team handled engineering, design, and SEO without the usual agency hand-offs. Weekly demos kept us in the loop from day one.",
       name: "Operations Director",
-      role: "Healthcare",
+      role: "Services · Healthcare",
       rating: 5,
     },
   ] as const;
@@ -139,16 +146,42 @@ async function main() {
     {
       question: "What types of projects do you take on?",
       answer:
-        "Web and mobile products, AI features, marketing sites, and full-stack platforms — from MVP to scale-up.",
+        "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work spans logistics, D2C, healthcare services, and fintech.",
     },
     {
       question: "How do engagements usually start?",
       answer:
-        "A short discovery call, then a scoped proposal with timeline, team, and clear deliverables.",
+        "Share your brief via our contact form or email. We schedule a 30-minute discovery call, then send a scoped proposal with timeline, squad composition, milestones, and a fixed or phased budget — usually within 2–3 business days.",
     },
     {
       question: "Do you work with startups and enterprises?",
-      answer: "Yes — we adapt squad size and process to your stage and constraints.",
+      answer:
+        "Yes. For early-stage founders we run lean MVP sprints with weekly shipping cadence. For established brands we embed a dedicated squad and integrate with your existing tools, processes, and compliance requirements.",
+    },
+    {
+      question: "What is a typical project timeline?",
+      answer:
+        "Marketing sites and landing pages: 3–6 weeks. MVPs and web apps: 8–14 weeks. Full platforms with AI, admin panels, and integrations: 12–20 weeks. Timelines depend on scope — we always share a week-by-week plan before kickoff.",
+    },
+    {
+      question: "Do you provide support after launch?",
+      answer:
+        "Yes. Every project includes a post-launch handover with documentation and training. We also offer monthly retainers for bug fixes, feature iterations, performance monitoring, SEO, and campaign optimization.",
+    },
+    {
+      question: "Where is your team based?",
+      answer:
+        "Our studio is in Gandhinagar, Gujarat, India. We work with clients across India and internationally — remote-first collaboration with shared Slack channels, weekly video standups, and async updates in your timezone.",
+    },
+    {
+      question: "What technologies do you use?",
+      answer:
+        "Next.js, React, TypeScript, Node.js, Express, MongoDB, PostgreSQL, Prisma, Cloudinary, AWS/GCP, and modern AI stacks (OpenAI, LangChain, custom ML pipelines). We pick tools for longevity and your team's ability to maintain them.",
+    },
+    {
+      question: "How is pricing structured?",
+      answer:
+        "Fixed-scope projects are quoted after discovery. Larger builds are phased — MVP first, then growth sprints. Budget ranges start from ₹5L for focused builds. Every proposal breaks down deliverables, timeline, and payment milestones with no hidden fees.",
     },
   ] as const;
 

@@ -18,8 +18,14 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [360, 640, 768, 1024, 1280, 1536, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512, 640, 750, 828, 1080, 1200, 1400],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    qualities: [75, 95],
+    localPatterns: [
+      {
+        pathname: "/images/**",
+      },
+    ],
     remotePatterns: [
       {
         protocol: "https",

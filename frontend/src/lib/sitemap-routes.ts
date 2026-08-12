@@ -12,7 +12,9 @@ const staticRoutes: Array<{
   { path: "/services", changeFrequency: "monthly", priority: 0.8 },
   { path: "/work", changeFrequency: "weekly", priority: 0.85 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/contact", changeFrequency: "monthly", priority: 0.85 },
+  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
 ];
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {

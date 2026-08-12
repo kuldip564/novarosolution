@@ -9,7 +9,9 @@ import {
   workProjects as fallbackWorkProjects,
 } from "./site-data";
 import { getWorkProjectImages, mergeWorkProjectImages } from "./work-project-images";
+import { resolveCanonicalRole, resolveMemberTier } from "./team-data";
 import { LEGACY_TEAM_NAMES } from "./team-defaults";
+import { localTeamPhoto } from "./team-photos";
 
 export type WorkProjectView = {
   idx: string;
@@ -65,6 +67,7 @@ export type ServiceGridView = {
 export type TeamMemberView = {
   name: string;
   role: string;
+  tier: import("./team-data").TeamTier;
   photo?: string | null;
   photoAsset?: CloudinaryAsset | null;
 };
@@ -190,17 +193,24 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
 }
 
 export function mapDbTeam(members: DbTeamMember[]): TeamMemberView[] {
-  if (!members.length) return [...fallbackTeam];
-  if (members.some((member) => LEGACY_TEAM_NAMES.has(member.name))) {
-    return [...fallbackTeam];
-  }
-  return members.map((member) => {
-    const photoAsset = parseCloudinaryAsset(member.photo);
+  const toView = (name: string, role: string, dbPhoto: DbTeamMember["photo"]) => {
+    const canonicalRole = resolveCanonicalRole(name, role);
+    const photoAsset = parseCloudinaryAsset(dbPhoto);
+    const cloudUrl = resolveAssetUrl(dbPhoto) ?? null;
     return {
-      name: member.name,
-      role: member.role,
-      photo: resolveAssetUrl(member.photo) ?? null,
-      photoAsset,
+      name,
+      role: canonicalRole,
+      tier: resolveMemberTier(name, canonicalRole),
+      photo: cloudUrl ?? localTeamPhoto(name),
+      photoAsset: cloudUrl ? photoAsset : null,
     };
-  });
+  };
+
+  if (!members.length) {
+    return fallbackTeam.map((member) => toView(member.name, member.role, null));
+  }
+  if (members.some((member) => LEGACY_TEAM_NAMES.has(member.name))) {
+    return fallbackTeam.map((member) => toView(member.name, member.role, null));
+  }
+  return members.map((member) => toView(member.name, member.role, member.photo));
 }

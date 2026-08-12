@@ -6,7 +6,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { BarChart3, Compass, Shield, Sparkles, type LucideIcon } from "lucide-react";
+import { BarChart3, Compass, MapPin, Shield, Sparkles, type LucideIcon } from "lucide-react";
 import { ClipReveal } from "@/components/anim/ClipReveal";
 import { Counter } from "@/components/anim/Counter";
 import { Parallax } from "@/components/anim/Parallax";
@@ -15,6 +15,7 @@ import { SplitText } from "@/components/anim/SplitText";
 import { Tilt } from "@/components/anim/Tilt";
 import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Button } from "@/components/Button";
+import { TeamGrid } from "@/components/sections/TeamGrid";
 import { CinemaBigword } from "@/components/sections/CinemaBigword";
 import { NMark } from "@/components/NMark";
 import { MediaPlaceholder } from "@/components/sections/MediaPlaceholder";
@@ -176,15 +177,33 @@ function AboutTimeline({
   );
 }
 
+function AboutIntroStats({ stats }: { stats: AboutStat[] }) {
+  const items = stats.slice(0, 4);
+  if (items.length === 0) return null;
+
+  return (
+    <div className="about-intro__stats" role="list" aria-label="Novaro Solution at a glance">
+      {items.map((stat) => (
+        <div key={stat.label} className="about-intro__stat" role="listitem">
+          <Counter value={stat.value} suffix={stat.suffix} className="about-intro__stat-value" />
+          <span className="about-intro__stat-label">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function AboutIntro({
   title,
   accent,
   tagline,
+  stats,
   cinematic,
 }: {
   title: string;
   accent: string;
   tagline: string;
+  stats: AboutStat[];
   cinematic: boolean;
 }) {
   const reduced = useReducedMotion();
@@ -201,8 +220,15 @@ function AboutIntro({
 
   const headline = (
     <>
+      <span className="about-intro__badge">
+        <MapPin size={14} strokeWidth={2} aria-hidden />
+        <span>
+          <strong>Gandhinagar, Gujarat</strong> · IT studio since 2024
+        </span>
+      </span>
       <CinemaBigword title={title} accent={accent} className="about-intro__bigword" />
       <p className="about-intro__tagline">{tagline}</p>
+      <AboutIntroStats stats={stats} />
     </>
   );
 
@@ -215,6 +241,7 @@ function AboutIntro({
         ) : (
           <div className="about-intro__glow" />
         )}
+        <div className="about-intro__glow about-intro__glow--secondary" />
       </div>
 
       <div className="wrap about-intro__content">
@@ -269,6 +296,7 @@ export function AboutExperience({
         title={content.introTitle}
         accent={content.introAccent}
         tagline={content.introLine}
+        stats={stats}
         cinematic={cinematic}
       />
 
@@ -368,7 +396,7 @@ export function AboutExperience({
 
       <section className="about-scene about-team" aria-labelledby="about-team-title">
         <div className="wrap">
-          <header className="about-scene__head">
+          <header className="about-scene__head" id="about-team-title">
             <span className="eyebrow">{content.team.eyebrow}</span>
             <SplitText
               text={content.team.title}
@@ -378,45 +406,38 @@ export function AboutExperience({
             <p className="about-scene__lede">{content.team.description}</p>
           </header>
 
-          <div className="about-team__grid">
-            {team.map((member, index) => (
-              <Reveal key={`${member.name}-${member.role}`} delay={index * 0.06}>
-                <Tilt className="about-team__member">
-                  <ClipReveal>
-                    {member.photoAsset ? (
-                      <CloudinaryImage
-                        asset={member.photoAsset}
-                        alt={`Portrait of ${member.name}`}
-                        width={600}
-                        height={800}
-                        transformWidth={480}
-                        className="about-team__photo"
-                        sizes="(max-width: 768px) 50vw, 280px"
-                      />
-                    ) : member.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={member.photo}
-                        alt={`Portrait of ${member.name}`}
-                        className="about-team__photo"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    ) : (
-                      <MediaPlaceholder
-                        title="Photo"
-                        hint="3:4 portrait"
-                        className="about-team__photo about-team__photo--placeholder"
-                      />
-                    )}
-                  </ClipReveal>
-                  <div className="about-team__meta">
-                    <h3>{member.name}</h3>
-                    <span>{member.role}</span>
-                  </div>
-                </Tilt>
-              </Reveal>
-            ))}
+          <div className="about-team__panel">
+            <div className="about-team__stats" aria-label="Team overview">
+              <div className="about-team__stat">
+                <span className="about-team__stat-value">{team.length}</span>
+                <span className="about-team__stat-label">Team members</span>
+              </div>
+              <div className="about-team__stat">
+                <span className="about-team__stat-value">
+                  {team.filter((member) => member.photo || member.photoAsset).length}
+                </span>
+                <span className="about-team__stat-label">Profiles with photos</span>
+              </div>
+              <div className="about-team__stat">
+                <span className="about-team__stat-value">
+                  {team.filter((member) => member.tier === "founder").length}
+                </span>
+                <span className="about-team__stat-label">Co-founders</span>
+              </div>
+              <div className="about-team__stat about-team__stat--location">
+                <span className="about-team__stat-value about-team__stat-value--text">
+                  Gandhinagar
+                </span>
+                <span className="about-team__stat-label">Headquarters · Gujarat</span>
+              </div>
+            </div>
+
+            <p className="about-team__hint">
+              Select any team member to open their full profile — role, skills, education, and
+              contact details.
+            </p>
+
+            <TeamGrid members={team} variant="about" />
           </div>
         </div>
       </section>

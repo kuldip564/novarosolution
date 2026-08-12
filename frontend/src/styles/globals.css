@@ -1,7 +1,11 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@import "./team.css";
+@import "./premium.css";
+@import "./geo.css";
 
 :root {
+  color-scheme: dark;
   --ink-900: #05080f;
   --ink-850: #070c18;
   --ink-800: #0a1428;
@@ -81,11 +85,14 @@
 }
 
 [data-theme="light"] {
+  color-scheme: light;
   --ink-900: #ffffff;
   --ink-850: #eef2f9;
   --ink-800: #ffffff;
   --ink-700: #e4ebf5;
   --navy: #0a1730;
+  --cyan: #2563eb;
+  --cyan-soft: #1d4ed8;
   --slate: #5c6b85;
   --slate-light: #46556f;
   --line-d: rgba(10, 23, 48, 0.1);
@@ -161,6 +168,7 @@
 
 html {
   scroll-behavior: auto;
+  background: var(--ink-900);
 }
 
 body {
@@ -221,6 +229,15 @@ img {
   height: 1px;
   background: var(--cyan);
   opacity: 0.6;
+}
+
+[data-theme="light"] .eyebrow {
+  color: var(--blue);
+}
+
+[data-theme="light"] .eyebrow::before {
+  background: var(--blue);
+  opacity: 0.55;
 }
 
 .eyebrow.center::before {
@@ -2446,6 +2463,46 @@ html.site--bg-3d .services-cinema {
 .contact-map {
   margin-top: 6px;
   min-height: 220px;
+}
+
+.contact-expect {
+  padding: 24px;
+  border-radius: var(--r);
+  border: 1px solid var(--line-d);
+  background: var(--surface-stat);
+  box-shadow: var(--shadow-card);
+}
+
+.contact-expect h4 {
+  color: var(--text-heading);
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.contact-expect ol {
+  margin: 0 0 16px;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-expect li {
+  color: var(--slate-light);
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.contact-industries {
+  font-size: 0.88rem;
+  color: var(--slate);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.contact-industries strong {
+  color: var(--text-heading);
+  font-weight: 600;
 }
 
 footer {

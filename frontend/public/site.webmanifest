@@ -1,6 +1,8 @@
 {
-  "name": "Novaro Solution",
+  "name": "Novaro Solution — Web App & AI Studio Gandhinagar",
   "short_name": "Novaro",
+  "description": "IT studio in Gandhinagar, Gujarat — web apps, AI/ML, digital marketing & SEO for India.",
+  "lang": "en-IN",
   "icons": [
     {
       "src": "/brand/novaro-icon.png",
@@ -15,7 +17,9 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#05080f",
-  "background_color": "#05080f",
-  "display": "standalone"
+  "theme_color": "#0a1730",
+  "background_color": "#f6f8fc",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
 }

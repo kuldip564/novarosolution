@@ -1,10 +1,55 @@
+import { team, teamCount } from "./team-data";
+
+export { team, teamCount };
+
 export const site = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
+  description:
+    "A Gandhinagar-based digital product studio — we design, build, and grow web apps, AI systems, and marketing engines for startups and established brands across India.",
   brandIcon: "/brand/novaro-icon.png",
   email: "novaro@novarosolution.com",
   phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
+  businessHours: "Mon–Sat · 10:00 AM – 7:00 PM IST",
+  responseTime: "We reply within one business day",
+  founded: 2024,
+  geo: {
+    latitude: 23.1858434,
+    longitude: 72.6184403,
+    region: "IN-GJ",
+    placename: "Sargasan, Gandhinagar, Gujarat, India",
+    postalCode: "382419",
+    streetAddress: "707, Capitol Icon, Swagat Reliance Road, Sargasan",
+    addressLocality: "Gandhinagar",
+    addressRegion: "Gujarat",
+    addressCountry: "IN",
+    timezone: "Asia/Kolkata",
+  },
+  serviceAreas: [
+    "Gandhinagar",
+    "Ahmedabad",
+    "GIFT City",
+    "Vadodara",
+    "Surat",
+    "Rajkot",
+    "Gujarat",
+    "India",
+    "Worldwide (Remote)",
+  ],
+  nearbyCities: [
+    { name: "Ahmedabad", distance: "25 km" },
+    { name: "GIFT City", distance: "12 km" },
+    { name: "Vadodara", distance: "130 km" },
+    { name: "Surat", distance: "265 km" },
+  ],
+  industries: [
+    "D2C & E-commerce",
+    "Logistics & Supply Chain",
+    "Healthcare & Services",
+    "Fintech & SaaS",
+    "Education & EdTech",
+  ],
   social: {
     linkedin: "https://www.linkedin.com/company/novaro-solution",
     x: "#",
@@ -130,17 +175,17 @@ export const homeProjects = [
 ] as const;
 
 export const homeStats = [
-  { value: 2, suffix: " yrs", label: "Years of experience" },
-  { value: 32, suffix: "+", label: "Happy clients" },
-  { value: 4, suffix: "", label: "Core practices" },
-  { value: 98, suffix: "%", label: "Client retention" },
+  { value: 2, suffix: " yrs", label: "Shipping production software" },
+  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 50, suffix: "+", label: "Products & platforms delivered" },
+  { value: 98, suffix: "%", label: "Clients who return for phase two" },
 ] as const;
 
 export const aboutStats = [
-  { value: 2, suffix: " yrs", label: "Years of experience" },
-  { value: 32, suffix: "+", label: "Happy clients" },
-  { value: 14, suffix: "", label: "People on the team" },
-  { value: 98, suffix: "%", label: "Client retention" },
+  { value: 2, suffix: " yrs", label: "Shipping production software" },
+  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: teamCount, suffix: "", label: "People on the team" },
+  { value: 98, suffix: "%", label: "Clients who return for phase two" },
 ] as const;
 
 export const whyItems = [
@@ -168,12 +213,6 @@ export const whyItems = [
     description:
       "Weekly working software, clear milestones, and honest updates — you always know where things stand.",
   },
-] as const;
-
-export const team = [
-  { name: "Kuldip Chaudhary", role: "Co-Founder" },
-  { name: "Mehul Chaudhary", role: "Co-Founder" },
-  { name: "Piyush Chaudhary", role: "Manager" },
 ] as const;
 
 export const serviceDetails = [
@@ -347,15 +386,15 @@ export const apiBase =
   process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const defaultHero = {
-  eyebrow: "Digital product studio · Gandhinagar",
+  eyebrow: "Digital product studio · Gandhinagar, Gujarat",
   headline: "We engineer products",
   headlineAccent: "that earn trust.",
   lede:
-    "Web and app platforms, AI that survives production, and marketing that moves revenue — one accountable team from roadmap to launch.",
+    "Novaro builds production-grade web and mobile apps, AI systems that survive real users, and digital marketing that moves revenue — one senior team from discovery to launch and beyond.",
   ctaPrimary: "See our work",
   ctaSecondary: "Book a call",
-  metaStat: "2",
-  metaLabel: "Years of experience",
+  metaStat: "32",
+  metaLabel: "Clients served",
 } as const;
 
 export type HeroContent = {
@@ -404,18 +443,27 @@ export const fallbackTestimonials = [
   {
     id: "1",
     quote:
-      "Novaro shipped a production-ready platform in weeks, not months — and the quality held up as we scaled.",
+      "Novaro shipped our logistics platform in weeks, not months. Booking, tracking, and admin flows went live together — and the codebase held up as we scaled past 10K deliveries.",
     name: "Product Lead",
-    role: "Fintech SaaS",
+    role: "Logistics · Gujarat",
     rating: 5,
     avatar: null,
   },
   {
     id: "2",
     quote:
-      "They integrated AI into our workflow without the usual hype — measurable time saved from week one.",
+      "They rebuilt our D2C storefront with Next.js and tied Meta ads to real conversions. Page speed improved, checkout friction dropped, and we finally had attribution we could trust.",
+    name: "Brand Founder",
+    role: "Premium D2C · India",
+    rating: 5,
+    avatar: null,
+  },
+  {
+    id: "3",
+    quote:
+      "What stood out was ownership — one team handled engineering, design, and SEO without the usual agency hand-offs. Weekly demos kept us in the loop from day one.",
     name: "Operations Director",
-    role: "Healthcare",
+    role: "Services · Healthcare",
     rating: 5,
     avatar: null,
   },
@@ -426,17 +474,48 @@ export const fallbackFaqs = [
     id: "1",
     question: "What types of projects do you take on?",
     answer:
-      "Web and mobile products, AI features, marketing sites, and full-stack platforms — from MVP to scale-up.",
+      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work spans logistics, D2C, healthcare services, and fintech.",
   },
   {
     id: "2",
     question: "How do engagements usually start?",
     answer:
-      "A short discovery call, then a scoped proposal with timeline, team, and clear deliverables.",
+      "Share your brief via our contact form or email. We schedule a 30-minute discovery call, then send a scoped proposal with timeline, squad composition, milestones, and a fixed or phased budget — usually within 2–3 business days.",
   },
   {
     id: "3",
     question: "Do you work with startups and enterprises?",
-    answer: "Yes — we adapt squad size and process to your stage and constraints.",
+    answer:
+      "Yes. For early-stage founders we run lean MVP sprints with weekly shipping cadence. For established brands we embed a dedicated squad and integrate with your existing tools, processes, and compliance requirements.",
+  },
+  {
+    id: "4",
+    question: "What is a typical project timeline?",
+    answer:
+      "Marketing sites and landing pages: 3–6 weeks. MVPs and web apps: 8–14 weeks. Full platforms with AI, admin panels, and integrations: 12–20 weeks. Timelines depend on scope — we always share a week-by-week plan before kickoff.",
+  },
+  {
+    id: "5",
+    question: "Do you provide support after launch?",
+    answer:
+      "Yes. Every project includes a post-launch handover with documentation and training. We also offer monthly retainers for bug fixes, feature iterations, performance monitoring, SEO, and campaign optimization.",
+  },
+  {
+    id: "6",
+    question: "Where is your team based?",
+    answer:
+      "Our studio is in Gandhinagar, Gujarat, India. We work with clients across India and internationally — remote-first collaboration with shared Slack channels, weekly video standups, and async updates in your timezone.",
+  },
+  {
+    id: "7",
+    question: "What technologies do you use?",
+    answer:
+      "Next.js, React, TypeScript, Node.js, Express, MongoDB, PostgreSQL, Prisma, Cloudinary, AWS/GCP, and modern AI stacks (OpenAI, LangChain, custom ML pipelines). We pick tools for longevity and your team's ability to maintain them.",
+  },
+  {
+    id: "8",
+    question: "How is pricing structured?",
+    answer:
+      "Fixed-scope projects are quoted after discovery. Larger builds are phased — MVP first, then growth sprints. Budget ranges start from ₹5L for focused builds. Every proposal breaks down deliverables, timeline, and payment milestones with no hidden fees.",
   },
 ] as const;

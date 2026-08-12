@@ -35,8 +35,8 @@ export function CloudinaryImage({
       crop: "fill",
     }) ?? parsed.secureUrl;
 
-  const isLocal = src.startsWith("/") && !src.startsWith("//");
   const isCloudinary = src.includes("cloudinary.com");
+  const hasQueryString = src.includes("?");
 
   return (
     <Image
@@ -48,7 +48,7 @@ export function CloudinaryImage({
       priority={priority}
       fetchPriority={fetchPriority}
       sizes={sizes}
-      unoptimized={isCloudinary || isLocal}
+      unoptimized={isCloudinary || hasQueryString}
     />
   );
 }

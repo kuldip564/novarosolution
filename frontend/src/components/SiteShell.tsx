@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { ScrollProgressBar } from "@/components/anim/ScrollProgressBar";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { OrganizationJsonLd } from "@/components/OrganizationJsonLd";
+import { SeoJsonLd } from "@/components/SeoJsonLd";
 import { ToastProvider } from "@/components/ui/Toast";
 import { MotionProvider } from "@/lib/motion-provider";
 
@@ -38,7 +38,7 @@ export function SiteShell({ children }: SiteShellProps) {
   return (
     <MotionProvider>
       <ToastProvider>
-        <OrganizationJsonLd />
+        <SeoJsonLd />
         <ScrollProgressBar />
         <SiteBackground />
         <Cursor />

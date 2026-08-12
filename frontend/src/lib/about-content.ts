@@ -1,3 +1,5 @@
+import { teamCount } from "./team-data";
+
 export type AboutMilestone = {
   year: string;
   title: string;
@@ -70,12 +72,12 @@ export type AboutPageContent = {
 export const defaultAboutPage: AboutPageContent = {
   introTitle: "NOVARO",
   introAccent: "ABOUT",
-  introLine: "We build digital products that earn trust — and keep earning it.",
+  introLine: "We build digital products that earn trust — and keep earning it after launch.",
   whoWeAre: {
     eyebrow: "Who we are",
     title: "A senior studio that ships\nwith you, not around you.",
     body:
-      "Novaro Solution is an IT studio in Gandhinagar focused on web and app engineering, AI/ML, and digital marketing. In two years we've grown into a team that ships with you — fewer hand-offs, more ownership, and software that holds up in production long after launch day.",
+      "Novaro Solution is an IT studio headquartered in Gandhinagar, Gujarat. We specialise in web and app engineering, AI/ML, and digital marketing — helping founders and brands ship products that perform in production, not just in pitch decks. In two years we've delivered 50+ platforms for clients in D2C, logistics, healthcare, and services — with one accountable team from first wireframe to post-launch growth.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -94,7 +96,7 @@ export const defaultAboutPage: AboutPageContent = {
         year: "2024",
         title: "Founded",
         text:
-          "Kuldip and Mehul Chaudhary founded Novaro in Gandhinagar as a focused studio — one team shipping web and app products without the agency hand-off cycle.",
+          "Kuldip Chaudhary, Mehul Chaudhary, and Ronak Prajapati founded Novaro in Gandhinagar — one focused studio shipping web, app, and AI products without the agency hand-off cycle.",
       },
       {
         year: "2025",
@@ -145,10 +147,10 @@ export const defaultAboutPage: AboutPageContent = {
     title: "Proof in the work.",
   },
   team: {
-    eyebrow: "Leadership",
-    title: "Founders & leadership.",
+    eyebrow: "Our people",
+    title: "Founders, leaders & the team.",
     description:
-      "Co-founders Kuldip Chaudhary and Mehul Chaudhary started Novaro to ship products with real accountability. Piyush Chaudhary manages operations and client delivery day to day.",
+      "Co-founders Kuldip Chaudhary, Mehul Chaudhary, and Ronak Prajapati built Novaro to ship products with real accountability. Alpesh Prajapati manages operations and delivery. Maulik, Krina, Sonal, and Abhi are the engineers, designers, and marketers who bring every roadmap to life.",
   },
   whyUs: {
     eyebrow: "Why Novaro",
@@ -304,10 +306,10 @@ export function normalizeAboutWhyItems(value: unknown): AboutWhyItem[] {
 
 export function normalizeAboutStats(value: unknown): AboutStat[] {
   const fallback = [
-    { value: 2, suffix: " yrs", label: "Years of experience" },
-    { value: 32, suffix: "+", label: "Happy clients" },
-    { value: 14, suffix: "", label: "People on the team" },
-    { value: 98, suffix: "%", label: "Client retention" },
+    { value: 2, suffix: " yrs", label: "Shipping production software" },
+    { value: 32, suffix: "+", label: "Clients across India & abroad" },
+    { value: teamCount, suffix: "", label: "People on the team" },
+    { value: 98, suffix: "%", label: "Clients who return for phase two" },
   ];
 
   if (!Array.isArray(value) || value.length === 0) {
