@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AboutExperience } from "@/components/about/AboutExperience";
-import { AboutTeamPhotoPreload } from "@/components/about/AboutTeamPhotoPreload";
 import {
   defaultAboutPage,
   normalizeAboutPage,
@@ -44,7 +43,6 @@ export default async function AboutPage() {
 
   return (
     <>
-      <AboutTeamPhotoPreload />
       <AboutExperience
       content={content}
       stats={normalizeAboutStats(stats)}
