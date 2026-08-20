@@ -19,11 +19,8 @@ async function start() {
     ]);
   } catch (error) {
     console.error("Failed to sync admin user from env:", error);
-    if (config.NODE_ENV === "production") {
-      process.exit(1);
-    }
     console.warn(
-      "Continuing in development — fix DATABASE_URL / MongoDB, then restart. Admin login may fail until sync succeeds.",
+      "Continuing without a working database — the public site runs on frontend fallbacks. Fix DATABASE_URL, then restart/redeploy to restore admin login and the CMS.",
     );
   }
 
