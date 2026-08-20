@@ -30,7 +30,7 @@ async function start() {
       : "Cloudinary: not configured — using local /uploads fallback",
   );
 
-  const server = app.listen(config.PORT, () => {
+  const server = app.listen(config.PORT, "0.0.0.0", () => {
     console.log(
       `Backend listening on http://localhost:${config.PORT} (${config.NODE_ENV})`,
     );

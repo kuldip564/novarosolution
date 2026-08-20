@@ -1,7 +1,12 @@
 import dotenv from "dotenv";
 import { z } from "zod";
 
-dotenv.config();
+// override: true so backend/.env is authoritative for this process even when a
+// parent dev-tooling process (e.g. a shared `concurrently` launcher) has already
+// set vars like PORT for a sibling process — otherwise dotenv silently keeps the
+// inherited value and the server can crash trying to bind someone else's port.
+// No-op in production: Render (etc.) injects env vars directly, no .env file exists.
+dotenv.config({ override: true });
 
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(5001),
