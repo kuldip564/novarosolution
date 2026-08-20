@@ -267,7 +267,7 @@ export function HomeSections({
                           transformWidth={640}
                           className="home-work-card__img"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                          priority={index === 0}
+                          priority={index < 2}
                         />
                       </div>
                     ) : (
@@ -298,7 +298,7 @@ export function HomeSections({
                           transformWidth={640}
                           className="home-work-card__img"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                          priority={index === 0}
+                          priority={index < 2}
                         />
                       </div>
                     ) : (
