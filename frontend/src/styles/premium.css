@@ -168,7 +168,7 @@
   color: #f59e0b;
 }
 
-[data-theme="light"] .home-testimonial__avatar-fallback {
+[data-theme="light"] .home-testimonial footer .home-testimonial__avatar-fallback {
   background: linear-gradient(155deg, #dbeafe, #bfdbfe);
   color: var(--navy);
 }
