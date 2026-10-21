@@ -6,9 +6,11 @@ type MediaPlaceholderProps = {
 
 export function MediaPlaceholder({
   title,
-  hint = "Add image / video",
+  hint = "",
   className = "",
 }: MediaPlaceholderProps) {
+  const publicHint = hint.toLowerCase().startsWith("add image") ? "" : hint;
+
   return (
     <div className={`media-ph ${className}`.trim()}>
       <div className="ph-ic">
@@ -19,7 +21,7 @@ export function MediaPlaceholder({
         </svg>
       </div>
       <div className="ph-t">{title}</div>
-      <div className="ph-s">{hint}</div>
+      {publicHint ? <div className="ph-s">{publicHint}</div> : null}
     </div>
   );
 }

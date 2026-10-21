@@ -57,6 +57,7 @@ export type HomeProjectView = {
 
 export type ServiceGridView = {
   id: string;
+  slug: string;
   title: string;
   description: string;
   tags: readonly string[] | string[];
@@ -131,7 +132,7 @@ export function mapDbProjectsToHomeGrid(projects: DbProject[]): HomeProjectView[
     );
 
     return {
-      href: project.externalUrl ?? "/work",
+      href: `/work/${project.slug}`,
       category: project.category,
       title: project.title,
       description: project.hook,
@@ -175,6 +176,7 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
   if (!services.length) {
     return fallbackServices.map((service) => ({
       id: service.id,
+      slug: service.slug,
       title: service.title,
       description: service.description,
       tags: service.tags,
@@ -184,6 +186,7 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
 
   return services.map((service, index) => ({
     id: String(index + 1).padStart(2, "0"),
+    slug: service.slug,
     title: service.title,
     description: service.shortDescription ?? service.description,
     tags: service.tags ?? [],

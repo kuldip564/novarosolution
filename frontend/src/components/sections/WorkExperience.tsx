@@ -5,6 +5,7 @@ import {
   useReducedMotion,
   useTransform,
 } from "framer-motion";
+import Link from "next/link";
 import { memo, useState } from "react";
 import { Reveal } from "@/components/anim/Reveal";
 import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
@@ -149,6 +150,9 @@ function WorkProjectSection({
                 </svg>
               </a>
             ) : null}
+            <Link href={`/work/${project.slug}`} className="work-project__cta work-project__cta--ghost">
+              Case study
+            </Link>
             <button
               type="button"
               className="work-project__cta work-project__cta--ghost"

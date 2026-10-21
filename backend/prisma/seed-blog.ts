@@ -1,5 +1,54 @@
 export const seedBlogPosts = [
   {
+    title: "What changes the cost of a SaaS MVP",
+    slug: "saas-mvp-cost-factors",
+    excerpt:
+      "Scope, integrations, accounts, and admin work move the price of a first SaaS release. A number without those facts is a guess.",
+    category: "Product",
+    tags: ["SaaS", "MVP", "Budget"],
+    author: { name: "Novaro Solution", avatar: null },
+    coverImage: "/images/webapp-dashboard.webp",
+    content: `
+      <p>A SaaS MVP is the smallest product a real user can log into and finish one job. The price moves with what that job requires, not with a flat package.</p>
+      <h2>What actually changes the cost</h2>
+      <ul>
+        <li>How many roles sign in, and what each role is allowed to see</li>
+        <li>Integrations that must work on day one — payments, email, or an existing database</li>
+        <li>Whether an admin needs to fix a customer record without a developer</li>
+        <li>How much of the workflow is new versus a screen on top of a tool you already pay for</li>
+      </ul>
+      <p>Leave reporting, extra roles, and nice-to-have integrations for the next release. A weekly build shows whether the first loop is worth finishing. <a href="/work/mr-antidot">Mr Antidot</a> is a service product with booking and pricing, which is the same shape as a first SaaS release. If you are scoping one, start with <a href="/services/web-app-eng">web and app development</a> or <a href="/contact">send a short brief</a>.</p>
+    `,
+    publishedDaysAgo: 0,
+  },
+  {
+    title: "Custom software vs off-the-shelf software",
+    slug: "custom-vs-off-the-shelf",
+    excerpt:
+      "Buy a tool when the workflow is common. Build one when the workflow is the business.",
+    category: "Product",
+    tags: ["Custom software", "SaaS", "Buying"],
+    author: { name: "Novaro Solution", avatar: null },
+    coverImage: "/images/webapp-dashboard.webp",
+    content: `
+      <p>Off-the-shelf software is the right buy when many companies do the job the same way. Custom software is worth it when the way you work is why customers pick you.</p>
+      <h2>Buy when</h2>
+      <ul>
+        <li>The workflow matches what the product already does, with light settings</li>
+        <li>You can live with the vendor's screens, data model, and release schedule</li>
+        <li>The job is accounting, email, or another problem that is already solved</li>
+      </ul>
+      <h2>Build when</h2>
+      <ul>
+        <li>Staff keep a spreadsheet beside the tool because the tool cannot do the real job</li>
+        <li>Customers would notice if you swapped the product for a generic one</li>
+        <li>Two or three tools have to be glued together for one order, booking, or shipment</li>
+      </ul>
+      <p><a href="/work/quadrato-cargo">Quadrato Cargo</a> needed booking, tracking, and dispatch in one product. A generic site would not have run that operation. If that sounds like the problem, see <a href="/services/web-app-eng">web and app development</a> or <a href="/contact">talk through the workflow</a>.</p>
+    `,
+    publishedDaysAgo: 1,
+  },
+  {
     title: "Shipping faster with a single full-stack team",
     slug: "ship-fast-stack",
     excerpt:
@@ -59,7 +108,7 @@ if (!result.ok) return fallbackWorkflow(input);</code></pre>
     author: { name: "Novaro Growth Lead", avatar: null },
     coverImage: "/images/digital-marketing-dashboard.webp",
     content: `
-      <p>Paid traffic is a accelerant, not a foundation. If your site is slow, thin, or impossible to crawl, campaigns leak budget.</p>
+      <p>Paid traffic is an accelerant, not a foundation. If your site is slow, thin, or impossible to crawl, campaigns leak budget.</p>
       <h2>The baseline checklist</h2>
       <ul>
         <li>Indexable templates with unique titles and meta descriptions</li>

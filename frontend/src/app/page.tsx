@@ -9,7 +9,6 @@ import {
   getPublishedTestimonials,
   getSiteContent,
 } from "@/lib/content";
-import { mapDbFaqs } from "@/components/sections/FaqSection";
 import { normalizeHeroContent } from "@/lib/hero-content";
 import { homePageJsonLd, homePageMetadata } from "@/lib/home-seo";
 import {
@@ -67,8 +66,7 @@ export default async function HomePage() {
 
   const homeCta = pickCta(cta, "home");
   const heroCopy = normalizeHeroContent(hero);
-  const faqItems = mapDbFaqs(faqs);
-  const jsonLd = homePageJsonLd(faqItems);
+  const jsonLd = homePageJsonLd();
 
   return (
     <>

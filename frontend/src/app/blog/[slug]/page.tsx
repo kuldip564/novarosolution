@@ -76,10 +76,12 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     title,
     description,
     icons: siteIcons,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title,
       description,
       type: "article",
+      url: `${siteBaseUrl()}/blog/${post.slug}`,
       publishedTime: post.publishedAt,
       authors: [post.author.name],
       images: ogImage ? [{ url: ogImage }] : undefined,

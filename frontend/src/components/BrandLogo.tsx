@@ -39,7 +39,7 @@ export function BrandLogo({
       <Link
         href={href}
         className={`brand ${className}`.trim()}
-        aria-label={label}
+        aria-label={showText ? undefined : label}
         onClick={onClick}
       >
         {content}

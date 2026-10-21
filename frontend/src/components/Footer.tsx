@@ -44,11 +44,7 @@ export function Footer() {
         <div className="foot-grid">
           <div className="foot-brand">
             <BrandLogo iconSize={30} href="/" />
-            <p>
-              {site.description} Based in Gandhinagar, we serve clients across India
-              and internationally — from D2C brands to logistics platforms and healthcare
-              services.
-            </p>
+            <p>{site.description}</p>
             <address className="foot-address" itemScope itemType="https://schema.org/PostalAddress">
               <span itemProp="streetAddress">{site.geo.streetAddress}</span>,{" "}
               <span itemProp="addressLocality">{site.geo.addressLocality}</span>,{" "}
@@ -95,24 +91,26 @@ export function Footer() {
           </div>
 
           <div className="foot-col">
-            <h5>Services</h5>
-            <Link href="/services">Web &amp; App Development</Link>
-            <Link href="/services">AI &amp; Machine Learning</Link>
-            <Link href="/services">Digital Marketing &amp; SEO</Link>
-            <Link href="/services">Cloud &amp; DevOps</Link>
+            <h2>Services</h2>
+            <Link href="/services/web-app-eng">Web &amp; App Development</Link>
+            <Link href="/services/ai-machine-ml">AI &amp; Machine Learning</Link>
+            <Link href="/services/digital-marketing">Digital Marketing &amp; SEO</Link>
+            <Link href="/services/cloud-devops">Cloud &amp; DevOps</Link>
           </div>
 
           <div className="foot-col">
-            <h5>Company</h5>
+            <h2>Company</h2>
             {navLinks.slice(1).map((link) => (
               <Link key={link.href} href={link.href}>
                 {link.label}
               </Link>
             ))}
+            <Link href="/software-development-usa">For US teams</Link>
+            <Link href="/it-services">IT services worldwide</Link>
           </div>
 
           <div className="foot-col">
-            <h5>Get in touch</h5>
+            <h2>Get in touch</h2>
             <a href={`mailto:${site.email}`}>{site.email}</a>
             <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
             <span>{site.location}</span>
@@ -122,7 +120,7 @@ export function Footer() {
         </div>
 
         <div className="foot-bot">
-          <p>© 2026 Novaro Solution · Gandhinagar, Gujarat, India. All rights reserved.</p>
+          <p>© 2026 Novaro Solution · Worldwide · Studio in Gandhinagar, India. All rights reserved.</p>
           <nav className="foot-legal" aria-label="Legal">
             {legalLinks.map((link) => (
               <Link key={link.href} href={link.href}>

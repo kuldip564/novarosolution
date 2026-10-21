@@ -35,9 +35,10 @@ export function getParticleCounts(tier: PerformanceTier): ParticleCounts {
     : { particleCount: 1400, starCount: 600 };
 }
 
-/** WebGL runs on mobile with a reduced particle budget; off only for reduced motion / low-end. */
+/** WebGL off on phones and low-end devices. CSS mark still shows. */
 export function shouldEnableWebGL(tier: PerformanceTier): boolean {
-  return tier !== "low";
+  if (tier === "low" || isMobileViewport()) return false;
+  return true;
 }
 
 export function getWebGLPixelRatio(): number {

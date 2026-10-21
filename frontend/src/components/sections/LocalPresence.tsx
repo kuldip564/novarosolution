@@ -28,18 +28,16 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
         {isHome ? (
           <header className="home-section-head home-section-head--center">
             <Reveal>
-              <span className="eyebrow center">Based in Gujarat</span>
+              <span className="eyebrow center">Global delivery</span>
             </Reveal>
             <h2 id="home-local-title" className="home-section-head__title">
-              Gandhinagar studio.
+              Software for the USA
               <br />
-              India &amp; worldwide delivery.
+              and every other market.
             </h2>
             <Reveal delay={0.08}>
               <p className="home-section-head__lede">
-                We work with teams across Ahmedabad, GIFT City, and all of Gujarat — plus
-                remote clients worldwide. Same senior team, clear communication, IST-friendly
-                hours.
+                The studio is in Gandhinagar. Calls land in the US morning. The rest of the day is Slack.
               </p>
             </Reveal>
           </header>
@@ -48,8 +46,8 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
             <span className="eyebrow">Find us</span>
             <h2 id="local-presence-title">Visit our Gandhinagar studio</h2>
             <p>
-              Book a discovery call or drop by during business hours — we serve clients across
-              Gujarat and India.
+              Book a discovery call, or visit the Gandhinagar studio. We build for companies in
+              the USA, UK, Europe, the Middle East, and India.
             </p>
           </header>
         )}
@@ -167,6 +165,9 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
         {isHome && (
           <Reveal className="local-foot-cta">
             <p>{formattedAddress()}</p>
+            <Button href="/software-development-usa" variant="ghost">
+              For US teams
+            </Button>
             <Button href="/contact">Book a discovery call</Button>
           </Reveal>
         )}

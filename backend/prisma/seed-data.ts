@@ -7,7 +7,7 @@ export const seedSite = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
   description:
-    "A Gandhinagar-based digital product studio — we design, build, and grow web apps, AI systems, and marketing engines for startups and established brands across India.",
+    "Novaro Solution designs and ships custom software — web apps, mobile products, AI systems, and digital marketing — for companies in the USA, UK, Europe, the Middle East, and India.",
   email: "novaro@novarosolution.com",
   phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
@@ -27,15 +27,14 @@ export const seedSite = {
     timezone: "Asia/Kolkata",
   },
   serviceAreas: [
-    "Gandhinagar",
-    "Ahmedabad",
-    "GIFT City",
-    "Vadodara",
-    "Surat",
-    "Rajkot",
-    "Gujarat",
+    "USA",
+    "Canada",
+    "United Kingdom",
+    "Europe",
+    "UAE",
+    "Australia",
     "India",
-    "Worldwide (Remote)",
+    "Worldwide",
   ],
   industries: [
     "D2C & E-commerce",
@@ -53,11 +52,11 @@ export const seedSite = {
 };
 
 export const seedHero = {
-  eyebrow: "Digital product studio · Gandhinagar, Gujarat",
-  headline: "We engineer products",
-  headlineAccent: "that earn trust.",
+  eyebrow: "Software · AI · Growth · Worldwide",
+  headline: "We build software",
+  headlineAccent: "worldwide.",
   lede:
-    "Novaro builds production-grade web and mobile apps, AI systems that survive real users, and digital marketing that moves revenue — one senior team from discovery to launch and beyond.",
+    "Web apps, mobile products, AI systems, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India — one senior team from discovery to launch.",
   ctaPrimary: "See our work",
   ctaSecondary: "Book a call",
   metaStat: "32",
@@ -461,8 +460,8 @@ export const seedServicesPage = {
         "A codebase your team can extend without rewriting",
       ],
       relatedLinks: [
-        { label: "Quadrato Cargo logistics platform", href: "https://www.quadratocargo.com/" },
-        { label: "Mr Antidot service platform", href: "https://www.mrantidot.com/" },
+        { label: "Quadrato Cargo logistics platform", href: "/work/quadrato-cargo" },
+        { label: "Mr Antidot service platform", href: "/work/mr-antidot" },
       ],
     },
     "ai-machine-ml": {
@@ -472,7 +471,7 @@ export const seedServicesPage = {
         "Human-in-the-loop workflows clinicians and ops teams trust",
       ],
       relatedLinks: [
-        { label: "Mr Antidot operations platform", href: "https://www.mrantidot.com/" },
+        { label: "Mr Antidot operations platform", href: "/work/mr-antidot" },
         { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
       ],
     },
@@ -483,8 +482,8 @@ export const seedServicesPage = {
         "Brand and performance working from the same playbook",
       ],
       relatedLinks: [
-        { label: "Zeevan premium D2C storefront", href: "https://www.zeevan.shop/" },
-        { label: "KankreG brand commerce site", href: "https://www.kankreg.com/" },
+        { label: "Zeevan premium D2C storefront", href: "/work/zeevan" },
+        { label: "KankreG brand commerce site", href: "/work/kankreg" },
       ],
     },
     "cloud-devops": {
@@ -494,7 +493,7 @@ export const seedServicesPage = {
         "Security and observability built in, not bolted on",
       ],
       relatedLinks: [
-        { label: "Quadrato Cargo platform build", href: "https://www.quadratocargo.com/" },
+        { label: "Quadrato Cargo platform build", href: "/work/quadrato-cargo" },
         { label: "Talk to us about your stack", href: "/contact" },
       ],
     },

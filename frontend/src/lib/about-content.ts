@@ -77,7 +77,7 @@ export const defaultAboutPage: AboutPageContent = {
     eyebrow: "Who we are",
     title: "A senior studio that ships\nwith you, not around you.",
     body:
-      "Novaro Solution is an IT studio headquartered in Gandhinagar, Gujarat. We specialise in web and app engineering, AI/ML, and digital marketing — helping founders and brands ship products that perform in production, not just in pitch decks. In two years we've delivered 50+ platforms for clients in D2C, logistics, healthcare, and services — with one accountable team from first wireframe to post-launch growth.",
+      "One team from the first wireframe to the release after launch. In two years we have shipped platforms for D2C, logistics, healthcare, and services. The studio is in Gandhinagar.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -249,7 +249,16 @@ export function normalizeAboutPage(value: unknown): AboutPageContent {
     whoWeAre: {
       eyebrow: pickString(who.eyebrow, defaultAboutPage.whoWeAre.eyebrow),
       title: pickString(who.title, defaultAboutPage.whoWeAre.title),
-      body: pickString(who.body, defaultAboutPage.whoWeAre.body),
+      body: (() => {
+        const body = pickString(who.body, defaultAboutPage.whoWeAre.body);
+        if (
+          body.startsWith("Novaro Solution is an IT studio headquartered in Gandhinagar") ||
+          body.startsWith("Novaro Solution builds software for companies in the USA")
+        ) {
+          return defaultAboutPage.whoWeAre.body;
+        }
+        return body;
+      })(),
     },
     missionVision: {
       eyebrow: pickString(mv.eyebrow, defaultAboutPage.missionVision.eyebrow),

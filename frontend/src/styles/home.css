@@ -501,6 +501,21 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
   }
 }
 
+@media (max-width: 767px) {
+  .home-hero__visual {
+    min-height: 0;
+  }
+
+  .home-hero__visual-float {
+    width: 104px;
+  }
+
+  .home-hero__mark {
+    height: 96px !important;
+    max-width: 80px !important;
+  }
+}
+
 /* ── Shared section chrome ── */
 
 .home-scene {
@@ -615,6 +630,8 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
 .home-section-foot {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-top: clamp(2rem, 4vw, 2.75rem);
 }
 
@@ -733,8 +750,14 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
 }
 
 .home-svc-card-wrap,
-.home-svc-card-wrap .home-svc-card {
+.home-svc-card-wrap .home-svc-card,
+a.home-svc-card-link {
   height: 100%;
+}
+
+a.home-svc-card-link {
+  display: flex;
+  color: inherit;
 }
 
 .home-svc-card {

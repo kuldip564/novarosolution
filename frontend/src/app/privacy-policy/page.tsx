@@ -106,8 +106,8 @@ export default function PrivacyPolicyPage() {
 
       <h2>International visitors</h2>
       <p>
-        Novaro is based in Gandhinagar, Gujarat, India, and we work with clients across India and
-        remotely worldwide. If you access the Services from outside India, your information may be
+        Novaro's studio is in Gandhinagar, India. We work with clients in the USA, UK, Europe, the
+        Middle East, and India. If you access the Services from outside India, your information may be
         transferred to, stored, and processed in India or other countries where our service
         providers operate, which may have data protection laws different from those of your home
         jurisdiction.

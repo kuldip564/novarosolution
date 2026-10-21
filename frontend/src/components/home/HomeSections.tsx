@@ -111,9 +111,15 @@ function ServiceCard({
     </article>
   );
 
+  const linked = (
+    <Link href={`/services/${service.slug}`} className="home-svc-card-link">
+      {card}
+    </Link>
+  );
+
   return (
     <Reveal delay={0.08 + index * 0.08} className="home-svc-grid__cell">
-      {tilt ? <Tilt className="home-svc-card-wrap">{card}</Tilt> : card}
+      {tilt ? <Tilt className="home-svc-card-wrap">{linked}</Tilt> : linked}
     </Reveal>
   );
 }
@@ -227,6 +233,7 @@ export function HomeSections({
             <Button href="/services" variant="ghost">
               Explore all services
             </Button>
+            <Button href="/it-services">IT services worldwide</Button>
           </Reveal>
         </div>
       </section>
@@ -267,7 +274,6 @@ export function HomeSections({
                           transformWidth={640}
                           className="home-work-card__img"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                          priority={index < 2}
                         />
                       </div>
                     ) : (
@@ -298,7 +304,6 @@ export function HomeSections({
                           transformWidth={640}
                           className="home-work-card__img"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                          priority={index < 2}
                         />
                       </div>
                     ) : (
@@ -412,12 +417,15 @@ export function HomeSections({
 
           <ol className="home-process-grid">
             {steps.map((step, index) => (
-              <Reveal key={step.num} delay={0.08 + index * 0.07}>
-                <li className="home-process-step">
-                  <span className="home-process-step__num">{step.num}</span>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </li>
+              <Reveal
+                as="li"
+                key={step.num}
+                delay={0.08 + index * 0.07}
+                className="home-process-step"
+              >
+                <span className="home-process-step__num">{step.num}</span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
               </Reveal>
             ))}
           </ol>

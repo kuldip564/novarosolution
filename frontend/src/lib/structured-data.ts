@@ -25,6 +25,21 @@ function regionAreaServed(name: string) {
   return { "@type": "AdministrativeArea" as const, name };
 }
 
+function countryAreaServed(name: string) {
+  return { "@type": "Country" as const, name };
+}
+
+const areasServed = [
+  countryAreaServed("United States"),
+  countryAreaServed("Canada"),
+  countryAreaServed("United Kingdom"),
+  countryAreaServed("United Arab Emirates"),
+  countryAreaServed("Australia"),
+  countryAreaServed("India"),
+  regionAreaServed("Europe"),
+  cityAreaServed("Gandhinagar"),
+];
+
 export function geoCoordinatesJsonLd() {
   return {
     "@type": "GeoCoordinates",
@@ -69,15 +84,7 @@ export function organizationJsonLd() {
     telephone: site.phone,
     foundingDate: String(site.founded),
     address: postalAddressJsonLd(),
-    areaServed: [
-      cityAreaServed("Gandhinagar"),
-      cityAreaServed("Ahmedabad"),
-      cityAreaServed("Vadodara"),
-      cityAreaServed("Surat"),
-      cityAreaServed("Rajkot"),
-      regionAreaServed("Gujarat"),
-      regionAreaServed("India"),
-    ],
+    areaServed: areasServed,
     knowsAbout: [
       "Web Application Development",
       "Mobile App Development",
@@ -111,15 +118,7 @@ export function localBusinessJsonLd() {
     geo: geoCoordinatesJsonLd(),
     hasMap: googleMapsUrl(),
     openingHoursSpecification: openingHoursSpecification(),
-    areaServed: [
-      cityAreaServed("Gandhinagar"),
-      cityAreaServed("Ahmedabad"),
-      cityAreaServed("Vadodara"),
-      cityAreaServed("Surat"),
-      cityAreaServed("Rajkot"),
-      regionAreaServed("Gujarat"),
-      regionAreaServed("India"),
-    ],
+    areaServed: areasServed,
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Novaro Solution Services",
@@ -129,7 +128,7 @@ export function localBusinessJsonLd() {
           itemOffered: {
             "@type": "Service",
             name: "Web & App Engineering",
-            areaServed: "Gandhinagar, Gujarat, India",
+            areaServed: "Worldwide",
           },
         },
         {
@@ -137,7 +136,7 @@ export function localBusinessJsonLd() {
           itemOffered: {
             "@type": "Service",
             name: "AI & Machine Learning",
-            areaServed: "Gandhinagar, Gujarat, India",
+            areaServed: "Worldwide",
           },
         },
         {
@@ -145,7 +144,7 @@ export function localBusinessJsonLd() {
           itemOffered: {
             "@type": "Service",
             name: "Digital Marketing & SEO",
-            areaServed: "Gandhinagar, Gujarat, India",
+            areaServed: "Worldwide",
           },
         },
       ],
@@ -162,7 +161,7 @@ export function webSiteJsonLd() {
     name: site.name,
     url: siteBaseUrl(),
     description: site.description,
-    inLanguage: "en-IN",
+    inLanguage: "en",
     publisher: { "@id": ORGANIZATION_ID },
     potentialAction: {
       "@type": "SearchAction",
@@ -172,25 +171,6 @@ export function webSiteJsonLd() {
       },
       "query-input": "required name=search_term_string",
     },
-  };
-}
-
-export function faqPageJsonLd(
-  items: Array<{ question: string; answer: string }>,
-) {
-  if (!items.length) return null;
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
   };
 }
 

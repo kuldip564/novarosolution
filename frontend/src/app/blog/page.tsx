@@ -16,9 +16,9 @@ import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Blog — Web Development, AI & SEO Insights | Gujarat",
+  title: "Blog — Software, AI & Growth Insights",
   description:
-    "Novaro Solution blog — web app development, AI in production, SEO & digital marketing insights from our Gandhinagar, Gujarat IT studio.",
+    "Notes on shipping software, production AI, and technical SEO.",
   path: "/blog",
   keywords: blogKeywords,
 });

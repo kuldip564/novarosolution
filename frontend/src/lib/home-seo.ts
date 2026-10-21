@@ -1,27 +1,22 @@
 import type { Metadata } from "next";
 import { geoMetaTags, homeKeywords } from "./geo-seo";
 import { site } from "./site-data";
-import {
-  LOCAL_BUSINESS_ID,
-  ORGANIZATION_ID,
-  WEBSITE_ID,
-  faqPageJsonLd,
-} from "./structured-data";
+import { LOCAL_BUSINESS_ID, ORGANIZATION_ID, WEBSITE_ID } from "./structured-data";
 import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const homePagePath = "/";
 
 export const homeSeoTitle =
-  "Web App Development Company Gandhinagar | AI/ML & Digital Marketing — Novaro Solution";
+  "Software Development Company | Web Apps, AI & Digital Marketing — Novaro Solution";
 
 export const homeSeoDescription =
-  "Novaro Solution — IT studio in Gandhinagar, Gujarat. Web & mobile apps, AI/ML, SEO & digital marketing for 32+ clients across Ahmedabad, GIFT City, Vadodara, Surat & India. Next.js experts.";
+  "Novaro Solution builds custom software, web and mobile apps, AI systems, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India. Studio in Gandhinagar.";
 
 export const homeOgImage = "/images/webapp-dashboard.webp";
 
 export function homePageMetadata(): Metadata {
   const url = `${siteBaseUrl()}${homePagePath}`;
-  const ogTitle = `${site.name} — Gandhinagar, Gujarat IT Studio`;
+  const ogTitle = `${site.name} — Global Software, AI & Growth`;
   const ogImageUrl = `${siteBaseUrl()}${homeOgImage}`;
 
   return {
@@ -31,12 +26,11 @@ export function homePageMetadata(): Metadata {
     other: geoMetaTags(),
     alternates: {
       canonical: homePagePath,
-      languages: { "en-IN": homePagePath },
     },
     icons: siteIcons,
     openGraph: {
       type: "website",
-      locale: "en_IN",
+      locale: "en_US",
       url,
       title: ogTitle,
       description: homeSeoDescription,
@@ -46,7 +40,7 @@ export function homePageMetadata(): Metadata {
           url: homeOgImage,
           width: 2048,
           height: 1529,
-          alt: "Novaro Solution — web app development company in Gandhinagar, Gujarat",
+          alt: "Novaro Solution — software development company for the USA, UK, Europe, and India",
         },
       ],
     },
@@ -59,11 +53,10 @@ export function homePageMetadata(): Metadata {
   };
 }
 
-export function homePageJsonLd(faqs?: Array<{ question: string; answer: string }>) {
+export function homePageJsonLd() {
   const base = siteBaseUrl();
-  const faqSchema = faqs?.length ? faqPageJsonLd(faqs) : null;
 
-  const schemas = [
+  return [
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -71,13 +64,10 @@ export function homePageJsonLd(faqs?: Array<{ question: string; answer: string }
       url: `${base}${homePagePath}`,
       name: homeSeoTitle,
       description: homeSeoDescription,
-      inLanguage: "en-IN",
+      inLanguage: "en",
       isPartOf: { "@id": WEBSITE_ID },
       about: { "@id": LOCAL_BUSINESS_ID },
       publisher: { "@id": ORGANIZATION_ID },
     },
-    ...(faqSchema ? [faqSchema] : []),
   ];
-
-  return schemas;
 }

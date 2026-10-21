@@ -14,12 +14,12 @@ export function brandIconAbsoluteUrl(): string {
 }
 
 export const defaultSiteDescription =
-  "Novaro Solution — Gandhinagar, Gujarat IT studio for web app development, AI/ML, and digital marketing. Serving Ahmedabad, Gujarat & India. Production software from MVP to scale.";
+  "Novaro Solution builds custom software, web apps, AI systems, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India.";
 
 export const siteIcons: NonNullable<Metadata["icons"]> = {
-  icon: [{ url: site.brandIcon, type: "image/png" }],
-  apple: [{ url: site.brandIcon, type: "image/png" }],
-  shortcut: site.brandIcon,
+  icon: [{ url: "/brand/novaro-icon-192.png", type: "image/png", sizes: "192x192" }],
+  apple: [{ url: "/brand/novaro-icon-192.png", type: "image/png", sizes: "192x192" }],
+  shortcut: "/brand/novaro-icon-192.png",
 };
 
 const defaultRobots: Metadata["robots"] = {
@@ -37,7 +37,7 @@ const defaultRobots: Metadata["robots"] = {
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteBaseUrl()),
   title: {
-    default: `${site.name} — Web App & AI Studio | Gandhinagar, Gujarat`,
+    default: `${site.name} — Global Software, AI & Growth Studio`,
     template: `%s — ${site.name}`,
   },
   description: defaultSiteDescription,
@@ -52,12 +52,11 @@ export const rootMetadata: Metadata = {
   robots: defaultRobots,
   alternates: {
     canonical: "/",
-    languages: { "en-IN": "/" },
   },
   other: geoMetaTags(),
   openGraph: {
     type: "website",
-    locale: "en_IN",
+    locale: "en_US",
     siteName: site.name,
     title: `${site.name} — Software · Intelligence · Growth`,
     description: defaultSiteDescription,
@@ -67,7 +66,7 @@ export const rootMetadata: Metadata = {
         url: "/images/webapp-dashboard.webp",
         width: 2048,
         height: 1529,
-        alt: `${site.name} — web app development studio in Gandhinagar, Gujarat`,
+        alt: `${site.name} — software development company for the USA, UK, Europe, and India`,
       },
     ],
   },
@@ -100,12 +99,11 @@ export function createPageMetadata(input: {
     robots: defaultRobots,
     alternates: {
       canonical: input.path ?? undefined,
-      languages: input.path ? { "en-IN": input.path } : undefined,
     },
     other: geoMetaTags(),
     openGraph: {
       type: "website",
-      locale: "en_IN",
+      locale: "en_US",
       url: canonical,
       title: ogTitle,
       description,

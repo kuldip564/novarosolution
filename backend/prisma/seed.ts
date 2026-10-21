@@ -171,7 +171,7 @@ async function main() {
     {
       question: "Where is your team based?",
       answer:
-        "Our studio is in Gandhinagar, Gujarat, India. We work with clients across India and internationally — remote-first collaboration with shared Slack channels, weekly video standups, and async updates in your timezone.",
+        "Our studio is in Gandhinagar, India. We build software for clients in the USA, UK, Europe, the Middle East, and across India — remote collaboration, shared Slack, and hours that overlap US and India time zones.",
     },
     {
       question: "What technologies do you use?",

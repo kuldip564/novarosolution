@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SeoJsonLd } from "@/components/SeoJsonLd";
 import { ToastProvider } from "@/components/ui/Toast";
-import { MotionProvider } from "@/lib/motion-provider";
+import { MotionProvider, useMotionSettings } from "@/lib/motion-provider";
 
 const SiteBackground = dynamic(
   () =>
@@ -22,6 +22,17 @@ const Cursor = dynamic(
   () => import("@/components/Cursor").then((mod) => mod.Cursor),
   { ssr: false, loading: () => null },
 );
+
+function DesktopEffects() {
+  const { ready, effectsEnabled } = useMotionSettings();
+  if (!ready || !effectsEnabled) return null;
+  return (
+    <>
+      <SiteBackground />
+      <Cursor />
+    </>
+  );
+}
 
 type SiteShellProps = {
   children: ReactNode;
@@ -40,8 +51,7 @@ export function SiteShell({ children }: SiteShellProps) {
       <ToastProvider>
         <SeoJsonLd />
         <ScrollProgressBar />
-        <SiteBackground />
-        <Cursor />
+        <DesktopEffects />
         <Header />
         <div className="page">{children}</div>
         <Footer />

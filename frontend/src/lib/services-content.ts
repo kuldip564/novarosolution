@@ -76,8 +76,8 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
       "A codebase your team can extend without rewriting",
     ],
       relatedLinks: [
-        { label: "Quadrato Cargo logistics platform", href: "https://www.quadratocargo.com/" },
-        { label: "Mr Antidot service platform", href: "https://www.mrantidot.com/" },
+        { label: "Quadrato Cargo logistics platform", href: "/work/quadrato-cargo" },
+        { label: "Mr Antidot service platform", href: "/work/mr-antidot" },
       ],
     },
     "ai-machine-ml": {
@@ -87,7 +87,7 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
         "Human-in-the-loop workflows clinicians and ops teams trust",
       ],
       relatedLinks: [
-        { label: "Mr Antidot operations platform", href: "https://www.mrantidot.com/" },
+        { label: "Mr Antidot operations platform", href: "/work/mr-antidot" },
         { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
       ],
     },
@@ -98,8 +98,8 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
         "Brand and performance working from the same playbook",
       ],
       relatedLinks: [
-        { label: "Zeevan premium D2C storefront", href: "https://www.zeevan.shop/" },
-        { label: "KankreG brand commerce site", href: "https://www.kankreg.com/" },
+        { label: "Zeevan premium D2C storefront", href: "/work/zeevan" },
+        { label: "KankreG brand commerce site", href: "/work/kankreg" },
       ],
     },
     "cloud-devops": {
@@ -109,7 +109,7 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
         "Security and observability built in, not bolted on",
       ],
       relatedLinks: [
-        { label: "Quadrato Cargo platform build", href: "https://www.quadratocargo.com/" },
+        { label: "Quadrato Cargo platform build", href: "/work/quadrato-cargo" },
       { label: "Talk to us about your stack", href: "/contact" },
     ],
   },
@@ -381,6 +381,10 @@ export function buildServiceDetails(
       pageContent.serviceExtras[service.slug] ??
       defaultServiceExtras[service.slug] ??
       defaultServiceExtras["web-app-eng"];
+    const fallbackMedia = fallbackServiceDetails.find(
+      (item, index) => slugFromFallback(index) === service.slug && "media" in item,
+    );
+    const localMedia = fallbackMedia && "media" in fallbackMedia ? fallbackMedia.media : undefined;
 
     return {
       slug: service.slug,
@@ -404,7 +408,7 @@ export function buildServiceDetails(
             width: 2048,
             height: 1529,
           }
-        : undefined,
+        : localMedia,
     };
   });
 }

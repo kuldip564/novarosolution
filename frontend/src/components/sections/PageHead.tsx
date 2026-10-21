@@ -45,7 +45,7 @@ export function PageHead({
 
         {variant === "bigword" ? (
           <Reveal delay={0.1}>
-            <div className="bigword">
+            <h1 className="bigword">
               <span className="o">{title}</span>
               {titleAccent && (
                 <>
@@ -53,7 +53,7 @@ export function PageHead({
                   <span className="g">{titleAccent}</span>
                 </>
               )}
-            </div>
+            </h1>
           </Reveal>
         ) : splitTitle ? (
           <SplitText text={title} className="page-title" />

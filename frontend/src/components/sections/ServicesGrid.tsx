@@ -43,6 +43,7 @@ function ServiceIcon({ type }: { type: string }) {
 export function ServicesGrid({
   services = fallbackServices.map((service) => ({
     id: service.id,
+    slug: service.slug,
     title: service.title,
     description: service.description,
     tags: service.tags,

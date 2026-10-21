@@ -939,6 +939,14 @@ html.site--bg-3d .services-cinema {
   color: var(--text-heading);
 }
 
+.pagehead h1.bigword {
+  margin: 0;
+  font-size: clamp(3.25rem, 13vw, 9.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+
 .bigword .o {
   color: transparent;
   -webkit-text-stroke: 1.5px var(--bigword-stroke);
@@ -2556,7 +2564,7 @@ footer {
   fill: currentColor;
 }
 
-.foot-col h5 {
+.foot-col h2 {
   font-family: var(--font-sora), sans-serif;
   font-weight: 600;
   font-size: 0.78rem;
@@ -2590,7 +2598,7 @@ footer {
 }
 
 .foot-bot p {
-  color: var(--slate);
+  color: var(--slate-light);
   font-size: 0.86rem;
 }
 
@@ -2604,6 +2612,12 @@ footer {
 }
 
 .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero is the LCP. Don't hide it until JS adds .in. */
+.home-hero .reveal {
   opacity: 1;
   transform: none;
 }
@@ -2638,6 +2652,11 @@ footer {
 }
 
 .split-text.in .word-i {
+  opacity: 1;
+  transform: none;
+}
+
+.home-hero .split-text .word-i {
   opacity: 1;
   transform: none;
 }

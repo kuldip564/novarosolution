@@ -14,7 +14,30 @@ export function normalizeHeroContent(value: unknown): HeroContent {
   };
 
   let headline = pick("headline");
-  const headlineAccent = pick("headlineAccent");
+  let headlineAccent = pick("headlineAccent");
+  let eyebrow = pick("eyebrow");
+  let lede = pick("lede");
+  // ponytail: CMS still stores the India-only hero; rewrite those exact strings so the global headline ships without a migration
+  const legacyHeadline =
+    headline === "We engineer products" || headline === "Web app development";
+  const legacyAccent =
+    headlineAccent === "that earn trust." || headlineAccent === "in Gandhinagar.";
+  if (legacyHeadline || legacyAccent) {
+    headline = defaultHero.headline;
+    headlineAccent = defaultHero.headlineAccent;
+  }
+  if (
+    eyebrow === "Digital product studio · Gandhinagar, Gujarat" ||
+    eyebrow === "Digital product studio · Gandhinagar"
+  ) {
+    eyebrow = defaultHero.eyebrow;
+  }
+  if (
+    lede.startsWith("Novaro builds production-grade web and mobile apps") ||
+    lede.includes("USA, UK, Europe")
+  ) {
+    lede = defaultHero.lede;
+  }
 
   // Legacy seed stored the full sentence in headline — split cleanly for display.
   if (
@@ -32,10 +55,10 @@ export function normalizeHeroContent(value: unknown): HeroContent {
   }
 
   return {
-    eyebrow: pick("eyebrow"),
+    eyebrow,
     headline: headline || defaultHero.headline,
     headlineAccent: headlineAccent || defaultHero.headlineAccent,
-    lede: pick("lede"),
+    lede,
     ctaPrimary: pick("ctaPrimary"),
     ctaSecondary: pick("ctaSecondary"),
     metaStat: pick("metaStat"),

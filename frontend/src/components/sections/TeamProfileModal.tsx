@@ -220,7 +220,7 @@ function ProfileBody({ profile }: { profile: TeamProfile }) {
       </ProfileSection>
 
       <p className="team-profile__member-note">
-        Part of Novaro Solution — Gandhinagar, Gujarat · Serving clients across India.
+        Part of the Novaro Solution studio.
       </p>
     </div>
   );

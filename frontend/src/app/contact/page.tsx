@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { getPublishedFaqs, getSiteContent } from "@/lib/content";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { contactKeywords } from "@/lib/geo-seo";
-import { breadcrumbJsonLd, faqPageJsonLd, LOCAL_BUSINESS_ID } from "@/lib/structured-data";
+import { breadcrumbJsonLd, LOCAL_BUSINESS_ID } from "@/lib/structured-data";
 import { siteBaseUrl } from "@/lib/site-metadata";
 import {
   defaultCta,
@@ -33,9 +33,9 @@ const ContactForm = dynamic(
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Contact — Web Development Company Gandhinagar",
+  title: "Contact Novaro Solution — Software for the USA, UK & India",
   description:
-    "Contact Novaro Solution — Gandhinagar, Gujarat IT studio for web apps, AI/ML & SEO. Call +91 96244 98325 or email novaro@novarosolution.com. Serving Ahmedabad & all India.",
+    "Start a software, AI, or marketing project with Novaro Solution. Call +91 96244 98325 or email novaro@novarosolution.com. We work with teams worldwide.",
   path: "/contact",
   keywords: contactKeywords,
 });
@@ -48,7 +48,6 @@ export default async function ContactPage() {
   ]);
 
   const contactCta = pickCta(cta, "contact");
-  const faqItems = mapDbFaqs(faqs);
   const base = siteBaseUrl();
 
   const jsonLd = [
@@ -61,14 +60,13 @@ export default async function ContactPage() {
       "@type": "ContactPage",
       "@id": `${base}/contact#contactpage`,
       url: `${base}/contact`,
-      name: "Contact Novaro Solution — Gandhinagar, Gujarat",
+      name: "Contact Novaro Solution",
       description:
-        "Contact our Gandhinagar IT studio for web development, AI/ML, and digital marketing projects across Gujarat and India.",
-      inLanguage: "en-IN",
+        "Contact Novaro Solution about a software, AI, or marketing project.",
+      inLanguage: "en",
       about: { "@id": LOCAL_BUSINESS_ID },
     },
-    faqPageJsonLd(faqItems),
-  ].filter(Boolean);
+  ];
 
   return (
     <main className="page-cinema contact-cinema">

@@ -6,8 +6,9 @@ export const site = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
   description:
-    "A Gandhinagar-based digital product studio — we design, build, and grow web apps, AI systems, and marketing engines for startups and established brands across India.",
-  brandIcon: "/brand/novaro-icon.png",
+    "Novaro Solution designs and ships custom software — web apps, mobile products, AI systems, and digital marketing.",
+  brandIcon: "/brand/novaro-icon.webp",
+  brandMark: "/brand/novaro-icon-sm.webp",
   email: "novaro@novarosolution.com",
   phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
@@ -27,15 +28,14 @@ export const site = {
     timezone: "Asia/Kolkata",
   },
   serviceAreas: [
-    "Gandhinagar",
-    "Ahmedabad",
-    "GIFT City",
-    "Vadodara",
-    "Surat",
-    "Rajkot",
-    "Gujarat",
+    "USA",
+    "Canada",
+    "United Kingdom",
+    "Europe",
+    "UAE",
+    "Australia",
     "India",
-    "Worldwide (Remote)",
+    "Worldwide",
   ],
   nearbyCities: [
     { name: "Ahmedabad", distance: "25 km" },
@@ -81,6 +81,7 @@ export const marqueeItems = [
 export const services = [
   {
     id: "01",
+    slug: "web-app-eng",
     title: "Web & App Engineering",
     description:
       "Production-grade web and mobile apps built on Next.js and Node — fast, scalable, and made to ship and last.",
@@ -89,6 +90,7 @@ export const services = [
   },
   {
     id: "02",
+    slug: "ai-machine-ml",
     title: "AI & Machine Learning",
     description:
       "Models, pipelines, and intelligent features that turn your data into decisions, automation, and real product value.",
@@ -97,6 +99,7 @@ export const services = [
   },
   {
     id: "03",
+    slug: "digital-marketing",
     title: "Digital Marketing",
     description:
       "SEO, performance campaigns, and brand systems that put your product in front of the right people at the right moment.",
@@ -141,7 +144,7 @@ export const processSteps = [
 
 export const homeProjects = [
   {
-    href: "https://www.zeevan.shop/",
+    href: "/work/zeevan",
     category: "E-commerce · D2C",
     title: "Zeevan",
     description:
@@ -149,7 +152,7 @@ export const homeProjects = [
     cover: "c1",
   },
   {
-    href: "https://www.kankreg.com/",
+    href: "/work/kankreg",
     category: "E-commerce · D2C",
     title: "KankreG",
     description:
@@ -157,7 +160,7 @@ export const homeProjects = [
     cover: "c2",
   },
   {
-    href: "https://www.mrantidot.com/",
+    href: "/work/mr-antidot",
     category: "Web App · Services",
     title: "Mr Antidot",
     description:
@@ -165,7 +168,7 @@ export const homeProjects = [
     cover: "c3",
   },
   {
-    href: "https://www.quadratocargo.com/",
+    href: "/work/quadrato-cargo",
     category: "Web App · Logistics",
     title: "Quadrato Cargo",
     description:
@@ -230,10 +233,10 @@ export const serviceDetails = [
     mediaTitle: "Web & App work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/webapp-dashboard.webp",
-      alt: "Web and app engineering services — glassmorphic dashboard on a laptop with navy and cyan UI",
-      width: 2048,
-      height: 1529,
+      src: "/images/novaro-web-apps.webp",
+      alt: "Laptop and phone showing a web app on a dark navy desk",
+      width: 1280,
+      height: 720,
     },
   },
   {
@@ -250,10 +253,10 @@ export const serviceDetails = [
     mediaTitle: "AI / ML work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/ai-ml-dashboard.webp",
-      alt: "AI and machine learning services — neural network visualization with glassmorphic panels",
-      width: 2048,
-      height: 1529,
+      src: "/images/novaro-ai.webp",
+      alt: "Abstract cyan network over a dark operations desk",
+      width: 1280,
+      height: 720,
     },
   },
   {
@@ -386,11 +389,11 @@ export const apiBase =
   process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const defaultHero = {
-  eyebrow: "Digital product studio · Gandhinagar, Gujarat",
-  headline: "We engineer products",
-  headlineAccent: "that earn trust.",
+  eyebrow: "Software · AI · Growth · Worldwide",
+  headline: "We build software",
+  headlineAccent: "worldwide.",
   lede:
-    "Novaro builds production-grade web and mobile apps, AI systems that survive real users, and digital marketing that moves revenue — one senior team from discovery to launch and beyond.",
+    "Web apps, mobile products, AI, and the marketing around them — one senior team from the first sketch to launch.",
   ctaPrimary: "See our work",
   ctaSecondary: "Book a call",
   metaStat: "32",
@@ -504,7 +507,7 @@ export const fallbackFaqs = [
     id: "6",
     question: "Where is your team based?",
     answer:
-      "Our studio is in Gandhinagar, Gujarat, India. We work with clients across India and internationally — remote-first collaboration with shared Slack channels, weekly video standups, and async updates in your timezone.",
+        "Our studio is in Gandhinagar, India. We build software for clients in the USA, UK, Europe, the Middle East, and across India — remote collaboration, shared Slack, and hours that overlap US and India time zones.",
   },
   {
     id: "7",

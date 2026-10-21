@@ -1,0 +1,50 @@
+# Novaro Solution
+
+Novaro Solution is a software studio in Gandhinagar, Gujarat, India. It designs and ships custom software for companies in the United States, the United Kingdom, Europe, the Middle East, and India. There is no office in the United States. Clients work remotely with the Gandhinagar studio.
+
+Founded: 2024
+Studio: 707, Capitol Icon, Swagat Reliance Road, Sargasan, Gandhinagar, Gujarat 382419, India
+Hours: Monday–Saturday, 10:00–19:00 IST (this covers the US East morning)
+Email: novaro@novarosolution.com
+Phone: +91 96244 98325
+Website: https://www.novarosolution.com
+
+## What it builds
+
+- Web applications and mobile products (Next.js, React, Node.js)
+- AI features in production apps (document extraction, search, review queues)
+- Digital marketing and technical SEO
+- Cloud, DevOps, and design systems
+
+Industries: D2C and e-commerce, logistics, healthcare services, fintech and SaaS, education.
+
+Public figures on the site: 2 years shipping production software, 32+ clients, 50+ products and platforms.
+
+## How a project starts
+
+Send a short brief. Novaro books a 30-minute discovery call, then sends a written proposal with scope, timeline, and price within 2–3 business days. Weekly demos. One team from discovery to launch.
+
+## Phrases these pages answer
+
+- IT services company, IT company, software development company → https://www.novarosolution.com/it-services
+- Web app development company, mobile app development → https://www.novarosolution.com/services/web-app-eng
+- AI development company, AI features in production → https://www.novarosolution.com/services/ai-machine-ml
+- Digital marketing and SEO company → https://www.novarosolution.com/services/digital-marketing
+- Software development for US companies → https://www.novarosolution.com/software-development-usa
+- Novaro Solution, software studio Gandhinagar → https://www.novarosolution.com/
+
+## Pages
+
+- [Home](https://www.novarosolution.com/): software development company overview
+- [Services](https://www.novarosolution.com/services): web apps, AI, digital marketing, cloud
+- [Web and app development](https://www.novarosolution.com/services/web-app-eng)
+- [AI and machine learning](https://www.novarosolution.com/services/ai-machine-ml)
+- [Digital marketing](https://www.novarosolution.com/services/digital-marketing)
+- [Cloud and DevOps](https://www.novarosolution.com/services/cloud-devops)
+- [Work](https://www.novarosolution.com/work): case studies (Zeevan, KankreG, Mr Antidot, Quadrato Cargo)
+- [For US teams](https://www.novarosolution.com/software-development-usa): how US companies hire the studio
+- [IT services worldwide](https://www.novarosolution.com/it-services): software, AI, and IT services for companies in any country
+- [About](https://www.novarosolution.com/about)
+- [Blog](https://www.novarosolution.com/blog)
+- [Contact](https://www.novarosolution.com/contact)
+- [Sitemap](https://www.novarosolution.com/sitemap.xml)

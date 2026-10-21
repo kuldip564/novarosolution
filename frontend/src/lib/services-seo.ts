@@ -8,10 +8,10 @@ import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
 export const servicesPagePath = "/services";
 
 export const servicesSeoTitle =
-  "Web App, AI/ML & SEO Services | IT Company Gandhinagar, Gujarat";
+  "Software, AI & Digital Marketing Services | USA, UK, Europe & India";
 
 export const servicesSeoDescription =
-  "Novaro Solution — web & app development, AI/ML, digital marketing & SEO in Gandhinagar, Gujarat. Serving Ahmedabad & India. Production-grade software that ships and scales.";
+  "Custom software, web and mobile apps, AI/ML, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India. Novaro Solution ships production software.";
 
 export const servicesOgImage = "/images/webapp-dashboard.webp";
 
@@ -30,7 +30,7 @@ export function servicesPageMetadata(): Metadata {
     icons: siteIcons,
     openGraph: {
       type: "website",
-      locale: "en_IN",
+      locale: "en_US",
       url,
       title: ogTitle,
       description: servicesSeoDescription,
@@ -117,12 +117,7 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
     serviceType: service.title,
     url: `${pageUrl}#service-${service.slug}`,
     provider: { "@id": ORGANIZATION_ID },
-    areaServed: [
-      { "@type": "City", name: "Gandhinagar" },
-      { "@type": "City", name: "Ahmedabad" },
-      { "@type": "AdministrativeArea", name: "Gujarat" },
-      { "@type": "Country", name: "India" },
-    ],
+    areaServed: "Worldwide",
     ...(service.tools.length > 0
       ? {
           category: service.tools.join(", "),

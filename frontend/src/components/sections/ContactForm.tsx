@@ -90,6 +90,8 @@ export function ContactFormInner() {
       }
 
       push(result.message || "Message sent. We'll reply within one business day.", "success");
+      const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+      gtag?.("event", "generate_lead", { page_path: window.location.pathname });
       reset();
     } catch (error) {
       const message =
@@ -196,7 +198,7 @@ export function ContactFormInner() {
 
           <Reveal delay={0.1} className="contact-info">
             <Badge variant="accent" className="contact-badge">
-              Gandhinagar · Gujarat · India
+              Worldwide · Studio in Gandhinagar
             </Badge>
             <div className="info-card">
               <div className="ic" aria-hidden="true">

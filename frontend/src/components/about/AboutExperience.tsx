@@ -223,7 +223,7 @@ function AboutIntro({
       <span className="about-intro__badge">
         <MapPin size={14} strokeWidth={2} aria-hidden />
         <span>
-          <strong>Gandhinagar, Gujarat</strong> · IT studio since 2024
+          <strong>Worldwide</strong> · Studio in Gandhinagar since 2024
         </span>
       </span>
       <CinemaBigword title={title} accent={accent} className="about-intro__bigword" />

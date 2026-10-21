@@ -19,7 +19,7 @@ const inter = Inter({
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700", "800"],
   display: "swap",
   preload: true,
 });
@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en-IN"
+      lang="en"
       className={`${inter.variable} ${sora.variable}`}
       suppressHydrationWarning
     >
@@ -50,20 +50,28 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
       {process.env.NODE_ENV === "production" && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_MEASUREMENT_ID}');
-            `}
-          </Script>
-        </>
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            (function(){
+              var id='${GA_MEASUREMENT_ID}';
+              function load(){
+                if (window.__gaLoaded) return;
+                window.__gaLoaded=1;
+                var s=document.createElement('script');
+                s.src='https://www.googletagmanager.com/gtag/js?id='+id;
+                s.async=true;
+                document.head.appendChild(s);
+                window.dataLayer=window.dataLayer||[];
+                window.gtag=function(){dataLayer.push(arguments);};
+                gtag('js', new Date());
+                gtag('config', id);
+              }
+              addEventListener('pointerdown', load, {once:true});
+              addEventListener('scroll', load, {once:true, passive:true});
+              setTimeout(load, 8000);
+            })();
+          `}
+        </Script>
       )}
     </html>
   );

@@ -35,61 +35,61 @@ export function geoMetaTags(): Record<string, string> {
 }
 
 export const defaultKeywords = [
+  "IT services company",
+  "software development company",
+  "custom software development USA",
+  "software development company for USA",
+  "web app development company",
+  "offshore software development company",
+  "AI development company",
+  "mobile app development company",
+  "Next.js development company",
+  "digital marketing agency",
+  "hire software developers",
+  "software company UK Europe UAE",
   "web development company Gandhinagar",
-  "software development company Gujarat",
-  "IT company Gandhinagar",
-  "web app development Ahmedabad",
-  "AI machine learning company India",
-  "digital marketing agency Gandhinagar",
-  "SEO company Gujarat",
-  "Next.js development studio India",
-  "mobile app development Gandhinagar",
-  "software company near me Gujarat",
-  "IT company GIFT City Gujarat",
-  "web development Vadodara Surat Rajkot",
-  "software studio Ahmedabad Gandhinagar",
   "Novaro Solution",
 ];
 
 export const homeKeywords = [
   ...defaultKeywords,
-  "best web development company Gandhinagar",
-  "custom software development Gujarat",
-  "IT studio Ahmedabad Gandhinagar",
+  "custom software development company",
+  "software development company USA",
+  "AI software company",
 ];
 
 export const servicesKeywords = [
   ...defaultKeywords,
-  "web app development services India",
-  "AI ML development company Gujarat",
-  "digital marketing services Gandhinagar",
-  "cloud DevOps company India",
+  "web app development services",
+  "AI ML development company",
+  "digital marketing services",
+  "cloud DevOps company",
 ];
 
 export const aboutKeywords = [
   "about Novaro Solution",
-  "IT studio Gandhinagar team",
-  "software company Gujarat founders",
+  "global software development company",
+  "software company for USA and Europe",
   ...defaultKeywords.slice(0, 6),
 ];
 
 export const contactKeywords = [
-  "contact web development company Gandhinagar",
-  "hire software developers Gujarat",
-  "IT company contact Gandhinagar",
+  "hire software developers",
+  "contact software development company",
+  "software development company USA contact",
   ...defaultKeywords.slice(0, 6),
 ];
 
 export const workKeywords = [
   "Novaro Solution portfolio",
-  "web development projects India",
-  "software case studies Gujarat",
+  "software development case studies",
+  "web app case studies",
   ...defaultKeywords.slice(0, 4),
 ];
 
 export const blogKeywords = [
-  "web development blog India",
+  "software development blog",
   "AI production blog",
-  "digital marketing insights Gujarat",
+  "digital marketing insights",
   "Novaro Solution blog",
 ];
