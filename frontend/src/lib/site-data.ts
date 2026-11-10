@@ -394,8 +394,8 @@ export const defaultHero = {
   headlineAccent: "worldwide.",
   lede:
     "Web apps, mobile products, AI, and the marketing around them — one senior team from the first sketch to launch.",
-  ctaPrimary: "See our work",
-  ctaSecondary: "Book a call",
+  ctaPrimary: "Start your project",
+  ctaSecondary: "Explore our work",
   metaStat: "32",
   metaLabel: "Clients served",
 } as const;

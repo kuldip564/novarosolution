@@ -45,11 +45,18 @@ function SiteBackground3DInner() {
       const { scene, camera, animatables, dispose } = sceneBundle;
       const { points, stars, shapes } = animatables;
 
-      const renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: !mobile,
-        powerPreference: "high-performance",
-      });
+      let renderer: THREE.WebGLRenderer;
+      try {
+        renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: !mobile,
+          powerPreference: "high-performance",
+        });
+      } catch {
+        // No WebGL context available — keep the CSS background.
+        dispose();
+        return;
+      }
       renderer.setPixelRatio(getWebGLPixelRatio());
       renderer.setClearColor(0x000000, 0);
 

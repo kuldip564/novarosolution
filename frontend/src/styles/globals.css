@@ -939,7 +939,8 @@ html.site--bg-3d .services-cinema {
   color: var(--text-heading);
 }
 
-.pagehead h1.bigword {
+.pagehead h1.bigword,
+.pagehead .bigword {
   margin: 0;
   font-size: clamp(3.25rem, 13vw, 9.5rem);
   line-height: 0.88;
@@ -969,6 +970,29 @@ html.site--bg-3d .services-cinema {
 
 .cinema-bigword .o {
   display: block;
+}
+
+/* Keyword H1 that sits under a decorative big word (Work, Blog, Contact, About, Services). */
+.page-h1,
+.pagehead .page-h1 {
+  margin: clamp(0.9rem, 2vw, 1.25rem) 0 0;
+  max-width: 34ch;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(1.25rem, 2.6vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--text-heading);
+  text-wrap: balance;
+}
+
+.page-h1--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.pagehead .page-h1 {
+  margin-bottom: 0.85rem;
 }
 
 .hero {
@@ -2333,6 +2357,11 @@ html.site--bg-3d .services-cinema {
   margin-bottom: 18px;
 }
 
+/* Light theme: the CTA band stays blue, so the label needs a light colour to stay readable. */
+[data-theme="light"] .cta-band .cta-eyebrow {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2886,7 +2915,7 @@ footer {
   border: 1px solid rgba(69, 200, 245, 0.28);
   color: var(--cyan-soft);
   font-family: var(--font-sora), sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   backdrop-filter: blur(8px);
@@ -3237,14 +3266,16 @@ footer {
 
   .reveal,
   .split-text .word-i,
-  .clip-reveal,
-  .drawer,
-  .faq-panel {
+  .clip-reveal {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
-    grid-template-rows: 1fr !important;
-    max-height: none !important;
+  }
+
+  /* Accordions keep their open/closed state; they just stop animating. */
+  .drawer,
+  .faq-panel {
+    transform: none !important;
   }
 
   .skeleton {
@@ -3887,12 +3918,102 @@ footer {
 
 .legal-prose ul {
   padding-left: 1.2rem;
+  list-style: disc;
+}
+
+.legal-prose li::marker {
+  color: var(--cyan);
 }
 
 .legal-prose a {
   color: var(--cyan);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.legal-prose h2 {
+  scroll-margin-top: calc(var(--site-header-h) + 1.25rem);
+}
+
+/* "In short" summary at the top of a legal page */
+.legal-summary {
+  margin: 0 0 var(--space-8);
+  padding: 1.25rem 1.35rem 0.5rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--cyan) 30%, var(--line-d));
+  background:
+    radial-gradient(ellipse 70% 80% at 0% 0%, color-mix(in srgb, var(--cyan) 12%, transparent), transparent 60%),
+    color-mix(in srgb, var(--surface-ghost) 70%, transparent);
+}
+
+.legal-prose .legal-summary__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-sora), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.legal-summary ul {
+  padding-left: 1.1rem;
+}
+
+.legal-summary li {
+  margin-bottom: 0.6rem;
+}
+
+/* Company details grid */
+.legal-prose .legal-facts {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.6rem;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+}
+
+.legal-prose .legal-facts li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-ghost);
+}
+
+.legal-facts span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.legal-facts strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-heading);
+  overflow-wrap: anywhere;
+}
+
+.legal-prose .legal-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-ghost);
+  font-style: normal;
+}
+
+.legal-contact strong {
+  color: var(--text-heading);
 }
 
 .legal-layout {

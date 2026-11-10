@@ -8,6 +8,7 @@ type SplitTextProps = {
   text: string;
   as?: "h1" | "h2" | "h3";
   className?: string;
+  id?: string;
 };
 
 function escapeHtml(value: string): string {
@@ -24,7 +25,7 @@ function isInViewport(el: HTMLElement) {
 }
 
 /** SSR-visible headline text; upgraded to word spans before first paint for animation. */
-export function SplitText({ text, as: Tag = "h1", className = "" }: SplitTextProps) {
+export function SplitText({ text, as: Tag = "h1", className = "", id }: SplitTextProps) {
   const ref = useRef<HTMLElement>(null);
   const { reducedMotion } = useMotionSettings();
   const skipMotion = reducedMotion || prefersReducedMotion();
@@ -77,6 +78,7 @@ export function SplitText({ text, as: Tag = "h1", className = "" }: SplitTextPro
     Tag,
     {
       ref,
+      id,
       className: `split-text ${skipMotion ? "in" : ""} ${className}`.trim(),
       "data-split": true,
       suppressHydrationWarning: true,

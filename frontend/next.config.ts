@@ -2,7 +2,16 @@ import type { NextConfig } from "next";
 
 const apiOrigin = process.env.API_PROXY_TARGET || "http://127.0.0.1:5001";
 
+/**
+ * Crawlers that get <title>, description and canonical in the initial <head> (blocking metadata)
+ * instead of streamed metadata. Next.js's default list plus Googlebot, AI answer engines and SEO tools,
+ * so every crawler sees the canonical URL without running JavaScript.
+ */
+const htmlLimitedBots =
+  /Googlebot|[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|msnbot|applebot|facebookexternalhit|facebookcatalog|Facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Pinterest|SkypeUriPreview|Yeti|Naverbot|googleweblight|GPTBot|OAI-SearchBot|ChatGPT-User|PerplexityBot|Perplexity-User|ClaudeBot|Claude-User|Claude-SearchBot|anthropic-ai|Amazonbot|CCBot|Bytespider|cohere-ai|YouBot|AhrefsBot|SemrushBot|Screaming Frog|MJ12bot|DotBot/i;
+
 const nextConfig: NextConfig = {
+  htmlLimitedBots,
   turbopack: {
     root: import.meta.dirname,
   },

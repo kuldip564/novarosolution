@@ -90,6 +90,7 @@ html.site--bg-3d .home-cinema .home-hero__backdrop::after {
   --surface-ghost: rgba(10, 23, 48, 0.04);
   --surface-ghost-hover: rgba(10, 23, 48, 0.08);
   --surface-chip: rgba(10, 23, 48, 0.04);
+  --surface-media: linear-gradient(150deg, #eef2f9, #e4ebf5);
   --bigword-stroke: rgba(10, 23, 48, 0.12);
   background: var(--home-ink);
 }
@@ -501,6 +502,59 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
   }
 }
 
+@media (max-width: 979px) {
+  /* Lines are already blocks here, so the <br> between them would add an empty line. */
+  .home-hero__title br {
+    display: none;
+  }
+
+  /* Center when there's room, but never push the logo up under the fixed header. */
+  .home-hero__inner {
+    align-content: start;
+    align-content: safe center;
+  }
+
+  /* Stacked layouts: headline first, location chips after the buttons. */
+  .home-hero__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-hero__copy > .eyebrow {
+    order: 1;
+  }
+
+  .home-hero__title {
+    order: 2;
+    margin: 0.85rem 0 1rem;
+  }
+
+  .home-hero__lede {
+    order: 3;
+    margin-bottom: 1.5rem;
+  }
+
+  .home-hero__actions {
+    order: 4;
+  }
+
+  .home-hero__loc {
+    order: 5;
+    margin: 1.75rem 0 0.6rem;
+  }
+
+  .home-hero__markets {
+    order: 6;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .home-hero__stat {
+    order: 7;
+  }
+}
+
 @media (max-width: 767px) {
   .home-hero__visual {
     min-height: 0;
@@ -523,6 +577,11 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
   padding: clamp(4.5rem, 11vw, 7.5rem) 0;
 }
 
+/* The hero keeps its own spacing below the fixed header (the generic rule above would override it). */
+.home-scene.home-hero {
+  padding: var(--hero-pad-top) 0 var(--hero-pad-bottom);
+}
+
 .home-cinema .light {
   --text-heading: var(--navy);
   --text-body: #1b2740;
@@ -533,6 +592,13 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
   --line-d: rgba(10, 23, 48, 0.1);
   --line-l: rgba(10, 23, 48, 0.1);
   --panel: #ffffff;
+  /* Light islands inside the dark theme need light surfaces and a darker accent for contrast. */
+  --cyan: var(--blue);
+  --cyan-soft: #1d4ed8;
+  --ink-850: #ffffff;
+  --surface-stat: #ffffff;
+  --surface-ghost: rgba(10, 23, 48, 0.04);
+  --surface-chip: rgba(10, 23, 48, 0.04);
   background: var(--paper);
   color: var(--navy);
   border-top: none;
@@ -1070,6 +1136,69 @@ a.home-svc-card-link {
   }
 }
 
+@media (min-width: 768px) {
+  .home-testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* An odd last quote spans the row instead of sitting alone in one column. */
+  .home-testimonials-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1100px) {
+  .home-testimonials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .home-testimonials-grid > :last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+
+/* Phones: swipeable row so three long quotes don't stack into one tall column. */
+@media (max-width: 767px) {
+  .home-testimonials-grid {
+    display: flex;
+    gap: 0.85rem;
+    margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+    padding: 0.25rem max(16px, env(safe-area-inset-left, 0px)) 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px));
+    scrollbar-width: none;
+  }
+
+  .home-testimonials-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-testimonials-grid > * {
+    flex: 0 0 min(86%, 340px);
+    scroll-snap-align: start;
+  }
+
+  .home-testimonial {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-testimonial blockquote {
+    flex: 1;
+    font-size: 0.97rem;
+  }
+}
+
+@media (max-width: 414px) {
+  .home-testimonials-grid {
+    margin-inline: calc(-1 * max(14px, env(safe-area-inset-left, 0px)));
+    padding-inline: max(14px, env(safe-area-inset-left, 0px));
+    scroll-padding-inline: max(14px, env(safe-area-inset-left, 0px));
+  }
+}
+
 .home-testimonial {
   height: 100%;
   padding: 1.5rem;
@@ -1143,6 +1272,12 @@ a.home-svc-card-link {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+@media (min-width: 600px) {
+  .home-process-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 900px) {
@@ -1248,12 +1383,19 @@ a.home-svc-card-link {
 .home-cta__inner {
   position: relative;
   z-index: 1;
-  max-width: 36rem;
+  max-width: 44rem;
   margin-inline: auto;
 }
 
 .home-cta__title {
   margin: 0.75rem 0 0;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(1.85rem, 4.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text-heading);
+  text-wrap: balance;
 }
 
 .home-cta__inner p {
@@ -1264,11 +1406,279 @@ a.home-svc-card-link {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Static single row (edges fade via the mask) instead of a tall wrapped list. */
   .home-marquee__track {
     animation: none;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
-    width: auto;
+    width: max-content;
     margin-inline: auto;
   }
+}
+
+/* ── Products shipped (under the stats) ── */
+.home-shipped {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.home-shipped__label {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.home-shipped__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.home-shipped__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-d);
+  background: var(--panel);
+  color: var(--text-heading);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.home-shipped__item:hover,
+.home-shipped__item:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--blue) 40%, var(--line-d));
+}
+
+.home-shipped__item strong {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+
+.home-shipped__item span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ── Why Novaro ── */
+.home-why__grid,
+.home-industries__grid,
+.home-stack__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .home-why__grid,
+  .home-industries__grid,
+  .home-stack__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .home-why__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .home-industries__grid,
+  .home-stack__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.home-why__card,
+.home-industries__card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: clamp(1.25rem, 2.5vw, 1.6rem);
+  border-radius: 20px;
+  border: 1px solid var(--line-d);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+.home-why__card:hover,
+.home-industries__card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--blue) 30%, var(--line-d));
+}
+
+.home-why__icon,
+.home-industries__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 1rem;
+  border-radius: 14px;
+  color: #ffffff;
+  background: var(--grad);
+  box-shadow: 0 12px 24px -12px rgba(47, 123, 255, 0.7);
+}
+
+.home-why__card h3,
+.home-industries__card h3 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text-heading);
+}
+
+.home-why__card p,
+.home-industries__card p {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* ── Technology stack ── */
+.home-stack__group {
+  height: 100%;
+  padding: 1.25rem 1.3rem;
+  border-radius: 20px;
+  border: 1px solid var(--line-d);
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.home-stack__head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+
+.home-stack__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--cyan) 30%, transparent);
+  background: var(--grad-soft);
+  color: var(--cyan);
+}
+
+.home-stack__head h3 {
+  margin: 0;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.home-stack__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.home-stack__items li {
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-chip);
+  font-size: 0.84rem;
+  color: var(--text-heading);
+}
+
+/* ── Industries ── */
+.home-industries__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.home-industries__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 36px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--blue) 25%, var(--line-d));
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--blue);
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+
+.home-industries__links a:hover {
+  background: color-mix(in srgb, var(--blue) 8%, transparent);
+  border-color: color-mix(in srgb, var(--blue) 50%, var(--line-d));
+}
+
+.home-industries__card--cta {
+  border-color: color-mix(in srgb, var(--blue) 30%, var(--line-d));
+  background:
+    radial-gradient(ellipse 80% 70% at 100% 0%, color-mix(in srgb, var(--cyan) 12%, transparent), transparent 60%),
+    var(--panel);
+}
+
+/* ── Insights ── */
+.home-insights__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  max-width: none;
+}
+
+.home-insights__grid {
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  .home-shipped__item {
+    padding: 0.55rem 0.9rem;
+  }
+
+  .home-why__card,
+  .home-industries__card,
+  .home-stack__group {
+    border-radius: 18px;
+  }
+}
+
+/* Dark scenes: links in industry cards use the cyan accent. */
+.home-cinema .home-scene:not(.light) .home-industries__links a {
+  color: var(--cyan-soft);
+  border-color: color-mix(in srgb, var(--cyan) 30%, var(--line-d));
 }

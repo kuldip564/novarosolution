@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllBlogPosts } from "./blog";
 import { getPublishedProjects, getPublishedServices } from "./content";
+import { locationPath, locations } from "./locations";
 import { siteBaseUrl } from "./site-metadata";
 
 const staticRoutes: Array<{
@@ -16,6 +17,7 @@ const staticRoutes: Array<{
   { path: "/contact", changeFrequency: "monthly", priority: 0.85 },
   { path: "/software-development-usa", changeFrequency: "monthly", priority: 0.9 },
   { path: "/it-services", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/locations", changeFrequency: "monthly", priority: 0.85 },
   { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
   { path: "/disclaimer", changeFrequency: "yearly", priority: 0.3 },
@@ -62,5 +64,18 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  return [...staticEntries, ...projectEntries, ...serviceEntries, ...blogEntries];
+  const locationEntries: MetadataRoute.Sitemap = locations.map((location) => ({
+    url: `${baseUrl}${locationPath(location.slug)}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: location.group === "india" ? 0.85 : 0.8,
+  }));
+
+  return [
+    ...staticEntries,
+    ...locationEntries,
+    ...projectEntries,
+    ...serviceEntries,
+    ...blogEntries,
+  ];
 }

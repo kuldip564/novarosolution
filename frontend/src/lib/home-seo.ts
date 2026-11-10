@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import { geoMetaTags, homeKeywords } from "./geo-seo";
 import { site } from "./site-data";
 import { LOCAL_BUSINESS_ID, ORGANIZATION_ID, WEBSITE_ID } from "./structured-data";
-import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
+import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const homePagePath = "/";
 
 export const homeSeoTitle =
-  "Software Development Company | Web Apps, AI & Digital Marketing — Novaro Solution";
+  "Custom Software & AI Development Company — Novaro Solution";
 
 export const homeSeoDescription =
-  "Novaro Solution builds custom software, web and mobile apps, AI systems, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India. Studio in Gandhinagar.";
+  "Novaro Solution builds custom software, web and mobile apps, AI features and SEO for companies in the USA, UK, Europe and India. Studio in Gandhinagar.";
 
-export const homeOgImage = "/images/webapp-dashboard.webp";
+export const homeOgImage = ogImagePath("Custom software, web apps & AI for companies worldwide", "Software development company");
 
 export function homePageMetadata(): Metadata {
   const url = `${siteBaseUrl()}${homePagePath}`;
@@ -20,7 +20,7 @@ export function homePageMetadata(): Metadata {
   const ogImageUrl = `${siteBaseUrl()}${homeOgImage}`;
 
   return {
-    title: homeSeoTitle,
+    title: { absolute: homeSeoTitle },
     description: homeSeoDescription,
     keywords: homeKeywords,
     other: geoMetaTags(),
@@ -30,7 +30,7 @@ export function homePageMetadata(): Metadata {
     icons: siteIcons,
     openGraph: {
       type: "website",
-      locale: "en_US",
+      ...ogLocales,
       url,
       title: ogTitle,
       description: homeSeoDescription,
@@ -38,8 +38,8 @@ export function homePageMetadata(): Metadata {
       images: [
         {
           url: homeOgImage,
-          width: 2048,
-          height: 1529,
+          width: 1200,
+          height: 630,
           alt: "Novaro Solution — software development company for the USA, UK, Europe, and India",
         },
       ],

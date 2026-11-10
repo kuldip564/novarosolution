@@ -35,12 +35,13 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${sora.variable}`}
+      data-theme="light"
       suppressHydrationWarning
     >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement,k='theme',s=localStorage.getItem(k);if(s==='light'||s==='dark'){d.setAttribute('data-theme',s);return;}if(s==='system'||!s){var m=window.matchMedia('(prefers-color-scheme: dark)').matches;d.setAttribute('data-theme',m?'dark':'light');return;}d.setAttribute('data-theme','dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+            __html: `(function(){try{var d=document.documentElement,s=localStorage.getItem('theme');if(s==='dark'||s==='light'){d.setAttribute('data-theme',s);return;}if(s==='system'){d.setAttribute('data-theme',window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');return;}d.setAttribute('data-theme','light');}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`,
           }}
         />
       </head>

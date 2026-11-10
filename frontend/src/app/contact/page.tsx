@@ -81,6 +81,7 @@ export default async function ContactPage() {
         title={pageCopy.title}
         titleAccent={pageCopy.titleAccent}
         variant="bigword"
+        heading="Contact our software studio in Gandhinagar"
         description={pageCopy.description}
         className="blog-head"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}

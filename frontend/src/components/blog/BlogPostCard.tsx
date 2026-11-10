@@ -25,6 +25,7 @@ export function BlogPostCard({ post, featured = false, delay = 0 }: BlogPostCard
               transformWidth={featured ? 1200 : 640}
               className="blog-card-img"
               sizes={featured ? "100vw" : "(max-width: 768px) 100vw, 33vw"}
+              priority={featured}
             />
           ) : (
             <div className="blog-card-ph">

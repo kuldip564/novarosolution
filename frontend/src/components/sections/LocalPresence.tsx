@@ -1,6 +1,8 @@
 import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
+import Link from "next/link";
 import { formattedAddress, googleMapsUrl, mapEmbedUrl } from "@/lib/geo-seo";
+import { serviceAreaLinks } from "@/lib/locations";
 import { site } from "@/lib/site-data";
 
 type LocalPresenceProps = {
@@ -132,11 +134,17 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
             <div className="local-areas">
               <span className="local-areas__label">Service areas</span>
               <div className="local-areas__pills" role="list">
-                {site.serviceAreas.map((area) => (
-                  <span key={area} className="local-areas__pill" role="listitem">
-                    {area}
-                  </span>
-                ))}
+                {site.serviceAreas.map((area) =>
+                  serviceAreaLinks[area] ? (
+                    <Link key={area} href={serviceAreaLinks[area]} className="local-areas__pill" role="listitem">
+                      {area}
+                    </Link>
+                  ) : (
+                    <span key={area} className="local-areas__pill" role="listitem">
+                      {area}
+                    </span>
+                  ),
+                )}
               </div>
             </div>
 
@@ -146,7 +154,13 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
                 <ul className="local-nearby__list">
                   {site.nearbyCities.map((city) => (
                     <li key={city.name}>
-                      <strong>{city.name}</strong>
+                      {serviceAreaLinks[city.name] ? (
+                        <Link href={serviceAreaLinks[city.name]}>
+                          <strong>{city.name}</strong>
+                        </Link>
+                      ) : (
+                        <strong>{city.name}</strong>
+                      )}
                       <span>{city.distance}</span>
                     </li>
                   ))}
@@ -165,8 +179,8 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
         {isHome && (
           <Reveal className="local-foot-cta">
             <p>{formattedAddress()}</p>
-            <Button href="/software-development-usa" variant="ghost">
-              For US teams
+            <Button href="/locations" variant="ghost">
+              All locations
             </Button>
             <Button href="/contact">Book a discovery call</Button>
           </Reveal>

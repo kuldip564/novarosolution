@@ -231,7 +231,7 @@ html.site--bg-3d .about-cinema .about-scene {
 }
 
 .about-intro__stat-label {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -644,7 +644,7 @@ html.site--bg-3d .about-cinema .about-scene {
 .about-team__stat-label {
   display: block;
   margin-top: 0.4rem;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -912,4 +912,168 @@ html.site--bg-3d .about-cinema .about-scene {
   .about-team__grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Stacked layouts: center the intro in the first screen; tablets get a shorter intro. */
+@media (max-width: 979px) {
+  .about-scene.about-intro {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 979px) {
+  .about-scene.about-intro {
+    min-height: min(72dvh, 760px);
+  }
+}
+
+/* ── Capabilities & process (compact) ── */
+.about-caps__title {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--text-heading);
+  text-wrap: balance;
+}
+
+.about-caps__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .about-caps__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .about-caps__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.about-caps__grid > li {
+  display: flex;
+}
+
+.about-caps__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 1.2rem 1.25rem;
+  border-radius: 18px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-soft);
+  color: inherit;
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.about-caps__card:hover,
+.about-caps__card:focus-visible {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--cyan) 40%, var(--line-d));
+}
+
+.about-caps__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 0.35rem;
+  border-radius: 13px;
+  color: #ffffff;
+  background: var(--grad);
+}
+
+.about-caps__card strong {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 1.02rem;
+  color: var(--text-heading);
+}
+
+.about-caps__card > span:not(.about-caps__icon):not(.about-caps__more) {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.about-caps__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding-top: 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.about-caps__steps {
+  list-style: none;
+  margin: clamp(1.25rem, 3vw, 2rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  counter-reset: none;
+}
+
+@media (min-width: 900px) {
+  .about-caps__steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.about-caps__steps li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  border: 1px dashed color-mix(in srgb, var(--cyan) 30%, var(--line-d));
+}
+
+.about-caps__no {
+  grid-row: span 2;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--cyan);
+}
+
+.about-caps__steps strong {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.98rem;
+  color: var(--text-heading);
+}
+
+.about-caps__steps li > span:last-child {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .about-caps__card {
+  background: #ffffff;
+  border-color: rgba(10, 23, 48, 0.08);
+}
+
+[data-theme="light"] .about-caps__more,
+[data-theme="light"] .about-caps__no {
+  color: var(--blue);
+}
+
+[data-theme="light"] .about-caps__steps li {
+  border-color: rgba(37, 99, 235, 0.22);
 }

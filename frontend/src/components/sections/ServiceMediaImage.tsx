@@ -44,8 +44,8 @@ export function ServiceMediaImage({
             width={width}
             height={height}
             sizes="(max-width: 600px) 100vw, (max-width: 980px) 92vw, min(560px, 46vw)"
-            priority={priority}
             loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
             className="srow-media-img"
             style={{ width: "100%", height: "auto" }}
           />

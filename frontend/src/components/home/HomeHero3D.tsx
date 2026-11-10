@@ -20,11 +20,18 @@ function HomeHero3DInner() {
     const sceneBundle = buildHomeHeroScene(performanceTier);
     const { scene, camera, group, dispose } = sceneBundle;
 
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: !mobile,
-      powerPreference: "high-performance",
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: !mobile,
+        powerPreference: "high-performance",
+      });
+    } catch {
+      // No WebGL context available — the CSS logo mark stays visible instead.
+      dispose();
+      return;
+    }
     renderer.setPixelRatio(getWebGLPixelRatio());
     renderer.setClearColor(0x000000, 0);
 

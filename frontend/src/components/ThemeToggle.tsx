@@ -95,13 +95,13 @@ export function ThemeToggle({
       <button
         type="button"
         className="theme-toggle"
-        aria-label={`Current theme: ${theme ?? "dark"}. Change theme`}
+        aria-label={`Current theme: ${theme ?? "light"}. Change theme`}
         aria-expanded={open}
         aria-haspopup="menu"
         onClick={() => setOpen((current) => !current)}
       >
         <span
-          key={resolvedTheme ?? "dark"}
+          key={resolvedTheme ?? "light"}
           className="theme-toggle-icon"
           aria-hidden="true"
         >

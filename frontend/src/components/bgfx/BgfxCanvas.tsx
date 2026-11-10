@@ -37,11 +37,16 @@ function BgfxCanvasInner() {
     );
     camera.position.set(0, 0, 16);
 
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: !mobile,
-      powerPreference: "high-performance",
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: !mobile,
+        powerPreference: "high-performance",
+      });
+    } catch {
+      return;
+    }
     renderer.setPixelRatio(getWebGLPixelRatio());
     renderer.setSize(window.innerWidth, window.innerHeight);
     Object.assign(renderer.domElement.style, {

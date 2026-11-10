@@ -31,6 +31,8 @@ Send a short brief. Novaro books a 30-minute discovery call, then sends a writte
 - AI development company, AI features in production → https://www.novarosolution.com/services/ai-machine-ml
 - Digital marketing and SEO company → https://www.novarosolution.com/services/digital-marketing
 - Software development for US companies → https://www.novarosolution.com/software-development-usa
+- Software development company in Gandhinagar or Ahmedabad, IT company Gandhinagar → https://www.novarosolution.com/locations/gandhinagar
+- Working hours and data rules for India, UK, Europe, UAE, Canada, Australia → https://www.novarosolution.com/locations
 - Novaro Solution, software studio Gandhinagar → https://www.novarosolution.com/
 
 ## Pages
@@ -44,7 +46,11 @@ Send a short brief. Novaro books a 30-minute discovery call, then sends a writte
 - [Work](https://www.novarosolution.com/work): case studies (Zeevan, KankreG, Mr Antidot, Quadrato Cargo)
 - [For US teams](https://www.novarosolution.com/software-development-usa): how US companies hire the studio
 - [IT services worldwide](https://www.novarosolution.com/it-services): software, AI, and IT services for companies in any country
+- [Where we work](https://www.novarosolution.com/locations): every market served, with overlap hours per time zone and data-protection notes
+- [Gandhinagar & Ahmedabad](https://www.novarosolution.com/locations/gandhinagar): the studio in Sargasan, 12 km from GIFT City, 25 km from Ahmedabad
 - [About](https://www.novarosolution.com/about)
 - [Blog](https://www.novarosolution.com/blog)
 - [Contact](https://www.novarosolution.com/contact)
 - [Sitemap](https://www.novarosolution.com/sitemap.xml)
+- [Terms & Conditions](https://www.novarosolution.com/terms): payments, IP ownership, warranty, liability; Indian law, arbitration in Gandhinagar
+- [Privacy Policy](https://www.novarosolution.com/privacy-policy)

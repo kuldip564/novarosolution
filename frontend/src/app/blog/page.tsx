@@ -15,17 +15,26 @@ import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 
 export const revalidate = 30;
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Blog — Software, AI & Growth Insights",
-  description:
-    "Notes on shipping software, production AI, and technical SEO.",
-  path: "/blog",
-  keywords: blogKeywords,
-});
-
 type BlogPageProps = {
   searchParams: Promise<{ page?: string; category?: string }>;
 };
+
+export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const page = Math.max(1, Number(params.page) || 1);
+  const category = params.category?.trim();
+  const base = createPageMetadata({
+    title: page > 1 ? `Blog — Page ${page} — Software, AI & SEO Insights` : "Blog — Software, AI & SEO Insights",
+    description:
+      "Practical notes from the Novaro Solution team on building SaaS products, shipping AI features, technical SEO, and working with a remote software studio.",
+    // Page 2+ is its own canonical; category filters point back to the main blog.
+    path: page > 1 && !category ? `/blog?page=${page}` : "/blog",
+    keywords: blogKeywords,
+    ogHeadline: "Software, AI & SEO insights",
+    ogEyebrow: "Novaro Solution blog",
+  });
+  return category ? { ...base, robots: { index: false, follow: true } } : base;
+}
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
@@ -49,6 +58,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         title={pageCopy.title}
         titleAccent={pageCopy.titleAccent}
         variant="bigword"
+        heading="Software, AI and SEO insights from our studio"
         description={pageCopy.description}
         className="blog-head"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Blog" }]}

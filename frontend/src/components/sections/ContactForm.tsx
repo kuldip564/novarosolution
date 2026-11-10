@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Reveal } from "@/components/anim/Reveal";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Field, Input, Select, TextArea } from "@/components/ui/Field";
 import { useToast } from "@/components/ui/Toast";
 import { apiFetch } from "@/lib/api";
+import { serviceAreaLinks } from "@/lib/locations";
 import {
   contactFormSchema,
   type ContactFormValues,
@@ -250,11 +252,17 @@ export function ContactFormInner() {
             <div className="contact-service-areas">
               <span className="contact-service-areas__label">We serve</span>
               <div className="contact-service-areas__pills">
-                {site.serviceAreas.slice(0, 6).map((area) => (
-                  <span key={area} className="contact-service-areas__pill">
-                    {area}
-                  </span>
-                ))}
+                {site.serviceAreas.slice(0, 7).map((area) =>
+                  serviceAreaLinks[area] ? (
+                    <Link key={area} href={serviceAreaLinks[area]} className="contact-service-areas__pill">
+                      {area}
+                    </Link>
+                  ) : (
+                    <span key={area} className="contact-service-areas__pill">
+                      {area}
+                    </span>
+                  ),
+                )}
               </div>
             </div>
             <div className="contact-expect">

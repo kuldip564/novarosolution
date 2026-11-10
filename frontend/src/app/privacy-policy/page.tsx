@@ -6,7 +6,8 @@ import { site } from "@/lib/site-data";
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy Policy",
   description:
-    "How Novaro Solution collects, uses, stores, protects, and manages personal information.",
+    "How Novaro Solution collects, uses, stores and protects personal information from our website and client projects, and the rights you have over your data.",
+  ogEyebrow: "Legal",
   path: "/privacy-policy",
 });
 

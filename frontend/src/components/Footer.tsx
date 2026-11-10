@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { googleMapsUrl } from "@/lib/geo-seo";
+import { serviceAreaLinks } from "@/lib/locations";
 import { navLinks, site } from "@/lib/site-data";
 
 const legalLinks = [
@@ -18,11 +19,17 @@ export function Footer() {
           <div className="foot-geo-bar__main">
             <span className="foot-geo-bar__label">Serving</span>
             <div className="foot-geo-bar__pills">
-              {site.serviceAreas.map((area) => (
-                <span key={area} className="foot-geo-bar__pill">
-                  {area}
-                </span>
-              ))}
+              {site.serviceAreas.map((area) =>
+                serviceAreaLinks[area] ? (
+                  <Link key={area} href={serviceAreaLinks[area]} className="foot-geo-bar__pill">
+                    {area}
+                  </Link>
+                ) : (
+                  <span key={area} className="foot-geo-bar__pill">
+                    {area}
+                  </span>
+                ),
+              )}
             </div>
           </div>
           <div className="foot-geo-bar__actions">
@@ -105,6 +112,7 @@ export function Footer() {
                 {link.label}
               </Link>
             ))}
+            <Link href="/locations">Locations</Link>
             <Link href="/software-development-usa">For US teams</Link>
             <Link href="/it-services">IT services worldwide</Link>
           </div>

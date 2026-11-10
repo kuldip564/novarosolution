@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Counter } from "@/components/anim/Counter";
 import { Reveal } from "@/components/anim/Reveal";
@@ -8,6 +9,14 @@ import { SplitText } from "@/components/anim/SplitText";
 import { Tilt } from "@/components/anim/Tilt";
 import { Button } from "@/components/Button";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
+import {
+  HomeIndustries,
+  HomeInsights,
+  HomeProjectStrip,
+  HomeStack,
+  HomeWhy,
+} from "@/components/home/HomeExtras";
+import type { BlogPost } from "@/lib/blog";
 import { LocalPresence } from "@/components/sections/LocalPresence";
 import { mapDbLogos, type LogoView } from "@/components/sections/LogoStrip";
 import { mapDbTestimonials, type TestimonialView } from "@/components/sections/TestimonialsSection";
@@ -35,7 +44,12 @@ type HomeSectionsProps = {
   logos: DbClientLogo[];
   faqs: FaqItem[];
   sections: HomeSectionsContent;
+  posts: BlogPost[];
 };
+
+const subscribeNoop = () => () => {};
+const getTrue = () => true;
+const getFalse = () => false;
 
 function ServiceIcon({ type }: { type: string }) {
   if (type === "monitor") {
@@ -135,10 +149,13 @@ export function HomeSections({
   logos,
   faqs,
   sections,
+  posts,
 }: HomeSectionsProps) {
   const { reducedMotion, performanceTier } = useMotionSettings();
-  const cinematic = !reducedMotion && performanceTier === "high";
-  const tilt = cinematic && performanceTier === "high";
+  // This tree hydrates late (dynamic chunk), after motion settings switch to real device values,
+  // so add the tilt wrapper only once hydrated to keep server and client markup identical.
+  const hydrated = useSyncExternalStore(subscribeNoop, getTrue, getFalse);
+  const tilt = hydrated && !reducedMotion && performanceTier === "high";
 
   const serviceItems = mapDbServicesToGrid(services);
   const projectItems = mapDbProjectsToHomeGrid(projects);
@@ -197,6 +214,22 @@ export function HomeSections({
         </section>
       )}
 
+      <section className="home-scene home-stats light" aria-label="Studio stats">
+        <div className="wrap">
+          <div className="home-stats-grid">
+            {stats.map((stat, index) => (
+              <Reveal key={stat.label} delay={0.06 + index * 0.06}>
+                <div className="home-stat">
+                  <Counter value={stat.value} suffix={stat.suffix} className="home-stat__value" />
+                  <span className="home-stat__label">{stat.label}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <HomeProjectStrip projects={projectItems} />
+        </div>
+      </section>
+
       <section className="home-scene home-services" id="services">
         <div className="wrap">
           <header className="home-section-head">
@@ -237,6 +270,8 @@ export function HomeSections({
           </Reveal>
         </div>
       </section>
+
+      <HomeWhy />
 
       <section className="home-scene home-work" id="work-preview">
         <div className="wrap">
@@ -335,20 +370,41 @@ export function HomeSections({
         </div>
       </section>
 
-      <section className="home-scene home-stats light" aria-label="Studio stats">
+      <section className="home-scene home-process light" aria-labelledby="home-process-title">
         <div className="wrap">
-          <div className="home-stats-grid">
-            {stats.map((stat, index) => (
-              <Reveal key={stat.label} delay={0.06 + index * 0.06}>
-                <div className="home-stat">
-                  <Counter value={stat.value} suffix={stat.suffix} className="home-stat__value" />
-                  <span className="home-stat__label">{stat.label}</span>
-                </div>
+          <header className="home-section-head home-section-head--center">
+            <Reveal>
+              <span className="eyebrow center">{sections.process.eyebrow}</span>
+            </Reveal>
+            <SplitText
+              text={sections.process.title}
+              as="h2"
+              id="home-process-title"
+              className="home-section-head__title"
+            />
+            <Reveal delay={0.08}>
+              <p className="home-section-head__lede">{sections.process.description}</p>
+            </Reveal>
+          </header>
+
+          <ol className="home-process-grid">
+            {steps.map((step, index) => (
+              <Reveal
+                as="li"
+                key={step.num}
+                delay={0.08 + index * 0.07}
+                className="home-process-step"
+              >
+                <span className="home-process-step__num">{step.num}</span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
               </Reveal>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
+
+      <HomeStack />
 
       <section className="home-scene home-testimonials" aria-labelledby="home-testimonials-title">
         <div className="wrap">
@@ -359,6 +415,7 @@ export function HomeSections({
             <SplitText
               text={sections.testimonials.title}
               as="h2"
+              id="home-testimonials-title"
               className="home-section-head__title"
             />
             <Reveal delay={0.08}>
@@ -399,38 +456,9 @@ export function HomeSections({
         </div>
       </section>
 
-      <section className="home-scene home-process light" aria-labelledby="home-process-title">
-        <div className="wrap">
-          <header className="home-section-head home-section-head--center">
-            <Reveal>
-              <span className="eyebrow center">{sections.process.eyebrow}</span>
-            </Reveal>
-            <SplitText
-              text={sections.process.title}
-              as="h2"
-              className="home-section-head__title"
-            />
-            <Reveal delay={0.08}>
-              <p className="home-section-head__lede">{sections.process.description}</p>
-            </Reveal>
-          </header>
+      <HomeIndustries />
 
-          <ol className="home-process-grid">
-            {steps.map((step, index) => (
-              <Reveal
-                as="li"
-                key={step.num}
-                delay={0.08 + index * 0.07}
-                className="home-process-step"
-              >
-                <span className="home-process-step__num">{step.num}</span>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <HomeInsights posts={posts} />
 
       <LocalPresence variant="home" />
 
@@ -444,6 +472,7 @@ export function HomeSections({
               <SplitText
                 text={sections.faq.title}
                 as="h2"
+                id="home-faq-title"
                 className="home-section-head__title"
               />
               <Reveal delay={0.08}>
@@ -463,7 +492,7 @@ export function HomeSections({
               <div className="home-cta__grid" aria-hidden />
               <div className="home-cta__inner">
                 <span className="eyebrow center">{sections.cta.eyebrow}</span>
-                <SplitText text={cta.title} as="h2" className="home-cta__title" />
+                <SplitText text={cta.title} as="h2" id="home-cta-title" className="home-cta__title" />
                 <p>{cta.description}</p>
                 <Button href="/contact">{sections.cta.buttonLabel}</Button>
               </div>

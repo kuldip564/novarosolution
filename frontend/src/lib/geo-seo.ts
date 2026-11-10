@@ -13,7 +13,7 @@ export function mapEmbedUrl(): string {
 }
 
 export function formattedAddress(): string {
-  return `${site.geo.streetAddress}, ${site.geo.addressRegion} ${site.geo.postalCode}, India`;
+  return `${site.geo.streetAddress}, ${site.geo.addressLocality}, ${site.geo.addressRegion} ${site.geo.postalCode}, India`;
 }
 
 /** Geo meta tags for local SEO (ICBM, geo.region, etc.) */

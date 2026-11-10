@@ -198,12 +198,17 @@
     max-width: 100%;
   }
 
+  /* Short page intros sit right under the header instead of floating in a tall empty block. */
   .pagehead {
-    min-height: min(78vh, 880px);
+    min-height: 0;
     padding:
-      var(--hero-pad-top)
+      calc(var(--site-header-h) + env(safe-area-inset-top, 0px) + 1.5rem)
       0
-      clamp(2.5rem, 8vw, 4rem);
+      clamp(2rem, 7vw, 3rem);
+  }
+
+  .pagehead .wrap.inner {
+    justify-content: flex-start;
   }
 
   .pagehead h1,
@@ -472,8 +477,8 @@
   }
 
   .eyebrow {
-    font-size: 0.66rem;
-    letter-spacing: 0.28em;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     gap: 8px;
   }
 
@@ -546,6 +551,8 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    max-width: 26rem;
+    margin-inline: auto;
   }
 
   .home-hero__actions .btn {
@@ -564,5 +571,99 @@
 
   .home-work-grid {
     gap: 1rem;
+  }
+}
+
+/* ── Phones & tablets: footer layout ── */
+@media (max-width: 600px) {
+  /* Brand and contact span the row; the two link lists sit side by side. */
+  .foot-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 20px;
+  }
+
+  .foot-brand,
+  .foot-grid > .foot-col:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .foot-brand p {
+    max-width: none;
+  }
+}
+
+/* ── Touch screens: comfortable tap targets (≈40–44px) ── */
+@media (pointer: coarse) {
+  .foot-col a {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    margin-bottom: 0;
+  }
+
+  .foot-col span {
+    margin-bottom: 8px;
+  }
+
+  .foot-legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  .foot-legal {
+    gap: 0 18px;
+  }
+
+  .foot-geo-bar__directions,
+  .local-map-card__link {
+    min-height: 44px;
+  }
+
+  .breadcrumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  .home-hero__markets li {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+  }
+
+  .home-hero__markets li.is-link a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+  }
+
+  .services-detail__link,
+  .error-page-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  .local-meta a {
+    display: block;
+    padding-block: 0.4rem;
+    margin-block: -0.25rem;
+  }
+
+  /* Service-area chips that link to location pages */
+  a.foot-geo-bar__pill,
+  a.contact-service-areas__pill,
+  a.local-areas__pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+  }
+
+  .local-nearby__list a {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0.6rem;
+    margin-block: -0.6rem;
   }
 }

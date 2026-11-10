@@ -73,6 +73,14 @@ const serviceLead: Record<string, string> = {
     "AWS or GCP, the pipeline that deploys it, and a design system the next screen can reuse.",
 };
 
+/** Search-result descriptions (kept to ~150 characters); the on-page lead stays as written. */
+const serviceMetaDescription: Record<string, string> = {
+  "ai-machine-ml":
+    "AI features with a job, a measure and a fallback: document extraction, search over your own content and review queues, with a person in the loop.",
+  "cloud-devops":
+    "Cloud architecture on AWS or GCP, CI/CD pipelines, monitoring and design systems — built by the team that ships your app, so nothing is lost in handover.",
+};
+
 type Props = { params: Promise<{ slug: string }> };
 
 async function loadService(slug: string): Promise<ServiceDetailView | null> {
@@ -98,7 +106,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return createPageMetadata({
     title: searchTitle[service.slug] ?? service.title,
-    description: serviceLead[service.slug] ?? service.description,
+    description: serviceMetaDescription[service.slug] ?? serviceLead[service.slug] ?? service.description,
+    ogEyebrow: "Services · Worldwide",
     path: `/services/${service.slug}`,
     keywords: [
       service.title,

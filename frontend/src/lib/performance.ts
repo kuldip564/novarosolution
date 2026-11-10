@@ -35,10 +35,29 @@ export function getParticleCounts(tier: PerformanceTier): ParticleCounts {
     : { particleCount: 1400, starCount: 600 };
 }
 
-/** WebGL off on phones and low-end devices. CSS mark still shows. */
+let webglSupport: boolean | null = null;
+
+/** True when the browser can create a WebGL context (GPU on, not blocklisted). */
+export function supportsWebGL(): boolean {
+  if (typeof window === "undefined") return false;
+  if (webglSupport !== null) return webglSupport;
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = (canvas.getContext("webgl2") || canvas.getContext("webgl")) as
+      | WebGLRenderingContext
+      | null;
+    webglSupport = Boolean(gl);
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+  } catch {
+    webglSupport = false;
+  }
+  return webglSupport;
+}
+
+/** WebGL off on phones, low-end devices, and browsers without WebGL. CSS mark still shows. */
 export function shouldEnableWebGL(tier: PerformanceTier): boolean {
   if (tier === "low" || isMobileViewport()) return false;
-  return true;
+  return supportsWebGL();
 }
 
 export function getWebGLPixelRatio(): number {

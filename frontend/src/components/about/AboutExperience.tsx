@@ -15,6 +15,7 @@ import { SplitText } from "@/components/anim/SplitText";
 import { Tilt } from "@/components/anim/Tilt";
 import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Button } from "@/components/Button";
+import { AboutCapabilities } from "@/components/about/AboutCapabilities";
 import { TeamGrid } from "@/components/sections/TeamGrid";
 import { CinemaBigword } from "@/components/sections/CinemaBigword";
 import { NMark } from "@/components/NMark";
@@ -226,7 +227,12 @@ function AboutIntro({
           <strong>Worldwide</strong> · Studio in Gandhinagar since 2024
         </span>
       </span>
-      <CinemaBigword title={title} accent={accent} className="about-intro__bigword" />
+      <CinemaBigword
+        title={title}
+        accent={accent}
+        className="about-intro__bigword"
+        heading="About Novaro Solution — a software studio in Gandhinagar, India"
+      />
       <p className="about-intro__tagline">{tagline}</p>
       <AboutIntroStats stats={stats} />
     </>
@@ -307,6 +313,7 @@ export function AboutExperience({
             <SplitText
               text={content.whoWeAre.title}
               as="h2"
+              id="about-who-title"
               className="about-scene__title"
             />
             <p className="about-who__body">{content.whoWeAre.body}</p>
@@ -362,6 +369,7 @@ export function AboutExperience({
             <SplitText
               text={content.values.title}
               as="h2"
+              id="about-values-title"
               className="about-scene__title"
             />
           </header>
@@ -380,6 +388,7 @@ export function AboutExperience({
             <SplitText
               text={content.stats.title}
               as="h2"
+              id="about-stats-title"
               className="about-scene__title"
             />
           </header>
@@ -442,6 +451,8 @@ export function AboutExperience({
         </div>
       </section>
 
+      <AboutCapabilities />
+
       <section className="about-scene about-why" aria-labelledby="about-why-title">
         <div className="wrap about-why__grid">
           <Reveal className="about-why__intro">
@@ -449,6 +460,7 @@ export function AboutExperience({
             <SplitText
               text={content.whyUs.title}
               as="h2"
+              id="about-why-title"
               className="about-scene__title"
             />
           </Reveal>
@@ -460,7 +472,7 @@ export function AboutExperience({
                   {item.key}
                 </span>
                 <div>
-                  <h3 id={index === 0 ? "about-why-title" : undefined}>{item.title}</h3>
+                  <h3>{item.title}</h3>
                   <p>{item.description}</p>
                 </div>
               </Reveal>
@@ -477,8 +489,8 @@ export function AboutExperience({
               <div className="about-cta__grid" aria-hidden />
               <div className="about-cta__inner">
                 <span className="eyebrow center">{content.cta.eyebrow}</span>
-                <SplitText text={ctaTitle} as="h2" className="about-cta__title" />
-                <p id="about-cta-title">{ctaDescription}</p>
+                <SplitText text={ctaTitle} as="h2" id="about-cta-title" className="about-cta__title" />
+                <p>{ctaDescription}</p>
                 <Button href="/contact">{content.cta.buttonLabel}</Button>
               </div>
             </div>

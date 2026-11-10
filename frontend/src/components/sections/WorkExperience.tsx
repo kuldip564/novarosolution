@@ -151,7 +151,7 @@ function WorkProjectSection({
               </a>
             ) : null}
             <Link href={`/work/${project.slug}`} className="work-project__cta work-project__cta--ghost">
-              Case study
+              View case study
             </Link>
             <button
               type="button"

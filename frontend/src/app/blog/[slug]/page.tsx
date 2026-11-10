@@ -14,39 +14,59 @@ import {
 } from "@/lib/blog";
 import { cloudinaryTransformUrl } from "@/lib/media";
 import { site } from "@/lib/site-data";
-import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
+import { brandIconAbsoluteUrl, ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
+import { breadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/structured-data";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function articleImage(post: BlogPost): string {
+  return (
+    cloudinaryTransformUrl(post.ogImage ?? post.coverImage, { width: 1200 }) ??
+    post.coverImage?.secureUrl ??
+    `${siteBaseUrl()}${ogImagePath(post.title, post.category || "Blog")}`
+  );
+}
+
 function articleJsonLd(post: BlogPost) {
   const url = `${siteBaseUrl()}/blog/${post.slug}`;
-  const image =
-    cloudinaryTransformUrl(post.ogImage ?? post.coverImage, { width: 1200 }) ??
-    post.coverImage?.secureUrl;
 
-  return {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.metaTitle ?? post.title,
-    description: post.metaDescription ?? post.excerpt,
-    image: image ? [image] : undefined,
-    datePublished: post.publishedAt,
-    author: {
-      "@type": "Person",
-      name: post.author.name,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: site.name,
-      logo: {
-        "@type": "ImageObject",
-        url: brandIconAbsoluteUrl(),
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": `${url}#article`,
+      headline: post.metaTitle ?? post.title,
+      description: post.metaDescription ?? post.excerpt,
+      image: [articleImage(post)],
+      datePublished: post.publishedAt,
+      dateModified: post.publishedAt,
+      inLanguage: "en",
+      articleSection: post.category || undefined,
+      keywords: post.tags.length ? post.tags.join(", ") : undefined,
+      timeRequired: post.readingTime ? `PT${post.readingTime}M` : undefined,
+      author: {
+        "@type": "Person",
+        name: post.author.name,
+        worksFor: { "@id": ORGANIZATION_ID },
+        url: `${siteBaseUrl()}/about`,
       },
+      publisher: {
+        "@type": "Organization",
+        "@id": ORGANIZATION_ID,
+        name: site.name,
+        logo: { "@type": "ImageObject", url: brandIconAbsoluteUrl() },
+      },
+      isPartOf: { "@type": "Blog", "@id": `${siteBaseUrl()}/blog#blog`, name: `${site.name} blog` },
+      mainEntityOfPage: { "@type": "WebPage", "@id": url },
     },
-    mainEntityOfPage: url,
-  };
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Blog", path: "/blog" },
+      { name: post.title, path: `/blog/${post.slug}` },
+    ]),
+  ];
 }
 
 export const revalidate = 30;
@@ -68,29 +88,34 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const { post } = data;
   const title = post.metaTitle ?? post.title;
   const description = post.metaDescription ?? post.excerpt;
-  const ogImage =
-    cloudinaryTransformUrl(post.ogImage ?? post.coverImage, { width: 1200 }) ??
-    post.coverImage?.secureUrl;
+  const ogImage = articleImage(post);
 
   return {
-    title,
+    title: { absolute: title.length > 42 ? title : `${title} — ${site.name}` },
     description,
+    keywords: post.tags.length ? post.tags : undefined,
+    authors: [{ name: post.author.name, url: `${siteBaseUrl()}/about` }],
     icons: siteIcons,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title,
       description,
       type: "article",
+      ...ogLocales,
+      siteName: site.name,
       url: `${siteBaseUrl()}/blog/${post.slug}`,
       publishedTime: post.publishedAt,
+      modifiedTime: post.publishedAt,
+      section: post.category || undefined,
+      tags: post.tags,
       authors: [post.author.name],
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ogImage ? [ogImage] : [site.brandIcon],
+      images: [ogImage],
     },
   };
 }

@@ -187,11 +187,7 @@ function ServiceDetailSection({
           priority={index < 1}
         />
       ) : (
-        <MediaPlaceholder
-          title={`${service.title} preview`}
-          hint="Add image / video · 4:3"
-          className="services-detail__placeholder"
-        />
+        <MediaPlaceholder title={service.title} className="services-detail__placeholder" />
       )}
     </ClipReveal>
   );
@@ -250,6 +246,7 @@ function ServiceDetailSection({
       )}
 
       <div className="services-detail__cta">
+        <Button href={`/services/${service.slug}`}>Learn more</Button>
         <Button href="/contact" variant="ghost">
           Discuss this service
         </Button>
@@ -377,6 +374,7 @@ function ServicesIntro({
         title={content.introTitle}
         accent={content.introAccent}
         className="services-intro__bigword"
+        heading="Software development, AI and digital marketing services"
       />
       <p className="services-intro__tagline">{content.introLine}</p>
     </>
@@ -440,6 +438,15 @@ export function ServicesExperience({
   return (
     <main className="services-cinema">
       <ServicesIntro content={content} cinematic={cinematic} />
+
+      <nav className="services-jump wrap" aria-label="Jump to a service">
+        {services.map((service) => (
+          <a key={service.slug} href={`#service-${service.slug}`} className="services-jump__link">
+            <span className="services-jump__no">{service.no}</span>
+            <span>{service.title}</span>
+          </a>
+        ))}
+      </nav>
 
       {services.map((service, index) => (
         <ServiceDetailSection

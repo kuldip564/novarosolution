@@ -45,8 +45,8 @@ export function CloudinaryImage({
       width={width}
       height={height}
       className={className}
-      priority={priority}
-      fetchPriority={fetchPriority}
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={fetchPriority ?? (priority ? "high" : undefined)}
       sizes={sizes}
       unoptimized={isCloudinary || hasQueryString}
     />

@@ -452,9 +452,9 @@ html.site--bg-3d .work-cinema .cta-band {
   }
 }
 
-@media (max-width: 479px) {
+@media (max-width: 340px) {
   .work-project__metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -541,19 +541,43 @@ html.site--bg-3d .work-cinema .cta-band {
     scroll-margin-top: 6.25rem;
   }
 
+  /* Primary button full width; "Case study" and "View details" share one row. */
   .work-project__actions {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .work-project__cta--primary {
+    grid-column: 1 / -1;
   }
 
   .work-project__cta {
     width: 100%;
     min-height: 48px;
+    padding-inline: 0.75rem;
     justify-content: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
   }
 
+  /* Three compact metrics in one row instead of 2 + an orphan. */
   .work-project__metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .work-project__metric {
+    padding: 0.7rem 0.65rem;
+    border-radius: 12px;
+  }
+
+  .work-project__metric strong {
+    font-size: clamp(1rem, 4.6vw, 1.2rem);
+  }
+
+  .work-project__metric span {
+    font-size: 0.72rem;
   }
 
   .work-project__title {

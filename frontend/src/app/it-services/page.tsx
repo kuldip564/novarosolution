@@ -28,7 +28,7 @@ const faqs = [
 export const metadata: Metadata = createPageMetadata({
   title: "IT Services Company for Software, AI & Web Apps",
   description:
-    "Novaro Solution is an IT services company. We build web apps, mobile products, AI systems, and digital marketing for companies worldwide. Studio in Gandhinagar, India.",
+    "Novaro Solution is an IT services company building web apps, mobile products, AI systems and digital marketing for companies worldwide, from Gandhinagar.",
   path,
   keywords: [
     "IT services company",

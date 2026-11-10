@@ -62,12 +62,18 @@
 }
 
 @media (min-width: 640px) {
-  .team-grid__cards--founders {
+  .team-grid__cards--founders,
+  .team-grid__cards--manager {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: none;
+  }
+
+  .team-grid__cards--employees {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .team-grid__cards--employees {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -109,7 +115,7 @@
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
   font-family: var(--font-sora), sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -328,7 +334,7 @@
   z-index: 2;
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -483,9 +489,67 @@
   border-bottom-color: rgba(10, 23, 48, 0.08);
 }
 
+/* Phones: compact two-up cards — photo, name, role. Skills and education live in the profile modal. */
 @media (max-width: 639px) {
+  .team-grid__cards--founders,
+  .team-grid__cards--manager,
   .team-grid__cards--employees {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 0.75rem;
+    max-width: none;
+  }
+
+  .team-card__trigger {
+    gap: 0.6rem;
+  }
+
+  .team-card__frame {
+    border-radius: 16px;
+  }
+
+  .team-card__meta h3,
+  .team-card__meta h4,
+  .team-grid--about .team-card__meta h3 {
+    font-size: 0.95rem;
+  }
+
+  .team-card__meta .team-card__role,
+  .team-grid--about .team-card__meta .team-card__role {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .team-card__education,
+  .team-card__tags,
+  .team-card__summary {
+    display: none !important;
+  }
+
+  .team-card__badge,
+  .team-card__view {
+    top: auto;
+    padding: 0.28rem 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+
+  .team-card__badge {
+    top: 8px;
+    left: 8px;
+  }
+
+  .team-card__view {
+    right: 8px;
+    bottom: 8px;
+  }
+}
+
+/* Touch screens have no hover, so keep the "View profile" hint visible. */
+@media (hover: none) {
+  .team-card__view {
+    opacity: 1;
+    transform: none;
   }
 }
 

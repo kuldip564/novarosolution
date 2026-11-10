@@ -21,11 +21,17 @@ import { normalizeHeroContent } from "@/lib/hero-content";
 import { useMotionSettings } from "@/lib/motion-provider";
 import { scrollStore } from "@/lib/scroll-store";
 import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
+import { serviceAreaLinks } from "@/lib/locations";
 
 const HomeHero3D = dynamic(
   () => import("./HomeHero3D").then((mod) => mod.HomeHero3D),
   { ssr: false },
 );
+
+/** Button labels are editable in the admin; send "work / portfolio / case study" labels to /work, everything else to /contact. */
+function ctaHref(label: string): string {
+  return /work|portfolio|case stud/i.test(label) ? "/work" : "/contact";
+}
 
 type HomeHeroProps = {
   content?: HeroContent;
@@ -45,12 +51,8 @@ function HeroPlace() {
       </div>
       <ul className="home-hero__markets" aria-label="Countries we build for">
         {site.serviceAreas.map((area) => (
-          <li key={area} className={area === "USA" ? "is-link" : undefined}>
-            {area === "USA" ? (
-              <Link href="/software-development-usa">{area}</Link>
-            ) : (
-              area
-            )}
+          <li key={area} className={serviceAreaLinks[area] ? "is-link" : undefined}>
+            {serviceAreaLinks[area] ? <Link href={serviceAreaLinks[area]}>{area}</Link> : area}
           </li>
         ))}
       </ul>
@@ -130,8 +132,8 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
             <SplitText text={headline} as="h1" className="home-hero__title" />
             <p className="home-hero__lede">{copy.lede}</p>
             <div className="home-hero__actions">
-              <Button href="/work">{copy.ctaPrimary}</Button>
-              <Button href="/contact" variant="ghost">
+              <Button href={ctaHref(copy.ctaPrimary)}>{copy.ctaPrimary}</Button>
+              <Button href={ctaHref(copy.ctaSecondary)} variant="ghost">
                 {copy.ctaSecondary}
               </Button>
             </div>
@@ -147,8 +149,8 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
             <SplitText text={headline} as="h1" className="home-hero__title" />
             <p className="home-hero__lede">{copy.lede}</p>
             <div className="home-hero__actions">
-              <Button href="/work">{copy.ctaPrimary}</Button>
-              <Button href="/contact" variant="ghost">
+              <Button href={ctaHref(copy.ctaPrimary)}>{copy.ctaPrimary}</Button>
+              <Button href={ctaHref(copy.ctaSecondary)} variant="ghost">
                 {copy.ctaSecondary}
               </Button>
             </div>

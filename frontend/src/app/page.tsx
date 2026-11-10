@@ -9,6 +9,7 @@ import {
   getPublishedTestimonials,
   getSiteContent,
 } from "@/lib/content";
+import { getBlogPosts } from "@/lib/blog";
 import { normalizeHeroContent } from "@/lib/hero-content";
 import { homePageJsonLd, homePageMetadata } from "@/lib/home-seo";
 import {
@@ -50,6 +51,7 @@ export default async function HomePage() {
     logos,
     faqs,
     homeSections,
+    latestPosts,
   ] = await Promise.all([
     getPublishedProjects(),
     getPublishedServices(),
@@ -62,6 +64,7 @@ export default async function HomePage() {
     getPublishedLogos(),
     getPublishedFaqs(),
     getSiteContent("homeSections", homeSectionsDefaults),
+    getBlogPosts({ page: 1, limit: 3 }).catch(() => null),
   ]);
 
   const homeCta = pickCta(cta, "home");
@@ -89,6 +92,7 @@ export default async function HomePage() {
           logos={logos}
           faqs={faqs}
           sections={homeSections}
+          posts={latestPosts?.posts ?? []}
         />
       </main>
     </>

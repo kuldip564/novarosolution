@@ -3,25 +3,25 @@ import { servicesKeywords } from "./geo-seo";
 import { site } from "./site-data";
 import type { ServiceDetailView } from "./services-content";
 import { ORGANIZATION_ID } from "./structured-data";
-import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
+import { brandIconAbsoluteUrl, ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const servicesPagePath = "/services";
 
 export const servicesSeoTitle =
-  "Software, AI & Digital Marketing Services | USA, UK, Europe & India";
+  "Software, AI & Digital Marketing Services — Novaro Solution";
 
 export const servicesSeoDescription =
-  "Custom software, web and mobile apps, AI/ML, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India. Novaro Solution ships production software.";
+  "Web and mobile app development, AI/ML, digital marketing and cloud DevOps for companies in the USA, UK, Europe, the Middle East and India.";
 
-export const servicesOgImage = "/images/webapp-dashboard.webp";
+export const servicesOgImage = ogImagePath("Web apps, AI, digital marketing & cloud services", "Services · Worldwide");
 
 export function servicesPageMetadata(): Metadata {
   const url = `${siteBaseUrl()}${servicesPagePath}`;
-  const ogTitle = `${servicesSeoTitle} — ${site.name}`;
+  const ogTitle = servicesSeoTitle;
   const ogImageUrl = `${siteBaseUrl()}${servicesOgImage}`;
 
   return {
-    title: servicesSeoTitle,
+    title: { absolute: ogTitle },
     description: servicesSeoDescription,
     keywords: servicesKeywords,
     alternates: {
@@ -30,7 +30,7 @@ export function servicesPageMetadata(): Metadata {
     icons: siteIcons,
     openGraph: {
       type: "website",
-      locale: "en_US",
+      ...ogLocales,
       url,
       title: ogTitle,
       description: servicesSeoDescription,
@@ -38,8 +38,8 @@ export function servicesPageMetadata(): Metadata {
       images: [
         {
           url: servicesOgImage,
-          width: 2048,
-          height: 1529,
+          width: 1200,
+          height: 630,
           alt: "Novaro Solution web and app engineering services dashboard preview",
         },
       ],

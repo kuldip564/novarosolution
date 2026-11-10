@@ -3,6 +3,7 @@ import { HomeSections } from "@/components/home/HomeSections";
 import type { DbClientLogo, DbFaq, DbProject, DbService, DbTestimonial } from "@/lib/content";
 import { homeStats, processSteps } from "@/lib/site-data";
 import type { HomeSectionsContent } from "@/lib/page-content-defaults";
+import type { BlogPost } from "@/lib/blog";
 
 type HomeBelowFoldProps = {
   projects: DbProject[];
@@ -15,6 +16,7 @@ type HomeBelowFoldProps = {
   logos: DbClientLogo[];
   faqs: DbFaq[];
   sections: HomeSectionsContent;
+  posts: BlogPost[];
 };
 
 export function HomeBelowFold(props: HomeBelowFoldProps) {

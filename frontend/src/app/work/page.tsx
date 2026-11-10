@@ -41,6 +41,7 @@ export default async function WorkPage() {
         title="NOVARO"
         titleAccent="WORK"
         variant="bigword"
+        heading="Case studies: web apps, D2C stores and logistics platforms"
         description="Zeevan, KankreG, Mr Antidot, and Quadrato Cargo — live products we designed and built. Open any project for details or visit the site directly."
         className="blog-head"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Work" }]}

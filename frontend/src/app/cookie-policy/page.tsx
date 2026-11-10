@@ -4,7 +4,9 @@ import { createPageMetadata } from "@/lib/site-metadata";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Cookie Policy",
-  description: "How Novaro Solution uses cookies and similar technologies.",
+  description:
+    "Which cookies novarosolution.com uses — essential, preference and analytics — why we use them, and how to block or delete them in your browser.",
+  ogEyebrow: "Legal",
   path: "/cookie-policy",
 });
 
