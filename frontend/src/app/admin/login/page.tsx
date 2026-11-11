@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
         if (res.status === 503) {
           throw new Error(
             data.error ||
-              "Database is unavailable. Start MongoDB and verify DATABASE_URL in backend/.env.",
+              "The server can't reach its database right now. Please try again shortly.",
           );
         }
         if (res.status === 0 || res.status >= 500) {
@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="admin-auth">
+    <main className="admin-auth">
       <div className="admin-auth-card">
         <div className="admin-auth-brand">
           <BrandLogo href="/" iconSize={56} showText={false} label="Novaro Solution" />
@@ -64,11 +64,7 @@ export default function AdminLoginPage() {
             <h1>Sign in</h1>
           </div>
         </div>
-        <p className="admin-lede">
-          Manage content and leads. Credentials are set in{" "}
-          <code>backend/.env</code> (<code>ADMIN_EMAIL</code> /{" "}
-          <code>ADMIN_PASSWORD</code>).
-        </p>
+        <p className="admin-lede">Manage content and leads.</p>
 
         <form className="admin-form" onSubmit={onSubmit}>
           <label>
@@ -97,6 +93,6 @@ export default function AdminLoginPage() {
           </button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }

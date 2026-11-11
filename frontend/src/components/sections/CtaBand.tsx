@@ -14,7 +14,7 @@ export function CtaBand({
   eyebrow = "Let's talk",
   title,
   description,
-  buttonLabel = "Start a project",
+  buttonLabel = "Start Your Project",
   buttonHref = "/contact",
 }: CtaBandProps) {
   return (

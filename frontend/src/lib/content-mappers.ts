@@ -63,6 +63,8 @@ export type ServiceGridView = {
   tags: readonly string[] | string[];
   icon: string;
   imageAsset?: CloudinaryAsset | null;
+  /** Alt text set in the admin for the service image. */
+  imageAlt?: string | null;
 };
 
 export type TeamMemberView = {
@@ -192,6 +194,7 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
     tags: service.tags ?? [],
     icon: service.icon ?? "monitor",
     imageAsset: parseCloudinaryAsset(service.image),
+    imageAlt: service.imageAlt ?? null,
   }));
 }
 

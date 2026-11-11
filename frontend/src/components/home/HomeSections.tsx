@@ -28,8 +28,9 @@ import {
   type ServiceGridView,
 } from "@/lib/content-mappers";
 import { isExternalProjectHref } from "@/lib/project-link";
+import { projectCardAlt } from "@/lib/work-project-images";
 import { useMotionSettings } from "@/lib/motion-provider";
-import { capabilities, homeStats, processSteps } from "@/lib/site-data";
+import { capabilities, homeStats, processSteps, site } from "@/lib/site-data";
 import type { HomeSectionsContent } from "@/lib/page-content-defaults";
 import type { FaqItem } from "@/components/sections/FaqSection";
 
@@ -98,7 +99,7 @@ function ServiceCard({
         <div className="home-svc-card__media">
           <CloudinaryImage
             asset={service.imageAsset}
-            alt={service.title}
+            alt={service.imageAlt || service.title}
             width={640}
             height={360}
             transformWidth={640}
@@ -264,9 +265,8 @@ export function HomeSections({
 
           <Reveal className="home-section-foot">
             <Button href="/services" variant="ghost">
-              Explore all services
+              Explore Our Services
             </Button>
-            <Button href="/it-services">IT services worldwide</Button>
           </Reveal>
         </div>
       </section>
@@ -303,7 +303,7 @@ export function HomeSections({
                       <div className="home-work-card__cover home-work-card__cover--photo">
                         <CloudinaryImage
                           asset={project.imageAsset}
-                          alt={project.title}
+                          alt={projectCardAlt(project)}
                           width={800}
                           height={560}
                           transformWidth={640}
@@ -333,7 +333,7 @@ export function HomeSections({
                       <div className="home-work-card__cover home-work-card__cover--photo">
                         <CloudinaryImage
                           asset={project.imageAsset}
-                          alt={project.title}
+                          alt={projectCardAlt(project)}
                           width={800}
                           height={560}
                           transformWidth={640}
@@ -364,7 +364,7 @@ export function HomeSections({
 
           <Reveal className="home-section-foot">
             <Button href="/work" variant="ghost">
-              View full portfolio
+              View Case Studies
             </Button>
           </Reveal>
         </div>
@@ -406,6 +406,7 @@ export function HomeSections({
 
       <HomeStack />
 
+      {testimonialItems.length > 0 ? (
       <section className="home-scene home-testimonials" aria-labelledby="home-testimonials-title">
         <div className="wrap">
           <header className="home-section-head home-section-head--center">
@@ -455,6 +456,7 @@ export function HomeSections({
           </div>
         </div>
       </section>
+      ) : null}
 
       <HomeIndustries />
 
@@ -495,6 +497,12 @@ export function HomeSections({
                 <SplitText text={cta.title} as="h2" id="home-cta-title" className="home-cta__title" />
                 <p>{cta.description}</p>
                 <Button href="/contact">{sections.cta.buttonLabel}</Button>
+                <p className="home-cta__alt">
+                  Prefer email or a call?{" "}
+                  <a href={`mailto:${site.email}`}>{site.email}</a>
+                  <span aria-hidden="true"> · </span>
+                  <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
+                </p>
               </div>
             </div>
           </Reveal>

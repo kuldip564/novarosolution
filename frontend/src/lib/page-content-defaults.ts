@@ -55,7 +55,7 @@ export const homeSectionsDefaults = {
   },
   cta: {
     eyebrow: "Let's talk",
-    buttonLabel: "Book a call",
+    buttonLabel: "Start Your Project",
   },
 } as const;
 

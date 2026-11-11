@@ -8,6 +8,9 @@ import { CtaBand } from "@/components/sections/CtaBand";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { LocalPresence } from "@/components/sections/LocalPresence";
 import { PageHead } from "@/components/sections/PageHead";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import type { TestimonialView } from "@/components/sections/TestimonialsSection";
+import type { WorkProjectView } from "@/lib/content-mappers";
 import { googleMapsUrl } from "@/lib/geo-seo";
 import { markets, type LocationEntry } from "@/lib/locations";
 import { site } from "@/lib/site-data";
@@ -19,6 +22,7 @@ import {
   ORGANIZATION_ID,
   webPageJsonLd,
 } from "@/lib/structured-data";
+import { jsonLdString } from "@/lib/json-ld";
 
 const serviceLinks = [
   { href: "/services/web-app-eng", label: "Web & app development" },
@@ -30,10 +34,9 @@ const serviceLinks = [
 
 function areaServedJsonLd(location: LocationEntry) {
   if (location.kind === "city") {
-    // The local page covers the studio's city and its neighbours.
-    return areasServed.filter((area) =>
-      ["Gandhinagar", "Ahmedabad", "GIFT City"].includes(area.name),
-    );
+    // Each local page names its own city (Gandhinagar's includes GIFT City, which sits within it).
+    const names = location.slug === "gandhinagar" ? ["Gandhinagar", "GIFT City"] : [location.name];
+    return areasServed.filter((area) => names.includes(area.name));
   }
   if (location.kind === "region") return { "@type": "Place", name: location.name };
   return { "@type": "Country", name: location.name, identifier: location.isoCode };
@@ -81,14 +84,29 @@ function locationJsonLd(location: LocationEntry, path: string) {
   ];
 }
 
+/** Orders testimonials so those whose role mentions one of `preferred` (e.g. "Gujarat") come first. */
+export function pickTestimonials(items: TestimonialView[], preferred: string[]): TestimonialView[] {
+  const score = (item: TestimonialView) =>
+    preferred.findIndex((word) => item.role.toLowerCase().includes(word.toLowerCase()));
+  return [...items].sort((a, b) => {
+    const sa = score(a);
+    const sb = score(b);
+    return (sa === -1 ? 99 : sa) - (sb === -1 ? 99 : sb);
+  });
+}
+
 type LocationViewProps = {
   location: LocationEntry;
   /** URL path of the page rendering this view (used for schema and breadcrumbs). */
   path: string;
+  /** Real case studies from the portfolio. */
+  projects?: WorkProjectView[];
+  /** Real client testimonials already published on the site (shown as quotes; no review markup). */
+  testimonials?: TestimonialView[];
 };
 
 /** Full location landing page — shared by /locations/[slug] and /software-development-usa. */
-export function LocationView({ location, path }: LocationViewProps) {
+export function LocationView({ location, path, projects = [], testimonials = [] }: LocationViewProps) {
   const isLocal = location.group === "india" && location.kind === "city";
   const inName = location.inName ?? location.name;
   const otherMarkets = markets.filter((market) => market.href !== path).slice(0, 4);
@@ -97,7 +115,7 @@ export function LocationView({ location, path }: LocationViewProps) {
     <main className="loc-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(locationJsonLd(location, path)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(locationJsonLd(location, path)) }}
       />
       <PageHead
         eyebrow={location.eyebrow}
@@ -111,9 +129,9 @@ export function LocationView({ location, path }: LocationViewProps) {
         ]}
       >
         <Reveal delay={0.25} className="loc-head__actions">
-          <Button href="/contact">Book a discovery call</Button>
+          <Button href="/contact">Book a Consultation</Button>
           <Button href="/work" variant="ghost">
-            See our work
+            View Case Studies
           </Button>
         </Reveal>
       </PageHead>
@@ -128,6 +146,35 @@ export function LocationView({ location, path }: LocationViewProps) {
               </Reveal>
             ))}
           </ul>
+
+          {location.localContext ? (
+            <Reveal className="loc-card loc-card--context">
+              <h2 className="loc-card__title">{location.localContext.title}</h2>
+              <p className="loc-card__body">{location.localContext.body}</p>
+            </Reveal>
+          ) : null}
+
+          {location.localServices?.length ? (
+            <div className="loc-services">
+              <header className="loc-section-head loc-section-head--left">
+                <span className="eyebrow">Services</span>
+                <h2>Services for {location.name} businesses</h2>
+              </header>
+              <ul className="loc-services__grid">
+                {location.localServices.map((service, index) => (
+                  <Reveal as="li" key={service.title} delay={0.04 * index}>
+                    <Link href={service.href} className="loc-service">
+                      <h3>{service.title}</h3>
+                      <p>{service.body}</p>
+                      <span className="loc-service__more">
+                        Learn more <ArrowUpRight size={14} aria-hidden />
+                      </span>
+                    </Link>
+                  </Reveal>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           <div className="loc-grid">
             <Reveal className="loc-card">
@@ -173,6 +220,58 @@ export function LocationView({ location, path }: LocationViewProps) {
             <Reveal>
               <TimezoneOverlap timezone={location.timezone} />
             </Reveal>
+          ) : null}
+
+          {projects.length > 0 ? (
+            <div className="loc-work">
+              <header className="loc-section-head loc-section-head--left">
+                <span className="eyebrow">Our work</span>
+                <h2>Products we&apos;ve shipped</h2>
+              </header>
+              <ul className="loc-work__grid">
+                {projects.slice(0, 4).map((project, index) => (
+                  <Reveal as="li" key={project.slug} delay={0.04 * index}>
+                    <Link href={`/work/${project.slug}`} className="loc-work__card">
+                      {project.heroImage ? (
+                        <CloudinaryImage
+                          asset={project.heroImage}
+                          alt={`${project.title} — ${project.category}`}
+                          width={480}
+                          height={360}
+                          transformWidth={480}
+                          className="loc-work__img"
+                          sizes="(max-width: 640px) 50vw, 280px"
+                        />
+                      ) : null}
+                      <span className="loc-work__meta">
+                        <span className="loc-card__eyebrow">{project.category}</span>
+                        <strong>{project.title}</strong>
+                      </span>
+                    </Link>
+                  </Reveal>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {testimonials.length > 0 ? (
+            <div className="loc-quotes">
+              <header className="loc-section-head loc-section-head--left">
+                <span className="eyebrow">Client voices</span>
+                <h2>What clients say</h2>
+              </header>
+              <ul className="loc-quotes__grid">
+                {testimonials.slice(0, 2).map((item) => (
+                  <Reveal as="li" key={item.id} className="loc-quote">
+                    <blockquote>{item.quote}</blockquote>
+                    <p className="loc-quote__by">
+                      <strong>{item.name}</strong>
+                      <span>{item.role}</span>
+                    </p>
+                  </Reveal>
+                ))}
+              </ul>
+            </div>
           ) : null}
 
           <div className="loc-grid">
@@ -256,7 +355,7 @@ export function LocationView({ location, path }: LocationViewProps) {
         eyebrow={location.name}
         title={`Tell us what you need built`}
         description={`A short brief is enough. We reply within one business day with a time for a call${location.timezone ? ` that suits ${location.timezone.city}` : ""}.`}
-        buttonLabel="Book a discovery call"
+        buttonLabel="Book a Consultation"
         buttonHref="/contact"
       />
     </main>

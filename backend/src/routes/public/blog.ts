@@ -57,6 +57,7 @@ function mapPublicPost(post: {
       avatar: parseCloudinaryAsset(authorRaw?.avatar),
     },
     publishedAt: post.publishedAt?.toISOString() ?? post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
     readingTime: post.readingTime || computeReadingTime(post.content),
     metaTitle: post.metaTitle,
     metaDescription: post.metaDescription,

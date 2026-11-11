@@ -18,7 +18,7 @@ The logs say Atlas reached the cluster but **rejected the username/password** in
 3. Build the URL with the database name after the host:
 
    ```
-   mongodb+srv://USER:NEWPASSWORD@cluster0.utxftds.mongodb.net/novaro?retryWrites=true&w=majority
+   mongodb+srv://USER:NEWPASSWORD@cluster0.xxxxx.mongodb.net/novaro?retryWrites=true&w=majority
    ```
 
    If you keep special characters, encode them: `@` → `%40`, `:` → `%3A`, `/` → `%2F`, `#` → `%23`, `%` → `%25`.

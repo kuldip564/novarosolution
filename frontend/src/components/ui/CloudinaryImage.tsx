@@ -29,14 +29,22 @@ export function CloudinaryImage({
   const parsed = parseCloudinaryAsset(asset);
   if (!parsed) return null;
 
-  const src =
-    cloudinaryTransformUrl(parsed, {
-      width: transformWidth ?? width,
-      crop: "fill",
-    }) ?? parsed.secureUrl;
+  const fallbackWidth = transformWidth ?? width;
+  const src = cloudinaryTransformUrl(parsed, { width: fallbackWidth, crop: "fill" }) ?? parsed.secureUrl;
 
   const isCloudinary = src.includes("cloudinary.com");
-  const hasQueryString = src.includes("?");
+  // Cloudinary resizes on its own CDN: hand next/image a loader so the browser gets a real
+  // srcset (one URL per width) instead of a single large file for every screen.
+  const canTransform = isCloudinary && src !== parsed.secureUrl;
+  const loader = canTransform
+    ? ({ width: requested }: { width: number }) =>
+        cloudinaryTransformUrl(parsed, { width: requested, crop: "fill" }) ?? src
+    : undefined;
+  // Bundled images (including the versioned /images/work/*.jpg?v=N files) go through the
+  // Next image optimizer for AVIF/WebP and resizing. Anything else with a query string, or a
+  // Cloudinary URL we can't transform, is served as-is.
+  const isBundled = src.startsWith("/images/");
+  const unoptimized = !loader && !isBundled && (isCloudinary || src.includes("?"));
 
   return (
     <Image
@@ -48,7 +56,9 @@ export function CloudinaryImage({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={fetchPriority ?? (priority ? "high" : undefined)}
       sizes={sizes}
-      unoptimized={isCloudinary || hasQueryString}
+      quality={90}
+      loader={loader}
+      unoptimized={unoptimized}
     />
   );
 }

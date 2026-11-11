@@ -2,7 +2,6 @@ import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Reveal } from "@/components/anim/Reveal";
 import type { DbTestimonial } from "@/lib/content";
 import { parseCloudinaryAsset } from "@/lib/media";
-import { fallbackTestimonials } from "@/lib/site-data";
 
 export type TestimonialView = {
   id: string;
@@ -17,14 +16,8 @@ type TestimonialsSectionProps = {
   items?: TestimonialView[];
 };
 
+/** Published (admin-entered) testimonials only; an empty list hides testimonial sections. */
 export function mapDbTestimonials(items: DbTestimonial[]): TestimonialView[] {
-  if (!items.length) {
-    return fallbackTestimonials.map((item) => ({
-      ...item,
-      avatar: null,
-    }));
-  }
-
   return items.map((item) => ({
     id: item.id,
     quote: item.quote,
@@ -35,9 +28,8 @@ export function mapDbTestimonials(items: DbTestimonial[]): TestimonialView[] {
   }));
 }
 
-export function TestimonialsSection({
-  items = fallbackTestimonials.map((item) => ({ ...item, avatar: null })),
-}: TestimonialsSectionProps) {
+export function TestimonialsSection({ items = [] }: TestimonialsSectionProps) {
+  if (!items.length) return null;
   return (
     <section className="sec testimonials-sec">
       <div className="wrap">

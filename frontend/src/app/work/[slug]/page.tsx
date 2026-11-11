@@ -12,6 +12,11 @@ import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
 import { projectDomain } from "@/lib/project-domain";
 import { breadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/structured-data";
 import { getWorkProjectImages } from "@/lib/work-project-images";
+import { TrackEvent } from "@/components/analytics/TrackEvent";
+import { CaseStudyView } from "@/components/work/CaseStudyView";
+import { getCaseStudyContent } from "@/lib/case-study-content";
+import "@/styles/case-study.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -44,14 +49,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await loadProject(slug);
   if (!project) return { title: "Project" };
 
+  const content = getCaseStudyContent(project.slug);
+
   return createPageMetadata({
-    title: `${project.title} case study | ${project.category}`,
-    description: caseStudyDescription(project.hook, project.category),
-    ogEyebrow: `Case study · ${project.category}`,
+    title: content?.seoTitle ?? `${project.title} case study | ${project.category}`,
+    description: content?.description ?? caseStudyDescription(project.hook, project.category),
+    ogEyebrow: `Case study · ${content?.industry ?? project.category}`,
+    ogHeadline: content?.h1,
     path: `/work/${project.slug}`,
     keywords: [
       `${project.title} case study`,
-      project.category,
+      content?.projectType ?? project.category,
+      ...(content?.technologies.map((tech) => tech.name) ?? project.tags),
       "software development company",
     ],
   });
@@ -65,39 +74,65 @@ export default async function WorkCasePage({ params }: Props) {
   const moreProjects = projects.filter((item) => item.slug !== project.slug).slice(0, 3);
   const domain = projectDomain(project.externalUrl);
 
+  const content = getCaseStudyContent(project.slug);
   const path = `/work/${project.slug}`;
+  const base = siteBaseUrl();
+  const absolute = (url: string) => (url.startsWith("http") ? url : `${base}${url}`);
   const heroUrl = project.heroImage?.secureUrl;
+  const images = [
+    ...(heroUrl ? [absolute(heroUrl)] : []),
+    ...(content?.screenshots.map((shot) => absolute(shot.src)) ?? []),
+  ];
+  const clientUrl = content?.liveUrl ?? project.externalUrl ?? undefined;
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "CreativeWork",
-      name: `${project.title} — ${project.category}`,
-      headline: `How we built ${project.title}`,
-      description: project.story,
-      url: `${siteBaseUrl()}${path}`,
-      image: heroUrl ? (heroUrl.startsWith("http") ? heroUrl : `${siteBaseUrl()}${heroUrl}`) : undefined,
-      genre: project.category,
-      keywords: [...project.tags].join(", "),
+      "@id": `${base}${path}#case-study`,
+      name: content?.h1 ?? `${project.title} — ${project.category}`,
+      headline: content?.h1 ?? `How we built ${project.title}`,
+      description: content?.description ?? project.story,
+      abstract: content?.summary,
+      url: `${base}${path}`,
+      mainEntityOfPage: `${base}${path}`,
+      image: images.length ? images : undefined,
+      genre: content?.projectType ?? project.category,
+      keywords: (content?.technologies.map((tech) => tech.name) ?? [...project.tags]).join(", "),
       inLanguage: "en",
       creator: { "@id": ORGANIZATION_ID },
-      ...(project.externalUrl ? { sameAs: project.externalUrl } : {}),
+      isPartOf: { "@id": `${base}/work#collection` },
+      ...(clientUrl
+        ? { about: { "@type": "Organization", name: content?.client ?? project.title, url: clientUrl } }
+        : {}),
     },
     breadcrumbJsonLd([
       { name: "Home", path: "/" },
       { name: "Work", path: "/work" },
-      { name: project.title, path },
+      { name: content?.client ?? project.title, path },
     ]),
   ];
 
+  if (content) {
+    return (
+      <main className="cs">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
+        <TrackEvent event="case_study_view" params={{ case_study: project.slug }} />
+        <CaseStudyView content={content} project={project} moreProjects={moreProjects} />
+      </main>
+    );
+  }
+
+  // Projects added in the admin without long-form copy keep the short layout.
   return (
     <main>
+      <TrackEvent event="case_study_view" params={{ case_study: project.slug }} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
       <PageHead
-        eyebrow={project.category}
-        title={project.title}
+        eyebrow={`Case study · ${project.category}`}
+        title={`${project.title} case study`}
         description={project.hook}
         breadcrumbs={[
           { label: "Home", href: "/" },
@@ -182,7 +217,7 @@ export default async function WorkCasePage({ params }: Props) {
             <div className="case__actions">
               {project.externalUrl ? <Button href={project.externalUrl}>Visit live site</Button> : null}
               <Button href="/contact" variant="ghost">
-                Start a similar project
+                Discuss Your Requirements
               </Button>
             </div>
           </div>

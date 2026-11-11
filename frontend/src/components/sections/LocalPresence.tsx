@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
+import { LazyMap } from "@/components/sections/LazyMap";
 import Link from "next/link";
 import { formattedAddress, googleMapsUrl, mapEmbedUrl } from "@/lib/geo-seo";
 import { serviceAreaLinks } from "@/lib/locations";
@@ -57,13 +58,10 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
         <div className="local-grid">
           <Reveal className="local-map-wrap">
             <div className="local-map-card">
-              <iframe
+              <LazyMap
                 title={`${site.name} location — Gandhinagar, Gujarat`}
                 className="local-map-iframe"
                 src={mapEmbedUrl()}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
               />
               <div className="local-map-card__overlay">
                 <span className="local-map-card__pin" aria-hidden="true">
@@ -133,19 +131,19 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
 
             <div className="local-areas">
               <span className="local-areas__label">Service areas</span>
-              <div className="local-areas__pills" role="list">
-                {site.serviceAreas.map((area) =>
-                  serviceAreaLinks[area] ? (
-                    <Link key={area} href={serviceAreaLinks[area]} className="local-areas__pill" role="listitem">
-                      {area}
-                    </Link>
-                  ) : (
-                    <span key={area} className="local-areas__pill" role="listitem">
-                      {area}
-                    </span>
-                  ),
-                )}
-              </div>
+              <ul className="local-areas__pills">
+                {site.serviceAreas.map((area) => (
+                  <li key={area}>
+                    {serviceAreaLinks[area] ? (
+                      <Link href={serviceAreaLinks[area]} className="local-areas__pill">
+                        {area}
+                      </Link>
+                    ) : (
+                      <span className="local-areas__pill">{area}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {site.nearbyCities.length > 0 && (
@@ -182,7 +180,6 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
             <Button href="/locations" variant="ghost">
               All locations
             </Button>
-            <Button href="/contact">Book a discovery call</Button>
           </Reveal>
         )}
       </div>

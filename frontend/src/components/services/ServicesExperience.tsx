@@ -246,9 +246,11 @@ function ServiceDetailSection({
       )}
 
       <div className="services-detail__cta">
-        <Button href={`/services/${service.slug}`}>Learn more</Button>
-        <Button href="/contact" variant="ghost">
-          Discuss this service
+        <Button href={`/services/${service.slug}`}>
+          Learn more<span className="sr-only"> about {service.title}</span>
+        </Button>
+        <Button href={`/contact?service=${service.slug}`} variant="ghost">
+          Discuss Your Requirements
         </Button>
       </div>
     </>

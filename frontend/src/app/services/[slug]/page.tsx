@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { CSSProperties } from "react";
+import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ServiceEngagement } from "@/components/analytics/ServiceEngagement";
+import { Reveal } from "@/components/anim/Reveal";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { Button } from "@/components/Button";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { PageHead } from "@/components/sections/PageHead";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { getAllBlogPosts, type BlogPost } from "@/lib/blog";
-import { getPublishedServices, getSiteContent } from "@/lib/content";
+import { getPublishedProjects, getPublishedServices, getSiteContent } from "@/lib/content";
+import { mapDbProjectsToWork } from "@/lib/content-mappers";
+import { getServicePageContent, servicePageContent } from "@/lib/service-page-content";
 import {
   buildServiceDetails,
   defaultServicesPage,
@@ -13,75 +23,10 @@ import {
   type ServiceDetailView,
 } from "@/lib/services-content";
 import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
+import { getWorkProjectImages } from "@/lib/work-project-images";
 import { breadcrumbJsonLd, LOCAL_BUSINESS_ID } from "@/lib/structured-data";
-
-const searchTitle: Record<string, string> = {
-  "web-app-eng": "Web App Development Company",
-  "ai-machine-ml": "AI Development Company",
-  "digital-marketing": "Digital Marketing and SEO Company",
-  "cloud-devops": "Cloud and DevOps Company",
-};
-
-const serviceSections: Record<
-  string,
-  Array<{ title: string; body: string; href?: string; linkLabel?: string }>
-> = {
-  "web-app-eng": [
-    {
-      title: "SaaS MVP",
-      body: "The first release is the workflow people repeat: accounts, the main screens, and one admin view. Extra roles and integrations wait until that loop is in use. You get a working build every week.",
-      href: "/blog/saas-mvp-cost-factors",
-      linkLabel: "What changes the cost",
-    },
-    {
-      title: "Mobile apps",
-      body: "When the phone is the product — camera, offline use, or push — we ship a store app. When the workflow is still changing, a responsive web app ships first and the store build follows.",
-    },
-    {
-      title: "Ecommerce",
-      body: "A storefront is a catalog, a checkout, and the product story. Zeevan and KankreG are the D2C examples. A booking or logistics product is a web app, not a theme.",
-    },
-  ],
-  "ai-machine-ml": [
-    {
-      title: "AI in a business workflow",
-      body: "Start with one job the team already does by hand. Document extraction, search over your own files, or a review queue. A person stays in the loop when the model is unsure.",
-    },
-  ],
-  "digital-marketing": [
-    {
-      title: "Technical SEO",
-      body: "Unique titles, one canonical URL, crawlable links, and a page that loads. Campaigns start after that.",
-      href: "/blog/tech-seo-tips",
-      linkLabel: "Technical SEO checklist",
-    },
-  ],
-  "cloud-devops": [
-    {
-      title: "Cloud and infrastructure",
-      body: "AWS or GCP, the pipeline that ships the app, and logs you can read when something fails. Cost comes down when unused environments and oversized instances go away — after the app has real traffic.",
-    },
-  ],
-};
-
-const serviceLead: Record<string, string> = {
-  "web-app-eng":
-    "Software people can log into, not a prototype. SaaS dashboards, mobile apps, and the APIs behind them — with a working build every week.",
-  "ai-machine-ml":
-    "A feature with a job, a measure, and a fallback. Document extraction, search over your own content, and review queues. A person stays in the loop when the model is unsure.",
-  "digital-marketing":
-    "Search, landing pages, and campaigns aimed at a product that actually loads. The page and the app can live in one codebase.",
-  "cloud-devops":
-    "AWS or GCP, the pipeline that deploys it, and a design system the next screen can reuse.",
-};
-
-/** Search-result descriptions (kept to ~150 characters); the on-page lead stays as written. */
-const serviceMetaDescription: Record<string, string> = {
-  "ai-machine-ml":
-    "AI features with a job, a measure and a fallback: document extraction, search over your own content and review queues, with a person in the loop.",
-  "cloud-devops":
-    "Cloud architecture on AWS or GCP, CI/CD pipelines, monitoring and design systems — built by the team that ships your app, so nothing is lost in handover.",
-};
+import "@/styles/service-page.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 /** Articles that answer questions about each service (internal links for readers and crawlers). */
 const relatedPostSlugs: Record<string, string[]> = {
@@ -90,6 +35,15 @@ const relatedPostSlugs: Record<string, string[]> = {
   "digital-marketing": ["tech-seo-tips", "web-app-development-expect", "working-with-us-teams"],
   "cloud-devops": ["ship-fast-stack", "web-app-development-expect", "hire-it-services-company"],
 };
+
+const toc = [
+  { id: "overview", label: "Overview" },
+  { id: "problems", label: "Problems we solve" },
+  { id: "scope", label: "What's included" },
+  { id: "process", label: "Process" },
+  { id: "case-studies", label: "Case studies" },
+  { id: "faq", label: "FAQ" },
+];
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -113,18 +67,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const service = await loadService(slug);
   if (!service) return { title: "Service" };
+  const copy = getServicePageContent(service.slug);
 
   return createPageMetadata({
-    title: searchTitle[service.slug] ?? service.title,
-    description: serviceMetaDescription[service.slug] ?? serviceLead[service.slug] ?? service.description,
-    ogEyebrow: "Services · Worldwide",
+    title: copy?.seoTitle ?? service.title,
+    description: copy?.metaDescription ?? service.description,
+    ogEyebrow: "Services",
+    ogHeadline: copy?.h1,
     path: `/services/${service.slug}`,
-    keywords: [
-      service.title,
-      "software development company USA",
-      "custom software development",
-      ...service.tools,
-    ],
+    keywords: copy?.keywords ?? [service.title, ...service.tools],
   });
 }
 
@@ -132,115 +83,399 @@ export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
   const service = await loadService(slug);
   if (!service) notFound();
+  const copy = getServicePageContent(service.slug);
+  // A service added in the admin without long-form copy still gets a page: the
+  // CMS fields render on their own.
+  const name = copy?.name ?? service.title;
+  const h1 = copy?.h1 ?? service.title;
 
-  const allPosts = await getAllBlogPosts().catch(() => []);
+  const [allPosts, dbProjects] = await Promise.all([
+    getAllBlogPosts().catch(() => []),
+    getPublishedProjects().catch(() => []),
+  ]);
   const wanted = relatedPostSlugs[service.slug] ?? [];
   const relatedPosts = [
-    ...wanted.map((slug) => allPosts.find((post) => post.slug === slug)).filter((post): post is BlogPost => Boolean(post)),
+    ...wanted.map((postSlug) => allPosts.find((post) => post.slug === postSlug)).filter((post): post is BlogPost => Boolean(post)),
     ...allPosts.filter((post) => !wanted.includes(post.slug)),
   ].slice(0, 3);
+
+  const projects = mapDbProjectsToWork(dbProjects);
+  const caseStudies = (copy?.caseStudies.items ?? [])
+    .map((item) => {
+      const project = projects.find((entry) => entry.slug === item.slug);
+      return project ? { ...item, project } : null;
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  const relatedServices = (copy?.related ?? [])
+    .map((relatedSlug) => servicePageContent[relatedSlug])
+    .filter(Boolean);
 
   const path = `/services/${service.slug}`;
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "Service",
-      name: service.title,
-      description: service.description,
+      "@id": `${siteBaseUrl()}${path}#service`,
+      name: h1,
+      serviceType: name,
+      description: copy?.metaDescription ?? service.description,
       url: `${siteBaseUrl()}${path}`,
       areaServed: "Worldwide",
       provider: { "@id": LOCAL_BUSINESS_ID },
+      ...(copy
+        ? {
+            hasOfferCatalog: {
+              "@type": "OfferCatalog",
+              name: copy.scope.title,
+              itemListElement: copy.scope.items.map((item) => ({
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: item.title, description: item.body },
+              })),
+            },
+          }
+        : {}),
     },
     breadcrumbJsonLd([
       { name: "Home", path: "/" },
       { name: "Services", path: "/services" },
-      { name: service.title, path },
+      { name, path },
     ]),
   ];
 
   return (
-    <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <main className="svcp">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
+      <ServiceEngagement service={service.slug} />
       <PageHead
-        eyebrow="Services · Worldwide"
-        title={service.title}
-        description={serviceLead[service.slug] ?? service.description}
+        eyebrow={copy?.eyebrow ?? "Services"}
+        title={h1}
+        description={copy?.lede ?? service.description}
+        className="svcp-head"
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Services", href: "/services" },
-          { label: service.title },
+          { label: name },
         ]}
-      />
-      <section className="sec detail">
-        <div className="wrap">
-          {service.media?.src && (
-            <figure className="detail-figure">
-              {/* Local webp already sized for the card; Next/Image adds a wrapper we don't need. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={service.media.src}
-                alt={service.media.alt}
-                width={service.media.width}
-                height={service.media.height}
+      >
+        <Reveal delay={0.26}>
+          <div className="svcp-head__actions">
+            <Button href={`/contact?service=${service.slug}`}>{copy?.cta.buttonLabel ?? "Start Your Project"}</Button>
+            {caseStudies.length > 0 ? (
+              <Button href="#case-studies" variant="ghost">
+                View Case Studies
+              </Button>
+            ) : null}
+          </div>
+        </Reveal>
+        {copy ? (
+          <nav className="svcp-toc" aria-label="On this page">
+            {toc
+              .filter((item) => item.id !== "case-studies" || caseStudies.length > 0)
+              .map((item) => (
+                <a key={item.id} href={`#${item.id}`}>
+                  {item.label}
+                </a>
+              ))}
+          </nav>
+        ) : null}
+      </PageHead>
+
+      {/* 2 · Introduction */}
+      <section id="overview" className="svcp-sec svcp-intro" aria-labelledby="svcp-intro-title">
+        <div className="wrap svcp-intro__grid">
+          <Reveal className="svcp-intro__copy">
+            <span className="eyebrow">Overview</span>
+            <h2 id="svcp-intro-title" className="svcp-h2">
+              {copy?.intro.title ?? name}
+            </h2>
+            {(copy?.intro.paragraphs ?? [service.description]).map((paragraph) => (
+              <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+            ))}
+          </Reveal>
+          {service.media?.src ? (
+            <Reveal delay={0.08}>
+              <figure className="svcp-intro__figure">
+                {/* Often the largest element on desktop, so it loads eagerly; next/image serves
+                    a size that fits the column instead of the full 1280px file. */}
+                <Image
+                  src={service.media.src}
+                  alt={service.media.alt}
+                  width={service.media.width}
+                  height={service.media.height}
+                  loading="eager"
+                  sizes="(max-width: 959px) 100vw, 520px"
+                  quality={90}
+                  unoptimized={!service.media.src.startsWith("/images/")}
+                />
+              </figure>
+            </Reveal>
+          ) : null}
+        </div>
+      </section>
+
+      {copy ? (
+        <>
+          {/* 3 · Problems  ·  4 · How we solve them */}
+          <section id="problems" className="svcp-sec svcp-sec--tint" aria-labelledby="svcp-problems-title">
+            <div className="wrap svcp-split">
+              <div>
+                <header className="svcp-sec-head">
+                  <span className="eyebrow">The problem</span>
+                  <h2 id="svcp-problems-title" className="svcp-h2">
+                    {copy.problems.title}
+                  </h2>
+                </header>
+                <ul className="svcp-list svcp-list--problems">
+                  {copy.problems.items.map((item, index) => (
+                    <Reveal as="li" key={item.title} delay={0.04 * index} className="svcp-item">
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </Reveal>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <header className="svcp-sec-head">
+                  <span className="eyebrow">Our approach</span>
+                  <h2 className="svcp-h2">{copy.approach.title}</h2>
+                </header>
+                <ol className="svcp-list svcp-list--approach">
+                  {copy.approach.items.map((item, index) => (
+                    <Reveal as="li" key={item.title} delay={0.04 * index} className="svcp-item">
+                      <span className="svcp-item__num" aria-hidden>
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </Reveal>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          {/* 5 · Scope  ·  6 · Technologies */}
+          <section id="scope" className="svcp-sec" aria-labelledby="svcp-scope-title">
+            <div className="wrap">
+              <header className="svcp-sec-head">
+                <span className="eyebrow">Scope</span>
+                <h2 id="svcp-scope-title" className="svcp-h2">
+                  {copy.scope.title}
+                </h2>
+              </header>
+              <ul className="svcp-scope">
+                {copy.scope.items.map((item, index) => (
+                  <Reveal as="li" key={item.title} delay={0.03 * index} className="svcp-scope__item">
+                    <span className="svcp-scope__icon" aria-hidden>
+                      <Check size={16} strokeWidth={2.4} />
+                    </span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </div>
+                  </Reveal>
+                ))}
+              </ul>
+
+              <div className="svcp-tech">
+                <h2 className="svcp-h3">Technologies we use</h2>
+                <dl className="svcp-tech__grid">
+                  {copy.technologies.map((group) => (
+                    <div key={group.group} className="svcp-tech__group">
+                      <dt>{group.group}</dt>
+                      <dd>
+                        <ul>
+                          {group.items.map((tool) => (
+                            <li key={tool}>{tool}</li>
+                          ))}
+                        </ul>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </section>
+
+          {/* 7 · Process */}
+          <section id="process" className="svcp-sec svcp-sec--tint" aria-labelledby="svcp-process-title">
+            <div className="wrap">
+              <header className="svcp-sec-head">
+                <span className="eyebrow">Process</span>
+                <h2 id="svcp-process-title" className="svcp-h2">
+                  {copy.process.title}
+                </h2>
+              </header>
+              <ol className="svcp-steps" style={{ "--steps": copy.process.steps.length } as CSSProperties}>
+                {copy.process.steps.map((step, index) => (
+                  <Reveal as="li" key={step.title} delay={0.05 * index} className="svcp-step">
+                    <span className="svcp-step__num" aria-hidden>
+                      {index + 1}
+                    </span>
+                    <h3>{step.title}</h3>
+                    <p>{step.body}</p>
+                  </Reveal>
+                ))}
+              </ol>
+              <p className="svcp-note">{copy.process.note}</p>
+            </div>
+          </section>
+
+          {/* 8 · Benefits and practical examples */}
+          <section className="svcp-sec" aria-labelledby="svcp-benefits-title">
+            <div className="wrap">
+              <header className="svcp-sec-head">
+                <span className="eyebrow">Benefits</span>
+                <h2 id="svcp-benefits-title" className="svcp-h2">
+                  {copy.benefits.title}
+                </h2>
+              </header>
+              <ul className="svcp-benefits">
+                {copy.benefits.items.map((item, index) => (
+                  <Reveal as="li" key={item.title} delay={0.04 * index} className="svcp-card">
+                    <h3>{item.title}</h3>
+                    <p>{item.body}</p>
+                  </Reveal>
+                ))}
+              </ul>
+
+              <header className="svcp-sec-head svcp-sec-head--spaced">
+                <h2 className="svcp-h3">{copy.examples.title}</h2>
+                {copy.examples.lede ? <p>{copy.examples.lede}</p> : null}
+              </header>
+              <ul className="svcp-examples">
+                {copy.examples.items.map((item, index) => (
+                  <Reveal as="li" key={item.title} delay={0.04 * index} className="svcp-card svcp-card--example">
+                    <h3>{item.title}</h3>
+                    <p>{item.body}</p>
+                    {item.href ? (
+                      <Link href={item.href} className="svcp-more">
+                        {item.linkLabel}
+                        <ArrowRight size={15} aria-hidden />
+                      </Link>
+                    ) : null}
+                  </Reveal>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          {/* 9 · Case studies */}
+          {caseStudies.length > 0 ? (
+            <section id="case-studies" className="svcp-sec svcp-sec--tint" aria-labelledby="svcp-work-title">
+              <div className="wrap">
+                <header className="svcp-sec-head">
+                  <span className="eyebrow">Case studies</span>
+                  <h2 id="svcp-work-title" className="svcp-h2">
+                    {copy.caseStudies.title}
+                  </h2>
+                  {copy.caseStudies.lede ? <p>{copy.caseStudies.lede}</p> : null}
+                </header>
+                <ul className="svcp-work">
+                  {caseStudies.map(({ slug: projectSlug, note, project }, index) => (
+                    <Reveal as="li" key={projectSlug} delay={0.05 * index}>
+                      <Link href={`/work/${projectSlug}`} className="svcp-work__card">
+                        {project.heroImage ? (
+                          <CloudinaryImage
+                            asset={project.heroImage}
+                            alt={getWorkProjectImages(projectSlug)?.heroAlt ?? `${project.title} — ${project.category}`}
+                            width={640}
+                            height={400}
+                            transformWidth={640}
+                            className="svcp-work__img"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                          />
+                        ) : null}
+                        <span className="svcp-work__body">
+                          <span className="svcp-work__cat">{project.category}</span>
+                          <strong>{project.title}</strong>
+                          <span className="svcp-work__note">{note}</span>
+                          <span className="svcp-more">
+                            Read the case study
+                            <ArrowRight size={15} aria-hidden />
+                          </span>
+                        </span>
+                      </Link>
+                    </Reveal>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          ) : null}
+
+          {/* 10 · FAQs (visible content only; no FAQPage markup, see docs/seo-growth.md) */}
+          <section id="faq" className="svcp-sec" aria-labelledby="svcp-faq-title">
+            <div className="wrap svcp-faq">
+              <header className="svcp-sec-head">
+                <span className="eyebrow">FAQ</span>
+                <h2 id="svcp-faq-title" className="svcp-h2">
+                  {copy.faqTitle}
+                </h2>
+                <p>
+                  Something else? <Link href="/contact">Ask us directly</Link>; we reply within one business day.
+                </p>
+              </header>
+              <FaqAccordion
+                items={copy.faqs.map((faq, index) => ({ id: `${service.slug}-${index}`, ...faq }))}
               />
-            </figure>
-          )}
-          <div className="detail-grid">
-          <div className="detail-panel">
-            <h2>What&apos;s included</h2>
-            <ul className="detail-points">
+            </div>
+          </section>
+
+          {/* 11 · Related services */}
+          {relatedServices.length > 0 ? (
+            <section className="svcp-sec svcp-sec--tint svcp-sec--compact" aria-labelledby="svcp-related-title">
+              <div className="wrap">
+                <header className="svcp-sec-head">
+                  <span className="eyebrow">Related services</span>
+                  <h2 id="svcp-related-title" className="svcp-h2">
+                    Services that work alongside this one
+                  </h2>
+                </header>
+                <ul className="svcp-related">
+                  {relatedServices.map((related) => (
+                    <li key={related.slug}>
+                      <Link href={`/services/${related.slug}`} className="svcp-related__card">
+                        <h3>{related.name}</h3>
+                        <p>{related.cardSummary}</p>
+                        <ArrowUpRight size={18} className="svcp-related__go" aria-hidden />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <p className="svcp-related__all">
+                  <Link href="/services">All software, AI and marketing services</Link>
+                </p>
+              </div>
+            </section>
+          ) : null}
+        </>
+      ) : (
+        <section className="svcp-sec">
+          <div className="wrap">
+            <h2 className="svcp-h2">What&apos;s included</h2>
+            <ul className="svcp-scope">
               {service.bullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
+                <li key={bullet} className="svcp-scope__item">
+                  <span className="svcp-scope__icon" aria-hidden>
+                    <Check size={16} strokeWidth={2.4} />
+                  </span>
+                  <div>
+                    <p>{bullet}</p>
+                  </div>
+                </li>
               ))}
             </ul>
           </div>
-          <div className="detail-panel">
-            {service.outcomes.length > 0 && (
-              <>
-                <h2>Outcomes</h2>
-                <ul className="detail-points">
-                  {service.outcomes.map((outcome) => (
-                    <li key={outcome}>{outcome}</li>
-                  ))}
-                </ul>
-              </>
-            )}
-            <div className="detail-links">
-              {service.relatedLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  {link.label}
-                </Link>
-              ))}
-              <Link href="/it-services">IT services worldwide</Link>
-            </div>
-          </div>
-          </div>
-          {(serviceSections[service.slug] ?? []).length > 0 && (
-            <div className="detail-grid">
-              {serviceSections[service.slug].map((section) => (
-                <div className="detail-panel" key={section.title}>
-                  <h2>{section.title}</h2>
-                  <p>{section.body}</p>
-                  {section.href && (
-                    <p>
-                      <Link href={section.href}>{section.linkLabel}</Link>
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+        </section>
+      )}
+
       {relatedPosts.length > 0 ? (
-        <section className="sec svc-reading" aria-labelledby="svc-reading-title">
+        <section className="svcp-sec svc-reading" aria-labelledby="svc-reading-title">
           <div className="wrap">
             <header className="svc-reading__head">
               <span className="eyebrow">Related reading</span>
-              <h2 id="svc-reading-title">Questions teams ask before a {service.title.toLowerCase()} project</h2>
+              <h2 id="svc-reading-title">Read before you start a project</h2>
             </header>
             <div className="blog-grid compact">
               {relatedPosts.map((post, index) => (
@@ -251,10 +486,16 @@ export default async function ServicePage({ params }: Props) {
         </section>
       ) : null}
 
+      {/* 12 · Contact CTA */}
       <CtaBand
         eyebrow="Let's talk"
-        title={`Start a ${service.title} project`}
-        description="Tell us the problem. We'll reply within one business day with a path, timeline, and team."
+        title={copy?.cta.title ?? `Talk to us about ${name}`}
+        description={
+          copy?.cta.description ??
+          "Tell us the problem. We'll reply within one business day with a path, timeline, and team."
+        }
+        buttonLabel={copy?.cta.buttonLabel ?? "Start Your Project"}
+        buttonHref={`/contact?service=${service.slug}`}
       />
     </main>
   );

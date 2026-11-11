@@ -15,6 +15,7 @@ import {
   budgetRanges,
   capabilities,
   contactServices,
+  contactTimelines,
   defaultCta,
   defaultHero,
   homeStats,
@@ -32,7 +33,7 @@ export const servicesSectionDefaults = {
 } as const;
 
 export const whySectionDefaults = {
-  title: "Senior people. One team. Real ownership.",
+  title: "One team. Real ownership.",
 } as const;
 
 export const teamSectionDefaults = {
@@ -46,6 +47,7 @@ export const teamProfileCount = Object.keys(teamProfiles).length;
 export const contactOptionsDefaults = {
   services: [...contactServices],
   budgetRanges: [...budgetRanges],
+  timelines: [...contactTimelines],
 } as const;
 
 export const siteContentRegistry = {

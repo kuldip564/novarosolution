@@ -47,6 +47,12 @@ export function supportsWebGL(): boolean {
       | WebGLRenderingContext
       | null;
     webglSupport = Boolean(gl);
+    if (gl) {
+      // Without a GPU the scene is rasterised on the CPU and blocks the main thread.
+      const info = gl.getExtension("WEBGL_debug_renderer_info");
+      const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+      if (/swiftshader|llvmpipe|software|basic render/i.test(renderer)) webglSupport = false;
+    }
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
   } catch {
     webglSupport = false;

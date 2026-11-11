@@ -15,14 +15,15 @@ import {
   type CtaContent,
 } from "@/lib/site-data";
 import { contactPageDefaults } from "@/lib/page-content-defaults";
+import { jsonLdString } from "@/lib/json-ld";
 
 
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Contact Novaro Solution — Software for the USA, UK & India",
+  title: "Contact Us to Start a Software Project",
   description:
-    "Start a software, AI, or marketing project with Novaro Solution. Call +91 96244 98325 or email novaro@novarosolution.com. We work with teams worldwide.",
+    "Tell us what you need built: a web app, an AI feature or marketing. We reply within one business day. Call +91 96244 98325 or visit our Gandhinagar studio.",
   path: "/contact",
   keywords: contactKeywords,
 });
@@ -60,7 +61,7 @@ export default async function ContactPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
+          __html: jsonLdString(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
         }}
       />
       <PageHead

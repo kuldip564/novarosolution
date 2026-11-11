@@ -84,7 +84,7 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
       outcomes: [
         "Models evaluated against real metrics, not demo accuracy",
         "Pipelines that survive scale, drift, and compliance reviews",
-        "Human-in-the-loop workflows clinicians and ops teams trust",
+        "Human review for the cases a model is unsure about",
       ],
       relatedLinks: [
         { label: "Mr Antidot operations platform", href: "/work/mr-antidot" },
@@ -190,7 +190,7 @@ export const defaultServicesPage: ServicesPageContent = {
   },
   cta: {
     eyebrow: "Let's talk",
-    buttonLabel: "Book a call",
+    buttonLabel: "Book a Consultation",
   },
   serviceExtras: defaultServiceExtras,
 };

@@ -1,5 +1,5 @@
 import type { DbFaq, DbTestimonial } from "./content";
-import { fallbackFaqs, fallbackTestimonials } from "./site-data";
+import { fallbackFaqs } from "./site-data";
 
 export const defaultFaqs: DbFaq[] = fallbackFaqs.map((item, index) => ({
   id: item.id,
@@ -9,28 +9,18 @@ export const defaultFaqs: DbFaq[] = fallbackFaqs.map((item, index) => ({
   published: true,
 }));
 
-export const defaultTestimonials: DbTestimonial[] = fallbackTestimonials.map(
-  (item, index) => ({
-    id: item.id,
-    quote: item.quote,
-    name: item.name,
-    role: item.role,
-    rating: item.rating,
-    avatar: item.avatar,
-    order: index,
-    published: true,
-  }),
-);
+/**
+ * No built-in testimonials: only quotes published in the admin (real, attributable clients) are
+ * shown. With none published, testimonial sections are hidden.
+ */
+export const defaultTestimonials: DbTestimonial[] = [];
 
 export function resolvePublishedFaqs(faqs: DbFaq[]): DbFaq[] {
   if (!faqs.length) return defaultFaqs;
   return faqs;
 }
 
-export function resolvePublishedTestimonials(
-  testimonials: DbTestimonial[],
-): DbTestimonial[] {
-  if (!testimonials.length) return defaultTestimonials;
+export function resolvePublishedTestimonials(testimonials: DbTestimonial[]): DbTestimonial[] {
   return testimonials;
 }
 

@@ -58,7 +58,20 @@ export function createApp() {
     }),
   );
 
-  app.use("/uploads", express.static(uploadsDir));
+  // Uploaded images (local fallback when Cloudinary is off). SVG can carry script, so every file is
+  // served sandboxed: no scripts, no plugins, no framing, and never sniffed as another type.
+  app.use(
+    "/uploads",
+    express.static(uploadsDir, {
+      dotfiles: "deny",
+      index: false,
+      setHeaders(res) {
+        res.setHeader("Content-Security-Policy", "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox");
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+      },
+    }),
+  );
 
   // Page content is mostly read by the website's own server (cached for 30 s), so reads get a
   // generous limit; writes and admin calls keep the stricter one.

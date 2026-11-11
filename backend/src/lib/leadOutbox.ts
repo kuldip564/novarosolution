@@ -1,5 +1,6 @@
 import { isDatabaseConnectionError } from "./dbErrors.js";
 import { isDatabaseAvailable, markDatabaseAvailable, markDatabaseUnavailable } from "./dbHealth.js";
+import { leadCreateData } from "./leadData.js";
 import type { LeadForEmail } from "./mailer.js";
 import { prisma } from "./prisma.js";
 
@@ -35,17 +36,7 @@ export async function flushQueuedLeads(): Promise<number> {
       const lead = queue[0];
       if (!lead) break;
       try {
-        await prisma.lead.create({
-          data: {
-            name: lead.name,
-            email: lead.email,
-            services: lead.services,
-            budget: lead.budget,
-            message: lead.message,
-            status: "NEW",
-            createdAt: new Date(lead.receivedAt),
-          },
-        });
+        await prisma.lead.create({ data: leadCreateData(lead) });
         queue.shift();
         saved += 1;
         markDatabaseAvailable();

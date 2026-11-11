@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How we collect, use, store, protect, and share personal information."
-      lastUpdated="August 20, 2026"
+      lastUpdated="November 11, 2026"
       breadcrumbs={[
         { label: "Home", href: "/" },
         { label: "Privacy Policy" },
@@ -37,8 +37,12 @@ export default function PrivacyPolicyPage() {
       <ul>
         <li>
           <strong>Information you provide.</strong> When you submit our contact or project
-          enquiry form, we collect your name, email address, project details or message, the
-          services you&apos;re interested in, and an optional budget range.
+          enquiry form, we collect your name, email address, the services you&apos;re interested
+          in and your project description. You can also choose to give your company name, a phone
+          or WhatsApp number, a budget range and a preferred timeline. We record which page of our
+          site the form was sent from, so we know which service you were reading about. We use
+          these details only to reply to your enquiry and prepare a proposal; we don&apos;t add you
+          to a mailing list.
         </li>
         <li>
           <strong>Technical and usage information.</strong> Like most websites, we automatically
@@ -107,7 +111,7 @@ export default function PrivacyPolicyPage() {
 
       <h2>International visitors</h2>
       <p>
-        Novaro's studio is in Gandhinagar, India. We work with clients in the USA, UK, Europe, the
+        Novaro&apos;s studio is in Gandhinagar, India. We work with clients in the USA, UK, Europe, the
         Middle East, and India. If you access the Services from outside India, your information may be
         transferred to, stored, and processed in India or other countries where our service
         providers operate, which may have data protection laws different from those of your home

@@ -177,18 +177,24 @@ export const homeProjects = [
   },
 ] as const;
 
+/**
+ * Only figures anyone can check on this site: the studio opened in 2024, the portfolio lists four
+ * live client products, the team page lists every person, and the reply time is our promise.
+ * Client counts or repeat-business rates belong here only once they can be shown to be true
+ * (they can also be set in the admin: Site content → homeStats / aboutStats).
+ */
 export const homeStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
-  { value: 50, suffix: "+", label: "Products & platforms delivered" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 4, suffix: "", label: "Live client products in our portfolio" },
+  { value: teamCount, suffix: "", label: "People on the team" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ] as const;
 
 export const aboutStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 4, suffix: "", label: "Live client products in our portfolio" },
   { value: teamCount, suffix: "", label: "People on the team" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ] as const;
 
 export const whyItems = [
@@ -303,16 +309,16 @@ export const workProjects = [
     category: "E-commerce · D2C",
     title: "Zeevan",
     hook:
-      "Premium A2 ghee brand storefront with product storytelling and a conversion-focused shopping experience.",
-    heroTitle: "Project hero — Zeevan",
+      "Pantry brand store for ghee, oil, masala and honey, with product storytelling, shop filters and customer accounts.",
+    heroTitle: "Zeevan online store",
     story:
       "We designed and built Zeevan's digital storefront to communicate premium quality from the first scroll — clear product hierarchy, trust-led visuals, and a fast path from discovery to purchase for A2 ghee buyers.",
     results: [
-      { value: "A2", label: "ghee positioning" },
-      { value: "D2C", label: "commerce flow" },
-      { value: "Fast", label: "mobile UX" },
+      { value: "4", label: "product ranges" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Accounts", label: "orders & rewards" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
     idx: "02",
@@ -322,15 +328,15 @@ export const workProjects = [
     title: "KankreG",
     hook:
       "A2 ghee D2C site with premium product presentation and a streamlined checkout journey.",
-    heroTitle: "Project hero — KankreG",
+    heroTitle: "KankreG online store",
     story:
       "KankreG needed a brand-forward commerce experience that feels as premium as the product. We shipped a responsive storefront with strong product pages, clear value messaging, and performance tuned for mobile shoppers.",
     results: [
-      { value: "Premium", label: "brand feel" },
-      { value: "Mobile", label: "first UX" },
-      { value: "SEO", label: "ready structure" },
+      { value: "3", label: "collections" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Offers", label: "discount codes" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
     idx: "03",
@@ -340,13 +346,13 @@ export const workProjects = [
     title: "Mr Antidot",
     hook:
       "Hygiene and pest-control platform with service booking, pricing tiers, and sector coverage for homes and businesses.",
-    heroTitle: "Project hero — Mr Antidot",
+    heroTitle: "Mr Antidot website",
     story:
       "Mr Antidot goes beyond a brochure site — we built a full service platform with treatment catalogues, transparent pricing, sector pages for hospitals and hospitality, team profiles, and lead capture wired for their operations team.",
     results: [
-      { value: "8+", label: "years in market" },
-      { value: "24/7", label: "support positioning" },
-      { value: "10+", label: "service lines" },
+      { value: "10", label: "service pages" },
+      { value: "Next.js", label: "framework" },
+      { value: "8", label: "sectors covered" },
     ],
     tags: ["Next.js", "Service booking", "CMS", "SEO"],
   },
@@ -357,25 +363,41 @@ export const workProjects = [
     category: "Web App · Logistics",
     title: "Quadrato Cargo",
     hook:
-      "International courier platform with booking, live tracking, and dispatch flows across 180 countries.",
-    heroTitle: "Project hero — Quadrato Cargo",
+      "International courier platform with four-step pickup booking, shipment tracking and quote requests.",
+    heroTitle: "Quadrato Cargo platform",
     story:
       "Quadrato Cargo is a full logistics product — instant and scheduled pickup booking, live shipment tracking, quote requests, and customer-facing flows designed for speed. We built the technology stack behind their Fast Forward, Rapid Reach promise.",
     results: [
-      { value: "180", label: "countries" },
-      { value: "10K+", label: "deliveries" },
-      { value: "~10 min", label: "pickup target" },
+      { value: "4-step", label: "booking flow" },
+      { value: "Next.js", label: "framework" },
+      { value: "QR", label: "tracking lookup" },
     ],
     tags: ["Next.js", "Booking", "Tracking", "Logistics"],
   },
 ] as const;
 
 export const contactServices = [
-  "Web / App",
-  "AI / ML",
-  "Marketing",
-  "Cloud / DevOps",
-  "Design",
+  "Web or mobile app",
+  "AI & automation",
+  "SEO & digital marketing",
+  "Cloud & DevOps",
+  "UI/UX design",
+  "Not sure yet",
+] as const;
+
+/** Service page slug → the matching option on the contact form (for ?service= links). */
+export const contactServiceBySlug: Record<string, (typeof contactServices)[number]> = {
+  "web-app-eng": "Web or mobile app",
+  "ai-machine-ml": "AI & automation",
+  "digital-marketing": "SEO & digital marketing",
+  "cloud-devops": "Cloud & DevOps",
+};
+
+export const contactTimelines = [
+  "As soon as possible",
+  "Within 1–3 months",
+  "In 3–6 months",
+  "Just exploring",
 ] as const;
 
 export const budgetRanges = [
@@ -390,14 +412,14 @@ export const apiBase =
 
 export const defaultHero = {
   eyebrow: "Software · AI · Growth · Worldwide",
-  headline: "We build software",
-  headlineAccent: "worldwide.",
+  headline: "Custom software",
+  headlineAccent: "for growing businesses.",
   lede:
-    "Web apps, mobile products, AI, and the marketing around them — one senior team from the first sketch to launch.",
-  ctaPrimary: "Start your project",
-  ctaSecondary: "Explore our work",
-  metaStat: "32",
-  metaLabel: "Clients served",
+    "Web apps, mobile apps, AI features and the marketing around them, designed and built by one team in Gandhinagar, India. You see a working build every week, and the code is yours at launch.",
+  ctaPrimary: "Start Your Project",
+  ctaSecondary: "View Case Studies",
+  metaStat: "1 day",
+  metaLabel: "Reply time on new enquiries",
 } as const;
 
 export type HeroContent = {
@@ -412,9 +434,9 @@ export type HeroContent = {
 };
 
 export const defaultCta = {
-  homeTitle: "Ready to ship something worth showing off?",
+  homeTitle: "Tell us what you need built.",
   homeDescription:
-    "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
+    "Share a few lines about your project. We reply within one business day, book a 30-minute call, and then send a scoped proposal with timeline and budget.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
     "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",
@@ -442,35 +464,10 @@ export function pickCta(cta: CtaContent, page: CtaPageKey) {
   };
 }
 
-export const fallbackTestimonials = [
-  {
-    id: "1",
-    quote:
-      "Novaro shipped our logistics platform in weeks, not months. Booking, tracking, and admin flows went live together — and the codebase held up as we scaled past 10K deliveries.",
-    name: "Product Lead",
-    role: "Logistics · Gujarat",
-    rating: 5,
-    avatar: null,
-  },
-  {
-    id: "2",
-    quote:
-      "They rebuilt our D2C storefront with Next.js and tied Meta ads to real conversions. Page speed improved, checkout friction dropped, and we finally had attribution we could trust.",
-    name: "Brand Founder",
-    role: "Premium D2C · India",
-    rating: 5,
-    avatar: null,
-  },
-  {
-    id: "3",
-    quote:
-      "What stood out was ownership — one team handled engineering, design, and SEO without the usual agency hand-offs. Weekly demos kept us in the loop from day one.",
-    name: "Operations Director",
-    role: "Services · Healthcare",
-    rating: 5,
-    avatar: null,
-  },
-] as const;
+/**
+ * Testimonials come only from the admin (Testimonials), where each quote belongs to a real,
+ * named client who agreed to be quoted. There are deliberately no built-in examples.
+ */
 
 export const fallbackFaqs = [
   {

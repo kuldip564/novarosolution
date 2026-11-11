@@ -10,6 +10,7 @@ import { locationPath, locations, marketHref, markets } from "@/lib/locations";
 import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
 import { breadcrumbJsonLd, LOCAL_BUSINESS_ID, webPageJsonLd } from "@/lib/structured-data";
 import "@/styles/locations.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 const path = "/locations";
 const title = "Where We Work — Gandhinagar, India & Worldwide";
@@ -33,7 +34,7 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default function LocationsPage() {
-  const local = locations[0];
+  const localPages = locations.filter((location) => location.group === "india");
   const india = markets.filter((market) => market.slug === "india");
   const international = markets.filter((market) => market.slug !== "india");
 
@@ -44,7 +45,7 @@ export default function LocationsPage() {
       "@type": "ItemList",
       name: "Markets served by Novaro Solution",
       itemListElement: [
-        { name: local.name, path: locationPath(local.slug) },
+        ...localPages.map((local) => ({ name: local.name, path: locationPath(local.slug) })),
         ...markets.map((market) => ({ name: market.name, path: marketHref(market) })),
       ].map((item, index) => ({
         "@type": "ListItem",
@@ -61,7 +62,7 @@ export default function LocationsPage() {
 
   return (
     <main className="loc-page">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <PageHead
         eyebrow="Where we work"
         title="One studio in Gandhinagar, clients worldwide"
@@ -77,26 +78,30 @@ export default function LocationsPage() {
             <h2 id="loc-gujarat-title">Gandhinagar &amp; Ahmedabad</h2>
           </header>
 
-          <Reveal>
-            <Link href={locationPath(local.slug)} className="loc-card loc-card--link loc-feature">
-              <span className="loc-feature__icon" aria-hidden>
-                <MapPin size={22} strokeWidth={1.8} />
-              </span>
-              <span className="loc-card__eyebrow">{local.eyebrow}</span>
-              <strong className="loc-card__name">{local.h1}</strong>
-              <span className="loc-card__summary">{local.lede}</span>
-              <span className="loc-feature__facts">
-                {local.facts.map((fact) => (
-                  <span key={fact.label}>
-                    <strong>{fact.value}</strong> {fact.label}
+          <div className="loc-features">
+            {localPages.map((local, index) => (
+              <Reveal key={local.slug} delay={0.06 * index}>
+                <Link href={locationPath(local.slug)} className="loc-card loc-card--link loc-feature">
+                  <span className="loc-feature__icon" aria-hidden>
+                    <MapPin size={22} strokeWidth={1.8} />
                   </span>
-                ))}
-              </span>
-              <span className="loc-card__go" aria-hidden>
-                <ArrowUpRight size={18} />
-              </span>
-            </Link>
-          </Reveal>
+                  <span className="loc-card__eyebrow">{local.eyebrow}</span>
+                  <strong className="loc-card__name">{local.h1}</strong>
+                  <span className="loc-card__summary">{local.cardSummary}</span>
+                  <span className="loc-feature__facts">
+                    {local.facts.slice(0, 3).map((fact) => (
+                      <span key={fact.label}>
+                        <strong>{fact.value}</strong> {fact.label}
+                      </span>
+                    ))}
+                  </span>
+                  <span className="loc-card__go" aria-hidden>
+                    <ArrowUpRight size={18} />
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
 
           <div className="loc-markets loc-markets--single">
             {india.map((market) => (
@@ -133,7 +138,7 @@ export default function LocationsPage() {
         eyebrow="Any time zone"
         title="Tell us where you are and what you need built"
         description="We reply within one business day with a call time that suits your working hours."
-        buttonLabel="Book a discovery call"
+        buttonLabel="Book a Consultation"
         buttonHref="/contact"
       />
     </main>

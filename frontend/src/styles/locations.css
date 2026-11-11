@@ -798,3 +798,229 @@
 [data-theme="light"] .loc-tz__band--studio {
   background: rgba(10, 23, 48, 0.22);
 }
+
+/* ── Local context, services, work, quotes ── */
+.loc-card--context {
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  border-color: color-mix(in srgb, var(--cyan) 22%, var(--line-d));
+}
+
+.loc-card--context .loc-card__title {
+  margin: 0 0 0.6rem;
+}
+
+.loc-card--context .loc-card__body {
+  max-width: 72ch;
+}
+
+.loc-services,
+.loc-work,
+.loc-quotes {
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.loc-services .loc-section-head,
+.loc-work .loc-section-head,
+.loc-quotes .loc-section-head {
+  margin-bottom: 1rem;
+}
+
+.loc-services__grid,
+.loc-work__grid,
+.loc-quotes__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .loc-services__grid,
+  .loc-quotes__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .loc-work__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .loc-services__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .loc-work__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.loc-services__grid > li,
+.loc-work__grid > li {
+  display: flex;
+}
+
+/* Projects stay two-up on phones so four case studies don't become a long scroll. */
+.loc-work__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 639px) {
+  .loc-work__meta {
+    padding: 0.65rem 0.75rem 0.8rem;
+  }
+
+  .loc-work__meta strong {
+    font-size: 0.92rem;
+  }
+}
+
+.loc-service {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 1.15rem 1.2rem;
+  border-radius: 18px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-soft);
+  color: inherit;
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.loc-service:hover,
+.loc-service:focus-visible {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--cyan) 45%, var(--line-d));
+}
+
+.loc-service h3 {
+  margin: 0;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.loc-service p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.loc-service__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.loc-work__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-card);
+  color: inherit;
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.loc-work__card:hover,
+.loc-work__card:focus-visible {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--cyan) 45%, var(--line-d));
+}
+
+.loc-work__card img,
+.loc-work__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.loc-work__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.loc-work__meta strong {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 1.02rem;
+  color: var(--text-heading);
+}
+
+.loc-quote {
+  height: 100%;
+  margin: 0;
+  padding: 1.25rem 1.35rem;
+  border-radius: 18px;
+  border: 1px solid var(--line-d);
+  background: var(--surface-card);
+}
+
+.loc-quote blockquote {
+  margin: 0 0 1rem;
+  line-height: 1.7;
+  color: var(--text-body);
+}
+
+.loc-quote__by {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin: 0;
+}
+
+.loc-quote__by strong {
+  color: var(--text-heading);
+}
+
+.loc-quote__by span {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+/* Hub: two featured local pages */
+.loc-features {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .loc-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.loc-features > div {
+  display: flex;
+}
+
+[data-theme="light"] .loc-service,
+[data-theme="light"] .loc-work__card,
+[data-theme="light"] .loc-quote {
+  background: #ffffff;
+  border-color: rgba(10, 23, 48, 0.08);
+}
+
+[data-theme="light"] .loc-service__more {
+  color: var(--blue);
+}

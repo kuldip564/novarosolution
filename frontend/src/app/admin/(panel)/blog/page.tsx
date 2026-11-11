@@ -39,8 +39,10 @@ export default function AdminBlogListPage() {
     }
   }, [push, query, status]);
 
+  // Debounced: typing in the search box sends one request when the typing pauses, not one per key.
   useEffect(() => {
-    void load();
+    const timer = window.setTimeout(() => void load(), 200);
+    return () => window.clearTimeout(timer);
   }, [load]);
 
   const filtered = useMemo(() => rows, [rows]);

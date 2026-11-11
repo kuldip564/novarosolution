@@ -42,7 +42,14 @@ export function Header() {
   const pathname = usePathname();
   const lenis = useLenis();
   const { reducedMotion } = useMotionSettings();
-  const [menuOpen, setMenuOpen] = useState(false);
+  // The menu is open only on the page it was opened on: navigating closes it, no effect needed.
+  const [menuPath, setMenuPath] = useState<string | null>(null);
+  const menuOpen = menuPath === pathname;
+  const setMenuOpen = (next: boolean | ((open: boolean) => boolean)) =>
+    setMenuPath((current) => {
+      const open = typeof next === "function" ? next(current === pathname) : next;
+      return open ? pathname : null;
+    });
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
@@ -62,10 +69,6 @@ export function Header() {
       header.classList.toggle("scrolled", next);
     });
   }, []);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -106,7 +109,7 @@ export function Header() {
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setMenuOpen(false);
+        setMenuPath(null);
         burgerRef.current?.focus();
         return;
       }
@@ -157,7 +160,7 @@ export function Header() {
           <div className="nav-actions">
             <ThemeToggle />
             <Button href="/contact" className="nav-cta">
-              Start a project
+              Start Your Project
             </Button>
           </div>
 
@@ -245,7 +248,7 @@ export function Header() {
                 >
                   <ThemeToggle variant="menu" />
                   <Button href="/contact" onClick={closeMenu}>
-                    Start a project
+                    Start Your Project
                   </Button>
                 </motion.div>
               </div>

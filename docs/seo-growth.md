@@ -8,13 +8,13 @@ There is no Search Console export, keyword-volume tool, or backlink index in thi
 
 ## What is indexable
 
-Home, about, services, four service pages (`web-app-eng`, `ai-machine-ml`, `digital-marketing`, `cloud-devops`), work and four case studies, blog and posts, contact, `/software-development-usa`, `/it-services`, `/locations` (where we work), `/locations/gandhinagar` (Gandhinagar & Ahmedabad), and four legal pages. `/admin` and `/api` are disallowed. The sitemap lists the public URLs.
+Home, about, services, four service pages (`web-app-eng`, `ai-machine-ml`, `digital-marketing`, `cloud-devops`), work and four case studies, blog and posts, contact, `/software-development-usa`, `/it-services`, `/locations` (where we work), `/locations/gandhinagar`, `/locations/ahmedabad`, and four legal pages. `/admin` and `/api` are disallowed. The sitemap lists the public URLs.
 
 One English site. `en` / `en-US` hreflang pairs were removed because both pointed at the same URL. Visible FAQs stay. `FAQPage` JSON-LD was removed because that rich result is limited to government and health sites.
 
 ## Keyword map
 
-One intent, one URL. The studio's own area has one local page (`/locations/gandhinagar`, covering Gandhinagar and Ahmedabad 25 km away). Every other market is a section of `/locations`, not a page. Do not add more city or country pages, or a separate URL for mobile, ecommerce, technical SEO, or SaaS.
+One intent, one URL. Two local pages: `/locations/gandhinagar` (where the studio is) and `/locations/ahmedabad` (service area 25 km away — the page says there is no office there). Every other market is a section of `/locations`, not a page. Add another city page only when Search Console shows real impressions for that city and there is something specific to say about it; never one page per service × city. See `local-seo-plan.md`.
 
 | Intent | URL |
 | --- | --- |
@@ -22,7 +22,8 @@ One intent, one URL. The studio's own area has one local page (`/locations/gandh
 | AI integration and automation | `/services/ai-machine-ml` |
 | Technical SEO and digital growth | `/services/digital-marketing` |
 | Cloud and DevOps | `/services/cloud-devops` |
-| Software / IT company in Gandhinagar or Ahmedabad | `/locations/gandhinagar` |
+| Software, website, app, SEO or AI company in Gandhinagar | `/locations/gandhinagar` |
+| Website, software, app, SEO or AI company for Ahmedabad | `/locations/ahmedabad` |
 | Working hours and data rules for India, UK, Europe, UAE, Canada, Australia | `/locations` (one section per market) |
 | How a US company hires this studio | `/software-development-usa` |
 | Broad IT services hub | `/it-services` |
@@ -38,7 +39,7 @@ Existing public figures stay as already published: 2 years, 32+ clients, 50+ pro
 Earn links by publishing something a US founder can use.
 
 - Keep the LinkedIn company page, the site, and `llms.txt` on the same facts: Gandhinagar studio, remote delivery, no US office.
-- Profiles worth a real listing, filled out by a person: Clutch, GoodFirms, and the Google Business Profile for the Gandhinagar studio only. Point the Business Profile website link at `/locations/gandhinagar` and keep its name, address, and phone identical to the footer.
+- Profiles worth a real listing, filled out by a person: Clutch, GoodFirms, and the Google Business Profile for the Gandhinagar studio only. Point the Business Profile website link at `/locations/gandhinagar` (with `?utm_source=google&utm_medium=organic&utm_campaign=gbp`) and keep its name, address, and phone identical to the footer.
 - Offer one useful article to a newsletter or community you already read. Do not buy links, use private blog networks, or post the same comment on forums.
 
 Once a month: export Search Console links if you have access, note new referring domains, and drop any directory that wants payment for a followed link.

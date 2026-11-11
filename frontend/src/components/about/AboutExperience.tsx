@@ -7,19 +7,15 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { BarChart3, Compass, MapPin, Shield, Sparkles, type LucideIcon } from "lucide-react";
-import { ClipReveal } from "@/components/anim/ClipReveal";
 import { Counter } from "@/components/anim/Counter";
 import { Parallax } from "@/components/anim/Parallax";
 import { Reveal } from "@/components/anim/Reveal";
 import { SplitText } from "@/components/anim/SplitText";
-import { Tilt } from "@/components/anim/Tilt";
-import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
 import { Button } from "@/components/Button";
 import { AboutCapabilities } from "@/components/about/AboutCapabilities";
 import { TeamGrid } from "@/components/sections/TeamGrid";
 import { CinemaBigword } from "@/components/sections/CinemaBigword";
 import { NMark } from "@/components/NMark";
-import { MediaPlaceholder } from "@/components/sections/MediaPlaceholder";
 import type {
   AboutMilestone,
   AboutPageContent,

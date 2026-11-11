@@ -17,6 +17,7 @@ import {
   type CtaContent,
 } from "@/lib/site-data";
 import "@/styles/services.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 export const revalidate = 30;
 
@@ -39,7 +40,7 @@ export default async function ServicesPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
       <ServicesExperience
         content={content}

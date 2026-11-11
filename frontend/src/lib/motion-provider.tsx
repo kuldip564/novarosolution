@@ -1,6 +1,6 @@
 "use client";
 
-import { MotionConfig, useAnimationFrame } from "framer-motion";
+import { MotionConfig } from "framer-motion";
 import { ReactLenis, useLenis } from "lenis/react";
 import {
   createContext,
@@ -62,12 +62,9 @@ function getClientSettings(): MotionSettings {
   return clientSettings;
 }
 
-function LenisFrameBridge() {
-  const lenis = useLenis();
-
-  useAnimationFrame((time) => {
-    if (!lenis) return;
-    lenis.raf(time);
+/** Publishes Lenis's scroll position to the shared scroll store. */
+function LenisScrollBridge() {
+  useLenis((lenis) => {
     setScrollY(lenis.scroll);
   });
 
@@ -120,31 +117,25 @@ export function MotionProvider({ children }: MotionProviderProps) {
   return (
     <MotionSettingsContext.Provider value={settings}>
       <MotionConfig reducedMotion="user">
-        {!settings.ready ? (
-          <>
-            <NativeScrollBridge />
-            {children}
-          </>
-        ) : settings.smoothScroll ? (
+        {/* Scroll plumbing sits beside the page, never around it: switching it on after
+            hydration must not remount the whole tree. */}
+        {settings.ready && settings.smoothScroll ? (
           <ReactLenis
             root
             options={{
               lerp: 0.1,
-              autoRaf: false,
+              autoRaf: true,
               syncTouch: false,
               touchMultiplier: 0,
               smoothWheel: true,
             }}
           >
-            <LenisFrameBridge />
-            {children}
+            <LenisScrollBridge />
           </ReactLenis>
         ) : (
-          <>
-            <NativeScrollBridge />
-            {children}
-          </>
+          <NativeScrollBridge />
         )}
+        {children}
       </MotionConfig>
     </MotionSettingsContext.Provider>
   );

@@ -181,6 +181,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .local-areas__pill {
@@ -475,6 +478,18 @@
 [data-theme="light"] .local-areas__label,
 [data-theme="light"] .local-nearby__label {
   color: var(--blue);
+}
+
+/* Small bold labels on the pale cards (#edeff4) need a deeper blue for 4.5:1. */
+.light .local-address__label,
+.light .local-meta__label,
+.light .local-areas__label,
+.light .local-nearby__label,
+[data-theme="light"] .local-meta__label,
+[data-theme="light"] .local-address__label,
+[data-theme="light"] .local-areas__label,
+[data-theme="light"] .local-nearby__label {
+  color: #1d4ed8;
 }
 
 [data-theme="light"] .local-areas__pill,

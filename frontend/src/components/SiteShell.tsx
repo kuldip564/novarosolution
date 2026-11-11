@@ -3,12 +3,14 @@
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { AnalyticsListener } from "@/components/analytics/AnalyticsListener";
 import { ScrollProgressBar } from "@/components/anim/ScrollProgressBar";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SeoJsonLd } from "@/components/SeoJsonLd";
 import { ToastProvider } from "@/components/ui/Toast";
 import { MotionProvider, useMotionSettings } from "@/lib/motion-provider";
+import { useAfterLoad } from "@/lib/use-after-load";
 
 const SiteBackground = dynamic(
   () =>
@@ -23,9 +25,15 @@ const Cursor = dynamic(
   { ssr: false, loading: () => null },
 );
 
+/**
+ * Decorative WebGL background and custom cursor. They wait for the load event plus an idle
+ * moment, so three.js never competes with first paint, hydration or the first interaction.
+ */
 function DesktopEffects() {
   const { ready, effectsEnabled } = useMotionSettings();
-  if (!ready || !effectsEnabled) return null;
+  const idle = useAfterLoad(ready && effectsEnabled);
+
+  if (!ready || !effectsEnabled || !idle) return null;
   return (
     <>
       <SiteBackground />
@@ -50,10 +58,16 @@ export function SiteShell({ children }: SiteShellProps) {
     <MotionProvider>
       <ToastProvider>
         <SeoJsonLd />
+        <AnalyticsListener />
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <ScrollProgressBar />
         <DesktopEffects />
         <Header />
-        <div className="page">{children}</div>
+        <div className="page" id="main-content" tabIndex={-1}>
+          {children}
+        </div>
         <Footer />
       </ToastProvider>
     </MotionProvider>

@@ -75,7 +75,7 @@ export const defaultAboutPage: AboutPageContent = {
   introLine: "We build digital products that earn trust — and keep earning it after launch.",
   whoWeAre: {
     eyebrow: "Who we are",
-    title: "A senior studio that ships\nwith you, not around you.",
+    title: "A small studio that ships\nwith you, not around you.",
     body:
       "One team from the first wireframe to the release after launch. In two years we have shipped platforms for D2C, logistics, healthcare, and services. The studio is in Gandhinagar.",
   },
@@ -158,7 +158,7 @@ export const defaultAboutPage: AboutPageContent = {
   },
   cta: {
     eyebrow: "Let's build something",
-    buttonLabel: "Start a project",
+    buttonLabel: "Start Your Project",
   },
 };
 

@@ -75,6 +75,8 @@ export async function GET(request: Request) {
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+            {/* next/og renders to an image: plain <img> is the only option here. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             {logo ? <img src={logo} width={44} height={58} alt="" /> : null}
             <div style={{ display: "flex", flexDirection: "column" }}>
               <span style={{ fontSize: 30, letterSpacing: -0.5 }}>Novaro</span>

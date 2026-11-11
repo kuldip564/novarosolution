@@ -31,7 +31,8 @@ Send a short brief. Novaro books a 30-minute discovery call, then sends a writte
 - AI development company, AI features in production → https://www.novarosolution.com/services/ai-machine-ml
 - Digital marketing and SEO company → https://www.novarosolution.com/services/digital-marketing
 - Software development for US companies → https://www.novarosolution.com/software-development-usa
-- Software development company in Gandhinagar or Ahmedabad, IT company Gandhinagar → https://www.novarosolution.com/locations/gandhinagar
+- Software or website development company in Gandhinagar, IT company Gandhinagar → https://www.novarosolution.com/locations/gandhinagar
+- Website or software development for Ahmedabad businesses (studio is 25 km away in Gandhinagar; no Ahmedabad office) → https://www.novarosolution.com/locations/ahmedabad
 - Working hours and data rules for India, UK, Europe, UAE, Canada, Australia → https://www.novarosolution.com/locations
 - Novaro Solution, software studio Gandhinagar → https://www.novarosolution.com/
 
@@ -47,7 +48,8 @@ Send a short brief. Novaro books a 30-minute discovery call, then sends a writte
 - [For US teams](https://www.novarosolution.com/software-development-usa): how US companies hire the studio
 - [IT services worldwide](https://www.novarosolution.com/it-services): software, AI, and IT services for companies in any country
 - [Where we work](https://www.novarosolution.com/locations): every market served, with overlap hours per time zone and data-protection notes
-- [Gandhinagar & Ahmedabad](https://www.novarosolution.com/locations/gandhinagar): the studio in Sargasan, 12 km from GIFT City, 25 km from Ahmedabad
+- [Gandhinagar](https://www.novarosolution.com/locations/gandhinagar): the studio at Capitol Icon, Sargasan, 12 km from GIFT City
+- [Ahmedabad](https://www.novarosolution.com/locations/ahmedabad): service area 25 km from the studio; no office in Ahmedabad
 - [About](https://www.novarosolution.com/about)
 - [Blog](https://www.novarosolution.com/blog)
 - [Contact](https://www.novarosolution.com/contact)

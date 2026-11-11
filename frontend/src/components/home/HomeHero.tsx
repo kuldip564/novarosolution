@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Reveal } from "@/components/anim/Reveal";
 import { SplitText } from "@/components/anim/SplitText";
 import { Button } from "@/components/Button";
@@ -19,7 +19,7 @@ import type { HeroContent } from "@/lib/site-data";
 import { defaultHero, site } from "@/lib/site-data";
 import { normalizeHeroContent } from "@/lib/hero-content";
 import { useMotionSettings } from "@/lib/motion-provider";
-import { scrollStore } from "@/lib/scroll-store";
+import { useAfterLoad } from "@/lib/use-after-load";
 import { useHydratedScroll } from "@/lib/use-hydrated-scroll";
 import { serviceAreaLinks } from "@/lib/locations";
 
@@ -28,13 +28,20 @@ const HomeHero3D = dynamic(
   { ssr: false },
 );
 
-/** Button labels are editable in the admin; send "work / portfolio / case study" labels to /work, everything else to /contact. */
+/**
+ * Button labels are editable in the admin. "Case studies / work / portfolio" labels go to /work,
+ * "services" labels to /services, everything else (start, book, discuss) to /contact.
+ */
 function ctaHref(label: string): string {
-  return /work|portfolio|case stud/i.test(label) ? "/work" : "/contact";
+  if (/work|portfolio|case stud/i.test(label)) return "/work";
+  if (/service/i.test(label)) return "/services";
+  return "/contact";
 }
 
 type HomeHeroProps = {
   content?: HeroContent;
+  /** Real, published client projects shown as proof under the CTAs (links to case studies). */
+  proof?: Array<{ title: string; href: string }>;
 };
 
 function HeroPlace() {
@@ -60,13 +67,15 @@ function HeroPlace() {
   );
 }
 
-export function HomeHero({ content = defaultHero }: HomeHeroProps) {
+export function HomeHero({ content = defaultHero, proof = [] }: HomeHeroProps) {
   const copy = normalizeHeroContent(content);
   const reduced = useReducedMotion();
   const { performanceTier, effectsEnabled, ready } = useMotionSettings();
   const cinematic = ready && !reduced && performanceTier === "high";
   const [isMobile, setIsMobile] = useState(false);
   const heroParallax = cinematic && effectsEnabled && !isMobile;
+  // The 3D mark is decorative: load three.js only after the page has loaded and gone idle.
+  const hero3d = useAfterLoad(effectsEnabled, 600);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -96,14 +105,21 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
   useEffect(() => {
     if (!heroParallax) return;
 
-    const onMove = () => {
-      mouseX.set(scrollStore.mx * 28);
-      mouseY.set(scrollStore.my * 22);
+    let frame = 0;
+    const onMove = (event: MouseEvent) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        mouseX.set((event.clientX / window.innerWidth - 0.5) * 28);
+        mouseY.set((event.clientY / window.innerHeight - 0.5) * 22);
+      });
     };
 
-    onMove();
-    const id = window.setInterval(onMove, 32);
-    return () => window.clearInterval(id);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(frame);
+    };
   }, [heroParallax, mouseX, mouseY]);
 
   const headline = `${copy.headline}\n${copy.headlineAccent}`;
@@ -122,44 +138,38 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
       </div>
 
       <div className="wrap home-hero__inner">
-        {cinematic ? (
-          <motion.div
-            className="home-hero__copy"
-            style={{ opacity: copyOpacity, y: copyY, willChange: "transform, opacity" }}
-          >
-            <HeroPlace />
-            <span className="eyebrow">{copy.eyebrow}</span>
-            <SplitText text={headline} as="h1" className="home-hero__title" />
-            <p className="home-hero__lede">{copy.lede}</p>
-            <div className="home-hero__actions">
-              <Button href={ctaHref(copy.ctaPrimary)}>{copy.ctaPrimary}</Button>
-              <Button href={ctaHref(copy.ctaSecondary)} variant="ghost">
-                {copy.ctaSecondary}
-              </Button>
-            </div>
-            <div className="home-hero__stat" aria-label={`${copy.metaStat} ${copy.metaLabel}`}>
-              <strong>{copy.metaStat}</strong>
-              <span>{copy.metaLabel}</span>
-            </div>
-          </motion.div>
-        ) : (
-          <Reveal className="home-hero__copy">
-            <HeroPlace />
-            <span className="eyebrow">{copy.eyebrow}</span>
-            <SplitText text={headline} as="h1" className="home-hero__title" />
-            <p className="home-hero__lede">{copy.lede}</p>
-            <div className="home-hero__actions">
-              <Button href={ctaHref(copy.ctaPrimary)}>{copy.ctaPrimary}</Button>
-              <Button href={ctaHref(copy.ctaSecondary)} variant="ghost">
-                {copy.ctaSecondary}
-              </Button>
-            </div>
-            <div className="home-hero__stat" aria-label={`${copy.metaStat} ${copy.metaLabel}`}>
-              <strong>{copy.metaStat}</strong>
-              <span>{copy.metaLabel}</span>
-            </div>
-          </Reveal>
-        )}
+        {/* One wrapper in every mode: the copy holds the largest paint, so it must not be
+            remounted when scroll effects switch on after hydration. */}
+        <motion.div
+          className="home-hero__copy"
+          style={cinematic ? { opacity: copyOpacity, y: copyY, willChange: "transform, opacity" } : undefined}
+        >
+          <HeroPlace />
+          <span className="eyebrow">{copy.eyebrow}</span>
+          <SplitText text={headline} as="h1" className="home-hero__title" />
+          <p className="home-hero__lede">{copy.lede}</p>
+          <div className="home-hero__actions">
+            <Button href={ctaHref(copy.ctaPrimary)}>{copy.ctaPrimary}</Button>
+            <Button href={ctaHref(copy.ctaSecondary)} variant="ghost">
+              {copy.ctaSecondary}
+            </Button>
+          </div>
+          {proof.length > 0 ? (
+            <p className="home-hero__proof">
+              <span className="home-hero__proof-label">Live client work:</span>{" "}
+              {proof.map((item, index) => (
+                <Fragment key={item.href}>
+                  {index > 0 ? <span aria-hidden="true"> · </span> : null}
+                  <Link href={item.href}>{item.title}</Link>
+                </Fragment>
+              ))}
+            </p>
+          ) : null}
+          <div className="home-hero__stat" aria-label={`${copy.metaStat} ${copy.metaLabel}`}>
+            <strong>{copy.metaStat}</strong>
+            <span>{copy.metaLabel}</span>
+          </div>
+        </motion.div>
 
         {cinematic ? (
           <motion.div
@@ -177,7 +187,7 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
                 willChange: heroParallax ? "transform" : undefined,
               }}
             >
-              {effectsEnabled ? <HomeHero3D /> : null}
+              {hero3d ? <HomeHero3D /> : null}
               <div className="home-hero__orbit" />
               <div className="home-hero__orbit home-hero__orbit--inner" />
               <NMark className="home-hero__mark" size={280} />
@@ -188,7 +198,7 @@ export function HomeHero({ content = defaultHero }: HomeHeroProps) {
             <div
               className={`home-hero__visual-float${effectsEnabled ? " home-hero__visual-float--3d" : ""}`}
             >
-              {effectsEnabled ? <HomeHero3D /> : null}
+              {hero3d ? <HomeHero3D /> : null}
               <div className="home-hero__orbit" />
               <div className="home-hero__orbit home-hero__orbit--inner" />
               <NMark className="home-hero__mark" size={96} />

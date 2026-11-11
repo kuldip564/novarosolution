@@ -17,7 +17,8 @@
   --cyan-soft: #8fe4ff;
   --paper: #f6f8fc;
   --mist: #e9eef6;
-  --slate: #5c6b85;
+  /* Muted text on the dark theme: #8391a8 keeps 4.5:1+ on every dark surface (was #5c6b85, ~3.5:1). */
+  --slate: #8391a8;
   --slate-light: #94a2bc;
   --line-d: rgba(255, 255, 255, 0.08);
   --line-l: rgba(10, 23, 48, 0.1);
@@ -2657,17 +2658,31 @@ footer {
 }
 
 /* Safety: hero and page-head content visible if intersection observer is delayed */
-.hero .reveal:not(.in),
-.pagehead .reveal:not(.in),
-.services-intro__head.reveal:not(.in),
-.about-intro__head.reveal:not(.in) {
-  animation: reveal-fallback 0.01s ease 0.5s forwards;
+/* Page headers hold the largest paint on inner pages: never hide them behind JS.
+   They are visible from the first frame and only slide up (transform does not delay LCP). */
+.hero .reveal,
+.pagehead .reveal,
+.services-intro__head.reveal,
+.about-intro__head.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  animation: head-rise 0.7s var(--ease) both;
+  animation-delay: var(--reveal-delay, 0s);
 }
 
-@keyframes reveal-fallback {
-  to {
-    opacity: 1;
-    transform: none;
+@keyframes head-rise {
+  from {
+    transform: translateY(18px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .reveal,
+  .pagehead .reveal,
+  .services-intro__head.reveal,
+  .about-intro__head.reveal {
+    animation: none;
   }
 }
 
@@ -3742,8 +3757,21 @@ footer {
   }
 }
 
-.route-shell {
-  will-change: opacity, transform;
+.route-shell--enter {
+  animation: route-enter 0.38s cubic-bezier(0.16, 0.84, 0.36, 1) both;
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-shell--enter {
+    animation: none;
+  }
 }
 
 @media (max-width: 768px) {
@@ -4179,5 +4207,38 @@ footer {
   .exp .idx {
     font-size: clamp(3rem, 18vw, 5rem);
     top: -40px;
+  }
+}
+
+/* Skip link: hidden until focused (first Tab on every page), then jumps past the header. */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #0b1220;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: none;
+  outline: 3px solid #45c8f5;
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
   }
 }

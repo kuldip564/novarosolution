@@ -4,9 +4,14 @@ import { config, isMailConfigured } from "../config/env.js";
 export type LeadForEmail = {
   name: string;
   email: string;
+  company?: string | null;
+  phone?: string | null;
   services: string[];
   budget: string | null;
+  timeline?: string | null;
   message: string;
+  /** Page the enquiry came from (path only). */
+  source?: string | null;
   receivedAt: string;
 };
 
@@ -50,12 +55,16 @@ export async function sendLeadNotification(lead: LeadForEmail, stored: boolean):
       from: config.MAIL_FROM ?? config.SMTP_USER ?? config.MAIL_TO,
       to: config.MAIL_TO,
       replyTo: lead.email,
-      subject: `New enquiry from ${oneLine(lead.name, 80)}${stored ? "" : " (not yet saved)"}`,
+      subject: `New enquiry from ${oneLine(lead.name, 80)}${lead.company ? ` (${oneLine(lead.company, 60)})` : ""}${stored ? "" : " — not yet saved"}`,
       text: [
         `Name: ${lead.name}`,
         `Email: ${lead.email}`,
+        `Company: ${lead.company || "—"}`,
+        `Phone / WhatsApp: ${lead.phone || "—"}`,
         `Services: ${lead.services.length ? lead.services.join(", ") : "—"}`,
         `Budget: ${lead.budget ?? "—"}`,
+        `Timeline: ${lead.timeline || "—"}`,
+        `Sent from: ${lead.source || "—"}`,
         `Received: ${lead.receivedAt}`,
         "",
         lead.message,

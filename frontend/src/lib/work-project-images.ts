@@ -54,3 +54,9 @@ export function mergeWorkProjectImages(
 export function localAsset(path: string): CloudinaryAsset {
   return workImage(path);
 }
+
+/** Descriptive alt text for a project card: the case study's hero alt when known, else title and category. */
+export function projectCardAlt(project: { href: string; title: string; category: string }): string {
+  const slug = project.href.startsWith("/work/") ? project.href.slice("/work/".length) : "";
+  return getWorkProjectImages(slug)?.heroAlt ?? `${project.title} — ${project.category}`;
+}

@@ -55,6 +55,9 @@ export default function RootLayout({
           {`
             (function(){
               var id='${GA_MEASUREMENT_ID}';
+              // Only the live site reports to GA: local builds, previews and the
+              // onrender.com copy would otherwise pollute the data with test visits.
+              if (!/(^|\\.)novarosolution\\.com$/.test(location.hostname)) return;
               function load(){
                 if (window.__gaLoaded) return;
                 window.__gaLoaded=1;
@@ -66,7 +69,10 @@ export default function RootLayout({
                 window.gtag=function(){dataLayer.push(arguments);};
                 gtag('js', new Date());
                 gtag('config', id);
+                (window.__gaPending||[]).forEach(function(e){gtag('event', e[0], e[1]);});
+                window.__gaPending=[];
               }
+              window.__gaLoad=load;
               addEventListener('pointerdown', load, {once:true});
               addEventListener('scroll', load, {once:true, passive:true});
               setTimeout(load, 8000);

@@ -5,6 +5,7 @@ import { formattedAddress } from "@/lib/geo-seo";
 import { site } from "@/lib/site-data";
 import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
 import { breadcrumbJsonLd, ORGANIZATION_ID, WEBSITE_ID } from "@/lib/structured-data";
+import { jsonLdString } from "@/lib/json-ld";
 
 const path = "/terms";
 const lastUpdated = "November 10, 2026";
@@ -52,7 +53,7 @@ export default function TermsPage() {
       lastUpdated={lastUpdated}
       breadcrumbs={[{ label: "Home", href: "/" }, { label: "Terms & Conditions" }]}
     >
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
 
       <div className="legal-summary" role="note" aria-label="Summary">
         <p className="legal-summary__title">In short</p>

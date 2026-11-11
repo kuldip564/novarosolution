@@ -4,6 +4,7 @@ import { CtaBand } from "@/components/sections/CtaBand";
 import { PageHead } from "@/components/sections/PageHead";
 import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
 import { breadcrumbJsonLd, LOCAL_BUSINESS_ID } from "@/lib/structured-data";
+import { jsonLdString } from "@/lib/json-ld";
 
 const path = "/it-services";
 
@@ -62,7 +63,7 @@ export default function ItServicesPage() {
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
       <PageHead
         eyebrow="Worldwide · IT services"

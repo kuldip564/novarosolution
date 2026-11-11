@@ -33,7 +33,7 @@ import type { HomeProjectView } from "@/lib/content-mappers";
 const whyItems: Array<{ icon: LucideIcon; title: string; body: string }> = [
   {
     icon: Users,
-    title: "One senior team, sketch to launch",
+    title: "One team, sketch to launch",
     body: "Design, engineering, AI, and SEO sit in one team — no hand-offs between vendors, no blame ping-pong.",
   },
   {
@@ -221,7 +221,7 @@ export function HomeIndustries() {
             <p>Tell us how your business runs today. We&apos;ll say honestly whether we&apos;re the right team.</p>
             <span className="home-industries__links">
               <Link href="/contact">
-                Start your project
+                Discuss Your Requirements
                 <ArrowUpRight size={14} aria-hidden />
               </Link>
             </span>

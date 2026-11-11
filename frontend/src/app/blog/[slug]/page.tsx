@@ -7,12 +7,16 @@ import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Reveal } from "@/components/anim/Reveal";
+import { Button } from "@/components/Button";
 import {
   formatBlogDate,
   getAllBlogPosts,
   getBlogPost,
   type BlogPost,
 } from "@/lib/blog";
+import { enhanceArticle, type ArticleSource } from "@/lib/article-enhance";
+import { clusterForPost, resolveArticleAuthor } from "@/lib/content-clusters";
+import { jsonLdString } from "@/lib/json-ld";
 import { cloudinaryTransformUrl } from "@/lib/media";
 import { site } from "@/lib/site-data";
 import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
@@ -28,6 +32,12 @@ function articleService(post: BlogPost): { href: string; label: string; pitch: s
   if (/ai|ml/i.test(post.category)) return { href: "/services/ai-machine-ml", label: "AI & machine learning services", pitch: "AI features with a job, a measure, and a fallback." };
   if (/growth|seo|marketing/i.test(post.category)) return { href: "/services/digital-marketing", label: "Digital marketing & SEO services", pitch: "Technical SEO and campaigns aimed at a product that loads." };
   return { href: "/services/web-app-eng", label: "Web & app development services", pitch: "SaaS products, mobile apps, and the APIs behind them." };
+}
+
+/** The last-edit date, only when it falls on a later day than publication. */
+function updatedDate(post: BlogPost): string | null {
+  if (!post.updatedAt) return null;
+  return post.updatedAt.slice(0, 10) > post.publishedAt.slice(0, 10) ? post.updatedAt : null;
 }
 
 type ArticlePageProps = {
@@ -61,8 +71,10 @@ function articleImages(post: BlogPost): string[] {
   return [...new Set(images)];
 }
 
-function articleJsonLd(post: BlogPost) {
+function articleJsonLd(post: BlogPost, sources: ArticleSource[] = []) {
   const url = `${siteBaseUrl()}/blog/${post.slug}`;
+  const author = resolveArticleAuthor(post.author.name);
+  const cluster = clusterForPost(post);
 
   return [
     {
@@ -73,17 +85,22 @@ function articleJsonLd(post: BlogPost) {
       description: post.metaDescription ?? post.excerpt,
       image: articleImages(post),
       datePublished: post.publishedAt,
-      dateModified: post.publishedAt,
+      dateModified: updatedDate(post) ?? post.publishedAt,
       inLanguage: "en",
-      articleSection: post.category || undefined,
+      articleSection: cluster?.name ?? (post.category || undefined),
       keywords: post.tags.length ? post.tags.join(", ") : undefined,
       timeRequired: post.readingTime ? `PT${post.readingTime}M` : undefined,
-      author: {
-        "@type": "Person",
-        name: post.author.name,
-        worksFor: { "@id": ORGANIZATION_ID },
-        url: `${siteBaseUrl()}/about`,
-      },
+      // A named person only when the byline matches someone on the team page.
+      author:
+        author.kind === "person"
+          ? {
+              "@type": "Person",
+              name: author.name,
+              jobTitle: author.role,
+              worksFor: { "@id": ORGANIZATION_ID },
+              url: `${siteBaseUrl()}/about`,
+            }
+          : { "@type": "Organization", "@id": ORGANIZATION_ID, name: site.name, url: siteBaseUrl() },
       publisher: {
         "@type": "Organization",
         "@id": ORGANIZATION_ID,
@@ -91,6 +108,7 @@ function articleJsonLd(post: BlogPost) {
         url: siteBaseUrl(),
         logo: { "@type": "ImageObject", url: `${siteBaseUrl()}/brand/novaro-icon.png` },
       },
+      citation: sources.length ? sources.map((source) => source.href) : undefined,
       isPartOf: { "@type": "Blog", "@id": `${siteBaseUrl()}/blog#blog`, name: `${site.name} blog` },
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
     },
@@ -138,7 +156,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       siteName: site.name,
       url: `${siteBaseUrl()}/blog/${post.slug}`,
       publishedTime: post.publishedAt,
-      modifiedTime: post.publishedAt,
+      modifiedTime: updatedDate(post) ?? post.publishedAt,
       section: post.category || undefined,
       tags: post.tags,
       authors: [post.author.name],
@@ -159,6 +177,19 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
   if (!data) notFound();
 
   const { post, related } = data;
+  const article = enhanceArticle(post.content);
+  const author = resolveArticleAuthor(post.author.name);
+  const cluster = clusterForPost(post);
+  const updated = updatedDate(post);
+  const next = articleService(post);
+
+  // Other articles in the same cluster, pillar first (contextual internal links).
+  const clusterPosts = cluster
+    ? (await getAllBlogPosts().catch(() => []))
+        .filter((item) => item.slug !== post.slug && clusterForPost(item)?.id === cluster.id)
+        .sort((a, b) => Number(b.slug === cluster.pillarSlug) - Number(a.slug === cluster.pillarSlug))
+        .slice(0, 4)
+    : [];
 
   return (
     <main className="article-page page-cinema blog-cinema">
@@ -196,8 +227,23 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
             <span className="blog-pill">{post.category}</span>
             <h1>{post.title}</h1>
             <div className="article-meta">
-              <span>{post.author.name}</span>
-              <span>{formatBlogDate(post.publishedAt)}</span>
+              <span>
+                {author.kind === "person" ? (
+                  <>
+                    By <Link href="/about">{author.name}</Link>, {author.role}
+                  </>
+                ) : (
+                  <>By the {site.name} team</>
+                )}
+              </span>
+              <span>
+                Published <time dateTime={post.publishedAt}>{formatBlogDate(post.publishedAt)}</time>
+              </span>
+              {updated ? (
+                <span>
+                  Updated <time dateTime={updated}>{formatBlogDate(updated)}</time>
+                </span>
+              ) : null}
               <span>{post.readingTime} min read</span>
             </div>
           </Reveal>
@@ -206,10 +252,33 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
 
       <div className="wrap article-layout">
         <ArticleShareBar title={post.title} slug={post.slug} />
-        <article
-          className="article-body"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        {article.toc.length >= 3 ? (
+          <nav className="article-toc" aria-label="In this article">
+            <span className="article-toc__label">In this article</span>
+            <ol>
+              {article.toc.map((heading) => (
+                <li key={heading.id}>
+                  <a href={`#${heading.id}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        ) : null}
+        <article className="article-body" dangerouslySetInnerHTML={{ __html: article.html }} />
+        {article.sources.length > 0 ? (
+          <section className="article-sources" aria-labelledby="article-sources-title">
+            <h2 id="article-sources-title">Sources</h2>
+            <ol>
+              {article.sources.map((source) => (
+                <li key={source.href}>
+                  <a href={source.href} target="_blank" rel="noopener noreferrer">
+                    {source.label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
         {post.tags.length > 0 && (
           <div className="article-tags">
             {post.tags.map((tag) => (
@@ -219,13 +288,33 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
         )}
       </div>
 
+      {cluster && clusterPosts.length > 0 ? (
+        <aside className="wrap article-cluster" aria-labelledby="article-cluster-title">
+          <div className="article-cluster__card">
+            <span className="eyebrow">Part of our {cluster.name.toLowerCase()} series</span>
+            <h2 id="article-cluster-title">More on this topic</h2>
+            <ul>
+              {clusterPosts.map((item) => (
+                <li key={item.id}>
+                  <Link href={`/blog/${item.slug}`}>{item.title}</Link>
+                  {item.slug === cluster.pillarSlug ? <span className="article-cluster__pillar">Start here</span> : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      ) : null}
+
       <aside className="wrap article-next" aria-label="Next step">
         <div className="article-next__card">
           <span className="eyebrow">Next step</span>
           <p>
-            <Link href={articleService(post).href}>{articleService(post).label}</Link> —{" "}
-            {articleService(post).pitch} Or <Link href="/contact">send us a short brief</Link>.
+            {cluster?.cta.text ?? `${next.pitch} Send us a short brief and we reply within one business day.`}
           </p>
+          <div className="article-next__actions">
+            <Button href={cluster?.cta.href ?? "/contact"}>{cluster?.cta.buttonLabel ?? "Start Your Project"}</Button>
+            <Link href={cluster?.service.href ?? next.href}>{cluster?.service.label ?? next.label}</Link>
+          </div>
         </div>
       </aside>
 
@@ -247,7 +336,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(post)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(articleJsonLd(post, article.sources)) }}
       />
     </main>
   );

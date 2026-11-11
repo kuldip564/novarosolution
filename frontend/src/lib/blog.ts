@@ -23,6 +23,8 @@ export type BlogPost = {
   tags: string[];
   author: BlogAuthor;
   publishedAt: string;
+  /** Last edit, from the API. Shown only when it is later than the publication day. */
+  updatedAt?: string;
   readingTime: number;
   metaTitle: string | null;
   metaDescription: string | null;
@@ -163,7 +165,7 @@ const fallbackPosts: BlogPost[] = [
     content: `<p>The work that matters is quiet: narrow features with clear inputs, measurable outputs, and humans still in the loop.</p><h2>Patterns we ship</h2><ul><li>Document intelligence — extract and route structured data from PDFs and scans.</li><li>Search and retrieval — grounded answers over your own content.</li><li>Vision assist — flag anomalies and surface them for review.</li></ul><p>We treat model calls like any other dependency: timeouts, retries, and a fallback when the model is unsure. Start with one workflow that saves real time.</p>`,
     category: "AI / ML",
     tags: ["LLM", "Computer vision"],
-    author: { name: "Novaro AI Lead", avatar: null },
+    author: { name: "Novaro Team", avatar: null },
     publishedAt: "2026-10-05T00:00:00.000Z",
     readingTime: 3,
     metaTitle: null,
@@ -180,7 +182,7 @@ const fallbackPosts: BlogPost[] = [
     content: `<p>Paid traffic is an accelerant, not a foundation. If a site is slow, thin, or hard to crawl, campaigns leak budget.</p><h2>The baseline</h2><ul><li>Unique titles and descriptions on every indexable template</li><li>Stable Core Web Vitals on real devices</li><li>Clean internal links and one canonical URL per page</li></ul><p>Article, product, and organization schema belong in the template, not in a hand-written script. Search Console and analytics should tell the same story about what gets found and what converts.</p>`,
     category: "Growth",
     tags: ["SEO", "Performance", "Analytics"],
-    author: { name: "Novaro Growth Lead", avatar: null },
+    author: { name: "Novaro Team", avatar: null },
     publishedAt: "2026-09-28T00:00:00.000Z",
     readingTime: 3,
     metaTitle: null,

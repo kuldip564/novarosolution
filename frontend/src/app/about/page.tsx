@@ -21,6 +21,7 @@ import {
   type CtaContent,
 } from "@/lib/site-data";
 import "@/styles/about.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 export const revalidate = 30;
 
@@ -78,7 +79,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <AboutExperience
       content={content}
       stats={normalizeAboutStats(stats)}

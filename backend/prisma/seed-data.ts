@@ -53,20 +53,20 @@ export const seedSite = {
 
 export const seedHero = {
   eyebrow: "Software · AI · Growth · Worldwide",
-  headline: "We build software",
-  headlineAccent: "worldwide.",
+  headline: "Custom software",
+  headlineAccent: "for growing businesses.",
   lede:
-    "Web apps, mobile products, AI systems, and digital marketing for companies in the USA, UK, Europe, the Middle East, and India — one senior team from discovery to launch.",
-  ctaPrimary: "See our work",
-  ctaSecondary: "Book a call",
-  metaStat: "32",
-  metaLabel: "Clients served",
+    "Web apps, mobile apps, AI features and the marketing around them, designed and built by one team in Gandhinagar, India. You see a working build every week, and the code is yours at launch.",
+  ctaPrimary: "Start Your Project",
+  ctaSecondary: "View Case Studies",
+  metaStat: "1 day",
+  metaLabel: "Reply time on new enquiries",
 };
 
 export const seedCta = {
-  homeTitle: "Ready to ship something worth showing off?",
+  homeTitle: "Tell us what you need built.",
   homeDescription:
-    "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
+    "Share a few lines about your project. We reply within one business day, book a 30-minute call, and then send a scoped proposal with timeline and budget.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
     "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",
@@ -135,18 +135,19 @@ export const seedProcessSteps = [
   },
 ];
 
+// Only figures that can be checked on the site. Add client counts or repeat rates only when true.
 export const seedHomeStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
-  { value: 50, suffix: "+", label: "Products & platforms delivered" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 4, suffix: "", label: "Live client products in our portfolio" },
+  { value: 8, suffix: "", label: "People on the team" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ];
 
 export const seedAboutStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 4, suffix: "", label: "Live client products in our portfolio" },
   { value: 8, suffix: "", label: "People on the team" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ];
 
 export const seedWhyItems = [
@@ -182,7 +183,7 @@ export const seedAboutPage = {
   introLine: "We build digital products that earn trust — and keep earning it after launch.",
   whoWeAre: {
     eyebrow: "Who we are",
-    title: "A senior studio that ships\nwith you, not around you.",
+    title: "A small studio that ships\nwith you, not around you.",
     body:
       "Novaro Solution is an IT studio headquartered in Gandhinagar, Gujarat. We specialise in web and app engineering, AI/ML, and digital marketing — helping founders and brands ship products that perform in production, not just in pitch decks. In two years we've delivered 50+ platforms for clients in D2C, logistics, healthcare, and services — with one accountable team from first wireframe to post-launch growth.",
   },
@@ -516,11 +517,11 @@ export const seedWorkProjects = [
     heroImage: "/images/work/zeevan.jpg",
     screens: ["/images/work/zeevan.jpg"],
     results: [
-      { value: "A2", label: "ghee positioning" },
-      { value: "D2C", label: "commerce flow" },
-      { value: "Fast", label: "mobile UX" },
+      { value: "4", label: "product ranges" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Accounts", label: "orders & rewards" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
     idx: "02",
@@ -537,11 +538,11 @@ export const seedWorkProjects = [
     heroImage: "/images/work/kankreg.jpg",
     screens: ["/images/work/kankreg.jpg"],
     results: [
-      { value: "Premium", label: "brand feel" },
-      { value: "Mobile", label: "first UX" },
-      { value: "SEO", label: "ready structure" },
+      { value: "3", label: "collections" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Offers", label: "discount codes" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
     idx: "03",
@@ -558,9 +559,9 @@ export const seedWorkProjects = [
     heroImage: "/images/work/mr-antidot.jpg",
     screens: ["/images/work/mr-antidot.jpg"],
     results: [
-      { value: "8+", label: "years in market" },
-      { value: "24/7", label: "support positioning" },
-      { value: "10+", label: "service lines" },
+      { value: "10", label: "service pages" },
+      { value: "Next.js", label: "framework" },
+      { value: "8", label: "sectors covered" },
     ],
     tags: ["Next.js", "Service booking", "CMS", "SEO"],
   },
@@ -571,7 +572,7 @@ export const seedWorkProjects = [
     category: "Web App · Logistics",
     title: "Quadrato Cargo",
     hook:
-      "International courier platform with booking, live tracking, and dispatch flows across 180 countries.",
+      "International courier platform with four-step pickup booking, shipment tracking and quote requests.",
     heroTitle: "Project hero — Quadrato Cargo",
     story:
       "Quadrato Cargo is a full logistics product — instant and scheduled pickup booking, live shipment tracking, quote requests, and customer-facing flows designed for speed. We built the technology stack behind their Fast Forward, Rapid Reach promise.",
@@ -579,9 +580,9 @@ export const seedWorkProjects = [
     heroImage: "/images/work/quadrato-cargo.jpg",
     screens: ["/images/work/quadrato-cargo.jpg"],
     results: [
-      { value: "180", label: "countries" },
-      { value: "10K+", label: "deliveries" },
-      { value: "~10 min", label: "pickup target" },
+      { value: "4-step", label: "booking flow" },
+      { value: "Next.js", label: "framework" },
+      { value: "QR", label: "tracking lookup" },
     ],
     tags: ["Next.js", "Booking", "Tracking", "Logistics"],
   },
@@ -611,7 +612,7 @@ export const seedServicesSection = {
 };
 
 export const seedWhySection = {
-  title: "Senior people. One team. Real ownership.",
+  title: "One team. Real ownership.",
 };
 
 export const seedTeamSection = {

@@ -1,27 +1,25 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useMotionSettings } from "@/lib/motion-provider";
+import { useEffect } from "react";
 
 type TemplateProps = {
   children: React.ReactNode;
 };
 
+/** False until the first page has hydrated; later navigations get a short CSS entrance. */
+let hasHydrated = false;
+
+/**
+ * Route transition. The first page renders exactly as the server sent it, with no wrapper
+ * swap and nothing hidden, so the largest paint is never delayed by JavaScript. Client
+ * navigations after that fade in with a CSS animation (off under prefers-reduced-motion).
+ */
 export default function Template({ children }: TemplateProps) {
-  const { reducedMotion, effectsEnabled } = useMotionSettings();
+  const animate = hasHydrated;
 
-  if (reducedMotion || !effectsEnabled) {
-    return <>{children}</>;
-  }
+  useEffect(() => {
+    hasHydrated = true;
+  }, []);
 
-  return (
-    <motion.div
-      className="route-shell"
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.38, ease: [0.16, 0.84, 0.36, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={animate ? "route-shell route-shell--enter" : "route-shell"}>{children}</div>;
 }

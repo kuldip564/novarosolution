@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useSyncExternalStore,
   useEffect,
   useRef,
   useState,
@@ -8,6 +9,10 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+
+const subscribeNoop = () => () => {};
+const getTrue = () => true;
+const getFalse = () => false;
 import { ArrowUp } from "lucide-react";
 import { useLenis } from "lenis/react";
 import type { BreadcrumbItem } from "@/components/ui/Breadcrumbs";
@@ -37,10 +42,9 @@ export function LegalDocument({
   const [toc, setToc] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  // True only in the browser after hydration (portals need document.body).
+  const mounted = useSyncExternalStore(subscribeNoop, getTrue, getFalse);
   const lenis = useLenis();
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const article = articleRef.current;

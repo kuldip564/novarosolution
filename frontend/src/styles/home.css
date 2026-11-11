@@ -252,6 +252,30 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
   align-items: center;
 }
 
+/* Proof under the CTAs: real client projects, each linking to its case study. */
+.home-hero__proof {
+  margin: 1.1rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--slate-light);
+}
+
+.home-hero__proof-label {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.home-hero__proof a {
+  color: var(--text-heading);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--cyan) 55%, transparent);
+  text-underline-offset: 3px;
+}
+
+.home-hero__proof a:hover {
+  color: var(--cyan);
+}
+
 .home-hero__stat {
   display: inline-flex;
   align-items: baseline;
@@ -461,6 +485,10 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
     justify-content: center;
   }
 
+  .home-hero__proof {
+    text-align: center;
+  }
+
   .home-hero__inner {
     width: 100%;
     max-width: 100%;
@@ -537,6 +565,11 @@ html.site--bg-3d[data-theme="light"] .home-cinema .home-hero__backdrop::after {
 
   .home-hero__actions {
     order: 4;
+  }
+
+  .home-hero__proof {
+    order: 4;
+    text-align: center;
   }
 
   .home-hero__loc {
@@ -907,7 +940,7 @@ a.home-svc-card-link {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: color-mix(in srgb, var(--text-muted) 85%, transparent);
+  color: var(--text-soft);
 }
 
 .home-svc-card h3 {
@@ -1681,4 +1714,19 @@ a.home-svc-card-link {
 .home-cinema .home-scene:not(.light) .home-industries__links a {
   color: var(--cyan-soft);
   border-color: color-mix(in srgb, var(--cyan) 30%, var(--line-d));
+}
+
+/* Secondary contact routes under the final enquiry button. */
+.home-cta__alt {
+  margin: 1.1rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.92;
+}
+
+.home-cta__alt a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
 }

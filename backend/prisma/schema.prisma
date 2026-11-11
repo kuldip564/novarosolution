@@ -134,9 +134,14 @@ model Lead {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String
+  company   String?
+  phone     String?
   services  String[]
   budget    String?
+  timeline  String?
   message   String
+  /// Page the enquiry was sent from (path only), e.g. /contact?service=web-app-eng
+  source    String?
   status    LeadStatus @default(NEW)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt

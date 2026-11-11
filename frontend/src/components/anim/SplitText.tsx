@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/device";
 import { useMotionSettings } from "@/lib/motion-provider";
 
@@ -74,22 +74,20 @@ export function SplitText({ text, as: Tag = "h1", className = "", id }: SplitTex
     return () => io.disconnect();
   }, [lines, skipMotion, text]);
 
-  return createElement(
-    Tag,
-    {
-      ref,
-      id,
-      className: `split-text ${skipMotion ? "in" : ""} ${className}`.trim(),
-      "data-split": true,
-      suppressHydrationWarning: true,
-    },
-    lines.map((line, lineIndex) =>
-      createElement(
-        "span",
-        { key: `${lineIndex}-${line}`, className: "split-line" },
-        line,
-        lineIndex < lines.length - 1 ? createElement("br") : null,
-      ),
-    ),
+  return (
+    <Tag
+      ref={ref as never}
+      id={id}
+      className={`split-text ${skipMotion ? "in" : ""} ${className}`.trim()}
+      data-split
+      suppressHydrationWarning
+    >
+      {lines.map((line, lineIndex) => (
+        <span key={`${lineIndex}-${line}`} className="split-line">
+          {line}
+          {lineIndex < lines.length - 1 ? <br /> : null}
+        </span>
+      ))}
+    </Tag>
   );
 }

@@ -23,7 +23,7 @@ const staticRoutes: Array<{
   { path: "/software-development-usa", changeFrequency: "monthly", priority: 0.9 },
   { path: "/it-services", changeFrequency: "monthly", priority: 0.9 },
   { path: "/locations", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-08-20" },
+  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-11-11" },
   { path: "/terms", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-11-10" },
   { path: "/disclaimer", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-06-14" },
   { path: "/cookie-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-06-14" },

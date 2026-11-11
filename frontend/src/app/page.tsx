@@ -22,6 +22,7 @@ import {
 } from "@/lib/site-data";
 import { homeSectionsDefaults } from "@/lib/page-content-defaults";
 import "@/styles/home.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 export const revalidate = 30;
 
@@ -66,11 +67,14 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
+          __html: jsonLdString(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
         }}
       />
       <main id="top" className="home-cinema">
-        <HomeHero content={heroCopy} />
+        <HomeHero
+          content={heroCopy}
+          proof={projects.slice(0, 4).map((project) => ({ title: project.title, href: `/work/${project.slug}` }))}
+        />
         <HomeBelowFold
           projects={projects}
           services={services}
