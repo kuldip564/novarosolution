@@ -322,9 +322,9 @@ export const seedServiceDetails = [
       "API, backend, and integration layers",
       "Performance, security, and accessibility audits",
     ],
-    image: "/images/webapp-dashboard.webp",
+    image: "/images/services/web-app-eng.webp",
     imageAlt:
-      "Web and app engineering services — glassmorphic dashboard on a laptop with navy and cyan UI",
+      "Glass browser and smartphone with floating interface cards, representing web and mobile app engineering",
   },
   {
     no: "02",
@@ -338,9 +338,9 @@ export const seedServiceDetails = [
       "Forecasting, recommendations, and ranking",
       "MLOps, evaluation, and model monitoring",
     ],
-    image: "/images/ai-ml-dashboard.webp",
+    image: "/images/services/ai-machine-ml.webp",
     imageAlt:
-      "AI and machine learning services — neural network visualization with glassmorphic panels",
+      "Glowing neural core with connected nodes and glass rings, representing AI and machine learning",
   },
   {
     no: "03",
@@ -354,9 +354,9 @@ export const seedServiceDetails = [
       "Landing pages and conversion optimization",
       "Brand, creative, and analytics setup",
     ],
-    image: "/images/digital-marketing-dashboard.webp",
+    image: "/images/services/digital-marketing.webp",
     imageAlt:
-      "Digital marketing services — analytics dashboard with campaign performance panels",
+      "Glass analytics dashboard with a growth curve and conversion funnel, representing digital marketing",
   },
   {
     no: "04",
@@ -370,9 +370,9 @@ export const seedServiceDetails = [
       "Design systems and product UI/UX",
       "Security reviews and compliance readiness",
     ],
-    image: null,
+    image: "/images/services/cloud-devops.webp",
     imageAlt:
-      "Cloud, DevOps, and design services — infrastructure and design system preview",
+      "Glass cloud linked to server blocks and a deployment pipeline, representing cloud, DevOps and design",
   },
 ];
 

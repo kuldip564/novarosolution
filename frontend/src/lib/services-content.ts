@@ -405,8 +405,8 @@ export function buildServiceDetails(
                 crop: "fill",
               }) ?? url,
             alt: service.imageAlt ?? service.title,
-            width: 2048,
-            height: 1529,
+            width: 1200,
+            height: 900,
           }
         : localMedia,
     };

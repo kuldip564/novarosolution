@@ -1610,9 +1610,9 @@ html.site--bg-3d .services-cinema {
   width: 100% !important;
   height: auto !important;
   min-height: clamp(260px, 42vw, 420px);
-  aspect-ratio: 2048 / 1529;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  object-position: center 42%;
+  object-position: center;
   transition: transform 0.65s var(--ease);
 }
 

@@ -239,10 +239,10 @@ export const serviceDetails = [
     mediaTitle: "Web & App work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/novaro-web-apps.webp",
-      alt: "Laptop and phone showing a web app on a dark navy desk",
-      width: 1280,
-      height: 720,
+      src: "/images/services/web-app-eng.webp",
+      alt: "Glass browser and smartphone with floating interface cards, representing web and mobile app engineering",
+      width: 1200,
+      height: 900,
     },
   },
   {
@@ -259,10 +259,10 @@ export const serviceDetails = [
     mediaTitle: "AI / ML work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/novaro-ai.webp",
-      alt: "Abstract cyan network over a dark operations desk",
-      width: 1280,
-      height: 720,
+      src: "/images/services/ai-machine-ml.webp",
+      alt: "Glowing neural core with connected nodes and glass rings, representing AI and machine learning",
+      width: 1200,
+      height: 900,
     },
   },
   {
@@ -279,10 +279,10 @@ export const serviceDetails = [
     mediaTitle: "Marketing work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/digital-marketing-dashboard.webp",
-      alt: "Digital marketing services — analytics dashboard with campaign performance panels",
-      width: 2048,
-      height: 1529,
+      src: "/images/services/digital-marketing.webp",
+      alt: "Glass analytics dashboard with a growth curve and conversion funnel, representing digital marketing",
+      width: 1200,
+      height: 900,
     },
   },
   {
@@ -298,6 +298,12 @@ export const serviceDetails = [
     ],
     mediaTitle: "Cloud & Design work",
     mediaHint: "Add image / video · 4:3",
+    media: {
+      src: "/images/services/cloud-devops.webp",
+      alt: "Glass cloud linked to server blocks and a deployment pipeline, representing cloud, DevOps and design",
+      width: 1200,
+      height: 900,
+    },
   },
 ] as const;
 

@@ -182,8 +182,8 @@ function ServiceDetailSection({
           asset={service.imageAsset}
           src={service.media?.src}
           alt={service.imageAlt ?? service.media?.alt ?? service.title}
-          width={service.media?.width ?? 2048}
-          height={service.media?.height ?? 1529}
+          width={service.media?.width ?? 1200}
+          height={service.media?.height ?? 900}
           priority={index < 1}
         />
       ) : (

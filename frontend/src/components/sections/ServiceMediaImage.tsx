@@ -16,8 +16,8 @@ export function ServiceMediaImage({
   asset,
   src,
   alt,
-  width = 2048,
-  height = 1529,
+  width = 1200,
+  height = 900,
   priority = false,
 }: ServiceMediaImageProps) {
   const parsed = asset ? parseCloudinaryAsset(asset) : null;
