@@ -4,10 +4,15 @@ import { getPublishedProjects, getPublishedServices } from "./content";
 import { locationPath, locations } from "./locations";
 import { siteBaseUrl } from "./site-metadata";
 
+/**
+ * lastModified is only set where the real content date is known (legal pages show it on the page,
+ * posts use their publish date). A "now" timestamp on every URL teaches Google to ignore lastmod.
+ */
 const staticRoutes: Array<{
   path: string;
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
   priority: number;
+  lastModified?: string;
 }> = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/about", changeFrequency: "monthly", priority: 0.8 },
@@ -18,20 +23,18 @@ const staticRoutes: Array<{
   { path: "/software-development-usa", changeFrequency: "monthly", priority: 0.9 },
   { path: "/it-services", changeFrequency: "monthly", priority: 0.9 },
   { path: "/locations", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
-  { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
-  { path: "/disclaimer", changeFrequency: "yearly", priority: 0.3 },
-  { path: "/cookie-policy", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-08-20" },
+  { path: "/terms", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-11-10" },
+  { path: "/disclaimer", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-06-14" },
+  { path: "/cookie-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-06-14" },
 ];
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteBaseUrl();
-  const now = new Date();
-
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map(
-    ({ path, changeFrequency, priority }) => ({
+    ({ path, changeFrequency, priority, lastModified }) => ({
       url: `${baseUrl}${path}`,
-      lastModified: now,
+      ...(lastModified ? { lastModified: new Date(lastModified) } : {}),
       changeFrequency,
       priority,
     }),
@@ -52,21 +55,18 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
 
   const projectEntries: MetadataRoute.Sitemap = projects.map((project) => ({
     url: `${baseUrl}/work/${project.slug}`,
-    lastModified: now,
     changeFrequency: "monthly",
     priority: 0.7,
   }));
 
   const serviceEntries: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${baseUrl}/services/${service.slug}`,
-    lastModified: now,
     changeFrequency: "monthly",
     priority: 0.75,
   }));
 
   const locationEntries: MetadataRoute.Sitemap = locations.map((location) => ({
     url: `${baseUrl}${locationPath(location.slug)}`,
-    lastModified: now,
     changeFrequency: "monthly",
     priority: location.group === "india" ? 0.85 : 0.8,
   }));

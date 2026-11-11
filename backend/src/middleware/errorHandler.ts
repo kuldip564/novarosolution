@@ -1,29 +1,39 @@
 import type { ErrorRequestHandler } from "express";
-import { Prisma } from "@prisma/client";
 import { config } from "../config/env.js";
+import { isDatabaseConnectionError } from "../lib/dbErrors.js";
 import { markDatabaseUnavailable } from "../lib/dbHealth.js";
 
-function isDatabaseUnavailable(error: unknown): boolean {
-  if (!(error instanceof Error)) return false;
-
-  const message = error.message.toLowerCase();
-  return (
-    message.includes("server selection timeout") ||
-    message.includes("connection refused") ||
-    message.includes("econnrefused") ||
-    (error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2010")
-  );
+export class HttpError extends Error {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
+    super(message);
+  }
 }
 
-export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  if (isDatabaseUnavailable(err)) {
-    markDatabaseUnavailable();
+export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
+  if (res.headersSent) return;
+
+  if (isDatabaseConnectionError(err)) {
+    markDatabaseUnavailable(err);
     res.status(503).json({
       ok: false,
       error:
-        "Database is unavailable. Check DATABASE_URL in backend/.env and ensure MongoDB is running.",
+        config.NODE_ENV === "production"
+          ? "This service is temporarily unavailable. Please try again shortly."
+          : "Database is unavailable. Check DATABASE_URL in backend/.env and that MongoDB is running.",
     });
+    return;
+  }
+
+  // Malformed JSON bodies from body-parser.
+  if (err?.type === "entity.parse.failed") {
+    res.status(400).json({ ok: false, error: "Invalid JSON body" });
+    return;
+  }
+  if (err?.type === "entity.too.large") {
+    res.status(413).json({ ok: false, error: "Request body is too large" });
     return;
   }
 
@@ -38,11 +48,8 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
       : err.message || "Internal server error";
 
   if (status >= 500) {
-    console.error("[error]", err);
+    console.error(`[error] ${req.method} ${req.originalUrl}`, err);
   }
 
-  res.status(status).json({
-    ok: false,
-    error: message,
-  });
+  res.status(status).json({ ok: false, error: message });
 };

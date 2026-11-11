@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleReadingProgress } from "@/components/blog/ArticleReadingProgress";
 import { ArticleShareBar } from "@/components/blog/ArticleShareBar";
@@ -14,19 +15,50 @@ import {
 } from "@/lib/blog";
 import { cloudinaryTransformUrl } from "@/lib/media";
 import { site } from "@/lib/site-data";
-import { brandIconAbsoluteUrl, ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
+import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
 import { breadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/structured-data";
+
+/** The service (or page) each article leads to — a contextual next step for readers. */
+function articleService(post: BlogPost): { href: string; label: string; pitch: string } {
+  const bySlug: Record<string, { href: string; label: string; pitch: string }> = {
+    "working-with-us-teams": { href: "/software-development-usa", label: "How US teams work with us", pitch: "Calls in your morning, weekly demos, one team." },
+    "hire-it-services-company": { href: "/it-services", label: "IT services for companies anywhere", pitch: "Web apps, AI, and marketing from one accountable team." },
+  };
+  if (bySlug[post.slug]) return bySlug[post.slug];
+  if (/ai|ml/i.test(post.category)) return { href: "/services/ai-machine-ml", label: "AI & machine learning services", pitch: "AI features with a job, a measure, and a fallback." };
+  if (/growth|seo|marketing/i.test(post.category)) return { href: "/services/digital-marketing", label: "Digital marketing & SEO services", pitch: "Technical SEO and campaigns aimed at a product that loads." };
+  return { href: "/services/web-app-eng", label: "Web & app development services", pitch: "SaaS products, mobile apps, and the APIs behind them." };
+}
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function absoluteUrl(url: string): string {
+  return url.startsWith("http") ? url : `${siteBaseUrl()}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+/** Branded card with the post title — unique per post. */
+function articleCardImage(post: BlogPost): string {
+  return absoluteUrl(ogImagePath(post.title, post.category || "Blog"));
+}
+
+/**
+ * Share image: the post's own OG image or Cloudinary cover when it has one; otherwise the branded
+ * title card (the built-in posts share a few stock covers, which would make every preview identical).
+ */
 function articleImage(post: BlogPost): string {
-  return (
-    cloudinaryTransformUrl(post.ogImage ?? post.coverImage, { width: 1200 }) ??
-    post.coverImage?.secureUrl ??
-    `${siteBaseUrl()}${ogImagePath(post.title, post.category || "Blog")}`
-  );
+  const own = cloudinaryTransformUrl(post.ogImage ?? post.coverImage, { width: 1200 });
+  if (own && own.includes("cloudinary.com")) return own;
+  return articleCardImage(post);
+}
+
+/** Every image Google may use for the article, as absolute URLs. */
+function articleImages(post: BlogPost): string[] {
+  const images = [articleImage(post)];
+  const cover = post.coverImage?.secureUrl;
+  if (cover) images.push(absoluteUrl(cover));
+  return [...new Set(images)];
 }
 
 function articleJsonLd(post: BlogPost) {
@@ -39,7 +71,7 @@ function articleJsonLd(post: BlogPost) {
       "@id": `${url}#article`,
       headline: post.metaTitle ?? post.title,
       description: post.metaDescription ?? post.excerpt,
-      image: [articleImage(post)],
+      image: articleImages(post),
       datePublished: post.publishedAt,
       dateModified: post.publishedAt,
       inLanguage: "en",
@@ -56,7 +88,8 @@ function articleJsonLd(post: BlogPost) {
         "@type": "Organization",
         "@id": ORGANIZATION_ID,
         name: site.name,
-        logo: { "@type": "ImageObject", url: brandIconAbsoluteUrl() },
+        url: siteBaseUrl(),
+        logo: { "@type": "ImageObject", url: `${siteBaseUrl()}/brand/novaro-icon.png` },
       },
       isPartOf: { "@type": "Blog", "@id": `${siteBaseUrl()}/blog#blog`, name: `${site.name} blog` },
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -185,6 +218,16 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
           </div>
         )}
       </div>
+
+      <aside className="wrap article-next" aria-label="Next step">
+        <div className="article-next__card">
+          <span className="eyebrow">Next step</span>
+          <p>
+            <Link href={articleService(post).href}>{articleService(post).label}</Link> —{" "}
+            {articleService(post).pitch} Or <Link href="/contact">send us a short brief</Link>.
+          </p>
+        </div>
+      </aside>
 
       {related.length > 0 && (
         <section className="sec article-related">

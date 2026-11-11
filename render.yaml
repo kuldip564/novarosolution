@@ -4,11 +4,16 @@ services:
     runtime: node
     rootDir: backend
     plan: free
-    buildCommand: npm install && npm run build
+    # --include=dev: prisma and typescript are needed to build even though NODE_ENV=production.
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm run start
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
+      # Render puts one proxy in front of the app; needed for per-visitor rate limits.
+      - key: TRUST_PROXY
+        value: "1"
       - key: CORS_ORIGIN
         sync: false
       - key: DATABASE_URL
@@ -24,6 +29,19 @@ services:
       - key: CLOUDINARY_API_KEY
         sync: false
       - key: CLOUDINARY_API_SECRET
+        sync: false
+      # Optional: email every new enquiry to MAIL_TO (also the backup when the database is down).
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_TO
+        sync: false
+      - key: MAIL_FROM
         sync: false
 
   - type: web
@@ -43,4 +61,9 @@ services:
       - key: NEXT_PUBLIC_API_URL
         sync: false
       - key: NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        sync: false
+      # Search Console / Bing Webmaster "HTML tag" verification codes (content value only).
+      - key: NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+        sync: false
+      - key: NEXT_PUBLIC_BING_SITE_VERIFICATION
         sync: false

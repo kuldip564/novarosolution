@@ -52,8 +52,15 @@ export const rootMetadata: Metadata = {
   icons: siteIcons,
   manifest: "/site.webmanifest",
   robots: defaultRobots,
-  alternates: {
-    canonical: "/",
+  // No canonical here: a layout-level canonical would make any page without its own point at "/".
+  // Each page sets its own (home included) via createPageMetadata / generateMetadata.
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
+      : {}),
   },
   other: geoMetaTags(),
   openGraph: {

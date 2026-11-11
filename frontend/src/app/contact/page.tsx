@@ -1,10 +1,9 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { LocalPresence } from "@/components/sections/LocalPresence";
 import { CtaBand } from "@/components/sections/CtaBand";
+import { ContactForm } from "@/components/sections/ContactForm";
 import { FaqSection, mapDbFaqs } from "@/components/sections/FaqSection";
 import { PageHead } from "@/components/sections/PageHead";
-import { Skeleton } from "@/components/ui/Skeleton";
 import { getPublishedFaqs, getSiteContent } from "@/lib/content";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { contactKeywords } from "@/lib/geo-seo";
@@ -17,18 +16,6 @@ import {
 } from "@/lib/site-data";
 import { contactPageDefaults } from "@/lib/page-content-defaults";
 
-const ContactForm = dynamic(
-  () => import("@/components/sections/ContactForm").then((m) => m.ContactForm),
-  {
-    loading: () => (
-      <div className="contact-form-skeleton">
-        <Skeleton className="skeleton-field" />
-        <Skeleton className="skeleton-field" />
-        <Skeleton className="skeleton-field skeleton-field-lg" />
-      </div>
-    ),
-  },
-);
 
 export const revalidate = 30;
 

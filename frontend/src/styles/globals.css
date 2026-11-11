@@ -2475,7 +2475,11 @@ html.site--bg-3d .services-cinema {
   stroke-width: 1.7;
 }
 
-.info-card h4 {
+.info-card h4,
+.info-card .info-card__title {
+  display: block;
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 600;
   color: var(--text-heading);
   font-size: 1rem;
   margin-bottom: 3px;
@@ -2510,7 +2514,8 @@ html.site--bg-3d .services-cinema {
   box-shadow: var(--shadow-card);
 }
 
-.contact-expect h4 {
+.contact-expect h4,
+.contact-expect .contact-expect__title {
   color: var(--text-heading);
   font-size: 1rem;
   margin-bottom: 12px;

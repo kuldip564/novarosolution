@@ -158,6 +158,15 @@ export default async function WorkCasePage({ params }: Props) {
                   ))}
                 </dd>
               </div>
+              <div>
+                <dt>Services</dt>
+                <dd className="case__services">
+                  <Link href="/services/web-app-eng">Web &amp; app development</Link>
+                  {/commerce|d2c/i.test(project.category) ? (
+                    <Link href="/services/digital-marketing">Digital marketing &amp; SEO</Link>
+                  ) : null}
+                </dd>
+              </div>
               {project.externalUrl && domain ? (
                 <div>
                   <dt>Live site</dt>

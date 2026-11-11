@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { isDatabaseAvailable, markDatabaseUnavailable } from "../../lib/dbHealth.js";
+import { isDatabaseConnectionError } from "../../lib/dbErrors.js";
 import { prisma } from "../../lib/prisma.js";
 import { parseCloudinaryAsset } from "../../types/media.js";
 import { computeReadingTime, publishedPostWhere, sanitizeRichText } from "../../utils/blog.js";
@@ -19,7 +20,7 @@ router.use(async (_req, res, next) => {
 });
 
 function onDbError(error: unknown, next: (error: unknown) => void) {
-  markDatabaseUnavailable();
+  if (isDatabaseConnectionError(error)) markDatabaseUnavailable(error);
   next(error);
 }
 

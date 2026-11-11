@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { isDatabaseAvailable, markDatabaseUnavailable } from "../../lib/dbHealth.js";
+import { isDatabaseConnectionError } from "../../lib/dbErrors.js";
 import { prisma } from "../../lib/prisma.js";
 
 const router = Router();
@@ -16,7 +17,7 @@ router.use(async (_req, res, next) => {
 });
 
 function onDbError(error: unknown, next: (error: unknown) => void) {
-  markDatabaseUnavailable();
+  if (isDatabaseConnectionError(error)) markDatabaseUnavailable(error);
   next(error);
 }
 

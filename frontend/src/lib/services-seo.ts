@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { servicesKeywords } from "./geo-seo";
 import { site } from "./site-data";
 import type { ServiceDetailView } from "./services-content";
-import { ORGANIZATION_ID } from "./structured-data";
-import { brandIconAbsoluteUrl, ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "./site-metadata";
+import { ORGANIZATION_ID, WEBSITE_ID } from "./structured-data";
+import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const servicesPagePath = "/services";
 
@@ -76,37 +76,15 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
   };
 
   const webPage = {
-    "@type": "WebPage",
+    "@type": "CollectionPage",
     "@id": `${pageUrl}#webpage`,
     url: pageUrl,
     name: servicesSeoTitle,
     description: servicesSeoDescription,
-    isPartOf: {
-      "@type": "WebSite",
-      name: site.name,
-      url: base,
-    },
-    about: {
-      "@type": "Organization",
-      name: site.name,
-      url: base,
-    },
-  };
-
-  const provider = {
-    "@type": "Organization",
-    "@id": ORGANIZATION_ID,
-    name: site.name,
-    url: base,
-    logo: brandIconAbsoluteUrl(),
-    email: site.email,
-    telephone: site.phone,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Gandhinagar",
-      addressRegion: "Gujarat",
-      addressCountry: "IN",
-    },
+    inLanguage: "en",
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
   };
 
   const serviceNodes = services.map((service) => ({
@@ -115,7 +93,7 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
     name: service.title,
     description: service.description,
     serviceType: service.title,
-    url: `${pageUrl}#service-${service.slug}`,
+    url: `${base}/services/${service.slug}`,
     provider: { "@id": ORGANIZATION_ID },
     areaServed: "Worldwide",
     ...(service.tools.length > 0
@@ -127,6 +105,6 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
 
   return {
     "@context": "https://schema.org",
-    "@graph": [provider, webPage, breadcrumb, ...serviceNodes],
+    "@graph": [webPage, breadcrumb, ...serviceNodes],
   };
 }

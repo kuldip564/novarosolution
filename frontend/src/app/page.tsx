@@ -1,6 +1,5 @@
-import dynamic from "next/dynamic";
+import { HomeBelowFold } from "@/components/home/HomeBelowFold";
 import { HomeHero } from "@/components/home/HomeHero";
-import { PageSkeleton } from "@/components/ui/Skeleton";
 import {
   getPublishedFaqs,
   getPublishedLogos,
@@ -28,15 +27,6 @@ export const revalidate = 30;
 
 export const metadata = homePageMetadata();
 
-const HomeBelowFold = dynamic(
-  () =>
-    import("@/components/home/HomeBelowFold").then((mod) => ({
-      default: mod.HomeBelowFold,
-    })),
-  {
-    loading: () => <PageSkeleton />,
-  },
-);
 
 export default async function HomePage() {
   const [

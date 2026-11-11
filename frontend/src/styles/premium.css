@@ -1517,3 +1517,65 @@ html[data-theme="light"].site--bg-3d body .home-cinema .home-work {
     grid-column: 2;
   }
 }
+
+/* ── Contextual internal links ── */
+.svc-reading__head {
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.svc-reading__head h2 {
+  margin: 0.7rem 0 0;
+  max-width: 32ch;
+  font-family: var(--font-sora), sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--text-heading);
+  text-wrap: balance;
+}
+
+.article-next {
+  margin-top: 0;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.article-next__card {
+  max-width: 920px;
+  margin-inline: auto;
+  padding: 1.2rem 1.4rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--cyan) 28%, var(--line-d));
+  background:
+    radial-gradient(ellipse 70% 90% at 0% 0%, color-mix(in srgb, var(--cyan) 10%, transparent), transparent 60%),
+    var(--surface-card);
+}
+
+.article-next__card p {
+  margin: 0.55rem 0 0;
+  line-height: 1.65;
+  color: var(--text-soft);
+}
+
+.article-next__card a {
+  font-weight: 600;
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.case__services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+}
+
+[data-theme="light"] .article-next__card {
+  background:
+    radial-gradient(ellipse 70% 90% at 0% 0%, rgba(37, 99, 235, 0.06), transparent 60%),
+    #ffffff;
+  border-color: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .article-next__card a {
+  color: var(--blue);
+}

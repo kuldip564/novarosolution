@@ -64,8 +64,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Blog" }]}
       />
 
-      <section className="sec blog-listing">
+      <section className="sec blog-listing" aria-labelledby="blog-articles-title">
         <div className="wrap">
+          <h2 id="blog-articles-title" className="sr-only">
+            {category ? `${category} articles` : "Latest articles"}
+          </h2>
           <Suspense fallback={null}>
             <BlogFilters categories={data.categories} activeCategory={category} />
           </Suspense>

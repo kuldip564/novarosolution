@@ -54,6 +54,8 @@ export function ContactFormInner() {
     setValue("services", next, { shouldValidate: true });
   }
 
+  const unreachableMessage = `We couldn't reach our server just now. Please try again in a minute, or email ${site.email} / call ${site.phone} — we reply within one business day.`;
+
   async function onSubmit(values: ContactFormValues) {
     setServerError(null);
 
@@ -74,9 +76,7 @@ export function ContactFormInner() {
         result = (await response.json()) as typeof result;
       } catch {
         if (!response.ok) {
-          throw new Error(
-            "Cannot reach the server. Run npm run dev from the project root so the API starts on port 5001.",
-          );
+          throw new Error(unreachableMessage);
         }
       }
 
@@ -96,10 +96,13 @@ export function ContactFormInner() {
       gtag?.("event", "generate_lead", { page_path: window.location.pathname });
       reset();
     } catch (error) {
+      // A network failure (offline, server asleep) surfaces as a TypeError from fetch.
       const message =
-        error instanceof Error
-          ? error.message
-          : "Could not send your message. Please try again.";
+        error instanceof TypeError
+          ? unreachableMessage
+          : error instanceof Error
+            ? error.message
+            : "Could not send your message. Please try again.";
       setServerError(message);
       push(message, "error");
     }
@@ -210,7 +213,7 @@ export function ContactFormInner() {
                 </svg>
               </div>
               <div>
-                <h4>Email</h4>
+                <strong className="info-card__title">Email</strong>
                 <a href={`mailto:${site.email}`}>{site.email}</a>
               </div>
             </div>
@@ -221,7 +224,7 @@ export function ContactFormInner() {
                 </svg>
               </div>
               <div>
-                <h4>Phone</h4>
+                <strong className="info-card__title">Phone</strong>
                 <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
               </div>
             </div>
@@ -233,7 +236,7 @@ export function ContactFormInner() {
                 </svg>
               </div>
               <div>
-                <h4>Studio</h4>
+                <strong className="info-card__title">Studio</strong>
                 <p>{site.location}</p>
               </div>
             </div>
@@ -245,7 +248,7 @@ export function ContactFormInner() {
                 </svg>
               </div>
               <div>
-                <h4>Business hours</h4>
+                <strong className="info-card__title">Business hours</strong>
                 <p>{site.businessHours}</p>
               </div>
             </div>
@@ -266,7 +269,7 @@ export function ContactFormInner() {
               </div>
             </div>
             <div className="contact-expect">
-              <h4>What happens next</h4>
+              <h2 className="contact-expect__title">What happens next</h2>
               <ol>
                 <li>We review your brief within one business day.</li>
                 <li>A 30-minute discovery call to understand goals and constraints.</li>

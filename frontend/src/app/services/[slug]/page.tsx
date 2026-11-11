@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { PageHead } from "@/components/sections/PageHead";
+import { getAllBlogPosts, type BlogPost } from "@/lib/blog";
 import { getPublishedServices, getSiteContent } from "@/lib/content";
 import {
   buildServiceDetails,
@@ -81,6 +83,14 @@ const serviceMetaDescription: Record<string, string> = {
     "Cloud architecture on AWS or GCP, CI/CD pipelines, monitoring and design systems — built by the team that ships your app, so nothing is lost in handover.",
 };
 
+/** Articles that answer questions about each service (internal links for readers and crawlers). */
+const relatedPostSlugs: Record<string, string[]> = {
+  "web-app-eng": ["saas-mvp-cost-factors", "web-app-development-expect", "custom-vs-off-the-shelf"],
+  "ai-machine-ml": ["ai-prod-apps", "ship-fast-stack", "hire-it-services-company"],
+  "digital-marketing": ["tech-seo-tips", "web-app-development-expect", "working-with-us-teams"],
+  "cloud-devops": ["ship-fast-stack", "web-app-development-expect", "hire-it-services-company"],
+};
+
 type Props = { params: Promise<{ slug: string }> };
 
 async function loadService(slug: string): Promise<ServiceDetailView | null> {
@@ -122,6 +132,13 @@ export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
   const service = await loadService(slug);
   if (!service) notFound();
+
+  const allPosts = await getAllBlogPosts().catch(() => []);
+  const wanted = relatedPostSlugs[service.slug] ?? [];
+  const relatedPosts = [
+    ...wanted.map((slug) => allPosts.find((post) => post.slug === slug)).filter((post): post is BlogPost => Boolean(post)),
+    ...allPosts.filter((post) => !wanted.includes(post.slug)),
+  ].slice(0, 3);
 
   const path = `/services/${service.slug}`;
   const jsonLd = [
@@ -218,6 +235,22 @@ export default async function ServicePage({ params }: Props) {
           )}
         </div>
       </section>
+      {relatedPosts.length > 0 ? (
+        <section className="sec svc-reading" aria-labelledby="svc-reading-title">
+          <div className="wrap">
+            <header className="svc-reading__head">
+              <span className="eyebrow">Related reading</span>
+              <h2 id="svc-reading-title">Questions teams ask before a {service.title.toLowerCase()} project</h2>
+            </header>
+            <div className="blog-grid compact">
+              {relatedPosts.map((post, index) => (
+                <BlogPostCard key={post.id} post={post} delay={index * 0.06} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <CtaBand
         eyebrow="Let's talk"
         title={`Start a ${service.title} project`}

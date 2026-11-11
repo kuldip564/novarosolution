@@ -26,8 +26,15 @@ const envSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
+  /** Proxy hops in front of Express (Render = 1). "false" disables. Defaults to 1 in production. */
+  TRUST_PROXY: z.string().optional(),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().int().positive().optional(),
+  /** true for port 465 (implicit TLS); false/empty for 587 (STARTTLS). */
+  SMTP_SECURE: z
+    .string()
+    .optional()
+    .transform((value) => (value ? ["1", "true", "yes"].includes(value.toLowerCase()) : undefined)),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   MAIL_TO: z.string().email().optional(),
@@ -51,6 +58,20 @@ export function getCorsOrigins(): string[] {
   return config.CORS_ORIGIN.split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
+}
+
+/** Express "trust proxy" value: hop count behind the load balancer, or false. */
+export function getTrustProxy(): number | boolean {
+  const raw = config.TRUST_PROXY?.trim().toLowerCase();
+  if (!raw) return config.NODE_ENV === "production" ? 1 : false;
+  if (raw === "false" || raw === "0") return false;
+  if (raw === "true") return true;
+  const hops = Number(raw);
+  return Number.isInteger(hops) && hops > 0 ? hops : 1;
+}
+
+export function isMailConfigured(): boolean {
+  return Boolean(config.SMTP_HOST && config.MAIL_TO);
 }
 
 export function isCloudinaryConfigured(): boolean {

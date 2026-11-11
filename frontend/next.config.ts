@@ -58,6 +58,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Same site on Render's default domain — keep it out of search results (canonical is www).
+        source: "/:path*",
+        has: [{ type: "host", value: "(?<host>.+\\.onrender\\.com)" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/admin/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
         source: "/images/:path*",
         headers: [
           {
