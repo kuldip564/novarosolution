@@ -127,6 +127,8 @@ GA4 recorded a `generate_lead` event, but that was the only one. There was nothi
 
 ## 5. Measurement plan (GA4)
 
+> **Superseded on 12 November 2026:** event names were aligned with the measurement plan. `cta_click` on primary buttons is now `primary_cta_click`; `email_click`, `phone_click` and `whatsapp_click` are `click_email`, `click_phone` and `click_whatsapp`; `case_study_view` is `project_view`; and `form_submit` and `service_page_view` were added. The current list is in [measurement-plan.md](measurement-plan.md).
+
 All events come from `frontend/src/lib/analytics.ts`. **No personal data is ever sent**: no names, emails, phone numbers or message text.
 
 | Event | Fires when | Parameters | Mark as key event? |

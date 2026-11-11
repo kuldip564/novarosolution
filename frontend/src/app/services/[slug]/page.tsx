@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { ServiceEngagement } from "@/components/analytics/ServiceEngagement";
+import { TrackEvent } from "@/components/analytics/TrackEvent";
 import { Reveal } from "@/components/anim/Reveal";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { Button } from "@/components/Button";
@@ -146,6 +147,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <main className="svcp">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
+      <TrackEvent event="service_page_view" params={{ service: service.slug, service_name: name }} />
       <ServiceEngagement service={service.slug} />
       <PageHead
         eyebrow={copy?.eyebrow ?? "Services"}

@@ -109,6 +109,10 @@ export function ContactFormInner() {
         : ""
     }`;
 
+    // The form passed browser validation and is being sent. This is an attempt, not a lead:
+    // the lead is `generate_lead`, after the server confirms it.
+    track("form_submit", { form_id: "contact", page_path: window.location.pathname });
+
     try {
       const response = await apiFetch("/api/contact", {
         method: "POST",

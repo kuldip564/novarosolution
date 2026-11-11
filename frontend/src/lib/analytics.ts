@@ -10,17 +10,32 @@
  * always queued before the event; events from before the loader exists are replayed by it.
  */
 
+/**
+ * Event names (see docs/measurement-plan.md for parameters and which one is a key event):
+ *  generate_lead            the server confirmed an enquiry (the only conversion)
+ *  form_submit              a valid form was sent to the server (attempt, not yet a lead)
+ *  form_start / form_validation_error / form_submit_error   funnel and error diagnostics
+ *  primary_cta_click        click on a primary (filled) call-to-action button
+ *  cta_click                click on a secondary button
+ *  click_email / click_phone / click_whatsapp   contact-link clicks (intent, not leads)
+ *  service_page_view        a service detail page was opened
+ *  service_page_engagement  the reader scrolled half of it or stayed 30 s
+ *  project_view             a case-study page was opened
+ */
 export type AnalyticsEvent =
   | "generate_lead"
+  | "form_submit"
   | "form_start"
   | "form_validation_error"
   | "form_submit_error"
+  | "primary_cta_click"
   | "cta_click"
-  | "email_click"
-  | "phone_click"
-  | "whatsapp_click"
-  | "case_study_view"
-  | "service_page_engagement";
+  | "click_email"
+  | "click_phone"
+  | "click_whatsapp"
+  | "service_page_view"
+  | "service_page_engagement"
+  | "project_view";
 
 type Params = Record<string, string | number | boolean | undefined>;
 

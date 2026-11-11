@@ -116,7 +116,7 @@ export default async function WorkCasePage({ params }: Props) {
     return (
       <main className="cs">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
-        <TrackEvent event="case_study_view" params={{ case_study: project.slug }} />
+        <TrackEvent event="project_view" params={{ project: project.slug, project_type: content?.projectType ?? project.category }} />
         <CaseStudyView content={content} project={project} moreProjects={moreProjects} />
       </main>
     );
@@ -125,7 +125,7 @@ export default async function WorkCasePage({ params }: Props) {
   // Projects added in the admin without long-form copy keep the short layout.
   return (
     <main>
-      <TrackEvent event="case_study_view" params={{ case_study: project.slug }} />
+      <TrackEvent event="project_view" params={{ project: project.slug, project_type: project.category }} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
