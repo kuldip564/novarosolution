@@ -58,9 +58,12 @@ export const rootMetadata: Metadata = {
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
       ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
       : {}),
-    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
-      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
-      : {}),
+    other: {
+      "probely-verification": "3426b8c7-9cb8-4662-8dc2-9707715bc2f6",
+      ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+        ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+        : {}),
+    },
   },
   other: geoMetaTags(),
   openGraph: {
