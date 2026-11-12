@@ -29,14 +29,17 @@ const Cursor = dynamic(
  * Decorative WebGL background and custom cursor. They wait for the load event plus an idle
  * moment, so three.js never competes with first paint, hydration or the first interaction.
  */
-function DesktopEffects() {
+/** Pages that run their own WebGL scene: the global background stays off there (one canvas per page). */
+const OWN_SCENE_PATHS = new Set(["/work"]);
+
+function DesktopEffects({ pathname }: { pathname: string }) {
   const { ready, effectsEnabled } = useMotionSettings();
   const idle = useAfterLoad(ready && effectsEnabled);
 
   if (!ready || !effectsEnabled || !idle) return null;
   return (
     <>
-      <SiteBackground />
+      {OWN_SCENE_PATHS.has(pathname) ? null : <SiteBackground />}
       <Cursor />
     </>
   );
@@ -63,7 +66,7 @@ export function SiteShell({ children }: SiteShellProps) {
           Skip to main content
         </a>
         <ScrollProgressBar />
-        <DesktopEffects />
+        <DesktopEffects pathname={pathname} />
         <Header />
         <div className="page" id="main-content" tabIndex={-1}>
           {children}
