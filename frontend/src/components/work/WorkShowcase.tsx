@@ -31,7 +31,7 @@ function PhoneFrame({ shot, className = "" }: { shot: CaseStudyScreenshot; class
   return (
     <figure className={`wk-frame wk-frame--phone ${className}`.trim()}>
       <div className="wk-frame__media">
-        <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes="(max-width: 767px) 40vw, 220px" />
+        <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes="(max-width: 767px) 60vw, 220px" />
       </div>
     </figure>
   );
@@ -114,12 +114,12 @@ function Visual({ project, variant }: { project: WorkProject; variant: Variant }
   const wide = variant === "full" || variant === "offset";
   const main = variant === "split" && second ? second : first;
   return (
-    <div className="wk-visual" data-wk-tilt>
+    <div className={`wk-visual${project.mobile ? " wk-visual--has-phone" : ""}`} data-wk-tilt>
       <BrowserFrame
         shot={main}
         domain={project.domain}
         className="wk-visual__main"
-        sizes={wide ? "(max-width: 767px) 100vw, (max-width: 1279px) 90vw, 1100px" : "(max-width: 767px) 100vw, (max-width: 1279px) 60vw, 760px"}
+        sizes={wide ? "(max-width: 1279px) 90vw, 1100px" : "(max-width: 1279px) 60vw, 760px"}
       />
       {variant === "offset" && second ? (
         <BrowserFrame shot={second} domain={project.domain} className="wk-visual__second" sizes="(max-width: 1023px) 1px, 520px" />
@@ -180,8 +180,9 @@ export function WorkShowcase({ projects }: { projects: WorkProject[] }) {
       { rootMargin: "-45% 0px -45% 0px" },
     );
     features.forEach((feature) => io.observe(feature));
+    // Visible only while the showcase covers the middle of the screen, so it never sits beside other sections.
     const section = new IntersectionObserver(([entry]) => setInView(Boolean(entry?.isIntersecting)), {
-      rootMargin: "-30% 0px -30% 0px",
+      rootMargin: "-48% 0px -48% 0px",
     });
     section.observe(root);
     return () => {
@@ -277,7 +278,11 @@ export function WorkShowcase({ projects }: { projects: WorkProject[] }) {
             <li key={project.slug}>
               <a href={`#project-${project.slug}`} aria-current={index === active ? "true" : undefined}>
                 <span className="wk-rail__dot" aria-hidden="true" />
-                <span className="wk-rail__label">{project.title}</span>
+                {/* Numbers keep the rail inside the page margin; names stay available to assistive tech. */}
+                <span className="wk-rail__label" aria-hidden="true">
+                  {project.number}
+                </span>
+                <span className="sr-only">{project.title}</span>
               </a>
             </li>
           ))}

@@ -36,7 +36,11 @@ const pad = (value: number) => String(value).padStart(2, "0");
 
 export default async function WorkPage() {
   const projects = toWorkProjects(mapDbProjectsToWork(await getPublishedProjects()));
-  const technologies = technologiesByProject(projects);
+  const allTechnologies = technologiesByProject(projects);
+  // Product technologies only; hosting and security headers are infrastructure, shown as a note.
+  const technologies = allTechnologies.filter((tech) => !["Vercel", "Content Security Policy"].includes(tech.name));
+  const vercel = allTechnologies.find((tech) => tech.name === "Vercel");
+  const allOnVercel = Boolean(vercel && vercel.projects.length === projects.length);
   const industries = industriesByProject(projects);
   const frameworks = technologies.filter((tech) => tech.name === "Next.js" || tech.name === "Expo");
   const liveCount = projects.filter((project) => project.liveUrl).length;
@@ -77,7 +81,7 @@ export default async function WorkPage() {
           <WorkHeroVisual />
           <div className="wrap wk-hero__inner">
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Work" }]} className="wk-hero__crumbs" />
-            <p className="wk-eyebrow wk-hero__eyebrow">Selected work / 2026</p>
+            <p className="wk-eyebrow wk-hero__eyebrow">Case studies / 2026</p>
             <h1 id="wk-hero-title" className="wk-hero__title">
               <span className="wk-line" style={{ ["--line" as string]: 0 }}>
                 Selected work.
@@ -180,14 +184,23 @@ export default async function WorkPage() {
               </p>
             </div>
             <div className="wk-stack">
-              <ul className="wk-stack__tech" aria-label="Technologies">
-                {technologies.map((tech, index) => (
-                  <li key={tech.name} data-wk-reveal style={{ ["--i" as string]: index % 4 }}>
-                    <strong>{tech.name}</strong>
-                    <span>{tech.projects.join(", ")}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="wk-stack__techwrap">
+                <ul className="wk-stack__tech" aria-label="Technologies">
+                  {technologies.map((tech, index) => (
+                    <li key={tech.name} data-wk-reveal style={{ ["--i" as string]: index % 4 }}>
+                      <strong>{tech.name}</strong>
+                      <span className="wk-stack__projects">
+                        {tech.projects.map((name) => (
+                          <span key={name}>{name}</span>
+                        ))}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                {allOnVercel ? (
+                  <p className="wk-stack__note">All {projects.length} sites are hosted on Vercel.</p>
+                ) : null}
+              </div>
               <ul className="wk-stack__industries" aria-label="Industries">
                 {industries.map((industry, index) => (
                   <li key={industry.name} data-wk-reveal style={{ ["--i" as string]: index }}>
@@ -224,8 +237,8 @@ export default async function WorkPage() {
                 </dd>
               </div>
               <div data-wk-reveal style={{ ["--i" as string]: 3 }}>
-                <dt>Facts checked on the live sites</dt>
-                <dd className="wk-numbers__text">Every one</dd>
+                <dt>Case-study facts checked on the live sites</dt>
+                <dd className="wk-numbers__text">All</dd>
               </div>
             </dl>
           </div>
@@ -246,8 +259,7 @@ export default async function WorkPage() {
             <div className="wk-closing__actions">
               <Button href="/contact">Start Your Project</Button>
               <p className="wk-closing__talk">
-                <span>Let&apos;s talk:</span> <a href={`mailto:${site.email}`}>{site.email}</a>
-                <span aria-hidden="true">·</span>
+                <span>Let&apos;s talk:</span> <a href={`mailto:${site.email}`}>{site.email}</a>{" "}
                 <a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a>
               </p>
             </div>

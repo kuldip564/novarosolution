@@ -73,9 +73,12 @@ export function WorkHeroVisual() {
       );
       io.observe(host);
 
+      // Hero height is cached on resize, so the scroll handler never reads layout.
+      let heroHeight = host.parentElement?.getBoundingClientRect().height || window.innerHeight;
       const ro = new ResizeObserver(([entry]) => {
         if (!entry) return;
         scene.resize(entry.contentRect.width, entry.contentRect.height);
+        heroHeight = host.parentElement?.getBoundingClientRect().height || window.innerHeight;
       });
       ro.observe(host);
 
@@ -83,10 +86,7 @@ export function WorkHeroVisual() {
         if (event.pointerType !== "mouse") return;
         scene.setPointer(event.clientX / window.innerWidth - 0.5, event.clientY / window.innerHeight - 0.5);
       };
-      const onScroll = () => {
-        const height = host.parentElement?.getBoundingClientRect().height || window.innerHeight;
-        scene.setScroll(window.scrollY / height);
-      };
+      const onScroll = () => scene.setScroll(window.scrollY / heroHeight);
       const onVisibility = () => wake();
       const onContextLost = (event: Event) => {
         event.preventDefault();

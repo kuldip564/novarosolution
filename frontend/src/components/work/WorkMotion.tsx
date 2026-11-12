@@ -25,12 +25,12 @@ export function WorkMotion({ children, className }: { children: ReactNode; class
           io.unobserve(entry.target);
         }
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px -4% 0px", threshold: 0.02 },
     );
 
     for (const el of targets) {
       const top = el.getBoundingClientRect().top;
-      if (top < window.innerHeight * 0.9) {
+      if (top < window.innerHeight * 0.96) {
         el.dataset.wkReveal = "in";
         continue;
       }
