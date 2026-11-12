@@ -168,7 +168,7 @@ export const locations: LocationEntry[] = [
       {
         question: "Do you work with companies in GIFT City?",
         answer:
-          "Yes. Fintech and SaaS are among the industries we build for, and the studio is a short drive from GIFT City for workshops and reviews.",
+          "Yes. We build web apps, SaaS dashboards and AI features for companies of any size, and the studio is a short drive from GIFT City for workshops and reviews.",
       },
       {
         question: "What does a project cost?",
@@ -271,7 +271,7 @@ export const locations: LocationEntry[] = [
       {
         question: "What kinds of Ahmedabad businesses do you work with?",
         answer:
-          "D2C and e-commerce brands, logistics and service companies, and teams building SaaS or fintech products. Our case studies include Zeevan, KankreG, Mr Antidot, and Quadrato Cargo.",
+          "D2C and e-commerce brands, logistics and home-service companies, and grocery delivery. Our case studies include VeggieKing, Zeevan, KankreG, Mr Antidot and Quadrato Cargo, and one of them, Mr Antidot, is based in Ahmedabad.",
       },
       {
         question: "How long does a website or web app take?",
@@ -333,7 +333,7 @@ export const usaLocation: LocationEntry = {
     "A first product or a rebuild when the current stack is slowing sales down.",
     "AI features with a fallback — document extraction, search, review queues.",
     "The marketing site and the product in the same codebase, so SEO and the app do not drift apart.",
-    "D2C storefronts, logistics platforms, healthcare services, and fintech tools.",
+    "D2C storefronts, a courier booking and tracking platform, a service-booking website, and grocery delivery apps.",
   ],
   data: {
     title: "US privacy rules, planned with you",
@@ -354,7 +354,7 @@ export const usaLocation: LocationEntry = {
     {
       question: "What do you build for US companies?",
       answer:
-        "Web apps, mobile products, AI features, and the marketing site around them. Recent work includes D2C storefronts, logistics platforms, healthcare services, and fintech tools.",
+        "Web apps, mobile products, AI features, and the marketing site around them. Recent work includes D2C storefronts, a courier booking and tracking platform, a service-booking website, and grocery delivery apps.",
     },
     {
       question: "How does a US company start a project?",

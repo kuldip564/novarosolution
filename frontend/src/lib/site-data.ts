@@ -43,12 +43,12 @@ export const site = {
     { name: "Vadodara", distance: "130 km" },
     { name: "Surat", distance: "265 km" },
   ],
+  /** Industries with a live case study behind them (see /work). Add one only with a project to show. */
   industries: [
-    "D2C & E-commerce",
-    "Logistics & Supply Chain",
-    "Healthcare & Services",
-    "Fintech & SaaS",
-    "Education & EdTech",
+    "D2C & e-commerce",
+    "Grocery delivery",
+    "Home & pest-control services",
+    "Logistics & courier",
   ],
   social: {
     linkedin: "https://www.linkedin.com/company/novaro-solution",

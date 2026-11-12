@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NotFoundPage } from "@/components/pages/NotFoundPage";
+import "@/styles/studio.css";
 
 export const metadata: Metadata = {
   title: { absolute: "Page not found — Novaro Solution" },

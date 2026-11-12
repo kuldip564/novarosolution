@@ -1899,3 +1899,13 @@
   }
 
 }
+
+/* Phones: the display titles read better in sentence case than in capitals */
+@media (max-width: 767px) {
+  .wk-hero__title,
+  .wk-intro__title,
+  .wk-closing__title {
+    text-transform: none;
+    letter-spacing: -0.045em;
+  }
+}

@@ -87,44 +87,10 @@ export function LocalPresence(_props: LocalPresenceProps) {
 
             <div className="local-meta-grid">
               <div className="local-meta">
-                <span className="local-meta__label">Phone</span>
-                <a href={`tel:${site.phone.replace(/\s/g, "")}`} itemProp="telephone">
-                  {site.phone}
-                </a>
-              </div>
-              <div className="local-meta">
-                <span className="local-meta__label">Email</span>
-                <a href={`mailto:${site.email}`} itemProp="email">
-                  {site.email}
-                </a>
-              </div>
-              <div className="local-meta">
                 <span className="local-meta__label">Hours</span>
                 <span itemProp="openingHours">{site.businessHours}</span>
               </div>
-              <div className="local-meta">
-                <span className="local-meta__label">Response</span>
-                <span>{site.responseTime}</span>
-              </div>
             </div>
-
-            <div className="local-areas">
-              <span className="local-areas__label">Service areas</span>
-              <ul className="local-areas__pills">
-                {site.serviceAreas.map((area) => (
-                  <li key={area}>
-                    {serviceAreaLinks[area] ? (
-                      <Link href={serviceAreaLinks[area]} className="local-areas__pill">
-                        {area}
-                      </Link>
-                    ) : (
-                      <span className="local-areas__pill">{area}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {site.nearbyCities.length > 0 && (
               <div className="local-nearby">
                 <span className="local-nearby__label">Nearby from our studio</span>

@@ -703,3 +703,101 @@
     transform: translateY(6px);
   }
 }
+
+/* ─────────────── 404 ─────────────── */
+.nf-hero {
+  min-height: min(86svh, 820px);
+}
+
+/* Phones: a smaller "404" above the heading, never behind text. Wide screens: a background accent. */
+.nf-code {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(4.5rem, 26vw, 7rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--st-blue) 38%, transparent);
+  pointer-events: none;
+}
+
+.nf-title {
+  max-width: none;
+  font-size: clamp(2.3rem, 7vw, 4.8rem);
+}
+
+.nf-links {
+  display: grid;
+  margin: clamp(2rem, 5vw, 3rem) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--st-line-strong);
+}
+
+.nf-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title go"
+    "body go";
+  align-items: center;
+  column-gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--st-line);
+  color: var(--st-ink);
+  transition: color 0.3s var(--st-ease);
+}
+
+.nf-link strong {
+  grid-area: title;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.nf-link span {
+  grid-area: body;
+  font-size: 0.92rem;
+  color: var(--st-muted);
+}
+
+.nf-link svg {
+  grid-area: go;
+  transition: transform 0.4s var(--st-ease);
+}
+
+.nf-link:hover {
+  color: var(--st-blue-ink);
+}
+
+.nf-link:hover svg {
+  transform: translate(3px, -3px);
+}
+
+@media (min-width: 900px) {
+  .nf-code {
+    position: absolute;
+    right: -0.06em;
+    top: calc(var(--site-header-h, 72px) + 1rem);
+    z-index: -1;
+    margin: 0;
+    font-size: clamp(10rem, 20vw, 18rem);
+  }
+
+  .nf-links {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    max-width: 960px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nf-code {
+    animation: st-float 8s ease-in-out infinite alternate;
+  }
+
+  .nf-links {
+    animation: st-rise 0.7s var(--st-ease) 0.55s both;
+  }
+}

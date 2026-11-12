@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/Badge";
 import { Field, Input, Select, TextArea } from "@/components/ui/Field";
 import { track } from "@/lib/analytics";
 import { apiFetch } from "@/lib/api";
-import { serviceAreaLinks } from "@/lib/locations";
 import {
   contactFormResolver,
   isContactFormField,
@@ -435,22 +434,6 @@ export function ContactFormInner() {
                 <p>{site.businessHours}</p>
               </div>
             </div>
-            <div className="contact-service-areas">
-              <span className="contact-service-areas__label">We serve</span>
-              <div className="contact-service-areas__pills">
-                {site.serviceAreas.slice(0, 7).map((area) =>
-                  serviceAreaLinks[area] ? (
-                    <Link key={area} href={serviceAreaLinks[area]} className="contact-service-areas__pill">
-                      {area}
-                    </Link>
-                  ) : (
-                    <span key={area} className="contact-service-areas__pill">
-                      {area}
-                    </span>
-                  ),
-                )}
-              </div>
-            </div>
             <div className="contact-expect">
               <h2 className="contact-expect__title">What happens next</h2>
               <ol>
@@ -459,7 +442,7 @@ export function ContactFormInner() {
                 <li>A scoped proposal with timeline, team, and budget options.</li>
               </ol>
               <p className="contact-industries">
-                <strong>Industries we work with:</strong> {site.industries.join(" · ")}
+                <strong>Industries we have shipped for:</strong> {site.industries.join(" · ")}
               </p>
             </div>
           </Reveal>

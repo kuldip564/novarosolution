@@ -1,0 +1,299 @@
+/* ─────────────────────────────────────────────────────────────
+   Site footer. Same palette as the studio pages; compact on phones, with 40px+ tap rows
+   and a service-area row that scrolls sideways instead of wrapping into a block.
+   ───────────────────────────────────────────────────────────── */
+
+.ft {
+  --ft-bg: #f5f7fa;
+  --ft-ink: #101a35;
+  --ft-muted: #566079;
+  --ft-blue: #1d4ed8;
+  --ft-line: rgba(16, 26, 53, 0.1);
+  --ft-card: #ffffff;
+  position: relative;
+  z-index: 1;
+  padding: clamp(48px, 7vw, 80px) 0 calc(28px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--ft-line);
+  background: var(--ft-bg);
+  color: var(--ft-ink);
+}
+
+[data-theme="dark"] .ft {
+  --ft-bg: #050914;
+  --ft-ink: #eef2fb;
+  --ft-muted: #a7b2c7;
+  --ft-blue: #8fb0ff;
+  --ft-line: rgba(255, 255, 255, 0.09);
+  --ft-card: #0e1830;
+}
+
+.ft h2 {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ft-blue);
+}
+
+/* ── Top: brand + link columns ── */
+.ft-top {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.25rem;
+}
+
+.ft-brand {
+  grid-column: 1 / -1;
+}
+
+.ft-brand__about {
+  max-width: 38ch;
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ft-muted);
+}
+
+.ft-address {
+  max-width: 38ch;
+  margin-top: 0.75rem;
+  font-size: 0.86rem;
+  font-style: normal;
+  line-height: 1.55;
+  color: var(--ft-muted);
+}
+
+.ft-socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.1rem;
+}
+
+.ft-socials a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--ft-line);
+  border-radius: 12px;
+  background: var(--ft-card);
+  color: var(--ft-muted);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.ft-socials a:hover {
+  border-color: var(--ft-blue);
+  color: var(--ft-blue);
+}
+
+.ft-socials svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.ft-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ft-col li a {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  font-size: 0.94rem;
+  line-height: 1.35;
+  color: var(--ft-ink);
+  transition: color 0.2s ease;
+}
+
+.ft-col li a:hover {
+  color: var(--ft-blue);
+}
+
+.ft-contact {
+  grid-column: 1 / -1;
+}
+
+.ft-contact__link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ft-ink);
+  overflow-wrap: anywhere;
+}
+
+.ft-contact__link svg {
+  flex: none;
+  color: var(--ft-blue);
+}
+
+.ft-contact__link:hover {
+  color: var(--ft-blue);
+}
+
+.ft-contact__note {
+  margin: 0.5rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--ft-muted);
+}
+
+/* ── Service areas: one row that scrolls sideways on phones ── */
+.ft-areas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--ft-line);
+  border-bottom: 1px solid var(--ft-line);
+}
+
+.ft-areas__label {
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ft-blue);
+}
+
+.ft-areas__list {
+  display: flex;
+  flex: 1 1 100%;
+  gap: 8px;
+  /* Bleed to the screen edge on phones (the page gutter is at least 14px there). */
+  margin: 0 -14px;
+  padding: 2px 14px;
+  overflow-x: auto;
+  list-style: none;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ft-areas__list::-webkit-scrollbar {
+  display: none;
+}
+
+.ft-areas__list li {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+.ft-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--ft-line);
+  border-radius: 999px;
+  background: var(--ft-card);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ft-ink);
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+a.ft-pill:hover {
+  border-color: var(--ft-blue);
+  color: var(--ft-blue);
+}
+
+.ft-pill--dir {
+  color: var(--ft-blue);
+}
+
+/* ── Bottom line ── */
+.ft-bot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-top: 1.25rem;
+}
+
+.ft-bot p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ft-muted);
+}
+
+.ft-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.1rem;
+}
+
+.ft-legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  font-size: 0.85rem;
+  color: var(--ft-muted);
+}
+
+.ft-legal a:hover {
+  color: var(--ft-blue);
+}
+
+@media (min-width: 720px) {
+  .ft-top {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ft-contact {
+    grid-column: auto;
+  }
+
+  .ft-areas__list {
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ft-top {
+    /* The contact column is wider so the email address never wraps mid-word */
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 2.5rem;
+  }
+
+  .ft-brand {
+    grid-column: auto;
+  }
+}
+
+@media (hover: none) {
+  .ft-socials a:active,
+  .ft-pill:active {
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-socials a:active,
+  .ft-pill:active {
+    transform: none;
+  }
+}

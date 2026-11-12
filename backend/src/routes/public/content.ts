@@ -10,7 +10,9 @@ router.use(async (_req, res, next) => {
     next();
     return;
   }
-  res.status(503).json({
+  // The public site already renders built-in content when this is down. 503 made every
+  // page load a failed request in the browser; ok:false is the fallback signal.
+  res.json({
     ok: false,
     error: "Database unavailable — using site fallbacks.",
   });

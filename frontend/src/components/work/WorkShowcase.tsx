@@ -11,7 +11,7 @@ import type { WorkProject } from "@/lib/work-portfolio";
 type Variant = "full" | "split" | "layered" | "offset";
 const VARIANTS: Variant[] = ["full", "split", "layered", "offset"];
 
-function BrowserFrame({ shot, domain, sizes, className = "" }: { shot: CaseStudyScreenshot; domain: string | null; sizes: string; className?: string }) {
+function BrowserFrame({ shot, domain, sizes, className = "", priority = false }: { shot: CaseStudyScreenshot; domain: string | null; sizes: string; className?: string; priority?: boolean }) {
   return (
     <figure className={`wk-frame wk-frame--browser ${className}`.trim()}>
       <div className="wk-frame__bar" aria-hidden="true">
@@ -21,24 +21,24 @@ function BrowserFrame({ shot, domain, sizes, className = "" }: { shot: CaseStudy
         {domain ? <em>{domain}</em> : null}
       </div>
       <div className="wk-frame__media">
-        <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes={sizes} />
+        <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes={sizes} priority={priority} />
       </div>
     </figure>
   );
 }
 
-function PhoneFrame({ shot, className = "" }: { shot: CaseStudyScreenshot; className?: string }) {
+function PhoneFrame({ shot, className = "", priority = false }: { shot: CaseStudyScreenshot; className?: string; priority?: boolean }) {
   return (
     <figure className={`wk-frame wk-frame--phone ${className}`.trim()}>
       <div className="wk-frame__media">
-        <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes="(max-width: 767px) 60vw, 220px" />
+        <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes="(max-width: 767px) 60vw, 220px" priority={priority} />
       </div>
     </figure>
   );
 }
 
 /** Branded stand-in when a project has no screenshots: never a fake product UI. */
-function BrandVisual({ project }: { project: WorkProject }) {
+function BrandVisual({ project, priority = false }: { project: WorkProject; priority?: boolean }) {
   return (
     <figure className="wk-frame wk-frame--brand">
       <div className="wk-frame__media wk-brand">
@@ -51,6 +51,7 @@ function BrandVisual({ project }: { project: WorkProject }) {
             transformWidth={1024}
             className="wk-brand__img"
             sizes="(max-width: 767px) 100vw, 60vw"
+            priority={priority}
           />
         ) : (
           <span className="wk-brand__mark" aria-hidden="true">
@@ -109,19 +110,19 @@ function Details({ project }: { project: WorkProject }) {
 }
 
 /** App projects: three phone screens side by side, the middle one raised. */
-function PhonesVisual({ project }: { project: WorkProject }) {
+function PhonesVisual({ project, priority = false }: { project: WorkProject; priority?: boolean }) {
   return (
     <div className="wk-visual wk-visual--phones" data-wk-tilt>
-      {project.phones.slice(0, 3).map((shot) => (
-        <PhoneFrame key={shot.src} shot={shot} />
+      {project.phones.slice(0, 3).map((shot, index) => (
+        <PhoneFrame key={shot.src} shot={shot} priority={priority && index === 0} />
       ))}
     </div>
   );
 }
 
-function Visual({ project, variant }: { project: WorkProject; variant: Variant }) {
+function Visual({ project, variant, priority = false }: { project: WorkProject; variant: Variant; priority?: boolean }) {
   const [first, second] = project.desktop;
-  if (!first) return project.phones.length > 1 ? <PhonesVisual project={project} /> : <BrandVisual project={project} />;
+  if (!first) return project.phones.length > 1 ? <PhonesVisual project={project} priority={priority} /> : <BrandVisual project={project} priority={priority} />;
   const wide = variant === "full" || variant === "offset";
   const main = variant === "split" && second ? second : first;
   return (
@@ -131,6 +132,7 @@ function Visual({ project, variant }: { project: WorkProject; variant: Variant }
         domain={project.domain}
         className="wk-visual__main"
         sizes={wide ? "(max-width: 1279px) 90vw, 1100px" : "(max-width: 1279px) 60vw, 760px"}
+        priority={priority}
       />
       {variant === "offset" && second ? (
         <BrowserFrame shot={second} domain={project.domain} className="wk-visual__second" sizes="(max-width: 1023px) 1px, 520px" />
@@ -161,7 +163,7 @@ function Feature({ project, index, total }: { project: WorkProject; index: numbe
           <Details project={project} />
         </div>
         <div className="wk-feature__stage" data-wk-reveal="" data-wk-frame>
-          <Visual project={project} variant={variant} />
+          <Visual project={project} variant={variant} priority={index === 0} />
         </div>
       </div>
     </article>

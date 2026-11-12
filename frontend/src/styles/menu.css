@@ -1,0 +1,106 @@
+/* ─────────────────────────────────────────────────────────────
+   Phone menu: numbered links from the top (no empty gap), a contact block, then the theme
+   switch and the main call to action. Entrance stagger comes from Header.tsx.
+   ───────────────────────────────────────────────────────────── */
+
+.mobile-menu .mobile-menu-nav {
+  justify-content: flex-start;
+  gap: 0;
+  padding-top: 4px;
+}
+
+.mobile-menu-nav .mobile-menu-link {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 60px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--line-d);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font-family: var(--font-sora), system-ui, sans-serif;
+  font-size: clamp(1.45rem, 6.4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+}
+
+.mobile-menu-link__num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--cyan);
+}
+
+.mobile-menu-link__go {
+  opacity: 0.4;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.mobile-menu-nav .mobile-menu-link.active {
+  padding-left: 4px;
+  background: none;
+  box-shadow: none;
+  color: var(--cyan);
+}
+
+.mobile-menu-nav .mobile-menu-link.active .mobile-menu-link__go,
+.mobile-menu-nav .mobile-menu-link:hover .mobile-menu-link__go,
+.mobile-menu-nav .mobile-menu-link:focus-visible .mobile-menu-link__go {
+  opacity: 1;
+}
+
+.mobile-menu-nav .mobile-menu-link:active .mobile-menu-link__go {
+  transform: translate(3px, -3px);
+}
+
+.mobile-menu-contact {
+  display: grid;
+  flex-shrink: 0;
+  gap: 2px;
+  margin-top: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--line-d);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--cyan) 6%, transparent);
+}
+
+.mobile-menu-contact__label {
+  margin: 0 0 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.mobile-menu-contact__link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.mobile-menu-contact__link svg {
+  flex: none;
+  color: var(--cyan);
+}
+
+@media (max-height: 700px) {
+  .mobile-menu-nav .mobile-menu-link {
+    min-height: 52px;
+    font-size: clamp(1.3rem, 5.6vw, 1.6rem);
+  }
+
+  .mobile-menu-contact {
+    margin-top: 0.75rem;
+  }
+}

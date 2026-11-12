@@ -365,18 +365,6 @@
     text-align: center;
   }
 
-  footer {
-    padding: 48px 0 32px;
-  }
-
-  .foot-grid {
-    gap: 28px;
-  }
-
-  .foot-col h2 {
-    margin-bottom: 12px;
-  }
-
   .toast-stack {
     left: max(16px, env(safe-area-inset-left, 0px));
     right: max(16px, env(safe-area-inset-right, 0px));
@@ -419,8 +407,7 @@
   .proc,
   .stats,
   .team,
-  .drawer-grid,
-  .foot-grid {
+  .drawer-grid {
     grid-template-columns: 1fr;
   }
 
@@ -499,48 +486,9 @@
   }
 }
 
-/* ── Phones & tablets: footer layout ── */
-@media (max-width: 600px) {
-  /* Brand and contact span the row; the two link lists sit side by side. */
-  .foot-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 28px 20px;
-  }
-
-  .foot-brand,
-  .foot-grid > .foot-col:last-child {
-    grid-column: 1 / -1;
-  }
-
-  .foot-brand p {
-    max-width: none;
-  }
-}
-
 /* ── Touch screens: comfortable tap targets (≈40–44px) ── */
 @media (pointer: coarse) {
-  .foot-col a {
-    display: flex;
-    align-items: center;
-    min-height: 40px;
-    margin-bottom: 0;
-  }
 
-  .foot-col span {
-    margin-bottom: 8px;
-  }
-
-  .foot-legal a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
-  }
-
-  .foot-legal {
-    gap: 0 18px;
-  }
-
-  .foot-geo-bar__directions,
   .local-map-card__link {
     min-height: 44px;
   }
@@ -564,7 +512,6 @@
   }
 
   /* Service-area chips that link to location pages */
-  a.foot-geo-bar__pill,
   a.contact-service-areas__pill,
   a.local-areas__pill {
     display: inline-flex;
@@ -577,5 +524,17 @@
     align-items: center;
     padding-block: 0.6rem;
     margin-block: -0.6rem;
+  }
+}
+
+/* Touch screens: chip rows and pills get comfortable tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .cs-toc a,
+  .svcp-toc a,
+  .legal-toc a,
+  .local-areas__pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 }

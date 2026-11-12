@@ -27,10 +27,6 @@ body {
   color: var(--navy);
 }
 
-[data-theme="light"] footer {
-  background: linear-gradient(180deg, var(--ink-850) 0%, #e8edf6 100%);
-  border-top-color: rgba(10, 23, 48, 0.08);
-}
 
 /* ── Header ── */
 
@@ -170,35 +166,6 @@ body {
 
 /* ── Footer ── */
 
-.foot-brand p {
-  text-wrap: pretty;
-  max-width: 36ch;
-  line-height: 1.65;
-}
-
-.foot-col a,
-.foot-col span {
-  transition: color 0.25s var(--ease);
-}
-
-.foot-col a:hover {
-  color: var(--cyan);
-}
-
-[data-theme="light"] .foot-col a:hover {
-  color: var(--blue);
-}
-
-[data-theme="light"] .socials a {
-  background: #ffffff;
-  border-color: rgba(10, 23, 48, 0.08);
-  box-shadow: 0 8px 20px -14px rgba(10, 23, 48, 0.12);
-}
-
-[data-theme="light"] .socials a:hover {
-  box-shadow: 0 12px 28px -12px rgba(37, 99, 235, 0.28);
-}
-
 /* ── About page ── */
 
 /* ── CTA bands ── */
@@ -249,7 +216,6 @@ img[data-nimg] {
   outline-color: var(--blue);
 }
 
-[data-theme="light"] .foot-geo-bar__label,
 [data-theme="light"] .local-address__label,
 [data-theme="light"] .local-meta__label {
   color: var(--blue);
@@ -260,76 +226,6 @@ img[data-nimg] {
    (homepage CLS measured 0.13–0.38). */
 
 /* ── Footer geo bar (local SEO) ── */
-
-.foot-geo-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1rem;
-  padding: 1rem 1.25rem;
-  margin-bottom: 2rem;
-  border-radius: 16px;
-  border: 1px solid var(--line-d);
-  background: color-mix(in srgb, var(--surface-stat) 90%, transparent);
-  box-shadow: var(--shadow-card);
-}
-
-.foot-geo-bar__label {
-  font-family: var(--font-sora), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  flex-shrink: 0;
-}
-
-.foot-geo-bar__pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.foot-geo-bar__pill {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--slate-light);
-  border: 1px solid var(--line-d);
-  background: var(--surface-ghost);
-  transition:
-    border-color 0.25s var(--ease),
-    color 0.25s var(--ease),
-    background 0.25s var(--ease);
-}
-
-.foot-geo-bar__pill:hover {
-  border-color: color-mix(in srgb, var(--cyan) 35%, var(--line-d));
-  color: var(--text-heading);
-}
-
-[data-theme="light"] .foot-geo-bar {
-  background: #ffffff;
-  border-color: rgba(10, 23, 48, 0.08);
-}
-
-[data-theme="light"] .foot-geo-bar__pill {
-  background: rgba(10, 23, 48, 0.03);
-  border-color: rgba(10, 23, 48, 0.08);
-}
-
-[data-theme="light"] .foot-geo-bar__label {
-  color: var(--blue);
-}
-
-.foot-address {
-  font-style: normal;
-  font-size: 0.85rem;
-  color: var(--slate-light);
-  margin: 0.5rem 0 1rem;
-  line-height: 1.5;
-}
 
 /* ── Blog & article premium (all themes) ── */
 

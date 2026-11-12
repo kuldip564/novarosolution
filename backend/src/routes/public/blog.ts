@@ -13,7 +13,7 @@ router.use(async (_req, res, next) => {
     next();
     return;
   }
-  res.status(503).json({
+  res.json({
     ok: false,
     error: "Database unavailable — using site fallbacks.",
   });
