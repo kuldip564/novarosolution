@@ -142,10 +142,16 @@ export function ContactFormInner() {
           form_id: "contact",
           reason: response.status === 429 ? "rate_limited" : fieldErrors ? "server_validation" : "server",
         });
+        // Server-side failures (5xx) always offer email and phone, whatever text the API sent:
+        // the visitor must never be left without a way to reach us.
+        const serverMessage =
+          response.status >= 500
+            ? `${(result.error || "Something went wrong on our side.").replace(/\.?\s*$/, ".")} Please try again in a minute, or ${fallbackContact}.`
+            : result.error || `Something went wrong. Please try again, or ${fallbackContact}.`;
         throw new Error(
           response.status === 429
             ? `You've sent several messages in a short time. Please wait a minute and try again, or ${fallbackContact}.`
-            : result.error || `Something went wrong. Please try again, or ${fallbackContact}.`,
+            : serverMessage,
         );
       }
 

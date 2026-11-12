@@ -414,15 +414,9 @@ img[data-nimg] {
   color: var(--navy);
 }
 
-/* Smoother section transitions — disabled on reduced motion */
-@media (prefers-reduced-motion: no-preference) {
-  .sec,
-  .home-scene,
-  .about-scene {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 600px;
-  }
-}
+/* No content-visibility on page sections: its fixed 600px placeholder doesn't match real section
+   heights (the homepage marquee is ~50px), so content jumped when each section scrolled into view
+   (homepage CLS measured 0.13–0.38). */
 
 /* ── Footer geo bar (local SEO) ── */
 

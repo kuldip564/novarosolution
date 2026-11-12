@@ -17,6 +17,9 @@ import { ArrowUp } from "lucide-react";
 import { useLenis } from "lenis/react";
 import type { BreadcrumbItem } from "@/components/ui/Breadcrumbs";
 import { PageHead } from "@/components/sections/PageHead";
+import { usePathname } from "next/navigation";
+import { jsonLdString } from "@/lib/json-ld";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { scrollToTarget } from "@/lib/scroll-to";
 import { subscribeScroll } from "@/lib/scroll-store";
 import { slugifyText } from "@/lib/slug";
@@ -102,10 +105,25 @@ export function LegalDocument({
     }
   }
 
+  const pathname = usePathname();
   const hasToc = toc.length > 1;
 
   return (
     <main className="page-cinema legal-cinema">
+      {/* BreadcrumbList matching the visible trail (the last crumb is this page). */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(
+            breadcrumbJsonLd(
+              breadcrumbs.map((item, index) => ({
+                name: item.label,
+                path: item.href ?? (index === breadcrumbs.length - 1 ? pathname : "/"),
+              })),
+            ),
+          ),
+        }}
+      />
       <PageHead
         eyebrow="Legal"
         title={title}

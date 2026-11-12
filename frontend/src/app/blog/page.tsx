@@ -9,7 +9,9 @@ import { PageHead } from "@/components/sections/PageHead";
 import { getBlogPosts } from "@/lib/blog";
 import { getSiteContent } from "@/lib/content";
 import { blogPageDefaults } from "@/lib/page-content-defaults";
+import { jsonLdString } from "@/lib/json-ld";
 import { createPageMetadata } from "@/lib/site-metadata";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { blogKeywords } from "@/lib/geo-seo";
 import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 
@@ -53,6 +55,17 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <main className="page-cinema blog-cinema">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+            ]),
+          ),
+        }}
+      />
       <PageHead
         eyebrow={pageCopy.eyebrow}
         title={pageCopy.title}

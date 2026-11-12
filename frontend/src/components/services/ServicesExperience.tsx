@@ -173,7 +173,7 @@ function ServiceDetailSection({
   });
 
   const copyY = useTransform(scrollYProgress, [0, 0.55], cinematic && !reduced ? [28, 0] : [0, 0]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.35], cinematic && !reduced ? [0.65, 1] : [1, 1]);
+  // Movement only, no fade: dimmed copy read as 2.7:1 contrast while below the screen centre.
 
   const media = (
     <ClipReveal className="services-detail__media-clip">
@@ -268,7 +268,7 @@ function ServiceDetailSection({
           {cinematic && !reduced ? (
             <motion.div
               className="services-detail__copy"
-              style={{ y: copyY, opacity: copyOpacity, willChange: "transform, opacity" }}
+              style={{ y: copyY, willChange: "transform" }}
             >
               <span className="services-detail__no" aria-hidden>
                 {service.no}

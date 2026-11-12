@@ -4,7 +4,7 @@ import { LegalDocument } from "@/components/legal/LegalDocument";
 import { formattedAddress } from "@/lib/geo-seo";
 import { site } from "@/lib/site-data";
 import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
-import { breadcrumbJsonLd, ORGANIZATION_ID, WEBSITE_ID } from "@/lib/structured-data";
+import { ORGANIZATION_ID, WEBSITE_ID } from "@/lib/structured-data";
 import { jsonLdString } from "@/lib/json-ld";
 
 const path = "/terms";
@@ -40,10 +40,7 @@ export default function TermsPage() {
       isPartOf: { "@id": WEBSITE_ID },
       publisher: { "@id": ORGANIZATION_ID },
     },
-    breadcrumbJsonLd([
-      { name: "Home", path: "/" },
-      { name: "Terms & Conditions", path },
-    ]),
+    // BreadcrumbList comes from LegalDocument, built from the visible breadcrumb trail.
   ];
 
   return (
