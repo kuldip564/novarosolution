@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowUpRight } from "lucide-react";
+import { RevealScope } from "@/components/anim/RevealScope";
 import { ArticleReadingProgress } from "@/components/blog/ArticleReadingProgress";
 import { ArticleShareBar } from "@/components/blog/ArticleShareBar";
-import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { ArticleToc } from "@/components/blog/ArticleToc";
+import { BlogList, blogHref } from "@/components/blog/BlogIndex";
+import { StudioSectionHead } from "@/components/studio/StudioSectionHead";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
 import {
   formatBlogDate,
@@ -21,6 +24,9 @@ import { cloudinaryTransformUrl } from "@/lib/media";
 import { site } from "@/lib/site-data";
 import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "@/lib/site-metadata";
 import { breadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/structured-data";
+import "@/styles/studio.css";
+import "@/styles/blog.css";
+import "@/styles/article.css";
 
 /** The service (or page) each article leads to — a contextual next step for readers. */
 function articleService(post: BlogPost): { href: string; label: string; pitch: string } {
@@ -191,148 +197,194 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
         .slice(0, 4)
     : [];
 
+  const cover = post.coverImage;
+  const initial = (author.kind === "person" ? author.name : site.name).charAt(0);
+
   return (
-    <main className="article-page page-cinema blog-cinema">
+    <main className="st ar">
       <ArticleReadingProgress />
-
-      <section className="article-hero">
-        {post.coverImage ? (
-          <div className="article-hero-bg">
-            <CloudinaryImage
-              asset={post.coverImage}
-              alt={post.title}
-              width={1920}
-              height={900}
-              transformWidth={1600}
-              className="article-hero-img"
-              priority
-              sizes="100vw"
-            />
-            <div className="article-hero-overlay" />
-          </div>
-        ) : (
-          <div className="article-hero-fallback" />
-        )}
-
-        <div className="wrap article-hero-inner">
-          <Reveal>
+      <RevealScope attribute="data-st-reveal">
+        <header className="ar-hero">
+          <div className="wrap ar-hero__inner">
             <Breadcrumbs
-              className="article-crumbs"
+              className="st-hero__crumbs ar-hero__crumbs"
               items={[
                 { label: "Home", href: "/" },
                 { label: "Blog", href: "/blog" },
                 { label: post.title },
               ]}
             />
-            <span className="blog-pill">{post.category}</span>
-            <h1>{post.title}</h1>
-            <div className="article-meta">
-              <span>
+            <Link href={blogHref({ category: post.category })} className="ar-hero__cat">
+              {cluster?.name ?? post.category}
+            </Link>
+            <h1 className="ar-hero__title">{post.title}</h1>
+            <p className="ar-hero__dek">{post.excerpt}</p>
+            <div className="ar-byline">
+              <span className="ar-byline__avatar" aria-hidden="true">
+                {initial}
+              </span>
+              <span className="ar-byline__who">
                 {author.kind === "person" ? (
                   <>
-                    By <Link href="/about">{author.name}</Link>, {author.role}
+                    <Link href="/about">{author.name}</Link>
+                    <span>{author.role}</span>
                   </>
                 ) : (
-                  <>By the {site.name} team</>
+                  <>
+                    <strong>{site.name} team</strong>
+                    <span>Software studio in Gandhinagar, India</span>
+                  </>
                 )}
               </span>
-              <span>
-                Published <time dateTime={post.publishedAt}>{formatBlogDate(post.publishedAt)}</time>
-              </span>
-              {updated ? (
-                <span>
-                  Updated <time dateTime={updated}>{formatBlogDate(updated)}</time>
-                </span>
-              ) : null}
-              <span>{post.readingTime} min read</span>
+              <dl className="ar-byline__facts">
+                <div>
+                  <dt>Published</dt>
+                  <dd>
+                    <time dateTime={post.publishedAt}>{formatBlogDate(post.publishedAt)}</time>
+                  </dd>
+                </div>
+                {updated ? (
+                  <div>
+                    <dt>Updated</dt>
+                    <dd>
+                      <time dateTime={updated}>{formatBlogDate(updated)}</time>
+                    </dd>
+                  </div>
+                ) : null}
+                <div>
+                  <dt>Reading time</dt>
+                  <dd>{post.readingTime} min</dd>
+                </div>
+              </dl>
             </div>
-          </Reveal>
+          </div>
+          {cover ? (
+            <figure className="wrap ar-cover">
+              <CloudinaryImage
+                asset={cover}
+                alt=""
+                width={1600}
+                height={800}
+                transformWidth={1600}
+                className="ar-cover__img"
+                priority
+                sizes="(max-width: 1280px) 100vw, 1200px"
+              />
+            </figure>
+          ) : null}
+        </header>
+
+        <div className="wrap ar-layout">
+          {article.toc.length >= 3 ? (
+            <div className="ar-layout__toc">
+              <ArticleToc items={article.toc} />
+            </div>
+          ) : null}
+          <div className="ar-layout__body">
+            <article className="ar-prose" data-article-body dangerouslySetInnerHTML={{ __html: article.html }} />
+            {article.sources.length > 0 ? (
+              <section className="ar-sources" aria-labelledby="article-sources-title">
+                <h2 id="article-sources-title">Sources</h2>
+                <ol>
+                  {article.sources.map((source) => (
+                    <li key={source.href}>
+                      <a href={source.href} target="_blank" rel="noopener noreferrer">
+                        {source.label}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
+            {post.tags.length > 0 ? (
+              <ul className="ar-tags" aria-label="Tags">
+                {post.tags.map((tag) => (
+                  <li key={tag}>{tag}</li>
+                ))}
+              </ul>
+            ) : null}
+            <section className="ar-author" aria-labelledby="ar-author-title">
+              <span className="ar-author__avatar" aria-hidden="true">
+                {initial}
+              </span>
+              <div>
+                <p className="ar-author__eyebrow">Written by</p>
+                <h2 id="ar-author-title" className="ar-author__name">
+                  {author.kind === "person" ? author.name : `The ${site.name} team`}
+                </h2>
+                <p className="ar-author__bio">
+                  {author.kind === "person"
+                    ? `${author.role} at ${site.name}, a software studio in Gandhinagar, India.`
+                    : `${site.name} is a software studio in Gandhinagar, India. We build websites, web and mobile apps, AI features and marketing for companies in India and abroad, and write about what we learn doing it.`}
+                </p>
+                <Link href="/about" className="st-text-link">
+                  About the studio
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
+            </section>
+          </div>
+          <div className="ar-layout__share">
+            <ArticleShareBar title={post.title} slug={post.slug} />
+          </div>
         </div>
-      </section>
 
-      <div className="wrap article-layout">
-        <ArticleShareBar title={post.title} slug={post.slug} />
-        {article.toc.length >= 3 ? (
-          <nav className="article-toc" aria-label="In this article">
-            <span className="article-toc__label">In this article</span>
-            <ol>
-              {article.toc.map((heading) => (
-                <li key={heading.id}>
-                  <a href={`#${heading.id}`}>{heading.text}</a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        ) : null}
-        <article className="article-body" dangerouslySetInnerHTML={{ __html: article.html }} />
-        {article.sources.length > 0 ? (
-          <section className="article-sources" aria-labelledby="article-sources-title">
-            <h2 id="article-sources-title">Sources</h2>
-            <ol>
-              {article.sources.map((source) => (
-                <li key={source.href}>
-                  <a href={source.href} target="_blank" rel="noopener noreferrer">
-                    {source.label}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </section>
-        ) : null}
-        {post.tags.length > 0 && (
-          <div className="article-tags">
-            {post.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {cluster && clusterPosts.length > 0 ? (
-        <aside className="wrap article-cluster" aria-labelledby="article-cluster-title">
-          <div className="article-cluster__card">
-            <span className="eyebrow">Part of our {cluster.name.toLowerCase()} series</span>
-            <h2 id="article-cluster-title">More on this topic</h2>
-            <ul>
-              {clusterPosts.map((item) => (
-                <li key={item.id}>
-                  <Link href={`/blog/${item.slug}`}>{item.title}</Link>
-                  {item.slug === cluster.pillarSlug ? <span className="article-cluster__pillar">Start here</span> : null}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
-      ) : null}
-
-      <aside className="wrap article-next" aria-label="Next step">
-        <div className="article-next__card">
-          <span className="eyebrow">Next step</span>
-          <p>
-            {cluster?.cta.text ?? `${next.pitch} Send us a short brief and we reply within one business day.`}
-          </p>
-          <div className="article-next__actions">
-            <Button href={cluster?.cta.href ?? "/contact"}>{cluster?.cta.buttonLabel ?? "Start Your Project"}</Button>
-            <Link href={cluster?.service.href ?? next.href}>{cluster?.service.label ?? next.label}</Link>
-          </div>
-        </div>
-      </aside>
-
-      {related.length > 0 && (
-        <section className="sec article-related">
-          <div className="wrap">
-            <Reveal>
-              <span className="eyebrow">Keep reading</span>
-              <h2>Related posts</h2>
-            </Reveal>
-            <div className="blog-grid compact">
-              {related.map((item, index) => (
-                <BlogPostCard key={item.id} post={item} delay={index * 0.08} />
-              ))}
+        <section className="st-section st-section--alt ar-more" aria-label="Keep going">
+          <div className="wrap ar-more__grid">
+            {cluster && clusterPosts.length > 0 ? (
+              <div className="ar-series" data-st-reveal>
+                <p className="st-eyebrow">Part of our {cluster.name.toLowerCase()} series</p>
+                <h2 className="ar-series__title">More on this topic</h2>
+                <ul className="ar-series__list">
+                  {clusterPosts.map((item) => (
+                    <li key={item.id}>
+                      <Link href={`/blog/${item.slug}`}>
+                        <span>{item.title}</span>
+                        {item.slug === cluster.pillarSlug ? <em className="ar-series__pillar">Start here</em> : null}
+                        <ArrowUpRight size={16} aria-hidden="true" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            <div className="ar-next" data-st-reveal style={{ ["--i" as string]: 1 }} data-cta-location="article-next">
+              <p className="st-eyebrow st-eyebrow--light">Next step</p>
+              <p className="ar-next__text">
+                {cluster?.cta.text ?? `${next.pitch} Send us a short brief and we reply within one business day.`}
+              </p>
+              <div className="ar-next__actions">
+                <Button href={cluster?.cta.href ?? "/contact"}>{cluster?.cta.buttonLabel ?? "Start Your Project"}</Button>
+                <Link href={cluster?.service.href ?? next.href} className="ar-next__link">
+                  {cluster?.service.label ?? next.label}
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
             </div>
           </div>
         </section>
-      )}
+
+        {related.length > 0 ? (
+          <section className="st-section ar-related" aria-labelledby="ar-related-title">
+            <div className="wrap">
+              <StudioSectionHead
+                eyebrow="Keep reading"
+                id="ar-related-title"
+                title="Related articles"
+                align="split"
+                action={
+                  <Link href="/blog" className="st-text-link">
+                    All articles
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  </Link>
+                }
+              />
+              <BlogList posts={related} />
+            </div>
+          </section>
+        ) : null}
+      </RevealScope>
 
       <script
         type="application/ld+json"

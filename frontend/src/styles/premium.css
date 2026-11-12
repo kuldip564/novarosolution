@@ -490,8 +490,7 @@ html.site--bg-3d .page-cinema .cta-band {
 }
 
 [data-theme="light"] .blog-cinema .article-page .article-body,
-[data-theme="light"] .blog-cinema .article-meta,
-[data-theme="light"] .blog-cinema .article-related h2 {
+[data-theme="light"] .blog-cinema .article-meta {
   color: var(--navy);
 }
 
@@ -1043,16 +1042,6 @@ html.site--bg-3d .page-cinema .cta-band {
     align-items: start;
   }
 
-  .article-layout .article-share {
-    grid-row: span 2;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .article-layout .article-share .btn {
-    justify-content: center;
-  }
-
   .article-layout .article-body,
   .article-layout .article-tags {
     grid-column: 2;
@@ -1097,45 +1086,10 @@ html.site--bg-3d .page-cinema .cta-band {
   margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-.article-next__card {
-  max-width: 920px;
-  margin-inline: auto;
-  padding: 1.2rem 1.4rem;
-  border-radius: 18px;
-  border: 1px solid color-mix(in srgb, var(--cyan) 28%, var(--line-d));
-  background:
-    radial-gradient(ellipse 70% 90% at 0% 0%, color-mix(in srgb, var(--cyan) 10%, transparent), transparent 60%),
-    var(--surface-card);
-}
-
-.article-next__card p {
-  margin: 0.55rem 0 0;
-  line-height: 1.65;
-  color: var(--text-soft);
-}
-
-.article-next__card a {
-  font-weight: 600;
-  color: var(--cyan);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .case__services {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 0.9rem;
-}
-
-[data-theme="light"] .article-next__card {
-  background:
-    radial-gradient(ellipse 70% 90% at 0% 0%, rgba(37, 99, 235, 0.06), transparent 60%),
-    #ffffff;
-  border-color: rgba(37, 99, 235, 0.2);
-}
-
-[data-theme="light"] .article-next__card a {
-  color: var(--blue);
 }
 
 /* ── Article template: byline, contents, sources, cluster links, CTA ── */
@@ -1145,122 +1099,8 @@ html.site--bg-3d .page-cinema .cta-band {
   text-underline-offset: 3px;
 }
 
-.article-toc {
-  max-width: 720px;
-  padding: 1.1rem 1.25rem;
-  border: 1px solid var(--line-d);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--surface-ghost) 80%, transparent);
-}
-
-.article-toc__label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-}
-
-.article-toc ol {
-  display: grid;
-  gap: 0.4rem;
-  margin: 0.7rem 0 0;
-  padding-left: 1.2rem;
-  color: var(--text-soft);
-}
-
-.article-toc a {
-  color: var(--text-heading);
-}
-
-.article-toc a:hover {
-  color: var(--cyan);
-}
-
 .article-body h2 {
   scroll-margin-top: calc(var(--site-header-h, 72px) + 16px);
-}
-
-.article-sources {
-  max-width: 720px;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--line-d);
-}
-
-.article-sources h2 {
-  margin: 0;
-  font-family: var(--font-sora), sans-serif;
-  font-size: 1.1rem;
-  color: var(--text-heading);
-}
-
-.article-sources ol {
-  display: grid;
-  gap: 0.45rem;
-  margin: 0.75rem 0 0;
-  padding-left: 1.2rem;
-  font-size: 0.92rem;
-  color: var(--text-soft);
-}
-
-.article-sources a {
-  color: var(--cyan);
-  overflow-wrap: anywhere;
-}
-
-.article-cluster {
-  margin-bottom: clamp(1rem, 3vw, 1.5rem);
-}
-
-.article-cluster__card {
-  max-width: 920px;
-  margin-inline: auto;
-  padding: 1.2rem 1.4rem;
-  border: 1px solid var(--line-d);
-  border-radius: 18px;
-  background: var(--surface-card);
-}
-
-.article-cluster__card h2 {
-  margin: 0.6rem 0 0;
-  font-family: var(--font-sora), sans-serif;
-  font-size: 1.2rem;
-  color: var(--text-heading);
-}
-
-.article-cluster__card ul {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0.8rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.article-cluster__card li a {
-  font-weight: 600;
-  color: var(--text-heading);
-}
-
-.article-cluster__card li a:hover {
-  color: var(--cyan);
-}
-
-.article-cluster__pillar {
-  margin-left: 0.6rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--cyan) 14%, transparent);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--cyan);
-}
-
-.article-next__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1.25rem;
-  margin-top: 1rem;
 }
 
 /* Header over a page-top hero (home, work): fully transparent until the page scrolls. */

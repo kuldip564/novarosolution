@@ -2,7 +2,7 @@
 
 Written 12 November 2026. Goal: build topical authority around what Novaro sells (web and software development, mobile apps, AI and automation, SEO and digital marketing, cloud and DevOps, UI/UX) through a small number of connected, experience-based articles.
 
-**Status:** the article template is built (see §6). No new article is published. Every draft needs a human fact review first, using the checklist in [content/article-template.md](content/article-template.md).
+**Status:** the article template is built (see §6). On 12 November 2026 six articles were written and added to the site's built-in posts (`frontend/src/lib/blog.ts`): website development process, website development cost in India, mobile app development process, React Native vs Flutter vs native, website performance (our own site's numbers), and SEO for Indian businesses. Their external facts link to sources that were checked on that date. **They still need the human fact review** in [content/article-template.md](content/article-template.md), including a named reviewer, before this branch is deployed. The existing eight posts were moved into their cluster categories.
 
 Search volumes are not included, because no keyword tool was connected. Check each primary keyword in Google Keyword Planner and Search Console before writing, and swap in a close variant if the data says so.
 

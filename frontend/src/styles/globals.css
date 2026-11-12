@@ -2760,24 +2760,6 @@ footer {
   font-weight: 700;
 }
 
-.article-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  z-index: 60;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.article-progress div {
-  height: 100%;
-  width: 100%;
-  transform-origin: left center;
-  background: linear-gradient(90deg, #54cdf6, #2f7bff);
-  will-change: transform;
-}
-
 .article-hero {
   position: relative;
   min-height: 52vh;
@@ -2837,29 +2819,6 @@ footer {
   display: grid;
   gap: 28px;
   padding: 48px 0 72px;
-}
-
-.article-share {
-  position: sticky;
-  top: 96px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid var(--line-d);
-  background: rgba(255, 255, 255, 0.03);
-  z-index: 5;
-}
-
-.article-share-label {
-  font-family: var(--font-sora), sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-right: 6px;
 }
 
 .btn.small {
@@ -2948,10 +2907,6 @@ footer {
   font-size: 0.82rem;
 }
 
-.article-related h2 {
-  margin-top: 8px;
-}
-
 @media (max-width: 980px) {
   .blog-grid {
     grid-template-columns: 1fr;
@@ -2959,10 +2914,6 @@ footer {
 
   .blog-card.featured {
     grid-template-columns: 1fr;
-  }
-
-  .article-share {
-    position: static;
   }
 }
 
@@ -3482,8 +3433,7 @@ footer {
   line-height: 1.7;
 }
 
-.pagehead-crumbs,
-.article-crumbs {
+.pagehead-crumbs {
   margin-bottom: var(--space-4);
 }
 
