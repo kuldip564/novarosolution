@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
-const apiOrigin = process.env.API_PROXY_TARGET || "http://127.0.0.1:5001";
+const apiOrigin =
+  process.env.API_PROXY_TARGET ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://127.0.0.1:5001";
 
 /**
  * Crawlers that get <title>, description and canonical in the initial <head> (blocking metadata)

@@ -1,12 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { apiFetch } from "@/lib/api";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -45,8 +43,7 @@ export default function AdminLoginPage() {
         throw new Error(data.error || "Login failed");
       }
 
-      router.push("/admin");
-      router.refresh();
+      window.location.assign("/admin");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
