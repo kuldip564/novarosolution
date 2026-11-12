@@ -41,11 +41,11 @@ const adsenseHosts =
   "https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://adservice.google.com https://www.googletagservices.com https://fundingchoicesmessages.google.com";
 const reportOnlyCsp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com ${adsenseHosts}`,
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://analytics.ahrefs.com ${adsenseHosts}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://res.cloudinary.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://www.google.com https://www.google.co.in https://*.gstatic.com ${adsenseHosts}`,
   "font-src 'self' data:",
-  `connect-src 'self' ${browserApiOrigin} https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://www.google.com https://api.cloudinary.com https://csi.gstatic.com ${adsenseHosts}`
+  `connect-src 'self' ${browserApiOrigin} https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://analytics.ahrefs.com https://*.g.doubleclick.net https://www.google.com https://api.cloudinary.com https://csi.gstatic.com ${adsenseHosts}`
     .replace(/\s+/g, " ")
     .trim(),
   `frame-src https://maps.google.com https://www.google.com ${adsenseHosts}`,

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { AdSenseScript } from "@/components/analytics/AdSenseScript";
+import { AhrefsScript } from "@/components/analytics/AhrefsScript";
 import { AnalyticsListener } from "@/components/analytics/AnalyticsListener";
 import { ScrollProgressBar } from "@/components/anim/ScrollProgressBar";
 import { Footer } from "@/components/Footer";
@@ -64,6 +65,7 @@ export function SiteShell({ children }: SiteShellProps) {
         <SeoJsonLd />
         <AnalyticsListener />
         <AdSenseScript />
+        <AhrefsScript />
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
