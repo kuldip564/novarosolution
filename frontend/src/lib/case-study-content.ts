@@ -31,11 +31,15 @@ export type CaseStudyContent = {
   industry: string;
   projectType: string;
   /** Portfolio filter group. */
-  group: "E-commerce" | "Web platforms";
+  group: "E-commerce" | "Web platforms" | "Mobile apps";
   platform: string;
   liveUrl: string;
-  /** The credit line as it appears in the client site's footer. */
-  credit: string;
+  /** Set for mobile apps: the store `liveUrl` points to, e.g. "Google Play". Websites leave it out. */
+  store?: string;
+  /** The credit line as it appears in the client site's footer (websites only). */
+  credit?: string;
+  /** Replaces the default "Captured from the live site" line under the screenshots. */
+  screenshotsNote?: string;
   services: Array<{ label: string; href: string }>;
   overview: string[];
   clientBackground: { paragraphs: string[]; source: string };
@@ -435,11 +439,137 @@ const quadratoCargo: CaseStudyContent = {
   ],
 };
 
+/** Phone screens from the VeggieKing customer app, cropped to the display (personal details blurred). */
+function appShot(file: string, alt: string, caption: string): CaseStudyScreenshot {
+  return { src: `/images/work/veggieking/${file}`, alt, caption, device: "mobile", width: 713, height: 1550 };
+}
+
+/**
+ * Checked in November 2026 against the app's Google Play listing (description, release
+ * notes, data-safety section), the screens above and the Flutter source code. The 15-minute
+ * delivery time is the client's own promise, shown as such.
+ */
+const veggieKing: CaseStudyContent = {
+  slug: "veggieking",
+  seoTitle: "VeggieKing Case Study: Grocery Delivery App",
+  description:
+    "How we built VeggieKing's grocery delivery apps in Flutter: category shopping, any-weight orders, live tracking, loyalty points and a delivery-partner app.",
+  h1: "VeggieKing: fresh fruit and vegetable delivery apps",
+  summary:
+    "Flutter apps for customers and delivery partners, with any-weight orders, live tracking, loyalty points and festive themes, live on Google Play.",
+  client: "VeggieKing",
+  industry: "Grocery & quick commerce",
+  projectType: "Grocery delivery apps",
+  group: "Mobile apps",
+  platform: "Android apps on Google Play, built with Flutter",
+  liveUrl: "https://play.google.com/store/apps/details?id=com.cm.vegieeking.customer",
+  store: "Google Play",
+  screenshotsNote: "Screens from the customer app, November 2026. Personal details are blurred.",
+  services: [webService],
+  overview: [
+    "VeggieKing delivers fresh fruits, vegetables and everyday groceries to the customer's door. We built its customer app and its delivery-partner app in Flutter: category shopping and voice search, orders by any weight, live order tracking, VeggieKing Points, one-tap reorder and seasonal festive themes, with a web admin panel for stores, stock, orders and riders.",
+  ],
+  clientBackground: {
+    paragraphs: [
+      "VeggieKing is a fresh fruit, vegetable and grocery delivery service. Its Google Play listing describes farm-fresh vegetables, seasonal fruits, quality-checked and hygienically packed products, and fast doorstep delivery.",
+      "The app's home screen promises delivery in 15 minutes from a nearby store. That is the client's service promise, not a figure we measured.",
+    ],
+    source: "the VeggieKing listing on Google Play",
+  },
+  challenge: [
+    "Fresh produce is bought often, in small and exact quantities, and customers expect it at the door quickly. A repeat order has to take seconds, not minutes.",
+    "Behind the app, each order has to reach a store with stock and a rider nearby, so customers, riders and the store team all need the same live picture of the order.",
+  ],
+  objectives: [
+    "Let customers shop by category or search, including by voice",
+    "Allow orders by any weight, not only fixed pack sizes",
+    "Show live order status and tracking after checkout",
+    "Bring customers back with points, one-tap reorder and seasonal touches",
+    "Give delivery partners an app of their own",
+    "Give the team one admin panel for stores, stock, orders and riders",
+  ],
+  approach: [
+    {
+      title: "Shopping in a few taps",
+      body: "Categories and search open the home screen, search works by voice, and the cart stays one tap away in a bar above the tab bar.",
+    },
+    {
+      title: "Built for repeat orders",
+      body: "An Order again tab, saved addresses, and a cart that shows how far the order is from free delivery and what the customer saves.",
+    },
+    {
+      title: "Local and seasonal",
+      body: "Festive themes change the app for the season, such as Diwali with greetings in Gujarati, and the Sabji Slice mini-game gives customers a reason to open the app between orders.",
+    },
+  ],
+  solution:
+    "Two Flutter apps on Google Play, VeggieKing for customers and Veggieking Delivery Boy for delivery partners, using Firebase for sign-in, push notifications, analytics and crash reports and Google Maps for location and tracking, run from a web admin panel for stores, catalogue and pricing, inventory, orders, riders and cash.",
+  features: [
+    { title: "15-minute delivery promise", body: "The home screen shows the delivery time from a nearby store, and products carry a 15 MINS badge." },
+    { title: "Categories and voice search", body: "Vegetables, fruits, herbs and spices, leafy greens and combo packs, with search by typing or speaking." },
+    { title: "Any weight", body: "Customers can type their own amount, such as 130 g, instead of picking a fixed pack." },
+    { title: "Live tracking", body: "Order status and live tracking after checkout, and an order can be cancelled in two taps." },
+    { title: "A cart that helps", body: "Progress towards free delivery, savings on the order, save for later and cash on delivery." },
+    { title: "Points and reorder", body: "VeggieKing Points are earned on delivered orders and can be used at checkout; one tap adds a past order back to the cart." },
+    { title: "Festive themes and Sabji Slice", body: "Seasonal themes such as Diwali, and a mini-game where customers slice vegetables and climb a leaderboard." },
+    { title: "Delivery-partner app", body: "A separate Flutter app for riders, Veggieking Delivery Boy, also on Google Play." },
+    { title: "Admin panel", body: "Stores and delivery areas, catalogue and pricing, inventory, orders and riders, and cash reconciliation in one place." },
+  ],
+  architecture: [
+    { label: "Apps", value: "Flutter: a customer app and a delivery-partner app" },
+    { label: "Release", value: "Android App Bundles on Google Play, targeting API level 36" },
+    { label: "Maps and location", value: "Google Maps, device location and route lines for live tracking" },
+    { label: "Notifications", value: "Firebase Cloud Messaging push notifications" },
+    { label: "Monitoring", value: "Firebase Analytics, and Crashlytics in the delivery-partner app" },
+    { label: "Admin", value: "Web admin panel with roles, two-factor sign-in and store-level access" },
+  ],
+  process: [
+    { title: "Flow mapping", body: "Browse, cart, checkout, tracking and reorder for customers; pickup and delivery for riders; stock and orders for stores." },
+    { title: "Design", body: "A warm, food-first interface with large product photos, festive themes and the cart always in reach." },
+    { title: "Build", body: "Two Flutter apps and the admin panel, working from the same orders." },
+    { title: "Release and updates", body: "Published on Google Play and updated regularly; the 7 November 2026 release added any-weight orders, one-tap reorder and clearer tracking." },
+  ],
+  screenshots: [
+    appShot(
+      "home-mobile.webp",
+      "VeggieKing home screen in its Diwali theme: delivery in 15 minutes, search with voice input, and Vegetables, Fruits, Herbs & Spices, Leafy Greens and Combo Packs",
+      "Home with the Diwali theme and categories",
+    ),
+    appShot(
+      "product-mobile.webp",
+      "VeggieKing product page: Miniature Banana (Elaichi kela), 250 g for ₹40, with a 15 MINS badge and an Add button",
+      "Product page",
+    ),
+    appShot(
+      "cart-mobile.webp",
+      "VeggieKing cart: progress towards free delivery, savings on the order, VeggieKing Points and Place Order with cash on delivery",
+      "Cart with free-delivery progress and points",
+    ),
+    appShot(
+      "account-mobile.webp",
+      "VeggieKing account screen: orders, VeggieKing Points, help, the delivery address and the Sabji Slice game, with personal details blurred",
+      "Account with points and the Sabji Slice game",
+    ),
+  ],
+  technologies: [
+    { name: "Flutter", note: "Customer and delivery-partner apps" },
+    { name: "Firebase", note: "Sign-in, push notifications, analytics and crash reports" },
+    { name: "Google Maps", note: "Location and live order tracking" },
+  ],
+  outcomes: [
+    "The customer app is live on Google Play",
+    "The delivery-partner app, Veggieking Delivery Boy, is live on Google Play",
+    "The 7 November 2026 update added any-weight orders, one-tap reorder, clearer live tracking and two-tap cancellation",
+    "Google Play's data safety section lists data as encrypted in transit, with deletion on request",
+  ],
+};
+
 export const caseStudyContent: Record<string, CaseStudyContent> = {
   [zeevan.slug]: zeevan,
   [kankreg.slug]: kankreg,
   [mrAntidot.slug]: mrAntidot,
   [quadratoCargo.slug]: quadratoCargo,
+  [veggieKing.slug]: veggieKing,
 };
 
 export function getCaseStudyContent(slug: string): CaseStudyContent | null {

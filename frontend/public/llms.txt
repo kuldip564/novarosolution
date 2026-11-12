@@ -44,7 +44,7 @@ Send a short brief. Novaro books a 30-minute discovery call, then sends a writte
 - [AI and machine learning](https://www.novarosolution.com/services/ai-machine-ml)
 - [Digital marketing](https://www.novarosolution.com/services/digital-marketing)
 - [Cloud and DevOps](https://www.novarosolution.com/services/cloud-devops)
-- [Work](https://www.novarosolution.com/work): case studies (Zeevan, KankreG, Mr Antidot, Quadrato Cargo)
+- [Work](https://www.novarosolution.com/work): case studies (VeggieKing, Zeevan, KankreG, Mr Antidot, Quadrato Cargo)
 - [For US teams](https://www.novarosolution.com/software-development-usa): how US companies hire the studio
 - [IT services worldwide](https://www.novarosolution.com/it-services): software, AI, and IT services for companies in any country
 - [Where we work](https://www.novarosolution.com/locations): every market served, with overlap hours per time zone and data-protection notes

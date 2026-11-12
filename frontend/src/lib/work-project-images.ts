@@ -34,6 +34,11 @@ export const WORK_PROJECT_IMAGES: Record<string, WorkProjectImageSet> = {
     heroAlt: "Quadrato Cargo — track shipments, book courier, and get quotes",
     screens: [workImage("/images/work/quadrato-cargo.jpg")],
   },
+  veggieking: {
+    hero: workImage("/images/work/veggieking.jpg"),
+    heroAlt: "VeggieKing grocery delivery app: home, product and cart screens on three phones",
+    screens: [workImage("/images/work/veggieking.jpg")],
+  },
 };
 
 export function getWorkProjectImages(slug: string): WorkProjectImageSet | null {

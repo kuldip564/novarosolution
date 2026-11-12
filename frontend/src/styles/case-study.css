@@ -477,6 +477,30 @@
   gap: 1.5rem;
 }
 
+/* App projects: phone screens only, two per row on phones, four across on wide screens. */
+.cs-gallery--phones {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem) clamp(0.75rem, 2.5vw, 2rem);
+  justify-items: center;
+}
+
+@media (min-width: 960px) {
+  .cs-gallery--phones {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .cs-gallery--phones .cs-frame--mobile {
+    padding: 5px;
+    border-radius: 24px;
+  }
+
+  .cs-gallery--phones .cs-frame--mobile img {
+    border-radius: 19px;
+  }
+}
+
 .cs-shot {
   margin: 0;
 }

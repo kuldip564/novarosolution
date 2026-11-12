@@ -24,9 +24,14 @@ export type WorkProject = {
   /** Verified technologies, hosting and headers left out. */
   stack: string[];
   liveUrl: string | null;
+  /** Website domain; null for apps, which link to their store instead. */
   domain: string | null;
+  /** Text for the live link: the domain, or the store name for apps ("Google Play"). */
+  liveLabel: string | null;
   desktop: CaseStudyScreenshot[];
   mobile: CaseStudyScreenshot | null;
+  /** Every phone screenshot, for app projects shown without a desktop view. */
+  phones: CaseStudyScreenshot[];
   art: CloudinaryAsset | null;
   artAlt: string;
 };
@@ -38,6 +43,7 @@ export function toWorkProjects(projects: WorkProjectView[]): WorkProject[] {
   return projects.map((project, index) => {
     const content = caseStudyContent[project.slug];
     const liveUrl = content?.liveUrl ?? project.externalUrl ?? null;
+    const domain = content?.store ? null : projectDomain(liveUrl);
     return {
       slug: project.slug,
       number: String(index + 1).padStart(2, "0"),
@@ -50,9 +56,11 @@ export function toWorkProjects(projects: WorkProjectView[]): WorkProject[] {
       services: content?.services.map((service) => service.label) ?? [],
       stack: content?.technologies.map((tech) => tech.name).filter((name) => !NOT_STACK.has(name)) ?? [...project.tags],
       liveUrl,
-      domain: projectDomain(liveUrl),
+      domain,
+      liveLabel: content?.store ?? domain,
       desktop: content?.screenshots.filter((shot) => shot.device === "desktop") ?? [],
       mobile: content?.screenshots.find((shot) => shot.device === "mobile") ?? null,
+      phones: content?.screenshots.filter((shot) => shot.device === "mobile") ?? [],
       art: project.heroImage ?? null,
       artAlt: getWorkProjectImages(project.slug)?.heroAlt ?? `${project.title} — ${project.category}`,
     };

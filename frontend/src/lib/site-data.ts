@@ -185,14 +185,14 @@ export const homeProjects = [
  */
 export const homeStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 4, suffix: "", label: "Live client products in our portfolio" },
+  { value: 5, suffix: "", label: "Live client products in our portfolio" },
   { value: teamCount, suffix: "", label: "People on the team" },
   { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ] as const;
 
 export const aboutStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 4, suffix: "", label: "Live client products in our portfolio" },
+  { value: 5, suffix: "", label: "Live client products in our portfolio" },
   { value: teamCount, suffix: "", label: "People on the team" },
   { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ] as const;
@@ -310,6 +310,24 @@ export const serviceDetails = [
 export const workProjects = [
   {
     idx: "01",
+    slug: "veggieking",
+    externalUrl: "https://play.google.com/store/apps/details?id=com.cm.vegieeking.customer",
+    category: "Mobile App · Grocery delivery",
+    title: "VeggieKing",
+    hook:
+      "Fresh fruit and vegetable delivery apps for customers and riders, with any-weight orders, live tracking and loyalty points.",
+    heroTitle: "VeggieKing apps",
+    story:
+      "VeggieKing delivers fresh produce and groceries to the door. We built its customer and delivery-partner apps in Flutter, with category shopping, voice search, any-weight orders, live tracking, points, one-tap reorder and festive themes.",
+    results: [
+      { value: "2", label: "Flutter apps" },
+      { value: "Flutter", label: "framework" },
+      { value: "Google Play", label: "live" },
+    ],
+    tags: ["Flutter", "Firebase", "Google Maps", "Grocery delivery"],
+  },
+  {
+    idx: "02",
     slug: "zeevan",
     externalUrl: "https://www.zeevan.shop/",
     category: "E-commerce · D2C",
@@ -327,7 +345,7 @@ export const workProjects = [
     tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
-    idx: "02",
+    idx: "03",
     slug: "kankreg",
     externalUrl: "https://www.kankreg.com/",
     category: "E-commerce · D2C",
@@ -345,7 +363,7 @@ export const workProjects = [
     tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
-    idx: "03",
+    idx: "04",
     slug: "mr-antidot",
     externalUrl: "https://www.mrantidot.com/",
     category: "Web App · Services",
@@ -363,7 +381,7 @@ export const workProjects = [
     tags: ["Next.js", "Service booking", "CMS", "SEO"],
   },
   {
-    idx: "04",
+    idx: "05",
     slug: "quadrato-cargo",
     externalUrl: "https://www.quadratocargo.com/",
     category: "Web App · Logistics",
@@ -481,7 +499,7 @@ export const fallbackFaqs = [
     id: "1",
     question: "What types of projects do you take on?",
     answer:
-      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work includes two D2C e-commerce stores, a pest-control service website with booking, and a courier booking and tracking platform.",
+      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work includes grocery delivery apps for customers and riders, two D2C e-commerce stores, a pest-control service website with booking, and a courier booking and tracking platform.",
   },
   {
     id: "2",

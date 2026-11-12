@@ -125,8 +125,9 @@ export function HomeTrust({
           ))}
         </dl>
         <p className="hm-trust__note" data-hm-reveal>
-          Each product is live on the client&apos;s own domain, across {industries.join(", ").replace(/, ([^,]*)$/, " and $1")}.
-          Every case study can be checked against the live site.
+          Each product is live, on the client&apos;s own domain or on Google Play, across{" "}
+          {industries.join(", ").replace(/, ([^,]*)$/, " and $1")}. Every case study can be checked against the live
+          product.
         </p>
       </div>
     </section>
@@ -279,7 +280,7 @@ export function HomeWork({ projects }: { projects: WorkProject[] }) {
           id="hm-work-title"
           title={"Live products,\nbuilt end to end."}
           align="split"
-          lede="Two D2C stores, a service-booking website and a courier platform, each live on the client's own domain."
+          lede="Grocery delivery apps on Google Play, two D2C stores and a service-booking website, each one live today."
           action={
             <Button href="/work" variant="ghost">
               View Case Studies
@@ -290,12 +291,23 @@ export function HomeWork({ projects }: { projects: WorkProject[] }) {
         <article className="hm-feature" aria-labelledby="hm-feature-title">
           <div className="hm-feature__stage" data-hm-reveal>
             {primary.desktop[0] ? (
-              <Frame shot={primary.desktop[0]} domain={primary.domain} sizes="(max-width: 767px) 100vw, (max-width: 1279px) 66vw, 820px" />
-            ) : null}
-            {primary.mobile ? (
-              <figure className="hm-feature__phone">
-                <Image src={primary.mobile.src} alt={primary.mobile.alt} width={primary.mobile.width} height={primary.mobile.height} sizes="(max-width: 767px) 40vw, 220px" />
-              </figure>
+              <>
+                <Frame shot={primary.desktop[0]} domain={primary.domain} sizes="(max-width: 767px) 100vw, (max-width: 1279px) 66vw, 820px" />
+                {primary.mobile ? (
+                  <figure className="hm-feature__phone">
+                    <Image src={primary.mobile.src} alt={primary.mobile.alt} width={primary.mobile.width} height={primary.mobile.height} sizes="(max-width: 767px) 40vw, 220px" />
+                  </figure>
+                ) : null}
+              </>
+            ) : primary.phones.length ? (
+              // Apps have no desktop view: show up to three phone screens side by side.
+              <div className="hm-phones">
+                {primary.phones.slice(0, 3).map((shot) => (
+                  <figure key={shot.src} className="hm-phone">
+                    <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes="(max-width: 767px) 30vw, 230px" />
+                  </figure>
+                ))}
+              </div>
             ) : null}
           </div>
           <div className="hm-feature__copy" data-hm-reveal style={{ ["--i" as string]: 1 }}>

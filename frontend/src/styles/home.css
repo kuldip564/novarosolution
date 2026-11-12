@@ -1054,6 +1054,51 @@
   display: none;
 }
 
+/* App projects: three phone screens, the middle one raised. */
+.hm-phones {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(10px, 2.2vw, 28px);
+  padding: clamp(24px, 4vw, 52px) clamp(12px, 2.5vw, 32px);
+  border-radius: var(--hm-radius);
+  background: var(--hm-soft);
+}
+
+.hm-phone {
+  flex: 0 1 auto;
+  width: clamp(88px, 30%, 230px);
+  margin: 0;
+  padding: clamp(4px, 0.6vw, 7px);
+  border-radius: clamp(16px, 2.6vw, 28px);
+  background: #0f172a;
+  box-shadow: var(--hm-shadow-strong);
+  transition:
+    opacity 0.6s var(--hm-ease) 0.2s,
+    transform 0.8s var(--hm-ease) 0.2s;
+}
+
+.hm-phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: clamp(12px, 2.1vw, 22px);
+}
+
+.hm-phone:nth-child(2) {
+  margin-bottom: clamp(16px, 4vw, 44px);
+  transition-delay: 0.3s;
+}
+
+.hm-phone:nth-child(3) {
+  transition-delay: 0.4s;
+}
+
+.hm-feature__stage[data-hm-reveal="pending"] .hm-phone {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
 .hm-feature__stage[data-hm-reveal="pending"] {
   opacity: 1;
   transform: none;

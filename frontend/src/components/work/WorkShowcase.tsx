@@ -99,7 +99,7 @@ function Details({ project }: { project: WorkProject }) {
         </Link>
         {project.liveUrl ? (
           <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="wk-live-link">
-            {project.domain ?? "Live site"}
+            {project.liveLabel ?? "Live site"}
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         ) : null}
@@ -108,9 +108,20 @@ function Details({ project }: { project: WorkProject }) {
   );
 }
 
+/** App projects: three phone screens side by side, the middle one raised. */
+function PhonesVisual({ project }: { project: WorkProject }) {
+  return (
+    <div className="wk-visual wk-visual--phones" data-wk-tilt>
+      {project.phones.slice(0, 3).map((shot) => (
+        <PhoneFrame key={shot.src} shot={shot} />
+      ))}
+    </div>
+  );
+}
+
 function Visual({ project, variant }: { project: WorkProject; variant: Variant }) {
   const [first, second] = project.desktop;
-  if (!first) return <BrandVisual project={project} />;
+  if (!first) return project.phones.length > 1 ? <PhonesVisual project={project} /> : <BrandVisual project={project} />;
   const wide = variant === "full" || variant === "offset";
   const main = variant === "split" && second ? second : first;
   return (

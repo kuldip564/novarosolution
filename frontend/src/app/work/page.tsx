@@ -21,18 +21,23 @@ export const revalidate = 30;
 const path = "/work";
 const title = "Software Case Studies & Portfolio";
 const description =
-  "Case studies of live products Novaro Solution built: Zeevan and KankreG D2C stores on Expo, and the Mr Antidot and Quadrato Cargo platforms on Next.js.";
+  "Case studies of live products we built: VeggieKing's Flutter grocery apps, Zeevan and KankreG stores on Expo, and Mr Antidot and Quadrato Cargo on Next.js.";
 
 export const metadata: Metadata = createPageMetadata({
   title,
   description,
   path,
-  keywords: [...workKeywords, "e-commerce case study", "Next.js case study", "Expo web app case study"],
+  keywords: [...workKeywords, "e-commerce case study", "Next.js case study", "Expo web app case study", "Flutter app case study"],
   ogEyebrow: "Selected work",
   ogHeadline: "Selected work, built to make an impact",
 });
 
 const pad = (value: number) => String(value).padStart(2, "0");
+const NUMBER_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
+const inWords = (value: number) => NUMBER_WORDS[value] ?? String(value);
+/** "A", "A & B", "A, B & C". */
+const listNames = (names: string[]) =>
+  names.length < 3 ? names.join(" & ") : `${names.slice(0, -1).join(", ")} & ${names[names.length - 1]}`;
 
 export default async function WorkPage() {
   const projects = toWorkProjects(mapDbProjectsToWork(await getPublishedProjects()));
@@ -40,9 +45,11 @@ export default async function WorkPage() {
   // Product technologies only; hosting and security headers are infrastructure, shown as a note.
   const technologies = allTechnologies.filter((tech) => !["Vercel", "Content Security Policy"].includes(tech.name));
   const vercel = allTechnologies.find((tech) => tech.name === "Vercel");
-  const allOnVercel = Boolean(vercel && vercel.projects.length === projects.length);
+  // Apps ship through their store, so hosting is counted across websites only.
+  const websiteCount = projects.filter((project) => project.domain).length;
+  const allOnVercel = Boolean(vercel && websiteCount > 0 && vercel.projects.length === websiteCount);
   const industries = industriesByProject(projects);
-  const frameworks = technologies.filter((tech) => tech.name === "Next.js" || tech.name === "Expo");
+  const frameworks = technologies.filter((tech) => ["Next.js", "Expo", "Flutter"].includes(tech.name));
   const liveCount = projects.filter((project) => project.liveUrl).length;
 
   const base = siteBaseUrl();
@@ -95,8 +102,9 @@ export default async function WorkPage() {
             </h1>
             <div className="wk-hero__foot">
               <p className="wk-hero__intro">
-                Case studies of live digital products engineered by {site.name}: two D2C stores, a
-                service-booking website and a courier platform, each with the problem, the build and the stack.
+                Case studies of live digital products engineered by {site.name}: grocery delivery apps, two D2C
+                stores, a service-booking website and a courier platform, each with the problem, the build and the
+                stack.
               </p>
               <div className="wk-hero__aside">
                 <p className="wk-hero__count">
@@ -135,8 +143,8 @@ export default async function WorkPage() {
                 real business problems.
               </p>
               <p className="wk-intro__note">
-                Every project below is live on the client&apos;s own domain. Screenshots were captured from the live
-                sites in {CAPTURED}.
+                Every project below is live: the VeggieKing apps on Google Play, the websites on each client&apos;s
+                own domain. Website screenshots were captured from the live sites in {CAPTURED}.
               </p>
             </div>
           </div>
@@ -147,7 +155,7 @@ export default async function WorkPage() {
           <div className="wrap wk-section__head" data-wk-reveal>
             <p className="wk-eyebrow">Featured projects</p>
             <h2 id="wk-showcase-title" className="wk-h2">
-              Four products, four different problems.
+              {inWords(projects.length)} products, {inWords(projects.length).toLowerCase()} different problems.
             </h2>
           </div>
           <WorkShowcase projects={projects} />
@@ -180,7 +188,8 @@ export default async function WorkPage() {
                 What these products run on.
               </h2>
               <p className="wk-section__lede">
-                Only technologies confirmed on the live sites, each listed with the projects that use it.
+                Only technologies confirmed on the live sites or in the app&apos;s source code, each listed with the
+                projects that use it.
               </p>
             </div>
             <div className="wk-stack">
@@ -198,7 +207,7 @@ export default async function WorkPage() {
                   ))}
                 </ul>
                 {allOnVercel ? (
-                  <p className="wk-stack__note">All {projects.length} sites are hosted on Vercel.</p>
+                  <p className="wk-stack__note">All {websiteCount} websites are hosted on Vercel.</p>
                 ) : null}
               </div>
               <ul className="wk-stack__industries" aria-label="Industries">
@@ -233,11 +242,11 @@ export default async function WorkPage() {
                 <dt>Frameworks in production</dt>
                 <dd>
                   {pad(frameworks.length)}
-                  <small>{frameworks.map((tech) => tech.name).join(" & ")}</small>
+                  <small>{listNames(frameworks.map((tech) => tech.name))}</small>
                 </dd>
               </div>
               <div data-wk-reveal style={{ ["--i" as string]: 3 }}>
-                <dt>Case-study facts checked on the live sites</dt>
+                <dt>Case-study facts checked against the live products</dt>
                 <dd className="wk-numbers__text">All</dd>
               </div>
             </dl>

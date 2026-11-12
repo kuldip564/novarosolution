@@ -61,8 +61,12 @@ function Screenshot({ shot, domain }: { shot: CaseStudyScreenshot; domain: strin
 
 export function CaseStudyView({ content: c, project, moreProjects }: Props) {
   const domain = projectDomain(c.liveUrl) ?? c.liveUrl;
+  // Apps link to their store listing; websites to their own domain.
+  const liveLabel = c.store ?? domain;
+  const livePlace = c.store ?? "the live site";
   const desktopShots = c.screenshots.filter((shot) => shot.device === "desktop");
   const mobileShots = c.screenshots.filter((shot) => shot.device === "mobile");
+  const phonesOnly = desktopShots.length === 0;
 
   return (
     <>
@@ -80,7 +84,7 @@ export function CaseStudyView({ content: c, project, moreProjects }: Props) {
         <Reveal delay={0.26}>
           <div className="cs-head__actions">
             <a href={c.liveUrl} target="_blank" rel="noopener noreferrer" className="cs-live">
-              Visit {domain}
+              {c.store ? `Get it on ${c.store}` : `Visit ${domain}`}
               <ArrowUpRight size={16} aria-hidden />
             </a>
             <Button href="/contact" variant="ghost">
@@ -144,10 +148,10 @@ export function CaseStudyView({ content: c, project, moreProjects }: Props) {
                 <dd>{c.platform}</dd>
               </div>
               <div>
-                <dt>Live site</dt>
+                <dt>{c.store ? "Available on" : "Live site"}</dt>
                 <dd>
                   <a href={c.liveUrl} target="_blank" rel="noopener noreferrer">
-                    {domain}
+                    {liveLabel}
                   </a>
                 </dd>
               </div>
@@ -177,7 +181,11 @@ export function CaseStudyView({ content: c, project, moreProjects }: Props) {
                 {paragraph}
               </p>
             ))}
-            <p className="cs-source">Source: the client&apos;s public website, {c.clientBackground.source}.</p>
+            <p className="cs-source">
+              {c.store
+                ? `Source: ${c.clientBackground.source}.`
+                : `Source: the client's public website, ${c.clientBackground.source}.`}
+            </p>
           </div>
           <div>
             <span className="eyebrow">Business challenge</span>
@@ -269,7 +277,9 @@ export function CaseStudyView({ content: c, project, moreProjects }: Props) {
                 </div>
               ))}
             </dl>
-            <p className="cs-source">Checked against the live site in {CAPTURED}.</p>
+            <p className="cs-source">
+              Checked against {c.store ? "the app's source code" : "the live site"} in {CAPTURED}.
+            </p>
           </div>
           <div>
             <span className="eyebrow">Development process</span>
@@ -297,24 +307,32 @@ export function CaseStudyView({ content: c, project, moreProjects }: Props) {
           <header className="cs-sec-head">
             <span className="eyebrow">Screenshots</span>
             <h2 id="cs-shots-title" className="cs-h2">
-              {c.client} on desktop and mobile
+              {phonesOnly ? `${c.client} on a phone` : `${c.client} on desktop and mobile`}
             </h2>
-            <p>Captured from the live site in {CAPTURED}.</p>
+            <p>{c.screenshotsNote ?? `Captured from the live site in ${CAPTURED}.`}</p>
           </header>
-          <div className={`cs-gallery${mobileShots.length ? " cs-gallery--with-phone" : ""}`}>
-            <div className="cs-gallery__desktop">
-              {desktopShots.map((shot) => (
+          {phonesOnly ? (
+            <div className="cs-gallery cs-gallery--phones">
+              {mobileShots.map((shot) => (
                 <Screenshot key={shot.src} shot={shot} domain={domain} />
               ))}
             </div>
-            {mobileShots.length ? (
-              <div className="cs-gallery__mobile">
-                {mobileShots.map((shot) => (
+          ) : (
+            <div className={`cs-gallery${mobileShots.length ? " cs-gallery--with-phone" : ""}`}>
+              <div className="cs-gallery__desktop">
+                {desktopShots.map((shot) => (
                   <Screenshot key={shot.src} shot={shot} domain={domain} />
                 ))}
               </div>
-            ) : null}
-          </div>
+              {mobileShots.length ? (
+                <div className="cs-gallery__mobile">
+                  {mobileShots.map((shot) => (
+                    <Screenshot key={shot.src} shot={shot} domain={domain} />
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </section>
 
@@ -340,7 +358,7 @@ export function CaseStudyView({ content: c, project, moreProjects }: Props) {
             </h2>
             <p className="cs-text">
               We don&apos;t publish sales, traffic or conversion figures without the client&apos;s permission. These
-              are the results anyone can verify on the live site.
+              are the results anyone can verify on {livePlace}.
             </p>
             <ul className="cs-outcomes">
               {c.outcomes.map((outcome) => (

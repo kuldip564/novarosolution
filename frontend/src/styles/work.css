@@ -1018,6 +1018,37 @@
   }
 }
 
+/* App projects: three phone screens instead of a browser window, the middle one raised. */
+.wk-visual--phones {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(10px, 2.4vw, 32px);
+}
+
+.wk-visual--phones .wk-frame--phone {
+  display: block;
+  position: relative;
+  flex: 0 1 auto;
+  width: clamp(88px, 26%, 250px);
+  padding: clamp(4px, 0.6vw, 7px);
+  border-radius: clamp(16px, 2.6vw, 30px);
+  animation: none;
+}
+
+.wk-visual--phones .wk-frame--phone .wk-frame__media {
+  border-radius: clamp(12px, 2.1vw, 24px);
+}
+
+.wk-visual--phones .wk-frame--phone:nth-child(2) {
+  margin-bottom: clamp(16px, 4vw, 48px);
+  transition-delay: 0.28s;
+}
+
+.wk-visual--phones .wk-frame--phone:nth-child(3) {
+  transition-delay: 0.38s;
+}
+
 @media (min-width: 1024px) {
   /* 01 Full: title and details side by side, then the full-width visual */
   .wk-feature--full .wk-feature__copy {
@@ -1146,6 +1177,12 @@
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
     .wk-frame--phone {
+      animation: wk-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+
+    .wk-visual--phones .wk-frame--phone:nth-child(2) {
       animation: wk-drift linear both;
       animation-timeline: view();
       animation-range: entry 0% exit 100%;
