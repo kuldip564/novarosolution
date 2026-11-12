@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { AdSenseScript } from "@/components/analytics/AdSenseScript";
 import { AhrefsScript } from "@/components/analytics/AhrefsScript";
+import { ClarityScript } from "@/components/analytics/ClarityScript";
 import { AnalyticsListener } from "@/components/analytics/AnalyticsListener";
 import { ScrollProgressBar } from "@/components/anim/ScrollProgressBar";
 import { Footer } from "@/components/Footer";
@@ -66,6 +67,7 @@ export function SiteShell({ children }: SiteShellProps) {
         <AnalyticsListener />
         <AdSenseScript />
         <AhrefsScript />
+        <ClarityScript />
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
