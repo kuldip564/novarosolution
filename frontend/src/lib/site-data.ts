@@ -417,11 +417,12 @@ export const apiBase =
   process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const defaultHero = {
-  eyebrow: "Software · AI · Growth · Worldwide",
-  headline: "Custom software",
-  headlineAccent: "for growing businesses.",
+  eyebrow: "Software, AI & growth studio",
+  // "\n" starts a new headline line; the accent is the final, blue line.
+  headline: "We build software\nthat moves",
+  headlineAccent: "business forward.",
   lede:
-    "Web apps, mobile apps, AI features and the marketing around them, designed and built by one team in Gandhinagar, India. You see a working build every week, and the code is yours at launch.",
+    "From scalable web and mobile applications to intelligent AI features and digital growth systems, Novaro Solution turns ambitious ideas into production-ready technology.",
   ctaPrimary: "Start Your Project",
   ctaSecondary: "View Case Studies",
   metaStat: "1 day",
@@ -480,7 +481,7 @@ export const fallbackFaqs = [
     id: "1",
     question: "What types of projects do you take on?",
     answer:
-      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work spans logistics, D2C, healthcare services, and fintech.",
+      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work includes two D2C e-commerce stores, a pest-control service website with booking, and a courier booking and tracking platform.",
   },
   {
     id: "2",

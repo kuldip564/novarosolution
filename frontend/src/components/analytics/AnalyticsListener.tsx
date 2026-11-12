@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { track } from "@/lib/analytics";
 
 /** Layout classes that say nothing about which section a click came from. */
-const GENERIC_CLASSES = new Set(["home-scene", "sec", "light", "wrap", "reveal", "in"]);
+const GENERIC_CLASSES = new Set(["home-scene", "hm-section", "sec", "light", "wrap", "reveal", "in"]);
 
 function locationOf(el: Element): string {
   const tagged = el.closest<HTMLElement>("[data-cta-location]");

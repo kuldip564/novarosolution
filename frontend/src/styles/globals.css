@@ -294,7 +294,6 @@ html.site--bg-3d .page > .services-cinema {
   background: transparent;
 }
 
-html.site--bg-3d .home-cinema,
 html.site--bg-3d .work-cinema,
 html.site--bg-3d .about-cinema,
 html.site--bg-3d .services-cinema {
@@ -2651,12 +2650,6 @@ footer {
   transform: none;
 }
 
-/* Hero is the LCP. Don't hide it until JS adds .in. */
-.home-hero .reveal {
-  opacity: 1;
-  transform: none;
-}
-
 /* Safety: hero and page-head content visible if intersection observer is delayed */
 /* Page headers hold the largest paint on inner pages: never hide them behind JS.
    They are visible from the first frame and only slide up (transform does not delay LCP). */
@@ -2701,11 +2694,6 @@ footer {
 }
 
 .split-text.in .word-i {
-  opacity: 1;
-  transform: none;
-}
-
-.home-hero .split-text .word-i {
   opacity: 1;
   transform: none;
 }

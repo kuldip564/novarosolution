@@ -30,7 +30,7 @@ const Cursor = dynamic(
  * moment, so three.js never competes with first paint, hydration or the first interaction.
  */
 /** Pages that run their own WebGL scene: the global background stays off there (one canvas per page). */
-const OWN_SCENE_PATHS = new Set(["/work"]);
+const OWN_SCENE_PATHS = new Set(["/", "/work"]);
 
 function DesktopEffects({ pathname }: { pathname: string }) {
   const { ready, effectsEnabled } = useMotionSettings();

@@ -14,6 +14,9 @@ import { subscribeScroll } from "@/lib/scroll-store";
 
 const menuEase = [0.16, 0.84, 0.36, 1] as const;
 
+/** Pages whose hero starts at the very top: the header is transparent there until the page scrolls. */
+const OVER_HERO_PATHS = new Set(["/", "/work"]);
+
 const navContainerVariants = {
   hidden: {},
   visible: {
@@ -135,7 +138,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`site-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}
+        className={`site-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""} ${OVER_HERO_PATHS.has(pathname) ? "site-header--over-hero" : ""}`}
       >
         <div className="wrap nav">
           <BrandLogo

@@ -10,26 +10,7 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
  * when the hero leaves the viewport or the tab is hidden.
  */
 
-export type WorkHeroQuality = "high" | "medium";
-
-export type WorkHeroScene = {
-  canvas: HTMLCanvasElement;
-  render: (timeMs: number) => void;
-  /** Pointer position over the window, each axis -0.5…0.5. */
-  setPointer: (x: number, y: number) => void;
-  /** How far the hero has scrolled out of view, 0…1. */
-  setScroll: (progress: number) => void;
-  resize: (width: number, height: number) => void;
-  dispose: () => void;
-};
-
-type Options = {
-  width: number;
-  height: number;
-  theme: "light" | "dark";
-  quality: WorkHeroQuality;
-  pixelRatio: number;
-};
+import type { ThreeHeroScene, ThreeHeroSceneOptions } from "./use-three-scene";
 
 const BLUE = 0x2563eb;
 const CYAN = 0x22d3ee;
@@ -49,7 +30,7 @@ const PANELS: PanelSpec[] = [
   { size: [3.0, 0.75], position: [0.25, -1.95, 0.55], rotation: [-0.12, -0.12, 0] },
 ];
 
-export function createWorkHeroScene(options: Options): WorkHeroScene | null {
+export function createWorkHeroScene(options: ThreeHeroSceneOptions): ThreeHeroScene | null {
   const { theme, quality } = options;
   const dark = theme === "dark";
 
@@ -291,6 +272,9 @@ export function createWorkHeroScene(options: Options): WorkHeroScene | null {
     setScroll(progress) {
       scroll = Math.min(Math.max(progress, 0), 1);
     },
+    setAnimationLoop(fn) {
+      renderer.setAnimationLoop(fn);
+    },
     resize(width, height) {
       if (!width || !height) return;
       camera.aspect = width / height;
@@ -298,6 +282,7 @@ export function createWorkHeroScene(options: Options): WorkHeroScene | null {
       renderer.setSize(width, height, false);
     },
     dispose() {
+      renderer.setAnimationLoop(null);
       disposables.forEach((item) => item.dispose());
       room.traverse((child) => {
         const mesh = child as THREE.Mesh;

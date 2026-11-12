@@ -2,24 +2,21 @@ import { Reveal } from "@/components/anim/Reveal";
 import { Button } from "@/components/Button";
 import { LazyMap } from "@/components/sections/LazyMap";
 import Link from "next/link";
-import { formattedAddress, googleMapsUrl, mapEmbedUrl } from "@/lib/geo-seo";
+import { googleMapsUrl, mapEmbedUrl } from "@/lib/geo-seo";
 import { serviceAreaLinks } from "@/lib/locations";
 import { site } from "@/lib/site-data";
 
 type LocalPresenceProps = {
-  variant?: "home" | "contact";
+  /** Kept for existing callers; the homepage variant was retired with the old homepage. */
+  variant?: "contact";
 };
 
-export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
-  const isHome = variant === "home";
-  const sectionClass = isHome
-    ? "home-scene home-local light"
-    : "sec local-presence-sec";
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- callers still pass variant="contact"
+export function LocalPresence(_props: LocalPresenceProps) {
   return (
     <section
-      className={sectionClass}
-      aria-labelledby={isHome ? "home-local-title" : "local-presence-title"}
+      className="sec local-presence-sec"
+      aria-labelledby="local-presence-title"
       itemScope
       itemType="https://schema.org/LocalBusiness"
     >
@@ -28,32 +25,14 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
       <meta itemProp="email" content={site.email} />
 
       <div className="wrap">
-        {isHome ? (
-          <header className="home-section-head home-section-head--center">
-            <Reveal>
-              <span className="eyebrow center">Global delivery</span>
-            </Reveal>
-            <h2 id="home-local-title" className="home-section-head__title">
-              Software for the USA
-              <br />
-              and every other market.
-            </h2>
-            <Reveal delay={0.08}>
-              <p className="home-section-head__lede">
-                The studio is in Gandhinagar. Calls land in the US morning. The rest of the day is Slack.
-              </p>
-            </Reveal>
-          </header>
-        ) : (
-          <header className="local-presence-head">
-            <span className="eyebrow">Find us</span>
-            <h2 id="local-presence-title">Visit our Gandhinagar studio</h2>
-            <p>
-              Book a discovery call, or visit the Gandhinagar studio. We build for companies in
-              the USA, UK, Europe, the Middle East, and India.
-            </p>
-          </header>
-        )}
+        <header className="local-presence-head">
+          <span className="eyebrow">Find us</span>
+          <h2 id="local-presence-title">Visit our Gandhinagar studio</h2>
+          <p>
+            Book a discovery call, or visit the Gandhinagar studio. We build for companies in
+            the USA, UK, Europe, the Middle East, and India.
+          </p>
+        </header>
 
         <div className="local-grid">
           <Reveal className="local-map-wrap">
@@ -166,22 +145,11 @@ export function LocalPresence({ variant = "home" }: LocalPresenceProps) {
               </div>
             )}
 
-            {!isHome && (
-              <Button href={googleMapsUrl()} variant="ghost" className="local-cta-btn">
-                Open in Google Maps
-              </Button>
-            )}
-          </Reveal>
-        </div>
-
-        {isHome && (
-          <Reveal className="local-foot-cta">
-            <p>{formattedAddress()}</p>
-            <Button href="/locations" variant="ghost">
-              All locations
+            <Button href={googleMapsUrl()} variant="ghost" className="local-cta-btn">
+              Open in Google Maps
             </Button>
           </Reveal>
-        )}
+        </div>
       </div>
     </section>
   );
