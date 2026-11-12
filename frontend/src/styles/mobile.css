@@ -432,15 +432,6 @@
     font-size: 0.88rem;
   }
 
-  .blog-filters {
-    gap: 8px;
-  }
-
-  .blog-filters button {
-    min-height: var(--touch-min);
-    padding: 10px 14px;
-  }
-
   .faq-item summary {
     min-height: var(--touch-min);
     padding: 14px 16px;

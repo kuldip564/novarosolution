@@ -350,10 +350,6 @@ img[data-nimg] {
   box-shadow: 0 28px 56px -24px color-mix(in srgb, var(--cyan) 18%, transparent);
 }
 
-.blog-cinema .blog-pagination {
-  margin-top: clamp(1.5rem, 4vw, 2.5rem);
-}
-
 /* Contact info cards elevation */
 .contact-cinema .info-card {
   border-radius: 16px;
@@ -439,38 +435,8 @@ html.site--bg-3d .page-cinema .cta-band {
   gap: 0.85rem;
 }
 
-.blog-cinema .blog-listing {
-  padding-top: 0;
-}
-
-.blog-cinema .blog-featured {
-  margin-bottom: clamp(1.25rem, 3vw, 2rem);
-}
-
 .blog-cinema .blog-grid {
   gap: clamp(1rem, 2.5vw, 1.35rem);
-}
-
-.blog-cinema .blog-filters {
-  margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
-  padding: 0.5rem;
-  border-radius: 16px;
-  border: 1px solid var(--line-d);
-  background: color-mix(in srgb, var(--panel) 80%, transparent);
-}
-
-.blog-cinema .blog-filters button {
-  border-radius: 999px;
-  transition:
-    background 0.25s var(--ease),
-    border-color 0.25s var(--ease),
-    color 0.25s var(--ease),
-    transform 0.25s var(--ease);
-}
-
-.blog-cinema .blog-filters button:hover,
-.blog-cinema .blog-filters button[aria-current="true"] {
-  transform: translateY(-1px);
 }
 
 .legal-cinema .legal-wrap {
@@ -500,8 +466,7 @@ html.site--bg-3d .page-cinema .cta-band {
 }
 
 [data-theme="light"] .contact-cinema .form,
-[data-theme="light"] .legal-cinema .legal-wrap,
-[data-theme="light"] .blog-cinema .blog-filters {
+[data-theme="light"] .legal-cinema .legal-wrap {
   background: #ffffff;
   border-color: rgba(10, 23, 48, 0.08);
   box-shadow: var(--shadow-card);
@@ -522,12 +487,6 @@ html.site--bg-3d .page-cinema .cta-band {
 
 [data-theme="light"] .blog-cinema .blog-card-ph {
   background: linear-gradient(160deg, #eef2f9 0%, #e4ebf5 100%);
-}
-
-[data-theme="light"] .blog-cinema .blog-filters button[aria-current="true"] {
-  background: rgba(37, 99, 235, 0.1);
-  border-color: rgba(37, 99, 235, 0.22);
-  color: var(--navy);
 }
 
 [data-theme="light"] .blog-cinema .article-page .article-body,
@@ -584,19 +543,6 @@ html.site--bg-3d .page-cinema .cta-band {
 
 [data-theme="light"] .page-cinema .sec-head h2,
 [data-theme="light"] .page-cinema .faq-sec h2 {
-  color: var(--navy);
-}
-
-[data-theme="light"] .page-cinema .blog-filters button {
-  background: #ffffff;
-  border-color: rgba(10, 23, 48, 0.08);
-  color: var(--slate);
-}
-
-[data-theme="light"] .page-cinema .blog-filters button:hover,
-[data-theme="light"] .page-cinema .blog-filters button.active {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(37, 99, 235, 0.2);
   color: var(--navy);
 }
 
