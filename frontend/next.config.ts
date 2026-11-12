@@ -35,17 +35,20 @@ const enforcedCsp = ["frame-ancestors 'none'", "base-uri 'self'", "object-src 'n
  * Full policy in report-only mode: browsers log anything it would block (DevTools console)
  * without blocking it. Once production shows no violations, move it to the enforced header.
  * 'unsafe-inline' is needed for Next.js's inline bootstrap scripts and the GA loader.
+ * The googlesyndication / doubleclick / adtrafficquality hosts are Google AdSense (script, ad frames, pixels).
  */
+const adsenseHosts =
+  "https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://adservice.google.com https://www.googletagservices.com https://fundingchoicesmessages.google.com";
 const reportOnlyCsp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com ${adsenseHosts}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://res.cloudinary.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://www.google.com https://www.google.co.in",
+  `img-src 'self' data: blob: https://res.cloudinary.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://www.google.com https://www.google.co.in https://*.gstatic.com ${adsenseHosts}`,
   "font-src 'self' data:",
-  `connect-src 'self' ${browserApiOrigin} https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://www.google.com https://api.cloudinary.com`
+  `connect-src 'self' ${browserApiOrigin} https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://*.g.doubleclick.net https://www.google.com https://api.cloudinary.com https://csi.gstatic.com ${adsenseHosts}`
     .replace(/\s+/g, " ")
     .trim(),
-  "frame-src https://maps.google.com https://www.google.com",
+  `frame-src https://maps.google.com https://www.google.com ${adsenseHosts}`,
   "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",
