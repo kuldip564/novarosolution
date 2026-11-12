@@ -1,4 +1,4 @@
-import { teamCount } from "./team-data";
+import { aboutStats } from "./site-data";
 
 export type AboutMilestone = {
   year: string;
@@ -77,7 +77,7 @@ export const defaultAboutPage: AboutPageContent = {
     eyebrow: "Who we are",
     title: "A small studio that ships\nwith you, not around you.",
     body:
-      "One team from the first wireframe to the release after launch. In two years we have shipped platforms for D2C, logistics, healthcare, and services. The studio is in Gandhinagar.",
+      "One team from the first wireframe to the release after launch. In two years we have shipped products for D2C brands, home services, logistics and grocery delivery. The studio is in Gandhinagar.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -108,7 +108,7 @@ export const defaultAboutPage: AboutPageContent = {
         year: "Today",
         title: "Two years in",
         text:
-          "Two years of shipping production software for clients across fintech, healthcare, and D2C — still small by choice, still hands-on.",
+          "Two years of shipping production software: D2C stores, a service-booking website, a courier platform and grocery delivery apps. Still small by choice, still hands-on.",
       },
     ],
   },
@@ -314,12 +314,8 @@ export function normalizeAboutWhyItems(value: unknown): AboutWhyItem[] {
 }
 
 export function normalizeAboutStats(value: unknown): AboutStat[] {
-  const fallback = [
-    { value: 2, suffix: " yrs", label: "Shipping production software" },
-    { value: 32, suffix: "+", label: "Clients across India & abroad" },
-    { value: teamCount, suffix: "", label: "People on the team" },
-    { value: 98, suffix: "%", label: "Clients who return for phase two" },
-  ];
+  // Only figures that can be checked on this site (same as aboutStats in site-data.ts).
+  const fallback: AboutStat[] = aboutStats.map((stat) => ({ ...stat }));
 
   if (!Array.isArray(value) || value.length === 0) {
     return fallback;

@@ -109,29 +109,6 @@ body {
 
 /* ── Stats ── */
 
-.about-stats__item {
-  transition:
-    transform 0.35s var(--ease),
-    box-shadow 0.35s var(--ease);
-}
-
-.about-stats__item:hover {
-  transform: translateY(-3px);
-}
-
-[data-theme="light"] .about-stats__item {
-  background: #ffffff;
-  border: 1px solid rgba(10, 23, 48, 0.08);
-  box-shadow: 0 18px 44px -30px rgba(10, 23, 48, 0.14);
-}
-
-[data-theme="light"] .about-stats__value {
-  background: var(--grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 /* ── Testimonials ── */
 
 /* ── FAQ ── */
@@ -224,21 +201,8 @@ body {
 
 /* ── About page ── */
 
-[data-theme="light"] .about-why__item,
-[data-theme="light"] .about-value,
-[data-theme="light"] .about-who__glass {
-  background: #ffffff;
-  border-color: rgba(10, 23, 48, 0.08);
-  box-shadow: 0 18px 44px -30px rgba(10, 23, 48, 0.14);
-}
-
-[data-theme="light"] .about-timeline__item {
-  border-color: rgba(10, 23, 48, 0.08);
-}
-
 /* ── CTA bands ── */
 
-.about-cta__band,
 .cta-band {
   box-shadow: 0 28px 64px -32px rgba(30, 84, 214, 0.45);
 }
@@ -702,32 +666,10 @@ html.site--bg-3d .page-cinema .cta-band {
   box-shadow: 0 28px 64px -28px rgba(37, 99, 235, 0.22);
 }
 
-[data-theme="light"] .work-cinema,
-[data-theme="light"] .services-cinema {
+[data-theme="light"] .work-cinema {
   background:
     radial-gradient(ellipse 100% 60% at 50% -10%, rgba(84, 205, 246, 0.08), transparent 55%),
     var(--paper);
-}
-
-[data-theme="light"] .about-cinema {
-  background:
-    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(84, 205, 246, 0.08), transparent 55%),
-    var(--paper);
-}
-
-[data-theme="light"] .about-cinema .about-cta__band {
-  background: linear-gradient(155deg, #ffffff 0%, #eef4ff 48%, #e8f0fe 100%);
-  border-color: rgba(37, 99, 235, 0.14);
-  box-shadow: 0 28px 64px -28px rgba(37, 99, 235, 0.14);
-}
-
-[data-theme="light"] .about-cinema .about-cta__title,
-[data-theme="light"] .about-cinema .about-cta__title .word-i {
-  color: var(--navy);
-}
-
-[data-theme="light"] .about-cinema .about-cta__inner p {
-  color: var(--slate);
 }
 
 /* ── Home page, light theme — force flat white background everywhere ── */

@@ -6,7 +6,7 @@ const serviceSlugs = ["web-app-eng", "ai-machine-ml", "digital-marketing", "clou
 const serviceIcons = ["monitor", "ai", "chart", "cloud"] as const;
 
 const serviceTags: readonly (readonly string[])[] = [
-  ["Next.js", "Express", "SaaS", "Mobile"],
+  ["Next.js", "Express", "Flutter", "SaaS", "Mobile"],
   ["LLM apps", "Computer vision", "Pipelines"],
   ["SEO", "Paid ads", "Analytics", "Brand"],
   ["AWS", "GCP", "CI/CD", "Design systems"],

@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
-import { AboutExperience } from "@/components/about/AboutExperience";
+import { RevealScope } from "@/components/anim/RevealScope";
+import {
+  AboutHero,
+  AboutPractices,
+  AboutStory,
+  AboutTeam,
+  AboutTimeline,
+  AboutValues,
+  AboutWhy,
+  AboutWork,
+} from "@/components/about/AboutSections";
+import { StudioClosing } from "@/components/studio/StudioClosing";
 import {
   defaultAboutPage,
   normalizeAboutPage,
   normalizeAboutStats,
   normalizeAboutWhyItems,
 } from "@/lib/about-content";
-import { getPublishedTeam, getSiteContent } from "@/lib/content";
-import { mapDbTeam, type TeamMemberView } from "@/lib/content-mappers";
+import { getPublishedProjects, getPublishedTeam, getSiteContent } from "@/lib/content";
+import { mapDbProjectsToWork, mapDbTeam, type TeamMemberView } from "@/lib/content-mappers";
 import { createPageMetadata, siteBaseUrl } from "@/lib/site-metadata";
 import { breadcrumbJsonLd, ORGANIZATION_ID, webPageJsonLd } from "@/lib/structured-data";
 import { teamMemberSlug } from "@/lib/team-photos";
@@ -20,8 +31,10 @@ import {
   whyItems as defaultWhyItems,
   type CtaContent,
 } from "@/lib/site-data";
-import "@/styles/about.css";
 import { jsonLdString } from "@/lib/json-ld";
+import { toWorkProjects } from "@/lib/work-portfolio";
+import "@/styles/studio.css";
+import "@/styles/about.css";
 
 export const revalidate = 30;
 
@@ -57,12 +70,13 @@ function teamJsonLd(team: TeamMemberView[]) {
 }
 
 export default async function AboutPage() {
-  const [team, aboutPage, stats, whyItems, cta] = await Promise.all([
+  const [team, aboutPage, stats, whyItems, cta, projects] = await Promise.all([
     getPublishedTeam(),
     getSiteContent("aboutPage", defaultAboutPage),
     getSiteContent("aboutStats", aboutStats),
     getSiteContent("whyItems", defaultWhyItems),
     getSiteContent<CtaContent>("cta", defaultCta),
+    getPublishedProjects(),
   ]);
 
   const content = normalizeAboutPage(aboutPage);
@@ -80,14 +94,26 @@ export default async function AboutPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
-      <AboutExperience
-      content={content}
-      stats={normalizeAboutStats(stats)}
-      whyItems={normalizeAboutWhyItems(whyItems)}
-      team={teamView}
-      ctaTitle={aboutCta.title}
-      ctaDescription={aboutCta.description}
-      />
+      <main className="st ab">
+        <RevealScope attribute="data-st-reveal">
+          <AboutHero team={teamView} stats={normalizeAboutStats(stats)} />
+          <AboutStory who={content.whoWeAre} missionVision={content.missionVision} />
+          <AboutTimeline timeline={content.timeline} />
+          <AboutValues values={content.values} />
+          <AboutTeam content={content.team} team={teamView} />
+          <AboutPractices />
+          <AboutWhy content={content.whyUs} items={normalizeAboutWhyItems(whyItems)} />
+          <AboutWork projects={toWorkProjects(mapDbProjectsToWork(projects))} />
+          <StudioClosing
+            id="ab-closing-title"
+            eyebrow={content.cta.eyebrow}
+            title={aboutCta.title}
+            lede={aboutCta.description}
+            buttonLabel={content.cta.buttonLabel}
+            location="about-cta"
+          />
+        </RevealScope>
+      </main>
     </>
   );
 }

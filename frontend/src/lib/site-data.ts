@@ -85,7 +85,7 @@ export const services = [
     title: "Web & App Engineering",
     description:
       "Production-grade web and mobile apps built on Next.js and Node — fast, scalable, and made to ship and last.",
-    tags: ["Next.js", "Express", "SaaS", "Mobile"],
+    tags: ["Next.js", "Express", "Flutter", "SaaS", "Mobile"],
     icon: "monitor",
   },
   {
@@ -178,7 +178,7 @@ export const homeProjects = [
 ] as const;
 
 /**
- * Only figures anyone can check on this site: the studio opened in 2024, the portfolio lists four
+ * Only figures anyone can check on this site: the studio opened in 2024, the portfolio lists five
  * live client products, the team page lists every person, and the reply time is our promise.
  * Client counts or repeat-business rates belong here only once they can be shown to be true
  * (they can also be set in the admin: Site content → homeStats / aboutStats).

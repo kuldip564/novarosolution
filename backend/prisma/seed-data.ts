@@ -277,7 +277,7 @@ export const seedServicesGrid = [
     title: "Web & App Engineering",
     shortDescription:
       "Production-grade web and mobile apps built on Next.js and Node — fast, scalable, and made to ship and last.",
-    tags: ["Next.js", "Express", "SaaS", "Mobile"],
+    tags: ["Next.js", "Express", "Flutter", "SaaS", "Mobile"],
     icon: "monitor",
   },
   {

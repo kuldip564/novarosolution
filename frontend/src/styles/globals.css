@@ -288,15 +288,11 @@ html.site--bg-3d body {
   background: transparent;
 }
 
-html.site--bg-3d .page > main,
-html.site--bg-3d .page > .about-cinema,
-html.site--bg-3d .page > .services-cinema {
+html.site--bg-3d .page > main {
   background: transparent;
 }
 
-html.site--bg-3d .work-cinema,
-html.site--bg-3d .about-cinema,
-html.site--bg-3d .services-cinema {
+html.site--bg-3d .work-cinema {
   background: transparent;
 }
 
@@ -960,18 +956,6 @@ html.site--bg-3d .services-cinema {
   color: transparent;
 }
 
-.cinema-bigword {
-  font-size: clamp(3rem, 12vw, 8.25rem);
-  text-align: center;
-  text-wrap: balance;
-  line-height: 0.94;
-  padding-top: 0.06em;
-}
-
-.cinema-bigword .o {
-  display: block;
-}
-
 /* Keyword H1 that sits under a decorative big word (Work, Blog, Contact, About, Services). */
 .page-h1,
 .pagehead .page-h1 {
@@ -1480,218 +1464,6 @@ html.site--bg-3d .services-cinema {
   background: var(--cyan);
 }
 
-.srow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  padding: clamp(40px, 7vw, 90px) 0;
-  border-bottom: 1px solid var(--line-d);
-}
-
-.srow:nth-child(even) .srow-media {
-  order: -1;
-}
-
-.srow .no {
-  font-family: var(--font-sora), sans-serif;
-  font-weight: 800;
-  font-size: 1rem;
-  background: var(--grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: 0.1em;
-}
-
-.srow h3 {
-  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
-  color: var(--text-heading);
-  margin: 14px 0 16px;
-}
-
-.srow p {
-  color: var(--slate-light);
-  font-size: 1.04rem;
-  margin-bottom: 22px;
-}
-
-.srow ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.srow li {
-  display: flex;
-  gap: 12px;
-  color: var(--text-list);
-  font-size: 0.98rem;
-}
-
-.srow li::before {
-  content: "";
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--grad-soft);
-  border: 1px solid rgba(69, 200, 245, 0.4);
-}
-
-.srow-media {
-  position: relative;
-  width: 100%;
-  align-self: stretch;
-  min-height: clamp(260px, 42vw, 420px);
-  border-radius: 20px;
-  overflow: visible;
-}
-
-.srow-media-clip {
-  width: 100%;
-  min-height: clamp(260px, 42vw, 420px);
-  border-radius: 20px;
-  overflow: hidden;
-  will-change: clip-path;
-}
-
-.srow-media-slot {
-  position: relative;
-  width: 100%;
-  min-height: clamp(260px, 42vw, 420px);
-  isolation: isolate;
-}
-
-.srow-media-frame {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  min-height: clamp(260px, 42vw, 420px);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(143, 228, 255, 0.18);
-  box-shadow:
-    0 28px 64px -32px rgba(0, 0, 0, 0.55),
-    0 0 48px -12px rgba(47, 123, 255, 0.22);
-  background: var(--ink-800);
-}
-
-.srow-media-glow {
-  position: absolute;
-  inset: -14% -10%;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at 50% 46%,
-    rgba(69, 200, 245, 0.22),
-    rgba(47, 123, 255, 0.1) 44%,
-    transparent 72%
-  );
-  filter: blur(20px);
-  opacity: 0.9;
-}
-
-.srow-media-inner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  min-height: clamp(260px, 42vw, 420px);
-  overflow: hidden;
-  border-radius: inherit;
-}
-
-.srow-media-img {
-  display: block;
-  width: 100% !important;
-  height: auto !important;
-  min-height: clamp(260px, 42vw, 420px);
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.65s var(--ease);
-}
-
-.srow-media-frame:hover .srow-media-img {
-  transform: scale(1.03);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .srow-media-img,
-  .srow-media-frame:hover .srow-media-img {
-    transition: none;
-    transform: none;
-  }
-}
-
-.srow-cta {
-  margin-top: 26px;
-}
-
-.media-ph {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  background: var(--surface-media);
-  border: 1.5px dashed rgba(143, 228, 255, 0.35);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  text-align: center;
-  color: var(--slate-light);
-  min-height: 100%;
-  padding: 24px;
-}
-
-.media-ph .ph-ic {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: var(--grad-soft);
-  border: 1px solid rgba(69, 200, 245, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.media-ph .ph-ic svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--cyan-soft);
-  fill: none;
-  stroke-width: 1.6;
-}
-
-.media-ph .ph-t {
-  font-family: var(--font-sora), sans-serif;
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--text-media);
-}
-
-.media-ph .ph-s {
-  font-size: 0.76rem;
-  color: var(--slate);
-  letter-spacing: 0.04em;
-}
-
-.media-ph::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at 70% 20%,
-    rgba(69, 200, 245, 0.12),
-    transparent 50%
-  );
-  pointer-events: none;
-}
-
 .exp {
   position: relative;
   min-height: 100vh;
@@ -1861,10 +1633,6 @@ html.site--bg-3d .services-cinema {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr;
   gap: 16px;
-}
-
-.drawer-grid .media-ph {
-  aspect-ratio: 3 / 4;
 }
 
 .drawer-grid .drawer-shot,
@@ -2654,9 +2422,7 @@ footer {
 /* Page headers hold the largest paint on inner pages: never hide them behind JS.
    They are visible from the first frame and only slide up (transform does not delay LCP). */
 .hero .reveal,
-.pagehead .reveal,
-.services-intro__head.reveal,
-.about-intro__head.reveal {
+.pagehead .reveal {
   opacity: 1;
   transform: none;
   transition: none;
@@ -2672,9 +2438,7 @@ footer {
 
 @media (prefers-reduced-motion: reduce) {
   .hero .reveal,
-  .pagehead .reveal,
-  .services-intro__head.reveal,
-  .about-intro__head.reveal {
+  .pagehead .reveal {
     animation: none;
   }
 }
@@ -2696,15 +2460,6 @@ footer {
 .split-text.in .word-i {
   opacity: 1;
   transform: none;
-}
-
-.clip-reveal {
-  clip-path: inset(100% 0 0 0);
-  transition: clip-path 0.9s var(--ease);
-}
-
-.clip-reveal.in {
-  clip-path: inset(0 0 0 0);
 }
 
 .tilt {
@@ -2790,13 +2545,8 @@ footer {
 
   .work-grid,
   .why-grid,
-  .srow,
   .contact-grid {
     grid-template-columns: 1fr;
-  }
-
-  .srow:nth-child(even) .srow-media {
-    order: 0;
   }
 
   .drawer-grid {
@@ -3273,8 +3023,7 @@ footer {
   }
 
   .reveal,
-  .split-text .word-i,
-  .clip-reveal {
+  .split-text .word-i {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;

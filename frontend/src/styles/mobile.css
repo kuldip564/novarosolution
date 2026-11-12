@@ -183,21 +183,6 @@
     justify-content: center;
   }
 
-  .cinema-bigword,
-  .services-intro__bigword,
-  .about-intro__bigword {
-    width: 100%;
-    max-width: 100%;
-    padding-top: 0.08em;
-    overflow-wrap: anywhere;
-  }
-
-  .services-intro__content,
-  .about-intro__content {
-    width: 100%;
-    max-width: 100%;
-  }
-
   /* Short page intros sit right under the header instead of floating in a tall empty block. */
   .pagehead {
     min-height: 0;
@@ -219,10 +204,6 @@
   .bigword {
     font-size: clamp(2.85rem, 15vw, 4.75rem);
     line-height: 0.9;
-  }
-
-  .cinema-bigword {
-    font-size: clamp(2.75rem, 14vw, 4.5rem);
   }
 
   .marquee {
@@ -520,23 +501,10 @@
 
 /* Cinema pages — phone polish */
 @media (max-width: 768px) {
-  .services-cinema,
-  .about-cinema {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: clip;
-  }
 
   .page {
     overflow-x: clip;
     max-width: 100%;
-  }
-
-  .services-scene.services-intro,
-  .about-scene.about-intro {
-    min-height: max(88dvh, var(--hero-min-height));
-    padding-top: var(--hero-pad-top);
-    padding-bottom: var(--hero-pad-bottom);
   }
 }
 
@@ -592,7 +560,6 @@
     min-height: 40px;
   }
 
-  .services-detail__link,
   .error-page-links a {
     display: inline-flex;
     align-items: center;

@@ -75,9 +75,10 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
       "Core Web Vitals and accessibility baked in before launch",
       "A codebase your team can extend without rewriting",
     ],
+      // Case-study links match the services each case study lists (case-study-content.ts).
       relatedLinks: [
+        { label: "VeggieKing grocery delivery apps", href: "/work/veggieking" },
         { label: "Quadrato Cargo logistics platform", href: "/work/quadrato-cargo" },
-        { label: "Mr Antidot service platform", href: "/work/mr-antidot" },
       ],
     },
     "ai-machine-ml": {
@@ -86,10 +87,7 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
         "Pipelines that survive scale, drift, and compliance reviews",
         "Human review for the cases a model is unsure about",
       ],
-      relatedLinks: [
-        { label: "Mr Antidot operations platform", href: "/work/mr-antidot" },
-        { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
-      ],
+      relatedLinks: [{ label: "Shipping AI to production", href: "/blog/ai-prod-apps" }],
     },
     "digital-marketing": {
       outcomes: [
@@ -97,10 +95,7 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
         "Spend tied to revenue with clean attribution",
         "Brand and performance working from the same playbook",
       ],
-      relatedLinks: [
-        { label: "Zeevan premium D2C storefront", href: "/work/zeevan" },
-        { label: "KankreG brand commerce site", href: "/work/kankreg" },
-      ],
+      relatedLinks: [{ label: "Mr Antidot service website and SEO", href: "/work/mr-antidot" }],
     },
     "cloud-devops": {
       outcomes: [
@@ -108,12 +103,9 @@ const defaultServiceExtras: Record<string, ServiceExtra> = {
         "Design systems that keep UX consistent as you ship",
         "Security and observability built in, not bolted on",
       ],
-      relatedLinks: [
-        { label: "Quadrato Cargo platform build", href: "/work/quadrato-cargo" },
-      { label: "Talk to us about your stack", href: "/contact" },
-    ],
-  },
-};
+      relatedLinks: [{ label: "Talk to us about your stack", href: "/contact" }],
+    },
+  };
 
 export const defaultServicesPage: ServicesPageContent = {
   introTitle: "NOVARO",
@@ -121,10 +113,11 @@ export const defaultServicesPage: ServicesPageContent = {
   introLine: "Engineering, intelligence, and growth — built to ship.",
   introSubline:
     "Four practices. One accountable team. Production software, AI that holds up, and marketing that moves the numbers.",
+  // Only figures that can be checked on this site (see homeStats in site-data.ts).
   introStats: [
     { value: 4, suffix: "", label: "Core practices" },
-    { value: 2, suffix: " yrs", label: "Years of experience" },
-    { value: 32, suffix: "+", label: "Happy clients" },
+    { value: 2, suffix: " yrs", label: "Shipping production software" },
+    { value: 5, suffix: "", label: "Live client products" },
   ],
   capabilities: {
     eyebrow: "Capabilities",
