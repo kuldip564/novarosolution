@@ -3,6 +3,16 @@ import type { NextConfig } from "next";
 const apiOrigin = process.env.API_PROXY_TARGET || "http://127.0.0.1:5001";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", key: "host", value: "novarosolution.com" }],
+        destination: "https://www.novarosolution.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   turbopack: {
     root: import.meta.dirname,
   },

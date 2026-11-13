@@ -3,10 +3,18 @@ import { site } from "./site-data";
 import { geoMetaTags, defaultKeywords } from "./geo-seo";
 
 export function siteBaseUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "https://www.novarosolution.com"
-  );
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://www.novarosolution.com";
+
+  try {
+    const url = new URL(configured);
+    if (url.hostname.toLowerCase() === "novarosolution.com") {
+      url.hostname = "www.novarosolution.com";
+      url.protocol = "https:";
+    }
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return "https://www.novarosolution.com";
+  }
 }
 
 export function brandIconAbsoluteUrl(): string {
@@ -14,7 +22,7 @@ export function brandIconAbsoluteUrl(): string {
 }
 
 export const defaultSiteDescription =
-  "Novaro Solution — Gandhinagar, Gujarat IT studio for web app development, AI/ML, and digital marketing. Serving Ahmedabad, Gujarat & India. Production software from MVP to scale.";
+  "Novaro Solution is a Gandhinagar IT studio building web and mobile apps, AI features, and digital growth systems for businesses across Gujarat and India.";
 
 export const siteIcons: NonNullable<Metadata["icons"]> = {
   icon: [{ url: site.brandIcon, type: "image/png" }],
@@ -37,7 +45,7 @@ const defaultRobots: Metadata["robots"] = {
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteBaseUrl()),
   title: {
-    default: `${site.name} — Web App & AI Studio | Gandhinagar, Gujarat`,
+    default: `${site.name} | IT & Web App Studio, Gandhinagar`,
     template: `%s — ${site.name}`,
   },
   description: defaultSiteDescription,

@@ -15,13 +15,32 @@ import { defaultCta, pickCta, type CtaContent } from "@/lib/site-data";
 
 export const revalidate = 30;
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Blog — Web Development, AI & SEO Insights | Gujarat",
-  description:
-    "Novaro Solution blog — web app development, AI in production, SEO & digital marketing insights from our Gandhinagar, Gujarat IT studio.",
-  path: "/blog",
-  keywords: blogKeywords,
-});
+export async function generateMetadata({
+  searchParams,
+}: BlogPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const page = Math.max(1, Number(params.page) || 1);
+  const isFiltered = Boolean(params.category?.trim());
+
+  const title = isFiltered
+    ? "Filtered Blog Articles | Novaro Solution"
+    : page > 1
+      ? `Web, AI & SEO Insights | Page ${page} | Novaro`
+      : "Web, AI & SEO Insights | Novaro Solution";
+  const description = isFiltered
+    ? "Browse Novaro Solution articles filtered by topic, including software development, AI, mobile apps, and digital marketing."
+    : page > 1
+      ? `More Novaro Solution articles on web development, mobile apps, AI in production, technical SEO, and digital marketing. Page ${page}.`
+      : "Practical insights from Novaro Solution on web development, mobile apps, AI in production, technical SEO, and digital marketing.";
+
+  return {
+    ...createPageMetadata({ title, description, path: "/blog", keywords: blogKeywords }),
+    alternates: {
+      canonical: !isFiltered && page > 1 ? `/blog?page=${page}` : "/blog",
+    },
+    robots: isFiltered ? { index: false, follow: true } : { index: true, follow: true },
+  };
+}
 
 type BlogPageProps = {
   searchParams: Promise<{ page?: string; category?: string }>;

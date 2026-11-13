@@ -22,9 +22,9 @@ import "@/styles/about.css";
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "About Us — IT Studio Gandhinagar, Gujarat",
+  title: "About Novaro Solution | Gandhinagar IT Studio",
   description:
-    "Meet Novaro Solution — Gandhinagar & Ahmedabad IT studio. 8-person team shipping web apps, AI/ML & digital marketing for 32+ clients across Gujarat & India since 2024.",
+    "Meet Novaro Solution's team in Gandhinagar, Gujarat. We build web and mobile apps, AI/ML products, and digital growth systems for businesses.",
   path: "/about",
   keywords: aboutKeywords,
 });

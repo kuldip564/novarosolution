@@ -19,9 +19,9 @@ const WorkExperience = dynamic(
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Portfolio — Web & App Projects | Gujarat, India",
+  title: "Novaro Solution Portfolio | Web & App Projects",
   description:
-    "Novaro Solution client work — Zeevan, KankreG, Mr Antidot & Quadrato Cargo. E-commerce, logistics & service platforms built in Gandhinagar, Gujarat for clients across India.",
+    "Explore Novaro Solution's web, app, e-commerce, and logistics projects across D2C, services, and business platforms.",
   path: "/work",
   keywords: workKeywords,
 });

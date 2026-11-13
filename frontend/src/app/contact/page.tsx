@@ -33,9 +33,9 @@ const ContactForm = dynamic(
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Contact — Web Development Company Gandhinagar",
+  title: "Contact Novaro Solution | Gandhinagar",
   description:
-    "Contact Novaro Solution — Gandhinagar, Gujarat IT studio for web apps, AI/ML & SEO. Call +91 96244 98325 or email novaro@novarosolution.com. Serving Ahmedabad & all India.",
+    "Contact Novaro Solution in Gandhinagar for web and mobile apps, AI/ML, SEO, and digital marketing. Call or email our team to discuss your project.",
   path: "/contact",
   keywords: contactKeywords,
 });

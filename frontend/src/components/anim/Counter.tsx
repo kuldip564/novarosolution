@@ -28,6 +28,9 @@ export function Counter({ value, suffix = "", className = "" }: CounterProps) {
 
           const start = performance.now();
           const duration = 1400;
+          // Server-render the real value for crawlers and no-JS visitors;
+          // reset only when the visible animation begins.
+          el.textContent = `0${suffix}`;
 
           function tick(now: number) {
             const progress = Math.min((now - start) / duration, 1);
@@ -49,7 +52,7 @@ export function Counter({ value, suffix = "", className = "" }: CounterProps) {
 
   return (
     <div ref={ref} className={className} data-count={value} data-suffix={suffix}>
-      0
+      {`${value}${suffix}`}
     </div>
   );
 }

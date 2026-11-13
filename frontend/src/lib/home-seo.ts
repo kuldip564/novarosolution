@@ -12,10 +12,10 @@ import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
 export const homePagePath = "/";
 
 export const homeSeoTitle =
-  "Web App Development Company Gandhinagar | AI/ML & Digital Marketing — Novaro Solution";
+  "IT Company in Gandhinagar | Web & App Development | Novaro";
 
 export const homeSeoDescription =
-  "Novaro Solution — IT studio in Gandhinagar, Gujarat. Web & mobile apps, AI/ML, SEO & digital marketing for 32+ clients across Ahmedabad, GIFT City, Vadodara, Surat & India. Next.js experts.";
+  "Novaro Solution is a Gandhinagar IT company building websites, web and mobile apps, AI solutions, and digital growth systems for Gujarat businesses.";
 
 export const homeOgImage = "/images/webapp-dashboard.webp";
 

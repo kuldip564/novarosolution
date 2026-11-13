@@ -63,11 +63,18 @@ function MarqueeRow({
           className={`services-capabilities__track ${reverse ? "services-capabilities__track--reverse" : ""} ${animated ? "" : "services-capabilities__track--static"}`}
           role="list"
         >
-          {loop.map((item, index) => (
-            <div key={`${item.title}-${index}`} role="listitem">
-              <CapabilityCard item={item} />
-            </div>
-          ))}
+          {loop.map((item, index) => {
+            const isVisualDuplicate = index >= items.length;
+            return (
+              <div
+                key={`${item.title}-${index}`}
+                role={isVisualDuplicate ? undefined : "listitem"}
+                aria-hidden={isVisualDuplicate || undefined}
+              >
+                <CapabilityCard item={item} />
+              </div>
+            );
+          })}
         </div>
       </motion.div>
     </div>
