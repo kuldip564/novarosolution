@@ -81,9 +81,9 @@ export const locations: LocationEntry[] = [
     isoCode: "IN-GJ",
     eyebrow: "Gandhinagar · Gujarat · Our studio",
     h1: "Software & website development company in Gandhinagar",
-    seoTitle: "Software & Website Development in Gandhinagar",
+    seoTitle: "IT Company in Gandhinagar",
     seoDescription:
-      "Websites, web and mobile apps, AI and SEO from our studio at Capitol Icon, Sargasan, Gandhinagar. Visit the team and see a working build every week.",
+      "Websites, web and mobile apps, AI and SEO from our Sargasan, Gandhinagar studio. Meet the team and review a working build every week.",
     ogHeadline: "Software & website development in Gandhinagar",
     lede: "Our studio is at Capitol Icon in Sargasan, Gandhinagar. Local businesses, startups, and teams around GIFT City and Infocity can sit with the people building their product — and see a working build every week.",
     cardSummary: "Our studio at Capitol Icon, Sargasan — visit the team, Monday to Saturday.",
@@ -194,9 +194,9 @@ export const locations: LocationEntry[] = [
     isoCode: "IN-GJ",
     eyebrow: "Ahmedabad · Gujarat · 25 km from our studio",
     h1: "Website & software development for Ahmedabad businesses",
-    seoTitle: "Website & Software Development for Ahmedabad",
+    seoTitle: "Website Development in Ahmedabad",
     seoDescription:
-      "Websites, web and mobile apps, AI and SEO for Ahmedabad businesses, from our Gandhinagar studio 25 km away. Meet at the studio or over weekly demos.",
+      "Websites, apps, AI and SEO for Ahmedabad businesses, delivered from our Gandhinagar studio 25 km away. Meet us or review weekly demos.",
     ogHeadline: "Website & software development for Ahmedabad",
     lede: "We don't have an Ahmedabad office — our studio is in Sargasan, Gandhinagar, about 25 km away. Ahmedabad companies visit us there or work with us over calls, a shared channel, and a working build every week.",
     cardSummary: "25 km from our studio — meet in Sargasan or work over weekly demos.",
