@@ -20,9 +20,9 @@ import "@/styles/contact.css";
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Contact Us to Start a Software Project",
+  title: "Contact Novaro Solution | IT Company in Gandhinagar",
   description:
-    "Tell us what you need built: a web app, an AI feature or marketing. We reply within one business day. Call +91 96244 98325 or visit our Gandhinagar studio.",
+    "Contact our Gandhinagar team for website, web app, mobile app, AI, and SEO projects. Call +91 96244 98325 or send a project enquiry online.",
   path: "/contact",
   keywords: contactKeywords,
 });
