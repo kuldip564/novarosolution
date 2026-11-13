@@ -13,9 +13,9 @@ import "@/styles/locations.css";
 import { jsonLdString } from "@/lib/json-ld";
 
 const path = "/locations";
-const title = "Where We Work — Gandhinagar, India & Worldwide";
+const title = "Gandhinagar & Ahmedabad Locations";
 const description =
-  "Novaro Solution builds software from Gandhinagar for Gujarat, India, the USA, UK, Europe, UAE, Canada and Australia — with honest overlap hours for each time zone.";
+  "Our Gandhinagar studio serves Ahmedabad, Gujarat, India and international software teams across the USA, UK, Europe and UAE.";
 
 export const metadata: Metadata = createPageMetadata({
   title,
