@@ -87,7 +87,7 @@ const expoArchitecture = (domain: string) => [
 
 const zeevan: CaseStudyContent = {
   slug: "zeevan",
-  seoTitle: "Zeevan Case Study: D2C Pantry Store on Expo",
+  seoTitle: "Zeevan D2C Pantry Store Case Study",
   description:
     "How we built Zeevan's D2C pantry store with Expo: ghee, oil, masala and honey ranges, shop filters, customer accounts, order tracking and a mobile-first layout.",
   h1: "Zeevan: a D2C pantry store for ghee, oil, masala and honey",
