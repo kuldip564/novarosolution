@@ -72,8 +72,10 @@ export function BlogPostEditorPage({ postId }: BlogPostEditorPageProps) {
     }
   }, [postId, push]);
 
+  // Scheduled rather than called inline, so a quick unmount (or a changed id) cancels the load.
   useEffect(() => {
-    void load();
+    const timer = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(timer);
   }, [load]);
 
   function patch<K extends keyof AdminBlogPostInput>(key: K, value: AdminBlogPostInput[K]) {

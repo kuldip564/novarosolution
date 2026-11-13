@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Reveal } from "@/components/anim/Reveal";
 import { Tilt } from "@/components/anim/Tilt";
 import { CloudinaryImage } from "@/components/admin/CloudinaryImage";
@@ -38,7 +38,7 @@ function TeamCard({
   member: TeamMemberView;
   index: number;
   variant: "default" | "about";
-  onSelect: (member: TeamMemberView) => void;
+  onSelect: (member: TeamMemberView, trigger: HTMLElement) => void;
 }) {
   const cardClass =
     variant === "about" ? "team-card team-card--about team-card--clickable" : "team-card team-card--clickable";
@@ -47,17 +47,14 @@ function TeamCard({
   return (
     <Reveal delay={0.05 + index * 0.05}>
       <Tilt className={cardClass}>
-        <button
-          type="button"
-          className="team-card__trigger"
-          onClick={() => onSelect(member)}
-          aria-label={`View profile for ${member.name}`}
-        >
+        {/* The name is the button (its accessible name matches what people see); its ::after
+            overlay stretches over the card so the whole card stays clickable. */}
+        <div className="team-card__trigger">
           <div className="team-card__frame">
             {member.photoAsset ? (
               <CloudinaryImage
                 asset={member.photoAsset}
-                alt={member.name}
+                alt={`${member.name}, ${member.role} at Novaro Solution`}
                 width={600}
                 height={800}
                 transformWidth={960}
@@ -68,7 +65,7 @@ function TeamCard({
             ) : member.photo ? (
               <TeamPhoto
                 src={member.photo}
-                alt={member.name}
+                alt={`${member.name}, ${member.role} at Novaro Solution`}
                 className="team-card__photo"
                 priority={member.tier === "founder" && index === 0}
               />
@@ -83,10 +80,21 @@ function TeamCard({
             ) : member.tier === "manager" ? (
               <span className="team-card__badge team-card__badge--manager">Manager</span>
             ) : null}
-            <span className="team-card__view">View profile</span>
+            <span className="team-card__view" aria-hidden="true">
+              View profile
+            </span>
           </div>
           <div className="team-card__meta">
-            <h3>{member.name}</h3>
+            <h3>
+              <button
+                type="button"
+                className="team-card__open"
+                aria-haspopup="dialog"
+                onClick={(event) => onSelect(member, event.currentTarget)}
+              >
+                {member.name}
+              </button>
+            </h3>
             <span className="team-card__role">{member.role}</span>
             <span className="team-card__education">{preview.education}</span>
             {preview.skills.length > 0 ? (
@@ -101,7 +109,7 @@ function TeamCard({
               <span className="team-card__summary">{preview.summary}</span>
             )}
           </div>
-        </button>
+        </div>
       </Tilt>
     </Reveal>
   );
@@ -110,15 +118,19 @@ function TeamCard({
 export function TeamGrid({ members, variant = "default" }: TeamGridProps) {
   const [selectedMember, setSelectedMember] = useState<TeamMemberView | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const lastTrigger = useRef<HTMLElement | null>(null);
   const groups = groupTeamMembers(members);
 
-  function openProfile(member: TeamMemberView) {
+  function openProfile(member: TeamMemberView, trigger: HTMLElement) {
+    lastTrigger.current = trigger;
     setSelectedMember(member);
     setModalOpen(true);
   }
 
   function closeProfile() {
     setModalOpen(false);
+    // Keyboard and screen-reader users continue from the card they opened.
+    requestAnimationFrame(() => lastTrigger.current?.focus());
     window.setTimeout(() => setSelectedMember(null), 320);
   }
 

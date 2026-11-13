@@ -23,6 +23,12 @@
   width: 100%;
   height: 320px;
   border: 0;
+  /* Shown while the embed loads (or if maps are blocked). */
+  background:
+    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--cyan) 16%, transparent), transparent 42%),
+    linear-gradient(color-mix(in srgb, var(--cyan) 9%, transparent) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, color-mix(in srgb, var(--cyan) 9%, transparent) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--surface-media);
   filter: saturate(0.92) contrast(1.02);
   transition: filter 0.4s var(--ease);
 }
@@ -124,7 +130,7 @@
 .local-areas__label,
 .local-nearby__label {
   font-family: var(--font-sora), sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -144,6 +150,10 @@
 }
 
 .local-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
   padding: 1rem 1.1rem;
   border-radius: 14px;
   border: 1px solid var(--line-d);
@@ -153,6 +163,7 @@
 .local-meta a {
   font-size: 0.9rem;
   color: var(--text-heading);
+  overflow-wrap: anywhere;
   transition: color 0.25s var(--ease);
 }
 
@@ -170,6 +181,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .local-areas__pill {
@@ -277,7 +291,7 @@
 .contact-service-areas__label {
   display: block;
   font-family: var(--font-sora), sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -316,91 +330,6 @@
   border-color: rgba(10, 23, 48, 0.08);
 }
 
-/* Hero location chip */
-.home-hero__loc {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.85rem;
-  padding: 0.4rem 0.85rem 0.4rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid var(--line-d);
-  background: color-mix(in srgb, var(--surface-ghost) 80%, transparent);
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--slate-light);
-  letter-spacing: 0.02em;
-  backdrop-filter: blur(8px);
-}
-
-.home-hero__loc svg {
-  width: 15px;
-  height: 15px;
-  stroke: var(--cyan);
-  fill: none;
-  stroke-width: 1.8;
-  flex-shrink: 0;
-}
-
-.home-hero__loc strong {
-  color: var(--text-heading);
-  font-weight: 600;
-}
-
-/* Enhanced footer geo bar */
-.foot-geo-bar {
-  justify-content: space-between;
-}
-
-.foot-geo-bar__main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1rem;
-  flex: 1;
-}
-
-.foot-geo-bar__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  flex-shrink: 0;
-}
-
-.foot-geo-bar__directions {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  font-family: var(--font-sora), sans-serif;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  border: 1px solid color-mix(in srgb, var(--cyan) 30%, var(--line-d));
-  background: var(--surface-ghost);
-  transition:
-    background 0.25s var(--ease),
-    border-color 0.25s var(--ease),
-    color 0.25s var(--ease);
-}
-
-.foot-geo-bar__directions svg {
-  width: 13px;
-  height: 13px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-}
-
-.foot-geo-bar__directions:hover {
-  color: var(--text-heading);
-  border-color: color-mix(in srgb, var(--cyan) 50%, var(--line-d));
-  background: color-mix(in srgb, var(--cyan) 8%, transparent);
-}
-
 /* Light theme */
 [data-theme="light"] .local-map-card,
 [data-theme="light"] .local-address,
@@ -431,31 +360,22 @@
   color: var(--blue);
 }
 
+/* Small bold labels on the pale cards (#edeff4) need a deeper blue for 4.5:1. */
+.light .local-address__label,
+.light .local-meta__label,
+.light .local-areas__label,
+.light .local-nearby__label,
+[data-theme="light"] .local-meta__label,
+[data-theme="light"] .local-address__label,
+[data-theme="light"] .local-areas__label,
+[data-theme="light"] .local-nearby__label {
+  color: #1d4ed8;
+}
+
 [data-theme="light"] .local-areas__pill,
 [data-theme="light"] .local-nearby__list li {
   background: rgba(10, 23, 48, 0.03);
   border-color: rgba(10, 23, 48, 0.08);
-}
-
-[data-theme="light"] .home-hero__loc {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(10, 23, 48, 0.1);
-  box-shadow: 0 10px 28px -18px rgba(10, 23, 48, 0.14);
-}
-
-[data-theme="light"] .home-hero__loc svg {
-  stroke: var(--blue);
-}
-
-[data-theme="light"] .foot-geo-bar__directions {
-  color: var(--blue);
-  border-color: rgba(37, 99, 235, 0.2);
-  background: rgba(255, 255, 255, 0.9);
-}
-
-[data-theme="light"] .foot-geo-bar__directions:hover {
-  background: rgba(37, 99, 235, 0.06);
-  border-color: rgba(37, 99, 235, 0.35);
 }
 
 @media (max-width: 960px) {
@@ -467,46 +387,9 @@
     height: 260px;
   }
 
-  .local-meta-grid {
-    grid-template-columns: 1fr;
-  }
-
   .local-nearby__list {
     grid-template-columns: 1fr;
   }
-
-  .foot-geo-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .foot-geo-bar__actions {
-    justify-content: flex-start;
-  }
-}
-
-/* Home cinema — local presence section */
-.home-cinema .home-local {
-  padding-block: clamp(4rem, 8vw, 6rem);
-  background: var(--home-ink);
-}
-
-.home-cinema .home-local .home-section-head__title {
-  font-family: var(--font-sora), sans-serif;
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
-  font-weight: 700;
-  line-height: 1.12;
-  color: var(--text-heading);
-  text-align: center;
-  margin: 0.75rem 0 0;
-}
-
-[data-theme="light"] .home-cinema .home-local {
-  background: linear-gradient(180deg, #eef2f9 0%, #f6f8fc 100%);
-}
-
-[data-theme="light"] .home-cinema .home-local .home-section-head__title {
-  color: var(--navy);
 }
 
 @media (max-width: 640px) {
@@ -519,4 +402,43 @@
     width: 100%;
     justify-content: flex-end;
   }
+}
+
+@media (max-width: 520px) {
+  .local-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Service-area pills that link to location pages */
+a.local-areas__pill,
+a.contact-service-areas__pill {
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+
+a.local-areas__pill:hover,
+a.local-areas__pill:focus-visible,
+a.contact-service-areas__pill:hover,
+a.contact-service-areas__pill:focus-visible {
+  border-color: color-mix(in srgb, var(--cyan) 55%, var(--line-d));
+  color: var(--cyan);
+}
+
+.local-nearby__list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.local-nearby__list a strong {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--cyan) 45%, transparent);
+  text-underline-offset: 3px;
+}
+
+.local-nearby__list a:hover strong {
+  color: var(--cyan);
 }

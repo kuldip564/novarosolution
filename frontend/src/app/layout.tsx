@@ -19,7 +19,7 @@ const inter = Inter({
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700", "800"],
   display: "swap",
   preload: true,
 });
@@ -33,14 +33,15 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en-IN"
+      lang="en"
       className={`${inter.variable} ${sora.variable}`}
+      data-theme="light"
       suppressHydrationWarning
     >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement,k='theme',s=localStorage.getItem(k);if(s==='light'||s==='dark'){d.setAttribute('data-theme',s);return;}if(s==='system'||!s){var m=window.matchMedia('(prefers-color-scheme: dark)').matches;d.setAttribute('data-theme',m?'dark':'light');return;}d.setAttribute('data-theme','dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+            __html: `(function(){try{var d=document.documentElement,s=localStorage.getItem('theme');if(s==='dark'||s==='light'){d.setAttribute('data-theme',s);return;}if(s==='system'){d.setAttribute('data-theme',window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');return;}d.setAttribute('data-theme','light');}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`,
           }}
         />
       </head>
@@ -50,20 +51,34 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
       {process.env.NODE_ENV === "production" && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_MEASUREMENT_ID}');
-            `}
-          </Script>
-        </>
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            (function(){
+              var id='${GA_MEASUREMENT_ID}';
+              // Only the live site reports to GA: local builds, previews and the
+              // onrender.com copy would otherwise pollute the data with test visits.
+              if (!/(^|\\.)novarosolution\\.com$/.test(location.hostname)) return;
+              function load(){
+                if (window.__gaLoaded) return;
+                window.__gaLoaded=1;
+                var s=document.createElement('script');
+                s.src='https://www.googletagmanager.com/gtag/js?id='+id;
+                s.async=true;
+                document.head.appendChild(s);
+                window.dataLayer=window.dataLayer||[];
+                window.gtag=function(){dataLayer.push(arguments);};
+                gtag('js', new Date());
+                gtag('config', id);
+                (window.__gaPending||[]).forEach(function(e){gtag('event', e[0], e[1]);});
+                window.__gaPending=[];
+              }
+              window.__gaLoad=load;
+              addEventListener('pointerdown', load, {once:true});
+              addEventListener('scroll', load, {once:true, passive:true});
+              setTimeout(load, 8000);
+            })();
+          `}
+        </Script>
       )}
     </html>
   );

@@ -1,4 +1,4 @@
-import { teamCount } from "./team-data";
+import { aboutStats } from "./site-data";
 
 export type AboutMilestone = {
   year: string;
@@ -75,9 +75,9 @@ export const defaultAboutPage: AboutPageContent = {
   introLine: "We build digital products that earn trust — and keep earning it after launch.",
   whoWeAre: {
     eyebrow: "Who we are",
-    title: "A senior studio that ships\nwith you, not around you.",
+    title: "A small studio that ships\nwith you, not around you.",
     body:
-      "Novaro Solution is an IT studio headquartered in Gandhinagar, Gujarat. We specialise in web and app engineering, AI/ML, and digital marketing — helping founders and brands ship products that perform in production, not just in pitch decks. In two years we've delivered 50+ platforms for clients in D2C, logistics, healthcare, and services — with one accountable team from first wireframe to post-launch growth.",
+      "One team from the first wireframe to the release after launch. In two years we have shipped products for D2C brands, home services, logistics and grocery delivery. The studio is in Gandhinagar.",
   },
   missionVision: {
     eyebrow: "Mission & vision",
@@ -108,7 +108,7 @@ export const defaultAboutPage: AboutPageContent = {
         year: "Today",
         title: "Two years in",
         text:
-          "Two years of shipping production software for clients across fintech, healthcare, and D2C — still small by choice, still hands-on.",
+          "Two years of shipping production software: D2C stores, a service-booking website, a courier platform and grocery delivery apps. Still small by choice, still hands-on.",
       },
     ],
   },
@@ -158,7 +158,7 @@ export const defaultAboutPage: AboutPageContent = {
   },
   cta: {
     eyebrow: "Let's build something",
-    buttonLabel: "Start a project",
+    buttonLabel: "Start Your Project",
   },
 };
 
@@ -249,7 +249,16 @@ export function normalizeAboutPage(value: unknown): AboutPageContent {
     whoWeAre: {
       eyebrow: pickString(who.eyebrow, defaultAboutPage.whoWeAre.eyebrow),
       title: pickString(who.title, defaultAboutPage.whoWeAre.title),
-      body: pickString(who.body, defaultAboutPage.whoWeAre.body),
+      body: (() => {
+        const body = pickString(who.body, defaultAboutPage.whoWeAre.body);
+        if (
+          body.startsWith("Novaro Solution is an IT studio headquartered in Gandhinagar") ||
+          body.startsWith("Novaro Solution builds software for companies in the USA")
+        ) {
+          return defaultAboutPage.whoWeAre.body;
+        }
+        return body;
+      })(),
     },
     missionVision: {
       eyebrow: pickString(mv.eyebrow, defaultAboutPage.missionVision.eyebrow),
@@ -305,12 +314,8 @@ export function normalizeAboutWhyItems(value: unknown): AboutWhyItem[] {
 }
 
 export function normalizeAboutStats(value: unknown): AboutStat[] {
-  const fallback = [
-    { value: 2, suffix: " yrs", label: "Shipping production software" },
-    { value: 32, suffix: "+", label: "Clients across India & abroad" },
-    { value: teamCount, suffix: "", label: "People on the team" },
-    { value: 98, suffix: "%", label: "Clients who return for phase two" },
-  ];
+  // Only figures that can be checked on this site (same as aboutStats in site-data.ts).
+  const fallback: AboutStat[] = aboutStats.map((stat) => ({ ...stat }));
 
   if (!Array.isArray(value) || value.length === 0) {
     return fallback;

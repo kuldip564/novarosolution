@@ -108,39 +108,8 @@ async function main() {
     });
   }
 
-  const seedTestimonials = [
-    {
-      quote:
-        "Novaro shipped our logistics platform in weeks, not months. Booking, tracking, and admin flows went live together — and the codebase held up as we scaled past 10K deliveries.",
-      name: "Product Lead",
-      role: "Logistics · Gujarat",
-      rating: 5,
-    },
-    {
-      quote:
-        "They rebuilt our D2C storefront with Next.js and tied Meta ads to real conversions. Page speed improved, checkout friction dropped, and we finally had attribution we could trust.",
-      name: "Brand Founder",
-      role: "Premium D2C · India",
-      rating: 5,
-    },
-    {
-      quote:
-        "What stood out was ownership — one team handled engineering, design, and SEO without the usual agency hand-offs. Weekly demos kept us in the loop from day one.",
-      name: "Operations Director",
-      role: "Services · Healthcare",
-      rating: 5,
-    },
-  ] as const;
-
-  for (const [index, testimonial] of seedTestimonials.entries()) {
-    await prisma.testimonial.create({
-      data: {
-        ...testimonial,
-        order: index,
-        published: true,
-      },
-    });
-  }
+  // No seeded testimonials: quotes are added in the admin, only for real, named clients who agreed
+  // to be quoted. (The anonymous examples that used to be seeded here could not be verified.)
 
   const seedFaqs = [
     {
@@ -171,7 +140,7 @@ async function main() {
     {
       question: "Where is your team based?",
       answer:
-        "Our studio is in Gandhinagar, Gujarat, India. We work with clients across India and internationally — remote-first collaboration with shared Slack channels, weekly video standups, and async updates in your timezone.",
+        "Our studio is in Gandhinagar, India. We build software for clients in the USA, UK, Europe, the Middle East, and across India — remote collaboration, shared Slack, and hours that overlap US and India time zones.",
     },
     {
       question: "What technologies do you use?",

@@ -50,8 +50,8 @@ export function TeamPhoto({
         height={dim.height}
         sizes={dim.sizes}
         quality={TEAM_PHOTO_QUALITY}
-        priority={priority}
-        loading={priority ? undefined : "lazy"}
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : undefined}
         className="team-photo__img"
         onLoad={() => setLoaded(true)}
       />

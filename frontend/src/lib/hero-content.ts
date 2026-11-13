@@ -14,7 +14,42 @@ export function normalizeHeroContent(value: unknown): HeroContent {
   };
 
   let headline = pick("headline");
-  const headlineAccent = pick("headlineAccent");
+  let headlineAccent = pick("headlineAccent");
+  let eyebrow = pick("eyebrow");
+  let lede = pick("lede");
+  // ponytail: CMS still stores the India-only hero; rewrite those exact strings so the global headline ships without a migration
+  // Earlier built-in defaults (never hand-written by an editor) are upgraded to the current ones.
+  const legacyHeadline = [
+    "We engineer products",
+    "Web app development",
+    "We build software",
+    "Custom software",
+  ].includes(headline);
+  const legacyAccent = [
+    "that earn trust.",
+    "in Gandhinagar.",
+    "worldwide.",
+    "for growing businesses.",
+  ].includes(headlineAccent);
+  if (legacyHeadline || legacyAccent) {
+    headline = defaultHero.headline;
+    headlineAccent = defaultHero.headlineAccent;
+  }
+  if (
+    eyebrow === "Digital product studio · Gandhinagar, Gujarat" ||
+    eyebrow === "Digital product studio · Gandhinagar" ||
+    eyebrow === "Software · AI · Growth · Worldwide"
+  ) {
+    eyebrow = defaultHero.eyebrow;
+  }
+  if (
+    lede.startsWith("Novaro builds production-grade web and mobile apps") ||
+    lede.includes("USA, UK, Europe") ||
+    lede.startsWith("Web apps, mobile products, AI, and the marketing around them") ||
+    lede.startsWith("Web apps, mobile apps, AI features and the marketing around them")
+  ) {
+    lede = defaultHero.lede;
+  }
 
   // Legacy seed stored the full sentence in headline — split cleanly for display.
   if (
@@ -32,15 +67,32 @@ export function normalizeHeroContent(value: unknown): HeroContent {
   }
 
   return {
-    eyebrow: pick("eyebrow"),
+    eyebrow,
     headline: headline || defaultHero.headline,
     headlineAccent: headlineAccent || defaultHero.headlineAccent,
-    lede: pick("lede"),
-    ctaPrimary: pick("ctaPrimary"),
-    ctaSecondary: pick("ctaSecondary"),
-    metaStat: pick("metaStat"),
-    metaLabel: pick("metaLabel"),
+    lede,
+    ...upgradeLegacyActions(pick("ctaPrimary"), pick("ctaSecondary")),
+    ...upgradeLegacyStat(pick("metaStat"), pick("metaLabel")),
   };
+}
+
+/** Earlier default button labels → the site's standard labels (conversion tracking relies on them). */
+function upgradeLegacyActions(primary: string, secondary: string) {
+  const map: Record<string, string> = {
+    "Start your project": "Start Your Project",
+    "Book a call": "Start Your Project",
+    "Explore our work": "View Case Studies",
+    "See our work": "View Case Studies",
+  };
+  return { ctaPrimary: map[primary] ?? primary, ctaSecondary: map[secondary] ?? secondary };
+}
+
+/** The old "32 clients served" default can't be verified anywhere on the site: show the reply-time fact instead. */
+function upgradeLegacyStat(metaStat: string, metaLabel: string) {
+  if (metaStat === "32" && /clients served/i.test(metaLabel)) {
+    return { metaStat: defaultHero.metaStat, metaLabel: defaultHero.metaLabel };
+  }
+  return { metaStat, metaLabel };
 }
 
 export function heroContentFields(): Array<{
@@ -54,7 +106,7 @@ export function heroContentFields(): Array<{
     {
       key: "headline",
       label: "Headline (line 1)",
-      hint: "Main title before the blue accent phrase",
+      hint: "Main title before the blue accent phrase. Type \\n to start a new line.",
     },
     {
       key: "headlineAccent",

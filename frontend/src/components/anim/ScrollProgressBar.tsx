@@ -32,11 +32,9 @@ export function ScrollProgressBar() {
     <div
       ref={barRef}
       className="scroll-progress"
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={0}
-      aria-label="Page scroll progress"
+      // Decorative: the browser already conveys scroll position, and the value never updated for
+      // assistive tech (it always announced 0%).
+      aria-hidden="true"
     >
       <div ref={fillRef} className="scroll-progress-fill" style={{ transform: "scaleX(0)" }} />
     </div>

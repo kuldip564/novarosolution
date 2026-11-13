@@ -1,17 +1,11 @@
 import { globalSiteJsonLd } from "@/lib/structured-data";
+import { jsonLdString } from "@/lib/json-ld";
 
 export function SeoJsonLd() {
-  const schemas = globalSiteJsonLd();
-
   return (
-    <>
-      {schemas.map((schema) => (
-        <script
-          key={schema["@id"] as string}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      ))}
-    </>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: jsonLdString(globalSiteJsonLd()) }}
+    />
   );
 }

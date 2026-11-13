@@ -73,7 +73,7 @@ export async function deleteCloudinaryAsset(publicId: string): Promise<void> {
 
 export function buildTransformationUrl(
   publicId: string,
-  transforms: string[] = ["f_auto", "q_auto"],
+  transforms: string[] = ["f_auto", "q_auto:best"],
 ): string {
   if (!isCloudinaryConfigured()) {
     throw new Error("Cloudinary is not configured");

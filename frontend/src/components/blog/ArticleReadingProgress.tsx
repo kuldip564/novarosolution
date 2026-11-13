@@ -13,7 +13,7 @@ export function ArticleReadingProgress() {
       const fill = fillRef.current;
       if (!fill) return;
 
-      const article = document.querySelector<HTMLElement>(".article-body");
+      const article = document.querySelector<HTMLElement>("[data-article-body]");
       if (!article) return;
 
       const total = article.scrollHeight - window.innerHeight;
@@ -26,7 +26,7 @@ export function ArticleReadingProgress() {
   }, []);
 
   return (
-    <div className="article-progress" aria-hidden="true">
+    <div className="ar-progress" aria-hidden="true">
       <div
         ref={fillRef}
         style={{

@@ -26,7 +26,10 @@ function mapAssetPayload<T extends Record<string, unknown>>(
   } as T;
 }
 
-function crudRouter<T extends z.ZodType>(
+type CreateData = Parameters<typeof prisma.testimonial.create>[0]["data"];
+type UpdateData = Parameters<typeof prisma.testimonial.update>[0]["data"];
+
+function crudRouter<T extends z.ZodType<Record<string, unknown>>>(
   schema: T,
   model: "testimonial" | "teamMember" | "clientLogo" | "faq",
   assetField?: AssetField,
@@ -53,7 +56,7 @@ function crudRouter<T extends z.ZodType>(
       }
       const order = await nextOrder(model);
       const data = await (prisma[model] as typeof prisma.testimonial).create({
-        data: { ...mapAssetPayload(parsed.data, assetField), order },
+        data: { ...mapAssetPayload(parsed.data, assetField), order } as unknown as CreateData,
       });
       res.status(201).json({ ok: true, data });
     } catch (error) {
@@ -84,7 +87,7 @@ function crudRouter<T extends z.ZodType>(
       }
       const data = await (prisma[model] as typeof prisma.testimonial).update({
         where: { id: req.params.id },
-        data: mapAssetPayload(parsed.data, assetField),
+        data: mapAssetPayload(parsed.data, assetField) as UpdateData,
       });
       res.json({ ok: true, data });
     } catch (error) {

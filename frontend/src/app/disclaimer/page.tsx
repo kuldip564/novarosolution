@@ -3,8 +3,10 @@ import { LegalDocument } from "@/components/legal/LegalDocument";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Disclaimer",
-  description: "General disclaimer for Novaro Solution website content.",
+  title: "Website Disclaimer",
+  description:
+    "Limits on the information Novaro Solution publishes: blog posts, estimates, case-study results and third-party links are general guidance, not professional advice.",
+  ogEyebrow: "Legal",
   path: "/disclaimer",
 });
 

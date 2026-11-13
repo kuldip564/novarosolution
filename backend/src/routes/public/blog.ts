@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { isDatabaseAvailable, markDatabaseUnavailable } from "../../lib/dbHealth.js";
+import { isDatabaseConnectionError } from "../../lib/dbErrors.js";
 import { prisma } from "../../lib/prisma.js";
 import { parseCloudinaryAsset } from "../../types/media.js";
 import { computeReadingTime, publishedPostWhere, sanitizeRichText } from "../../utils/blog.js";
@@ -12,14 +13,14 @@ router.use(async (_req, res, next) => {
     next();
     return;
   }
-  res.status(503).json({
+  res.json({
     ok: false,
     error: "Database unavailable — using site fallbacks.",
   });
 });
 
 function onDbError(error: unknown, next: (error: unknown) => void) {
-  markDatabaseUnavailable();
+  if (isDatabaseConnectionError(error)) markDatabaseUnavailable(error);
   next(error);
 }
 
@@ -56,6 +57,7 @@ function mapPublicPost(post: {
       avatar: parseCloudinaryAsset(authorRaw?.avatar),
     },
     publishedAt: post.publishedAt?.toISOString() ?? post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
     readingTime: post.readingTime || computeReadingTime(post.content),
     metaTitle: post.metaTitle,
     metaDescription: post.metaDescription,

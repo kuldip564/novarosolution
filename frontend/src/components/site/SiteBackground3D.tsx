@@ -45,11 +45,18 @@ function SiteBackground3DInner() {
       const { scene, camera, animatables, dispose } = sceneBundle;
       const { points, stars, shapes } = animatables;
 
-      const renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: !mobile,
-        powerPreference: "high-performance",
-      });
+      let renderer: THREE.WebGLRenderer;
+      try {
+        renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: !mobile,
+          powerPreference: "high-performance",
+        });
+      } catch {
+        // No WebGL context available — keep the CSS background.
+        dispose();
+        return;
+      }
       renderer.setPixelRatio(getWebGLPixelRatio());
       renderer.setClearColor(0x000000, 0);
 
@@ -77,7 +84,11 @@ function SiteBackground3DInner() {
 
       const onVisibility = () => {
         tabVisible = document.visibilityState === "visible";
-        if (tabVisible) animate();
+        cancelAnimationFrame(frameId);
+        if (tabVisible) {
+          lastFrame = 0;
+          frameId = requestAnimationFrame(animate);
+        }
       };
 
       const onResize = () => {
@@ -86,11 +97,18 @@ function SiteBackground3DInner() {
         renderer.setSize(window.innerWidth, window.innerHeight);
       };
 
-      const animate = () => {
-        frameId = requestAnimationFrame(animate);
-        if (!tabVisible) return;
+      // Slow ambient motion: 30fps is indistinguishable here and halves GPU and CPU work.
+      const frameInterval = 1000 / 30;
+      let lastFrame = 0;
 
-        time += mobile ? 0.001 : 0.0014;
+      const animate = (now = 0) => {
+        if (!tabVisible) return;
+        frameId = requestAnimationFrame(animate);
+        if (now - lastFrame < frameInterval) return;
+        const steps = lastFrame ? Math.min((now - lastFrame) / (1000 / 60), 4) : 1;
+        lastFrame = now;
+
+        time += (mobile ? 0.001 : 0.0014) * steps;
         const sy = scrollStore.y;
 
         points.rotation.y = time + sy * 0.0008;
@@ -118,7 +136,7 @@ function SiteBackground3DInner() {
       document.addEventListener("visibilitychange", onVisibility);
       window.addEventListener("resize", onResize);
       onResize();
-      animate();
+      frameId = requestAnimationFrame(animate);
 
       return () => {
         cancelAnimationFrame(frameId);

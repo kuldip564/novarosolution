@@ -13,6 +13,8 @@ type PageHeadProps = {
   variant?: "default" | "bigword";
   className?: string;
   breadcrumbs?: BreadcrumbItem[];
+  /** Keyword-rich H1 shown under the decorative big word (bigword variant only). */
+  heading?: string;
   children?: ReactNode;
 };
 
@@ -25,6 +27,7 @@ export function PageHead({
   variant = "default",
   className = "",
   breadcrumbs,
+  heading,
   children,
 }: PageHeadProps) {
   return (
@@ -45,15 +48,30 @@ export function PageHead({
 
         {variant === "bigword" ? (
           <Reveal delay={0.1}>
-            <div className="bigword">
-              <span className="o">{title}</span>
-              {titleAccent && (
-                <>
-                  <br />
-                  <span className="g">{titleAccent}</span>
-                </>
-              )}
-            </div>
+            {heading ? (
+              <>
+                <div className="bigword" aria-hidden="true">
+                  <span className="o">{title}</span>
+                  {titleAccent && (
+                    <>
+                      <br />
+                      <span className="g">{titleAccent}</span>
+                    </>
+                  )}
+                </div>
+                <h1 className="page-h1">{heading}</h1>
+              </>
+            ) : (
+              <h1 className="bigword">
+                <span className="o">{title}</span>
+                {titleAccent && (
+                  <>
+                    <br />
+                    <span className="g">{titleAccent}</span>
+                  </>
+                )}
+              </h1>
+            )}
           </Reveal>
         ) : splitTitle ? (
           <SplitText text={title} className="page-title" />

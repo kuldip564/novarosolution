@@ -6,8 +6,9 @@ export const site = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
   description:
-    "A Gandhinagar-based digital product studio — we design, build, and grow web apps, AI systems, and marketing engines for startups and established brands across India.",
-  brandIcon: "/brand/novaro-icon.png",
+    "Novaro Solution designs and ships custom software — web apps, mobile products, AI systems, and digital marketing.",
+  brandIcon: "/brand/novaro-icon.webp",
+  brandMark: "/brand/novaro-icon-sm.webp",
   email: "novaro@novarosolution.com",
   phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
@@ -27,15 +28,14 @@ export const site = {
     timezone: "Asia/Kolkata",
   },
   serviceAreas: [
-    "Gandhinagar",
-    "Ahmedabad",
-    "GIFT City",
-    "Vadodara",
-    "Surat",
-    "Rajkot",
-    "Gujarat",
+    "USA",
+    "Canada",
+    "United Kingdom",
+    "Europe",
+    "UAE",
+    "Australia",
     "India",
-    "Worldwide (Remote)",
+    "Worldwide",
   ],
   nearbyCities: [
     { name: "Ahmedabad", distance: "25 km" },
@@ -43,12 +43,12 @@ export const site = {
     { name: "Vadodara", distance: "130 km" },
     { name: "Surat", distance: "265 km" },
   ],
+  /** Industries with a live case study behind them (see /work). Add one only with a project to show. */
   industries: [
-    "D2C & E-commerce",
-    "Logistics & Supply Chain",
-    "Healthcare & Services",
-    "Fintech & SaaS",
-    "Education & EdTech",
+    "D2C & e-commerce",
+    "Grocery delivery",
+    "Home & pest-control services",
+    "Logistics & courier",
   ],
   social: {
     linkedin: "https://www.linkedin.com/company/novaro-solution",
@@ -81,14 +81,16 @@ export const marqueeItems = [
 export const services = [
   {
     id: "01",
+    slug: "web-app-eng",
     title: "Web & App Engineering",
     description:
       "Production-grade web and mobile apps built on Next.js and Node — fast, scalable, and made to ship and last.",
-    tags: ["Next.js", "Express", "SaaS", "Mobile"],
+    tags: ["Next.js", "Express", "Flutter", "SaaS", "Mobile"],
     icon: "monitor",
   },
   {
     id: "02",
+    slug: "ai-machine-ml",
     title: "AI & Machine Learning",
     description:
       "Models, pipelines, and intelligent features that turn your data into decisions, automation, and real product value.",
@@ -97,6 +99,7 @@ export const services = [
   },
   {
     id: "03",
+    slug: "digital-marketing",
     title: "Digital Marketing",
     description:
       "SEO, performance campaigns, and brand systems that put your product in front of the right people at the right moment.",
@@ -141,7 +144,7 @@ export const processSteps = [
 
 export const homeProjects = [
   {
-    href: "https://www.zeevan.shop/",
+    href: "/work/zeevan",
     category: "E-commerce · D2C",
     title: "Zeevan",
     description:
@@ -149,7 +152,7 @@ export const homeProjects = [
     cover: "c1",
   },
   {
-    href: "https://www.kankreg.com/",
+    href: "/work/kankreg",
     category: "E-commerce · D2C",
     title: "KankreG",
     description:
@@ -157,7 +160,7 @@ export const homeProjects = [
     cover: "c2",
   },
   {
-    href: "https://www.mrantidot.com/",
+    href: "/work/mr-antidot",
     category: "Web App · Services",
     title: "Mr Antidot",
     description:
@@ -165,7 +168,7 @@ export const homeProjects = [
     cover: "c3",
   },
   {
-    href: "https://www.quadratocargo.com/",
+    href: "/work/quadrato-cargo",
     category: "Web App · Logistics",
     title: "Quadrato Cargo",
     description:
@@ -174,18 +177,24 @@ export const homeProjects = [
   },
 ] as const;
 
+/**
+ * Only figures anyone can check on this site: the studio opened in 2024, the portfolio lists five
+ * live client products, the team page lists every person, and the reply time is our promise.
+ * Client counts or repeat-business rates belong here only once they can be shown to be true
+ * (they can also be set in the admin: Site content → homeStats / aboutStats).
+ */
 export const homeStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
-  { value: 50, suffix: "+", label: "Products & platforms delivered" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 5, suffix: "", label: "Live client products in our portfolio" },
+  { value: teamCount, suffix: "", label: "People on the team" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ] as const;
 
 export const aboutStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 5, suffix: "", label: "Live client products in our portfolio" },
   { value: teamCount, suffix: "", label: "People on the team" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ] as const;
 
 export const whyItems = [
@@ -230,10 +239,10 @@ export const serviceDetails = [
     mediaTitle: "Web & App work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/webapp-dashboard.webp",
-      alt: "Web and app engineering services — glassmorphic dashboard on a laptop with navy and cyan UI",
-      width: 2048,
-      height: 1529,
+      src: "/images/services/web-app-eng.webp",
+      alt: "Glass browser and smartphone with floating interface cards, representing web and mobile app engineering",
+      width: 1200,
+      height: 900,
     },
   },
   {
@@ -250,10 +259,10 @@ export const serviceDetails = [
     mediaTitle: "AI / ML work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/ai-ml-dashboard.webp",
-      alt: "AI and machine learning services — neural network visualization with glassmorphic panels",
-      width: 2048,
-      height: 1529,
+      src: "/images/services/ai-machine-ml.webp",
+      alt: "Glowing neural core with connected nodes and glass rings, representing AI and machine learning",
+      width: 1200,
+      height: 900,
     },
   },
   {
@@ -270,10 +279,10 @@ export const serviceDetails = [
     mediaTitle: "Marketing work",
     mediaHint: "Add image / video · 4:3",
     media: {
-      src: "/images/digital-marketing-dashboard.webp",
-      alt: "Digital marketing services — analytics dashboard with campaign performance panels",
-      width: 2048,
-      height: 1529,
+      src: "/images/services/digital-marketing.webp",
+      alt: "Glass analytics dashboard with a growth curve and conversion funnel, representing digital marketing",
+      width: 1200,
+      height: 900,
     },
   },
   {
@@ -289,90 +298,130 @@ export const serviceDetails = [
     ],
     mediaTitle: "Cloud & Design work",
     mediaHint: "Add image / video · 4:3",
+    media: {
+      src: "/images/services/cloud-devops.webp",
+      alt: "Glass cloud linked to server blocks and a deployment pipeline, representing cloud, DevOps and design",
+      width: 1200,
+      height: 900,
+    },
   },
 ] as const;
 
 export const workProjects = [
   {
     idx: "01",
+    slug: "veggieking",
+    externalUrl: "https://play.google.com/store/apps/details?id=com.cm.vegieeking.customer",
+    category: "Mobile App · Grocery delivery",
+    title: "VeggieKing",
+    hook:
+      "Fresh fruit and vegetable delivery apps for customers and riders, with any-weight orders, live tracking and loyalty points.",
+    heroTitle: "VeggieKing apps",
+    story:
+      "VeggieKing delivers fresh produce and groceries to the door. We built its customer and delivery-partner apps in Flutter, with category shopping, voice search, any-weight orders, live tracking, points, one-tap reorder and festive themes.",
+    results: [
+      { value: "2", label: "Flutter apps" },
+      { value: "Flutter", label: "framework" },
+      { value: "Google Play", label: "live" },
+    ],
+    tags: ["Flutter", "Firebase", "Google Maps", "Grocery delivery"],
+  },
+  {
+    idx: "02",
     slug: "zeevan",
     externalUrl: "https://www.zeevan.shop/",
     category: "E-commerce · D2C",
     title: "Zeevan",
     hook:
-      "Premium A2 ghee brand storefront with product storytelling and a conversion-focused shopping experience.",
-    heroTitle: "Project hero — Zeevan",
+      "Pantry brand store for ghee, oil, masala and honey, with product storytelling, shop filters and customer accounts.",
+    heroTitle: "Zeevan online store",
     story:
       "We designed and built Zeevan's digital storefront to communicate premium quality from the first scroll — clear product hierarchy, trust-led visuals, and a fast path from discovery to purchase for A2 ghee buyers.",
     results: [
-      { value: "A2", label: "ghee positioning" },
-      { value: "D2C", label: "commerce flow" },
-      { value: "Fast", label: "mobile UX" },
+      { value: "4", label: "product ranges" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Accounts", label: "orders & rewards" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
-    idx: "02",
+    idx: "03",
     slug: "kankreg",
     externalUrl: "https://www.kankreg.com/",
     category: "E-commerce · D2C",
     title: "KankreG",
     hook:
       "A2 ghee D2C site with premium product presentation and a streamlined checkout journey.",
-    heroTitle: "Project hero — KankreG",
+    heroTitle: "KankreG online store",
     story:
       "KankreG needed a brand-forward commerce experience that feels as premium as the product. We shipped a responsive storefront with strong product pages, clear value messaging, and performance tuned for mobile shoppers.",
     results: [
-      { value: "Premium", label: "brand feel" },
-      { value: "Mobile", label: "first UX" },
-      { value: "SEO", label: "ready structure" },
+      { value: "3", label: "collections" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Offers", label: "discount codes" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
-    idx: "03",
+    idx: "04",
     slug: "mr-antidot",
     externalUrl: "https://www.mrantidot.com/",
     category: "Web App · Services",
     title: "Mr Antidot",
     hook:
       "Hygiene and pest-control platform with service booking, pricing tiers, and sector coverage for homes and businesses.",
-    heroTitle: "Project hero — Mr Antidot",
+    heroTitle: "Mr Antidot website",
     story:
       "Mr Antidot goes beyond a brochure site — we built a full service platform with treatment catalogues, transparent pricing, sector pages for hospitals and hospitality, team profiles, and lead capture wired for their operations team.",
     results: [
-      { value: "8+", label: "years in market" },
-      { value: "24/7", label: "support positioning" },
-      { value: "10+", label: "service lines" },
+      { value: "10", label: "service pages" },
+      { value: "Next.js", label: "framework" },
+      { value: "8", label: "sectors covered" },
     ],
     tags: ["Next.js", "Service booking", "CMS", "SEO"],
   },
   {
-    idx: "04",
+    idx: "05",
     slug: "quadrato-cargo",
     externalUrl: "https://www.quadratocargo.com/",
     category: "Web App · Logistics",
     title: "Quadrato Cargo",
     hook:
-      "International courier platform with booking, live tracking, and dispatch flows across 180 countries.",
-    heroTitle: "Project hero — Quadrato Cargo",
+      "International courier platform with four-step pickup booking, shipment tracking and quote requests.",
+    heroTitle: "Quadrato Cargo platform",
     story:
       "Quadrato Cargo is a full logistics product — instant and scheduled pickup booking, live shipment tracking, quote requests, and customer-facing flows designed for speed. We built the technology stack behind their Fast Forward, Rapid Reach promise.",
     results: [
-      { value: "180", label: "countries" },
-      { value: "10K+", label: "deliveries" },
-      { value: "~10 min", label: "pickup target" },
+      { value: "4-step", label: "booking flow" },
+      { value: "Next.js", label: "framework" },
+      { value: "QR", label: "tracking lookup" },
     ],
     tags: ["Next.js", "Booking", "Tracking", "Logistics"],
   },
 ] as const;
 
 export const contactServices = [
-  "Web / App",
-  "AI / ML",
-  "Marketing",
-  "Cloud / DevOps",
-  "Design",
+  "Web or mobile app",
+  "AI & automation",
+  "SEO & digital marketing",
+  "Cloud & DevOps",
+  "UI/UX design",
+  "Not sure yet",
+] as const;
+
+/** Service page slug → the matching option on the contact form (for ?service= links). */
+export const contactServiceBySlug: Record<string, (typeof contactServices)[number]> = {
+  "web-app-eng": "Web or mobile app",
+  "ai-machine-ml": "AI & automation",
+  "digital-marketing": "SEO & digital marketing",
+  "cloud-devops": "Cloud & DevOps",
+};
+
+export const contactTimelines = [
+  "As soon as possible",
+  "Within 1–3 months",
+  "In 3–6 months",
+  "Just exploring",
 ] as const;
 
 export const budgetRanges = [
@@ -386,15 +435,16 @@ export const apiBase =
   process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const defaultHero = {
-  eyebrow: "Digital product studio · Gandhinagar, Gujarat",
-  headline: "We engineer products",
-  headlineAccent: "that earn trust.",
+  eyebrow: "Software, AI & growth studio",
+  // "\n" starts a new headline line; the accent is the final, blue line.
+  headline: "We build software\nthat moves",
+  headlineAccent: "business forward.",
   lede:
-    "Novaro builds production-grade web and mobile apps, AI systems that survive real users, and digital marketing that moves revenue — one senior team from discovery to launch and beyond.",
-  ctaPrimary: "See our work",
-  ctaSecondary: "Book a call",
-  metaStat: "32",
-  metaLabel: "Clients served",
+    "From scalable web and mobile applications to intelligent AI features and digital growth systems, Novaro Solution turns ambitious ideas into production-ready technology.",
+  ctaPrimary: "Start Your Project",
+  ctaSecondary: "View Case Studies",
+  metaStat: "1 day",
+  metaLabel: "Reply time on new enquiries",
 } as const;
 
 export type HeroContent = {
@@ -409,9 +459,9 @@ export type HeroContent = {
 };
 
 export const defaultCta = {
-  homeTitle: "Ready to ship something worth showing off?",
+  homeTitle: "Tell us what you need built.",
   homeDescription:
-    "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
+    "Share a few lines about your project. We reply within one business day, book a 30-minute call, and then send a scoped proposal with timeline and budget.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
     "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",
@@ -439,42 +489,17 @@ export function pickCta(cta: CtaContent, page: CtaPageKey) {
   };
 }
 
-export const fallbackTestimonials = [
-  {
-    id: "1",
-    quote:
-      "Novaro shipped our logistics platform in weeks, not months. Booking, tracking, and admin flows went live together — and the codebase held up as we scaled past 10K deliveries.",
-    name: "Product Lead",
-    role: "Logistics · Gujarat",
-    rating: 5,
-    avatar: null,
-  },
-  {
-    id: "2",
-    quote:
-      "They rebuilt our D2C storefront with Next.js and tied Meta ads to real conversions. Page speed improved, checkout friction dropped, and we finally had attribution we could trust.",
-    name: "Brand Founder",
-    role: "Premium D2C · India",
-    rating: 5,
-    avatar: null,
-  },
-  {
-    id: "3",
-    quote:
-      "What stood out was ownership — one team handled engineering, design, and SEO without the usual agency hand-offs. Weekly demos kept us in the loop from day one.",
-    name: "Operations Director",
-    role: "Services · Healthcare",
-    rating: 5,
-    avatar: null,
-  },
-] as const;
+/**
+ * Testimonials come only from the admin (Testimonials), where each quote belongs to a real,
+ * named client who agreed to be quoted. There are deliberately no built-in examples.
+ */
 
 export const fallbackFaqs = [
   {
     id: "1",
     question: "What types of projects do you take on?",
     answer:
-      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work spans logistics, D2C, healthcare services, and fintech.",
+      "Web and mobile products, SaaS dashboards, AI/ML features, e-commerce storefronts, service booking platforms, marketing sites, and full-stack platforms — from MVP through scale-up. Recent work includes grocery delivery apps for customers and riders, two D2C e-commerce stores, a pest-control service website with booking, and a courier booking and tracking platform.",
   },
   {
     id: "2",
@@ -504,7 +529,7 @@ export const fallbackFaqs = [
     id: "6",
     question: "Where is your team based?",
     answer:
-      "Our studio is in Gandhinagar, Gujarat, India. We work with clients across India and internationally — remote-first collaboration with shared Slack channels, weekly video standups, and async updates in your timezone.",
+        "Our studio is in Gandhinagar, India. We build software for clients in the USA, UK, Europe, the Middle East, and across India — remote collaboration, shared Slack, and hours that overlap US and India time zones.",
   },
   {
     id: "7",

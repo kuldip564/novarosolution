@@ -6,8 +6,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { config, getCorsOrigins } from "./config/env.js";
-import { errorHandler } from "./middleware/errorHandler.js";
+import { config, getCorsOrigins, getTrustProxy } from "./config/env.js";
+import { errorHandler, HttpError } from "./middleware/errorHandler.js";
 import { notFoundHandler } from "./middleware/notFound.js";
 import adminRouter from "./routes/admin/index.js";
 import contactRouter from "./routes/contact.js";
@@ -21,6 +21,11 @@ const uploadsDir = path.join(__dirname, "..", "uploads");
 export function createApp() {
   const app = express();
   const allowedOrigins = getCorsOrigins();
+
+  // Render (and most hosts) put one proxy in front of the app. Without this, every visitor
+  // shares the proxy's IP, so one busy minute would rate-limit everyone.
+  app.set("trust proxy", getTrustProxy());
+  app.disable("x-powered-by");
 
   app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
   app.use(
@@ -37,7 +42,7 @@ export function createApp() {
           callback(null, true);
           return;
         }
-        callback(new Error("Not allowed by CORS"));
+        callback(new HttpError(403, "Origin not allowed"));
       },
       credentials: true,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -46,23 +51,50 @@ export function createApp() {
   app.use(cookieParser());
   app.use(express.json({ limit: "512kb" }));
 
-  if (config.NODE_ENV !== "production") {
-    app.use(morgan("dev"));
-  }
+  // Request log: compact in production, without health checks (Render pings them constantly).
+  app.use(
+    morgan(config.NODE_ENV === "production" ? ":method :url :status :res[content-length] - :response-time ms" : "dev", {
+      skip: (req) => req.originalUrl.startsWith("/api/health"),
+    }),
+  );
 
-  app.use("/uploads", express.static(uploadsDir));
+  // Uploaded images (local fallback when Cloudinary is off). SVG can carry script, so every file is
+  // served sandboxed: no scripts, no plugins, no framing, and never sniffed as another type.
+  app.use(
+    "/uploads",
+    express.static(uploadsDir, {
+      dotfiles: "deny",
+      index: false,
+      setHeaders(res) {
+        res.setHeader("Content-Security-Policy", "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox");
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+      },
+    }),
+  );
 
-  const apiLimiter = rateLimit({
+  // Page content is mostly read by the website's own server (cached for 30 s), so reads get a
+  // generous limit; writes and admin calls keep the stricter one.
+  const readLimiter = rateLimit({
     windowMs: 60_000,
-    max: 120,
+    limit: 600,
     standardHeaders: true,
     legacyHeaders: false,
     message: { ok: false, error: "Too many requests, please try again later." },
   });
 
+  const apiLimiter = rateLimit({
+    windowMs: 60_000,
+    limit: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => req.method === "GET" && req.path.startsWith("/content"),
+    message: { ok: false, error: "Too many requests, please try again later." },
+  });
+
   const contactLimiter = rateLimit({
     windowMs: 60_000,
-    max: 5,
+    limit: 5,
     standardHeaders: true,
     legacyHeaders: false,
     message: {
@@ -72,8 +104,9 @@ export function createApp() {
   });
 
   const apiRouter = express.Router();
-  apiRouter.use(apiLimiter);
   apiRouter.use("/health", healthRouter);
+  apiRouter.use(apiLimiter);
+  apiRouter.use("/content", (req, res, next) => (req.method === "GET" ? readLimiter(req, res, next) : next()));
   apiRouter.use("/contact", contactLimiter, contactRouter);
   apiRouter.use("/content", publicContentRouter);
   apiRouter.use("/content/blog", publicBlogRouter);

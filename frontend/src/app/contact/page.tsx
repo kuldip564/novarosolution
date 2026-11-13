@@ -1,54 +1,38 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { LocalPresence } from "@/components/sections/LocalPresence";
-import { CtaBand } from "@/components/sections/CtaBand";
+import { ContactForm } from "@/components/sections/ContactForm";
 import { FaqSection, mapDbFaqs } from "@/components/sections/FaqSection";
-import { PageHead } from "@/components/sections/PageHead";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getPublishedFaqs, getSiteContent } from "@/lib/content";
+import { googleMapsUrl } from "@/lib/geo-seo";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { contactKeywords } from "@/lib/geo-seo";
-import { breadcrumbJsonLd, faqPageJsonLd, LOCAL_BUSINESS_ID } from "@/lib/structured-data";
+import { breadcrumbJsonLd, LOCAL_BUSINESS_ID } from "@/lib/structured-data";
 import { siteBaseUrl } from "@/lib/site-metadata";
-import {
-  defaultCta,
-  pickCta,
-  type CtaContent,
-} from "@/lib/site-data";
+import { site } from "@/lib/site-data";
 import { contactPageDefaults } from "@/lib/page-content-defaults";
+import { jsonLdString } from "@/lib/json-ld";
+import "@/styles/studio.css";
+import "@/styles/contact.css";
 
-const ContactForm = dynamic(
-  () => import("@/components/sections/ContactForm").then((m) => m.ContactForm),
-  {
-    loading: () => (
-      <div className="contact-form-skeleton">
-        <Skeleton className="skeleton-field" />
-        <Skeleton className="skeleton-field" />
-        <Skeleton className="skeleton-field skeleton-field-lg" />
-      </div>
-    ),
-  },
-);
 
 export const revalidate = 30;
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Contact — Web Development Company Gandhinagar",
+  title: "Contact Us to Start a Software Project",
   description:
-    "Contact Novaro Solution — Gandhinagar, Gujarat IT studio for web apps, AI/ML & SEO. Call +91 96244 98325 or email novaro@novarosolution.com. Serving Ahmedabad & all India.",
+    "Tell us what you need built: a web app, an AI feature or marketing. We reply within one business day. Call +91 96244 98325 or visit our Gandhinagar studio.",
   path: "/contact",
   keywords: contactKeywords,
 });
 
 export default async function ContactPage() {
-  const [faqs, cta, pageCopy] = await Promise.all([
+  const [faqs, pageCopy] = await Promise.all([
     getPublishedFaqs(),
-    getSiteContent<CtaContent>("cta", defaultCta),
     getSiteContent("contactPage", contactPageDefaults),
   ]);
 
-  const contactCta = pickCta(cta, "contact");
-  const faqItems = mapDbFaqs(faqs);
   const base = siteBaseUrl();
 
   const jsonLd = [
@@ -61,36 +45,60 @@ export default async function ContactPage() {
       "@type": "ContactPage",
       "@id": `${base}/contact#contactpage`,
       url: `${base}/contact`,
-      name: "Contact Novaro Solution — Gandhinagar, Gujarat",
+      name: "Contact Novaro Solution",
       description:
-        "Contact our Gandhinagar IT studio for web development, AI/ML, and digital marketing projects across Gujarat and India.",
-      inLanguage: "en-IN",
+        "Contact Novaro Solution about a software, AI, or marketing project.",
+      inLanguage: "en",
       about: { "@id": LOCAL_BUSINESS_ID },
     },
-    faqPageJsonLd(faqItems),
-  ].filter(Boolean);
+  ];
 
   return (
     <main className="page-cinema contact-cinema">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
+          __html: jsonLdString(jsonLd.length === 1 ? jsonLd[0] : jsonLd),
         }}
       />
-      <PageHead
-        eyebrow={pageCopy.eyebrow}
-        title={pageCopy.title}
-        titleAccent={pageCopy.titleAccent}
-        variant="bigword"
-        description={pageCopy.description}
-        className="blog-head"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
-      />
+      <section className="st st-hero ct-hero" aria-labelledby="ct-hero-title" data-cta-location="contact-hero">
+        <div className="wrap st-hero__inner">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} className="st-hero__crumbs" />
+          <p className="st-eyebrow st-hero__eyebrow">{pageCopy.eyebrow} · Studio in Gandhinagar</p>
+          <h1 id="ct-hero-title" className="st-hero__title ct-hero__title">
+            <span className="st-mask">
+              <span style={{ ["--line" as string]: 0 }}>Talk to our</span>{" "}
+            </span>
+            <span className="st-mask st-mask--accent">
+              <span style={{ ["--line" as string]: 1 }}>Gandhinagar studio.</span>
+            </span>
+          </h1>
+          <p className="st-hero__lede">{pageCopy.description}</p>
+          <ul className="ct-quick" aria-label="Other ways to reach us">
+            <li>
+              <a href={`mailto:${site.email}`} className="ct-quick__btn">
+                <Mail size={18} aria-hidden="true" />
+                Email us
+              </a>
+            </li>
+            <li>
+              <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="ct-quick__btn">
+                <Phone size={18} aria-hidden="true" />
+                Call {site.phone}
+              </a>
+            </li>
+            <li>
+              <a href={googleMapsUrl()} className="ct-quick__btn" target="_blank" rel="noopener noreferrer">
+                <MapPin size={18} aria-hidden="true" />
+                Directions<span className="sr-only"> (opens Google Maps)</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
       <ContactForm />
       <LocalPresence variant="contact" />
       <FaqSection items={mapDbFaqs(faqs)} />
-      <CtaBand title={contactCta.title} description={contactCta.description} />
     </main>
   );
 }

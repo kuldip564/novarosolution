@@ -49,7 +49,7 @@ export function cloudinaryTransformUrl(
 
   const transforms = [
     options.format ?? "f_auto",
-    options.quality ?? "q_auto",
+    options.quality ?? "q_auto:best",
   ];
   if (options.width) transforms.push(`w_${options.width}`);
   if (options.height) transforms.push(`h_${options.height}`);

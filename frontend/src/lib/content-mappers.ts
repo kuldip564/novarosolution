@@ -57,11 +57,14 @@ export type HomeProjectView = {
 
 export type ServiceGridView = {
   id: string;
+  slug: string;
   title: string;
   description: string;
   tags: readonly string[] | string[];
   icon: string;
   imageAsset?: CloudinaryAsset | null;
+  /** Alt text set in the admin for the service image. */
+  imageAlt?: string | null;
 };
 
 export type TeamMemberView = {
@@ -131,7 +134,7 @@ export function mapDbProjectsToHomeGrid(projects: DbProject[]): HomeProjectView[
     );
 
     return {
-      href: project.externalUrl ?? "/work",
+      href: `/work/${project.slug}`,
       category: project.category,
       title: project.title,
       description: project.hook,
@@ -163,8 +166,8 @@ export function mapDbServicesToRows(services: DbService[]): ServiceRowView[] {
                 crop: "fill",
               }) ?? url,
             alt: service.imageAlt ?? service.title,
-            width: 2048,
-            height: 1529,
+            width: 1200,
+            height: 900,
           }
         : undefined,
     };
@@ -175,6 +178,7 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
   if (!services.length) {
     return fallbackServices.map((service) => ({
       id: service.id,
+      slug: service.slug,
       title: service.title,
       description: service.description,
       tags: service.tags,
@@ -184,11 +188,13 @@ export function mapDbServicesToGrid(services: DbService[]): ServiceGridView[] {
 
   return services.map((service, index) => ({
     id: String(index + 1).padStart(2, "0"),
+    slug: service.slug,
     title: service.title,
     description: service.shortDescription ?? service.description,
     tags: service.tags ?? [],
     icon: service.icon ?? "monitor",
     imageAsset: parseCloudinaryAsset(service.image),
+    imageAlt: service.imageAlt ?? null,
   }));
 }
 

@@ -8,9 +8,13 @@ type Lead = {
   id: string;
   name: string;
   email: string;
+  company?: string | null;
+  phone?: string | null;
   services: string[];
   budget: string | null;
+  timeline?: string | null;
   message: string;
+  source?: string | null;
   status: "NEW" | "READ" | "ARCHIVED";
   createdAt: string;
 };
@@ -102,6 +106,7 @@ export default function AdminLeadsPage() {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Company</th>
                   <th>Email</th>
                   <th>Status</th>
                   <th>Date</th>
@@ -115,6 +120,7 @@ export default function AdminLeadsPage() {
                     onClick={() => setSelected(lead)}
                   >
                     <td>{lead.name}</td>
+                    <td>{lead.company || "—"}</td>
                     <td>{lead.email}</td>
                     <td>{lead.status}</td>
                     <td>{new Date(lead.createdAt).toLocaleString()}</td>
@@ -131,16 +137,30 @@ export default function AdminLeadsPage() {
           ) : (
             <>
               <h2>{selected.name}</h2>
-              <p>{selected.email}</p>
+              <p>
+                <a href={`mailto:${selected.email}`}>{selected.email}</a>
+              </p>
+              {selected.company ? <p>{selected.company}</p> : null}
+              {selected.phone ? (
+                <p>
+                  <a href={`tel:${selected.phone.replace(/[^\d+]/g, "")}`}>{selected.phone}</a>
+                </p>
+              ) : null}
               <p className="admin-muted">{new Date(selected.createdAt).toLocaleString()}</p>
               <p>
                 <strong>Services:</strong>{" "}
-                {Array.isArray(selected.services) ? selected.services.join(", ") : "—"}
+                {Array.isArray(selected.services) && selected.services.length ? selected.services.join(", ") : "—"}
               </p>
               <p>
                 <strong>Budget:</strong> {selected.budget || "—"}
               </p>
-              <p>{selected.message}</p>
+              <p>
+                <strong>Timeline:</strong> {selected.timeline || "—"}
+              </p>
+              {selected.source ? (
+                <p className="admin-muted">Sent from {selected.source}</p>
+              ) : null}
+              <p style={{ whiteSpace: "pre-wrap" }}>{selected.message}</p>
               <div className="admin-detail-actions">
                 <button type="button" className="admin-btn ghost" onClick={() => setStatus(selected.id, "READ")}>
                   Mark read

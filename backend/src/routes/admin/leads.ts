@@ -25,27 +25,54 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+/**
+ * CSV cell. Text that starts with = + - @ (or a tab/CR) would run as a formula in Excel or
+ * Sheets, so it is prefixed with an apostrophe. Visitors control these fields.
+ */
+function csvCell(value: unknown): string {
+  let text = value == null ? "" : String(value);
+  if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
 router.get("/export", async (_req, res, next) => {
   try {
     const leads = await prisma.lead.findMany({ orderBy: { createdAt: "desc" } });
-    const header = ["id", "name", "email", "services", "budget", "message", "status", "createdAt"];
+    const header = [
+      "id",
+      "name",
+      "email",
+      "company",
+      "phone",
+      "services",
+      "budget",
+      "timeline",
+      "message",
+      "source",
+      "status",
+      "createdAt",
+    ];
     const rows = leads.map((lead) =>
       [
         lead.id,
         lead.name,
         lead.email,
-        JSON.stringify(lead.services),
+        lead.company ?? "",
+        lead.phone ?? "",
+        lead.services.join("; "),
         lead.budget ?? "",
-        lead.message.replace(/"/g, '""'),
+        lead.timeline ?? "",
+        lead.message,
+        lead.source ?? "",
         lead.status,
         lead.createdAt.toISOString(),
       ]
-        .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+        .map(csvCell)
         .join(","),
     );
 
     const csv = [header.join(","), ...rows].join("\n");
-    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", 'attachment; filename="novaro-leads.csv"');
     res.send(csv);
   } catch (error) {

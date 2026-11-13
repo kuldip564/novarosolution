@@ -1,0 +1,175 @@
+/* Contact form: layout, states and accessibility fixes. Mobile first. */
+
+.contact-form .form-row {
+  display: grid;
+  gap: 18px;
+}
+
+@media (min-width: 640px) {
+  .contact-form .form-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.form-required-note {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+/* Service chips sit in a fieldset with a real legend. */
+.field-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field-group legend {
+  display: block;
+  margin-bottom: 8px;
+  padding: 0;
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--slate-light);
+}
+
+.field-group.field-error .chip {
+  border-color: color-mix(in srgb, #dc2626 45%, var(--line-d));
+}
+
+.contact-form .chip:focus-visible,
+.form-success__again:focus-visible,
+.form-success__actions a:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* Honeypot: off-screen, not display:none (some bots skip hidden inputs). */
+.form-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-privacy {
+  margin-top: 0;
+  line-height: 1.55;
+}
+
+.form-privacy a {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Error text must stay readable on the light theme (4.5:1 or better). */
+[data-theme="light"] .field-error-msg,
+[data-theme="light"] .formnote-error {
+  color: #b91c1c;
+}
+
+.contact-form .formnote-error {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, #dc2626 35%, transparent);
+  background: color-mix(in srgb, #dc2626 7%, transparent);
+  line-height: 1.55;
+}
+
+/* iOS zooms into inputs under 16px; keep them at 16px on phones. */
+@media (max-width: 767px) {
+  .contact-form .field input,
+  .contact-form .field textarea,
+  .contact-form .field select {
+    font-size: 16px;
+  }
+}
+
+/* Success state replaces the form. */
+.form-success {
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, #10b981 35%, var(--line-d));
+  background:
+    radial-gradient(ellipse 80% 90% at 0% 0%, color-mix(in srgb, #10b981 10%, transparent), transparent 60%),
+    var(--surface-card);
+  box-shadow: var(--shadow-soft);
+}
+
+.form-success__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.form-success__icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.form-success__title {
+  margin: 1rem 0 0.5rem;
+  font-family: var(--font-sora), sans-serif;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  line-height: 1.2;
+  color: var(--text-heading);
+  outline: none;
+}
+
+.form-success p {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--text-soft);
+}
+
+.form-success p a {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.form-success__steps {
+  display: grid;
+  gap: 8px;
+  margin: 1.25rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.55;
+  color: var(--text-heading);
+}
+
+.form-success__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.form-success__actions a {
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.form-success__again {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

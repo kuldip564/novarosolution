@@ -1,0 +1,82 @@
+/* ─────────────────────────────────────────────────────────────
+   Site-wide motion layer, tuned to work on phones as well as desktops.
+   - Uses the individual `scale` property, so it composes with each component's own
+     transform-based hover and reveal effects instead of overriding them.
+   - Scroll-linked pieces run only where the browser supports scroll-driven animation.
+   - Nothing here runs under prefers-reduced-motion.
+   ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* 1 · The short rule before each section label draws in as the section arrives */
+    .st-eyebrow::before,
+    .hm-eyebrow::before,
+    .wk-eyebrow::before,
+    .eyebrow::before {
+      transform-origin: left center;
+      animation: mo-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+
+    /* 2 · Images settle into their frames as they scroll into view */
+    .hm-service__media img,
+    .hm-card__media img,
+    .sv-practice__frame img,
+    .bl-feature__img,
+    .ar-cover__img,
+    .case-more__img,
+    .cs-hero__img,
+    .cs-shot img,
+    .wk-frame--phone img,
+    .ab-tile img,
+    .ar-prose img {
+      animation: mo-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+    }
+  }
+
+  /* 3 · Press feedback on touch screens: an immediate, small dip under the finger */
+  @media (hover: none) {
+    .btn:active,
+    .bl-card__link:active,
+    .bl-feature__link:active,
+    .hm-card:active,
+    .hm-service__link:active,
+    .sv-cap:active,
+    .sv-work__row:active,
+    .sv-proof a:active,
+    .ab-row:active,
+    .ab-value:active,
+    .wk-row__link:active,
+    .case-more__card:active,
+    .ar-series__list a:active,
+    .ar-share__btn:active,
+    .bl-topic:active,
+    .info-card:active,
+    .loc-card:active,
+    .faq-item summary:active,
+    .faq-item button:active {
+      scale: 0.98;
+    }
+  }
+}
+
+@keyframes mo-draw {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@keyframes mo-settle {
+  from {
+    scale: 1.08;
+  }
+  to {
+    scale: 1;
+  }
+}

@@ -2,26 +2,26 @@ import type { Metadata } from "next";
 import { servicesKeywords } from "./geo-seo";
 import { site } from "./site-data";
 import type { ServiceDetailView } from "./services-content";
-import { ORGANIZATION_ID } from "./structured-data";
-import { brandIconAbsoluteUrl, siteBaseUrl, siteIcons } from "./site-metadata";
+import { ORGANIZATION_ID, WEBSITE_ID } from "./structured-data";
+import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "./site-metadata";
 
 export const servicesPagePath = "/services";
 
 export const servicesSeoTitle =
-  "Web App, AI/ML & SEO Services | IT Company Gandhinagar, Gujarat";
+  "Software, AI & Digital Marketing Services — Novaro Solution";
 
 export const servicesSeoDescription =
-  "Novaro Solution — web & app development, AI/ML, digital marketing & SEO in Gandhinagar, Gujarat. Serving Ahmedabad & India. Production-grade software that ships and scales.";
+  "Web and mobile app development, AI/ML, digital marketing and cloud DevOps for companies in the USA, UK, Europe, the Middle East and India.";
 
-export const servicesOgImage = "/images/webapp-dashboard.webp";
+export const servicesOgImage = ogImagePath("Web apps, AI, digital marketing & cloud services", "Services · Worldwide");
 
 export function servicesPageMetadata(): Metadata {
   const url = `${siteBaseUrl()}${servicesPagePath}`;
-  const ogTitle = `${servicesSeoTitle} — ${site.name}`;
+  const ogTitle = servicesSeoTitle;
   const ogImageUrl = `${siteBaseUrl()}${servicesOgImage}`;
 
   return {
-    title: servicesSeoTitle,
+    title: { absolute: ogTitle },
     description: servicesSeoDescription,
     keywords: servicesKeywords,
     alternates: {
@@ -30,7 +30,7 @@ export function servicesPageMetadata(): Metadata {
     icons: siteIcons,
     openGraph: {
       type: "website",
-      locale: "en_IN",
+      ...ogLocales,
       url,
       title: ogTitle,
       description: servicesSeoDescription,
@@ -38,8 +38,8 @@ export function servicesPageMetadata(): Metadata {
       images: [
         {
           url: servicesOgImage,
-          width: 2048,
-          height: 1529,
+          width: 1200,
+          height: 630,
           alt: "Novaro Solution web and app engineering services dashboard preview",
         },
       ],
@@ -76,37 +76,15 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
   };
 
   const webPage = {
-    "@type": "WebPage",
+    "@type": "CollectionPage",
     "@id": `${pageUrl}#webpage`,
     url: pageUrl,
     name: servicesSeoTitle,
     description: servicesSeoDescription,
-    isPartOf: {
-      "@type": "WebSite",
-      name: site.name,
-      url: base,
-    },
-    about: {
-      "@type": "Organization",
-      name: site.name,
-      url: base,
-    },
-  };
-
-  const provider = {
-    "@type": "Organization",
-    "@id": ORGANIZATION_ID,
-    name: site.name,
-    url: base,
-    logo: brandIconAbsoluteUrl(),
-    email: site.email,
-    telephone: site.phone,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Gandhinagar",
-      addressRegion: "Gujarat",
-      addressCountry: "IN",
-    },
+    inLanguage: "en",
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
   };
 
   const serviceNodes = services.map((service) => ({
@@ -115,14 +93,9 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
     name: service.title,
     description: service.description,
     serviceType: service.title,
-    url: `${pageUrl}#service-${service.slug}`,
+    url: `${base}/services/${service.slug}`,
     provider: { "@id": ORGANIZATION_ID },
-    areaServed: [
-      { "@type": "City", name: "Gandhinagar" },
-      { "@type": "City", name: "Ahmedabad" },
-      { "@type": "AdministrativeArea", name: "Gujarat" },
-      { "@type": "Country", name: "India" },
-    ],
+    areaServed: "Worldwide",
     ...(service.tools.length > 0
       ? {
           category: service.tools.join(", "),
@@ -132,6 +105,6 @@ export function servicesPageJsonLd(services: ServiceDetailView[]) {
 
   return {
     "@context": "https://schema.org",
-    "@graph": [provider, webPage, breadcrumb, ...serviceNodes],
+    "@graph": [webPage, breadcrumb, ...serviceNodes],
   };
 }

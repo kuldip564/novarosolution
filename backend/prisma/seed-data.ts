@@ -7,7 +7,7 @@ export const seedSite = {
   name: "Novaro Solution",
   tagline: "Software · Intelligence · Growth",
   description:
-    "A Gandhinagar-based digital product studio — we design, build, and grow web apps, AI systems, and marketing engines for startups and established brands across India.",
+    "Novaro Solution designs and ships custom software — web apps, mobile products, AI systems, and digital marketing — for companies in the USA, UK, Europe, the Middle East, and India.",
   email: "novaro@novarosolution.com",
   phone: "+91 96244 98325",
   location: "Gandhinagar, Gujarat, India",
@@ -27,15 +27,14 @@ export const seedSite = {
     timezone: "Asia/Kolkata",
   },
   serviceAreas: [
-    "Gandhinagar",
-    "Ahmedabad",
-    "GIFT City",
-    "Vadodara",
-    "Surat",
-    "Rajkot",
-    "Gujarat",
+    "USA",
+    "Canada",
+    "United Kingdom",
+    "Europe",
+    "UAE",
+    "Australia",
     "India",
-    "Worldwide (Remote)",
+    "Worldwide",
   ],
   industries: [
     "D2C & E-commerce",
@@ -53,21 +52,21 @@ export const seedSite = {
 };
 
 export const seedHero = {
-  eyebrow: "Digital product studio · Gandhinagar, Gujarat",
-  headline: "We engineer products",
-  headlineAccent: "that earn trust.",
+  eyebrow: "Software · AI · Growth · Worldwide",
+  headline: "Custom software",
+  headlineAccent: "for growing businesses.",
   lede:
-    "Novaro builds production-grade web and mobile apps, AI systems that survive real users, and digital marketing that moves revenue — one senior team from discovery to launch and beyond.",
-  ctaPrimary: "See our work",
-  ctaSecondary: "Book a call",
-  metaStat: "32",
-  metaLabel: "Clients served",
+    "Web apps, mobile apps, AI features and the marketing around them, designed and built by one team in Gandhinagar, India. You see a working build every week, and the code is yours at launch.",
+  ctaPrimary: "Start Your Project",
+  ctaSecondary: "View Case Studies",
+  metaStat: "1 day",
+  metaLabel: "Reply time on new enquiries",
 };
 
 export const seedCta = {
-  homeTitle: "Ready to ship something worth showing off?",
+  homeTitle: "Tell us what you need built.",
   homeDescription:
-    "Tell us what you're building. We'll reply within one business day with a clear path, timeline, and team fit.",
+    "Share a few lines about your project. We reply within one business day, book a 30-minute call, and then send a scoped proposal with timeline and budget.",
   servicesTitle: "Not sure where to start?",
   servicesDescription:
     "Tell us the problem — we'll map the shortest path to a shipped result, with the right team and a clear timeline.",
@@ -136,18 +135,19 @@ export const seedProcessSteps = [
   },
 ];
 
+// Only figures that can be checked on the site. Add client counts or repeat rates only when true.
 export const seedHomeStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
-  { value: 50, suffix: "+", label: "Products & platforms delivered" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 4, suffix: "", label: "Live client products in our portfolio" },
+  { value: 8, suffix: "", label: "People on the team" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ];
 
 export const seedAboutStats = [
   { value: 2, suffix: " yrs", label: "Shipping production software" },
-  { value: 32, suffix: "+", label: "Clients across India & abroad" },
+  { value: 4, suffix: "", label: "Live client products in our portfolio" },
   { value: 8, suffix: "", label: "People on the team" },
-  { value: 98, suffix: "%", label: "Clients who return for phase two" },
+  { value: 1, suffix: " day", label: "Reply time on new enquiries" },
 ];
 
 export const seedWhyItems = [
@@ -183,7 +183,7 @@ export const seedAboutPage = {
   introLine: "We build digital products that earn trust — and keep earning it after launch.",
   whoWeAre: {
     eyebrow: "Who we are",
-    title: "A senior studio that ships\nwith you, not around you.",
+    title: "A small studio that ships\nwith you, not around you.",
     body:
       "Novaro Solution is an IT studio headquartered in Gandhinagar, Gujarat. We specialise in web and app engineering, AI/ML, and digital marketing — helping founders and brands ship products that perform in production, not just in pitch decks. In two years we've delivered 50+ platforms for clients in D2C, logistics, healthcare, and services — with one accountable team from first wireframe to post-launch growth.",
   },
@@ -277,7 +277,7 @@ export const seedServicesGrid = [
     title: "Web & App Engineering",
     shortDescription:
       "Production-grade web and mobile apps built on Next.js and Node — fast, scalable, and made to ship and last.",
-    tags: ["Next.js", "Express", "SaaS", "Mobile"],
+    tags: ["Next.js", "Express", "Flutter", "SaaS", "Mobile"],
     icon: "monitor",
   },
   {
@@ -322,9 +322,9 @@ export const seedServiceDetails = [
       "API, backend, and integration layers",
       "Performance, security, and accessibility audits",
     ],
-    image: "/images/webapp-dashboard.webp",
+    image: "/images/services/web-app-eng.webp",
     imageAlt:
-      "Web and app engineering services — glassmorphic dashboard on a laptop with navy and cyan UI",
+      "Glass browser and smartphone with floating interface cards, representing web and mobile app engineering",
   },
   {
     no: "02",
@@ -338,9 +338,9 @@ export const seedServiceDetails = [
       "Forecasting, recommendations, and ranking",
       "MLOps, evaluation, and model monitoring",
     ],
-    image: "/images/ai-ml-dashboard.webp",
+    image: "/images/services/ai-machine-ml.webp",
     imageAlt:
-      "AI and machine learning services — neural network visualization with glassmorphic panels",
+      "Glowing neural core with connected nodes and glass rings, representing AI and machine learning",
   },
   {
     no: "03",
@@ -354,9 +354,9 @@ export const seedServiceDetails = [
       "Landing pages and conversion optimization",
       "Brand, creative, and analytics setup",
     ],
-    image: "/images/digital-marketing-dashboard.webp",
+    image: "/images/services/digital-marketing.webp",
     imageAlt:
-      "Digital marketing services — analytics dashboard with campaign performance panels",
+      "Glass analytics dashboard with a growth curve and conversion funnel, representing digital marketing",
   },
   {
     no: "04",
@@ -370,9 +370,9 @@ export const seedServiceDetails = [
       "Design systems and product UI/UX",
       "Security reviews and compliance readiness",
     ],
-    image: null,
+    image: "/images/services/cloud-devops.webp",
     imageAlt:
-      "Cloud, DevOps, and design services — infrastructure and design system preview",
+      "Glass cloud linked to server blocks and a deployment pipeline, representing cloud, DevOps and design",
   },
 ];
 
@@ -461,8 +461,8 @@ export const seedServicesPage = {
         "A codebase your team can extend without rewriting",
       ],
       relatedLinks: [
-        { label: "Quadrato Cargo logistics platform", href: "https://www.quadratocargo.com/" },
-        { label: "Mr Antidot service platform", href: "https://www.mrantidot.com/" },
+        { label: "Quadrato Cargo logistics platform", href: "/work/quadrato-cargo" },
+        { label: "Mr Antidot service platform", href: "/work/mr-antidot" },
       ],
     },
     "ai-machine-ml": {
@@ -472,7 +472,7 @@ export const seedServicesPage = {
         "Human-in-the-loop workflows clinicians and ops teams trust",
       ],
       relatedLinks: [
-        { label: "Mr Antidot operations platform", href: "https://www.mrantidot.com/" },
+        { label: "Mr Antidot operations platform", href: "/work/mr-antidot" },
         { label: "Shipping AI to production", href: "/blog/ai-prod-apps" },
       ],
     },
@@ -483,8 +483,8 @@ export const seedServicesPage = {
         "Brand and performance working from the same playbook",
       ],
       relatedLinks: [
-        { label: "Zeevan premium D2C storefront", href: "https://www.zeevan.shop/" },
-        { label: "KankreG brand commerce site", href: "https://www.kankreg.com/" },
+        { label: "Zeevan premium D2C storefront", href: "/work/zeevan" },
+        { label: "KankreG brand commerce site", href: "/work/kankreg" },
       ],
     },
     "cloud-devops": {
@@ -494,7 +494,7 @@ export const seedServicesPage = {
         "Security and observability built in, not bolted on",
       ],
       relatedLinks: [
-        { label: "Quadrato Cargo platform build", href: "https://www.quadratocargo.com/" },
+        { label: "Quadrato Cargo platform build", href: "/work/quadrato-cargo" },
         { label: "Talk to us about your stack", href: "/contact" },
       ],
     },
@@ -504,6 +504,27 @@ export const seedServicesPage = {
 export const seedWorkProjects = [
   {
     idx: "01",
+    slug: "veggieking",
+    externalUrl: "https://play.google.com/store/apps/details?id=com.cm.vegieeking.customer",
+    category: "Mobile App · Grocery delivery",
+    title: "VeggieKing",
+    hook:
+      "Fresh fruit and vegetable delivery apps for customers and riders, with any-weight orders, live tracking and loyalty points.",
+    heroTitle: "Project hero — VeggieKing",
+    story:
+      "VeggieKing delivers fresh produce and groceries to the door. We built its customer and delivery-partner apps in Flutter, with category shopping, voice search, any-weight orders, live tracking, points, one-tap reorder and festive themes.",
+    coverClass: "c1",
+    heroImage: "/images/work/veggieking.jpg",
+    screens: ["/images/work/veggieking.jpg"],
+    results: [
+      { value: "2", label: "Flutter apps" },
+      { value: "Flutter", label: "framework" },
+      { value: "Google Play", label: "live" },
+    ],
+    tags: ["Flutter", "Firebase", "Google Maps", "Grocery delivery"],
+  },
+  {
+    idx: "02",
     slug: "zeevan",
     externalUrl: "https://www.zeevan.shop/",
     category: "E-commerce · D2C",
@@ -517,14 +538,14 @@ export const seedWorkProjects = [
     heroImage: "/images/work/zeevan.jpg",
     screens: ["/images/work/zeevan.jpg"],
     results: [
-      { value: "A2", label: "ghee positioning" },
-      { value: "D2C", label: "commerce flow" },
-      { value: "Fast", label: "mobile UX" },
+      { value: "4", label: "product ranges" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Accounts", label: "orders & rewards" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
-    idx: "02",
+    idx: "03",
     slug: "kankreg",
     externalUrl: "https://www.kankreg.com/",
     category: "E-commerce · D2C",
@@ -538,14 +559,14 @@ export const seedWorkProjects = [
     heroImage: "/images/work/kankreg.jpg",
     screens: ["/images/work/kankreg.jpg"],
     results: [
-      { value: "Premium", label: "brand feel" },
-      { value: "Mobile", label: "first UX" },
-      { value: "SEO", label: "ready structure" },
+      { value: "3", label: "collections" },
+      { value: "Expo", label: "React Native web" },
+      { value: "Offers", label: "discount codes" },
     ],
-    tags: ["E-commerce", "Next.js", "Brand", "D2C"],
+    tags: ["E-commerce", "Expo", "React Native", "D2C"],
   },
   {
-    idx: "03",
+    idx: "04",
     slug: "mr-antidot",
     externalUrl: "https://www.mrantidot.com/",
     category: "Web App · Services",
@@ -559,20 +580,20 @@ export const seedWorkProjects = [
     heroImage: "/images/work/mr-antidot.jpg",
     screens: ["/images/work/mr-antidot.jpg"],
     results: [
-      { value: "8+", label: "years in market" },
-      { value: "24/7", label: "support positioning" },
-      { value: "10+", label: "service lines" },
+      { value: "10", label: "service pages" },
+      { value: "Next.js", label: "framework" },
+      { value: "8", label: "sectors covered" },
     ],
     tags: ["Next.js", "Service booking", "CMS", "SEO"],
   },
   {
-    idx: "04",
+    idx: "05",
     slug: "quadrato-cargo",
     externalUrl: "https://www.quadratocargo.com/",
     category: "Web App · Logistics",
     title: "Quadrato Cargo",
     hook:
-      "International courier platform with booking, live tracking, and dispatch flows across 180 countries.",
+      "International courier platform with four-step pickup booking, shipment tracking and quote requests.",
     heroTitle: "Project hero — Quadrato Cargo",
     story:
       "Quadrato Cargo is a full logistics product — instant and scheduled pickup booking, live shipment tracking, quote requests, and customer-facing flows designed for speed. We built the technology stack behind their Fast Forward, Rapid Reach promise.",
@@ -580,9 +601,9 @@ export const seedWorkProjects = [
     heroImage: "/images/work/quadrato-cargo.jpg",
     screens: ["/images/work/quadrato-cargo.jpg"],
     results: [
-      { value: "180", label: "countries" },
-      { value: "10K+", label: "deliveries" },
-      { value: "~10 min", label: "pickup target" },
+      { value: "4-step", label: "booking flow" },
+      { value: "Next.js", label: "framework" },
+      { value: "QR", label: "tracking lookup" },
     ],
     tags: ["Next.js", "Booking", "Tracking", "Logistics"],
   },
@@ -612,7 +633,7 @@ export const seedServicesSection = {
 };
 
 export const seedWhySection = {
-  title: "Senior people. One team. Real ownership.",
+  title: "One team. Real ownership.",
 };
 
 export const seedTeamSection = {

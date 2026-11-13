@@ -5,14 +5,14 @@
   "lang": "en-IN",
   "icons": [
     {
-      "src": "/brand/novaro-icon.png",
-      "sizes": "512x512",
+      "src": "/brand/novaro-icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/brand/novaro-icon.png",
-      "sizes": "512x512",
+      "src": "/brand/novaro-icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     }

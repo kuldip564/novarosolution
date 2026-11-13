@@ -183,27 +183,17 @@
     justify-content: center;
   }
 
-  .cinema-bigword,
-  .services-intro__bigword,
-  .about-intro__bigword {
-    width: 100%;
-    max-width: 100%;
-    padding-top: 0.08em;
-    overflow-wrap: anywhere;
-  }
-
-  .services-intro__content,
-  .about-intro__content {
-    width: 100%;
-    max-width: 100%;
-  }
-
+  /* Short page intros sit right under the header instead of floating in a tall empty block. */
   .pagehead {
-    min-height: min(78vh, 880px);
+    min-height: 0;
     padding:
-      var(--hero-pad-top)
+      calc(var(--site-header-h) + env(safe-area-inset-top, 0px) + 1.5rem)
       0
-      clamp(2.5rem, 8vw, 4rem);
+      clamp(2rem, 7vw, 3rem);
+  }
+
+  .pagehead .wrap.inner {
+    justify-content: flex-start;
   }
 
   .pagehead h1,
@@ -214,10 +204,6 @@
   .bigword {
     font-size: clamp(2.85rem, 15vw, 4.75rem);
     line-height: 0.9;
-  }
-
-  .cinema-bigword {
-    font-size: clamp(2.75rem, 14vw, 4.5rem);
   }
 
   .marquee {
@@ -379,18 +365,6 @@
     text-align: center;
   }
 
-  footer {
-    padding: 48px 0 32px;
-  }
-
-  .foot-grid {
-    gap: 28px;
-  }
-
-  .foot-col h5 {
-    margin-bottom: 12px;
-  }
-
   .toast-stack {
     left: max(16px, env(safe-area-inset-left, 0px));
     right: max(16px, env(safe-area-inset-right, 0px));
@@ -433,8 +407,7 @@
   .proc,
   .stats,
   .team,
-  .drawer-grid,
-  .foot-grid {
+  .drawer-grid {
     grid-template-columns: 1fr;
   }
 
@@ -444,15 +417,6 @@
 
   .brand-header .nm {
     font-size: 0.88rem;
-  }
-
-  .blog-filters {
-    gap: 8px;
-  }
-
-  .blog-filters button {
-    min-height: var(--touch-min);
-    padding: 10px 14px;
   }
 
   .faq-item summary {
@@ -472,8 +436,8 @@
   }
 
   .eyebrow {
-    font-size: 0.66rem;
-    letter-spacing: 0.28em;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     gap: 8px;
   }
 
@@ -515,54 +479,62 @@
 
 /* Cinema pages — phone polish */
 @media (max-width: 768px) {
-  .home-cinema,
-  .services-cinema,
-  .about-cinema {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: clip;
-  }
 
   .page {
     overflow-x: clip;
     max-width: 100%;
   }
+}
 
-  .home-hero {
-    min-height: max(88dvh, var(--hero-min-height));
-    padding-top: var(--hero-pad-top);
-    padding-bottom: var(--hero-pad-bottom);
-    overflow-x: clip;
+/* ── Touch screens: comfortable tap targets (≈40–44px) ── */
+@media (pointer: coarse) {
+
+  .local-map-card__link {
+    min-height: 44px;
   }
 
-  .services-scene.services-intro,
-  .about-scene.about-intro {
-    min-height: max(88dvh, var(--hero-min-height));
-    padding-top: var(--hero-pad-top);
-    padding-bottom: var(--hero-pad-bottom);
+  .breadcrumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 
-  .home-hero__actions {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
+  .error-page-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 
-  .home-hero__actions .btn {
-    width: 100%;
-    min-height: 48px;
-    justify-content: center;
+  .local-meta a {
+    display: block;
+    padding-block: 0.4rem;
+    margin-block: -0.25rem;
   }
 
-  .home-scene {
-    padding: clamp(3.5rem, 10vw, 5rem) 0;
+  /* Service-area chips that link to location pages */
+  a.contact-service-areas__pill,
+  a.local-areas__pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
   }
 
-  .home-section-head__title {
-    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  .local-nearby__list a {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0.6rem;
+    margin-block: -0.6rem;
   }
+}
 
-  .home-work-grid {
-    gap: 1rem;
+/* Touch screens: chip rows and pills get comfortable tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .cs-toc a,
+  .svcp-toc a,
+  .legal-toc a,
+  .local-areas__pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 }

@@ -34,6 +34,11 @@ export const WORK_PROJECT_IMAGES: Record<string, WorkProjectImageSet> = {
     heroAlt: "Quadrato Cargo — track shipments, book courier, and get quotes",
     screens: [workImage("/images/work/quadrato-cargo.jpg")],
   },
+  veggieking: {
+    hero: workImage("/images/work/veggieking.jpg"),
+    heroAlt: "VeggieKing grocery delivery app: home, product and cart screens on three phones",
+    screens: [workImage("/images/work/veggieking.jpg")],
+  },
 };
 
 export function getWorkProjectImages(slug: string): WorkProjectImageSet | null {
@@ -53,4 +58,10 @@ export function mergeWorkProjectImages(
 
 export function localAsset(path: string): CloudinaryAsset {
   return workImage(path);
+}
+
+/** Descriptive alt text for a project card: the case study's hero alt when known, else title and category. */
+export function projectCardAlt(project: { href: string; title: string; category: string }): string {
+  const slug = project.href.startsWith("/work/") ? project.href.slice("/work/".length) : "";
+  return getWorkProjectImages(slug)?.heroAlt ?? `${project.title} — ${project.category}`;
 }

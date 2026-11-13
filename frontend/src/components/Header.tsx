@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
@@ -9,10 +10,13 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/Button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useMotionSettings } from "@/lib/motion-provider";
-import { navLinks } from "@/lib/site-data";
+import { navLinks, site } from "@/lib/site-data";
 import { subscribeScroll } from "@/lib/scroll-store";
 
 const menuEase = [0.16, 0.84, 0.36, 1] as const;
+
+/** Pages whose hero starts at the very top: the header is transparent there until the page scrolls. */
+const OVER_HERO_PATHS = new Set(["/", "/work"]);
 
 const navContainerVariants = {
   hidden: {},
@@ -42,7 +46,14 @@ export function Header() {
   const pathname = usePathname();
   const lenis = useLenis();
   const { reducedMotion } = useMotionSettings();
-  const [menuOpen, setMenuOpen] = useState(false);
+  // The menu is open only on the page it was opened on: navigating closes it, no effect needed.
+  const [menuPath, setMenuPath] = useState<string | null>(null);
+  const menuOpen = menuPath === pathname;
+  const setMenuOpen = (next: boolean | ((open: boolean) => boolean)) =>
+    setMenuPath((current) => {
+      const open = typeof next === "function" ? next(current === pathname) : next;
+      return open ? pathname : null;
+    });
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const burgerRef = useRef<HTMLButtonElement>(null);
@@ -62,10 +73,6 @@ export function Header() {
       header.classList.toggle("scrolled", next);
     });
   }, []);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -106,7 +113,7 @@ export function Header() {
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setMenuOpen(false);
+        setMenuPath(null);
         burgerRef.current?.focus();
         return;
       }
@@ -132,7 +139,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`site-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}
+        className={`site-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""} ${OVER_HERO_PATHS.has(pathname) ? "site-header--over-hero" : ""}`}
       >
         <div className="wrap nav">
           <BrandLogo
@@ -157,7 +164,7 @@ export function Header() {
           <div className="nav-actions">
             <ThemeToggle />
             <Button href="/contact" className="nav-cta">
-              Start a project
+              Start Your Project
             </Button>
           </div>
 
@@ -215,22 +222,48 @@ export function Header() {
                   animate={reducedMotion ? undefined : "visible"}
                   exit={reducedMotion ? undefined : "exit"}
                 >
-                  {navLinks.map((link, index) => (
-                    <motion.div
-                      key={link.href}
-                      custom={index}
-                      variants={reducedMotion ? undefined : navLinkVariants}
-                    >
-                      <Link
-                        href={link.href}
-                        className={pathname === link.href ? "active" : undefined}
-                        onClick={closeMenu}
+                  {navLinks.map((link, index) => {
+                    const current = pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`));
+                    return (
+                      <motion.div
+                        key={link.href}
+                        custom={index}
+                        variants={reducedMotion ? undefined : navLinkVariants}
                       >
-                        {link.label}
-                      </Link>
-                    </motion.div>
-                  ))}
+                        <Link
+                          href={link.href}
+                          className={`mobile-menu-link${current ? " active" : ""}`}
+                          aria-current={current ? "page" : undefined}
+                          onClick={closeMenu}
+                        >
+                          <span className="mobile-menu-link__num" aria-hidden="true">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="mobile-menu-link__label">{link.label}</span>
+                          <ArrowUpRight className="mobile-menu-link__go" size={20} aria-hidden="true" />
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </motion.nav>
+
+                <motion.div
+                  className="mobile-menu-contact"
+                  initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reducedMotion ? undefined : { opacity: 0, y: 8 }}
+                  transition={{ delay: reducedMotion ? 0 : 0.22, duration: 0.26, ease: menuEase }}
+                >
+                  <p className="mobile-menu-contact__label">Talk to us</p>
+                  <a href={`mailto:${site.email}`} className="mobile-menu-contact__link">
+                    <Mail size={16} aria-hidden="true" />
+                    {site.email}
+                  </a>
+                  <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="mobile-menu-contact__link">
+                    <Phone size={16} aria-hidden="true" />
+                    {site.phone}
+                  </a>
+                </motion.div>
 
                 <motion.div
                   className="mobile-menu-foot"
@@ -245,7 +278,7 @@ export function Header() {
                 >
                   <ThemeToggle variant="menu" />
                   <Button href="/contact" onClick={closeMenu}>
-                    Start a project
+                    Start Your Project
                   </Button>
                 </motion.div>
               </div>

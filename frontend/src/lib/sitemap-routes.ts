@@ -1,42 +1,83 @@
 import type { MetadataRoute } from "next";
 import { getAllBlogPosts } from "./blog";
+import { getPublishedProjects, getPublishedServices } from "./content";
+import { locationPath, locations } from "./locations";
 import { siteBaseUrl } from "./site-metadata";
 
+/**
+ * Only include lastModified when a trustworthy content date is available.
+ * Search engines may ignore changeFrequency and priority; the sitemap keeps
+ * to URLs and useful lastmod values instead.
+ */
 const staticRoutes: Array<{
   path: string;
-  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
-  priority: number;
+  lastModified?: string;
 }> = [
-  { path: "", changeFrequency: "weekly", priority: 1 },
-  { path: "/about", changeFrequency: "monthly", priority: 0.8 },
-  { path: "/services", changeFrequency: "monthly", priority: 0.8 },
-  { path: "/work", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/blog", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/contact", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
-  { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
+  { path: "" },
+  { path: "/about" },
+  { path: "/services" },
+  { path: "/work" },
+  { path: "/blog" },
+  { path: "/contact" },
+  { path: "/software-development-usa" },
+  { path: "/it-services" },
+  { path: "/locations" },
+  { path: "/privacy-policy", lastModified: "2026-11-11" },
+  { path: "/terms", lastModified: "2026-11-10" },
+  { path: "/disclaimer", lastModified: "2026-06-14" },
+  { path: "/cookie-policy", lastModified: "2026-06-14" },
 ];
+
+function toValidDate(value?: string): Date | undefined {
+  if (!value) return undefined;
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteBaseUrl();
-  const now = new Date();
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map(
-    ({ path, changeFrequency, priority }) => ({
+    ({ path, lastModified }) => ({
       url: `${baseUrl}${path}`,
-      lastModified: now,
-      changeFrequency,
-      priority,
+      ...(toValidDate(lastModified) ? { lastModified: toValidDate(lastModified) } : {}),
     }),
   );
 
-  const posts = await getAllBlogPosts();
-  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
-    changeFrequency: "monthly",
-    priority: 0.65,
+  const [posts, projects, services] = await Promise.all([
+    getAllBlogPosts(),
+    getPublishedProjects(),
+    getPublishedServices(),
+  ]);
+
+  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => {
+    const lastModified =
+      toValidDate(post.updatedAt) ?? toValidDate(post.publishedAt);
+
+    return {
+      url: `${baseUrl}/blog/${post.slug}`,
+      ...(lastModified ? { lastModified } : {}),
+    };
+  });
+
+  const projectEntries: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: `${baseUrl}/work/${project.slug}`,
   }));
 
-  return [...staticEntries, ...blogEntries];
+  const serviceEntries: MetadataRoute.Sitemap = services.map((service) => ({
+    url: `${baseUrl}/services/${service.slug}`,
+  }));
+
+  const locationEntries: MetadataRoute.Sitemap = locations.map((location) => ({
+    url: `${baseUrl}${locationPath(location.slug)}`,
+  }));
+
+  return [
+    ...staticEntries,
+    ...locationEntries,
+    ...projectEntries,
+    ...serviceEntries,
+    ...blogEntries,
+  ];
 }
