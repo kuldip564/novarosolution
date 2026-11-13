@@ -7,10 +7,10 @@ import { ogImagePath, ogLocales, siteBaseUrl, siteIcons } from "./site-metadata"
 export const homePagePath = "/";
 
 export const homeSeoTitle =
-  "Custom Software & AI Development Company — Novaro Solution";
+  "IT Company in Gandhinagar | Web & App Development | Novaro";
 
 export const homeSeoDescription =
-  "Novaro Solution builds custom software, web and mobile apps, AI features and SEO for companies in the USA, UK, Europe and India. Studio in Gandhinagar.";
+  "IT company in Gandhinagar for custom websites, web apps, mobile apps, AI solutions and digital marketing. Novaro Solution serves Ahmedabad and Gujarat.";
 
 export const homeOgImage = ogImagePath("Custom software, web apps & AI for companies worldwide", "Software development company");
 

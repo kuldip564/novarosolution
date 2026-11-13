@@ -25,9 +25,11 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
   const page = Math.max(1, Number(params.page) || 1);
   const category = params.category?.trim();
   const base = createPageMetadata({
-    title: page > 1 ? `Blog — Page ${page} — Software, AI & SEO Insights` : "Blog — Software, AI & SEO Insights",
+    title: page > 1 ? `Blog page ${page}` : "Blog — Software, AI & SEO Insights",
     description:
-      "Practical notes from the Novaro Solution team on building SaaS products, shipping AI features, technical SEO, and working with a remote software studio.",
+      page > 1
+        ? `More articles from Novaro Solution on software development, AI, and technical SEO. Browse page ${page} of our studio insights.`
+        : "Practical notes from Novaro Solution on building SaaS products, shipping AI features, technical SEO, and working with a remote software studio.",
     // Page 2+ is its own canonical; category filters point back to the main blog.
     path: page > 1 && !category ? `/blog?page=${page}` : "/blog",
     keywords: blogKeywords,

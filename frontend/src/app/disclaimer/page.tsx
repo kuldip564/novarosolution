@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/site-metadata";
 export const metadata: Metadata = createPageMetadata({
   title: "Website Disclaimer",
   description:
-    "Limits on the information Novaro Solution publishes: blog posts, estimates, case-study results and third-party links are general guidance, not professional advice.",
+    "Novaro Solution website content, estimates and case studies provide general information, not professional, legal or financial advice.",
   ogEyebrow: "Legal",
   path: "/disclaimer",
 });

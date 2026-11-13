@@ -39,11 +39,11 @@ import "@/styles/about.css";
 export const revalidate = 30;
 
 const aboutDescription =
-  "Novaro Solution builds web apps, AI systems, and digital marketing for companies in the USA, UK, Europe, and India. Studio in Gandhinagar since 2024.";
+  "Meet Novaro Solution, a Gandhinagar software studio building web and mobile apps, AI systems, and digital growth experiences for businesses in India and worldwide.";
 
 
 export const metadata: Metadata = createPageMetadata({
-  title: "About Novaro Solution — Global Software Studio",
+  title: "About Novaro Solution | IT Company in Gandhinagar",
   description: aboutDescription,
   path: "/about",
   keywords: aboutKeywords,
