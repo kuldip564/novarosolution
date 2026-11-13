@@ -5,38 +5,43 @@ import { locationPath, locations } from "./locations";
 import { siteBaseUrl } from "./site-metadata";
 
 /**
- * lastModified is only set where the real content date is known (legal pages show it on the page,
- * posts use their publish date). A "now" timestamp on every URL teaches Google to ignore lastmod.
+ * Only include lastModified when a trustworthy content date is available.
+ * Search engines may ignore changeFrequency and priority; the sitemap keeps
+ * to URLs and useful lastmod values instead.
  */
 const staticRoutes: Array<{
   path: string;
-  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
-  priority: number;
   lastModified?: string;
 }> = [
-  { path: "", changeFrequency: "weekly", priority: 1 },
-  { path: "/about", changeFrequency: "monthly", priority: 0.8 },
-  { path: "/services", changeFrequency: "monthly", priority: 0.8 },
-  { path: "/work", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/blog", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/contact", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/software-development-usa", changeFrequency: "monthly", priority: 0.9 },
-  { path: "/it-services", changeFrequency: "monthly", priority: 0.9 },
-  { path: "/locations", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-11-11" },
-  { path: "/terms", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-11-10" },
-  { path: "/disclaimer", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-06-14" },
-  { path: "/cookie-policy", changeFrequency: "yearly", priority: 0.3, lastModified: "2026-06-14" },
+  { path: "" },
+  { path: "/about" },
+  { path: "/services" },
+  { path: "/work" },
+  { path: "/blog" },
+  { path: "/contact" },
+  { path: "/software-development-usa" },
+  { path: "/it-services" },
+  { path: "/locations" },
+  { path: "/privacy-policy", lastModified: "2026-11-11" },
+  { path: "/terms", lastModified: "2026-11-10" },
+  { path: "/disclaimer", lastModified: "2026-06-14" },
+  { path: "/cookie-policy", lastModified: "2026-06-14" },
 ];
+
+function toValidDate(value?: string): Date | undefined {
+  if (!value) return undefined;
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteBaseUrl();
+
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map(
-    ({ path, changeFrequency, priority, lastModified }) => ({
+    ({ path, lastModified }) => ({
       url: `${baseUrl}${path}`,
-      ...(lastModified ? { lastModified: new Date(lastModified) } : {}),
-      changeFrequency,
-      priority,
+      ...(toValidDate(lastModified) ? { lastModified: toValidDate(lastModified) } : {}),
     }),
   );
 
@@ -46,29 +51,26 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     getPublishedServices(),
   ]);
 
-  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
-    changeFrequency: "monthly",
-    priority: 0.65,
-  }));
+  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => {
+    const lastModified =
+      toValidDate(post.updatedAt) ?? toValidDate(post.publishedAt);
+
+    return {
+      url: `${baseUrl}/blog/${post.slug}`,
+      ...(lastModified ? { lastModified } : {}),
+    };
+  });
 
   const projectEntries: MetadataRoute.Sitemap = projects.map((project) => ({
     url: `${baseUrl}/work/${project.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.7,
   }));
 
   const serviceEntries: MetadataRoute.Sitemap = services.map((service) => ({
     url: `${baseUrl}/services/${service.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.75,
   }));
 
   const locationEntries: MetadataRoute.Sitemap = locations.map((location) => ({
     url: `${baseUrl}${locationPath(location.slug)}`,
-    changeFrequency: "monthly",
-    priority: location.group === "india" ? 0.85 : 0.8,
   }));
 
   return [
