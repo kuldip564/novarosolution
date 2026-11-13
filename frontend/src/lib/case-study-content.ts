@@ -260,7 +260,7 @@ const kankreg: CaseStudyContent = {
 
 const mrAntidot: CaseStudyContent = {
   slug: "mr-antidot",
-  seoTitle: "Mr Antidot Case Study: Pest Control Website",
+  seoTitle: "Mr Antidot Pest Control Website",
   description:
     "How we built Mr Antidot's pest-control website on Next.js: ten service pages with prices and booking, sector pages, team profiles, a blog and lead capture.",
   h1: "Mr Antidot: a pest-control website with service booking",
@@ -350,7 +350,7 @@ const mrAntidot: CaseStudyContent = {
 
 const quadratoCargo: CaseStudyContent = {
   slug: "quadrato-cargo",
-  seoTitle: "Quadrato Cargo Case Study: Courier Platform",
+  seoTitle: "Quadrato Cargo Courier Platform",
   description:
     "How we built Quadrato Cargo's courier platform on Next.js: four-step pickup booking, instant or scheduled collection, tracking IDs with QR lookup and quotes.",
   h1: "Quadrato Cargo: courier booking and shipment tracking platform",
@@ -451,7 +451,7 @@ function appShot(file: string, alt: string, caption: string): CaseStudyScreensho
  */
 const veggieKing: CaseStudyContent = {
   slug: "veggieking",
-  seoTitle: "VeggieKing Case Study: Grocery Delivery App",
+  seoTitle: "VeggieKing Grocery Delivery App",
   description:
     "How we built VeggieKing's grocery delivery apps in Flutter: category shopping, any-weight orders, live tracking, loyalty points and a delivery-partner app.",
   h1: "VeggieKing: fresh fruit and vegetable delivery apps",
